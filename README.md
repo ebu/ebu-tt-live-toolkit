@@ -1,6 +1,6 @@
 # ebu-tt-live-toolkit
 
-This is the repository for the interoperability kit of [EBU-TT Live](https://tech.ebu.ch/docs/tech/tech3370v0_8.pdf). 
+This is the repository for the interoperability kit of [EBU-TT Live](https://tech.ebu.ch/publications/tech3370). 
 
 The kit is envisaged to contain a set of components for generating, testing and distributing subtitle documents in EBU-TT Part 3 format.
 
