@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2016, EBU, www.ebu.ch -->
+<!-- Version of XML Schema: 0.9 -->
+<!-- Creation: Current draft for EBU-TT Part 3 Update -->
+<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9. 
+Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tt="http://www.w3.org/ns/ttml"
+	xmlns:ebuttdt="urn:ebu:tt:datatypes" xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+	xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
+	xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebutts="urn:ebu:tt:style"
+	xmlns:ebuttp="urn:ebu:tt:parameters" targetNamespace="http://www.w3.org/ns/ttml"
+	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
+	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+	<xs:import namespace="http://www.w3.org/ns/ttml#styling" schemaLocation="styling.xsd"/>
+	<xs:import namespace="http://www.w3.org/ns/ttml#parameter" schemaLocation="parameter.xsd"/>
+	<xs:import namespace="urn:ebu:tt:metadata" schemaLocation="ebutt_metadata.xsd"/>
+	<xs:import namespace="urn:ebu:tt:style" schemaLocation="ebutt_styling.xsd"/>
+	<xs:import namespace="urn:ebu:tt:datatypes" schemaLocation="ebutt_datatypes.xsd"/>
+	<xs:import namespace="urn:ebu:tt:parameters" schemaLocation="ebutt_parameters.xsd"/>
+	<xs:import namespace="http://www.w3.org/ns/ttml#metadata" schemaLocation="metadata.xsd"/>
+	<xs:complexType name="tt">
+		<xs:annotation>
+			<xs:documentation>Root element of an EBU-TT XML document.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="head" type="tt:head"/>
+			<xs:element name="body" type="tt:body" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="xml:space" use="optional">
+			<xs:annotation>
+				<xs:documentation>Indicates the author’s intention of white space handling within
+					the content of the EBU-TT document.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ttp:timeBase" use="required"/>
+		<xs:attribute ref="ttp:frameRate" use="optional"/>
+		<xs:attribute ref="ttp:frameRateMultiplier" use="optional"/>
+		<xs:attribute ref="ttp:markerMode" use="optional"/>
+		<xs:attribute ref="ttp:dropMode" use="optional"/>
+		<xs:attribute ref="ttp:clockMode" use="optional"/>
+		<xs:attribute ref="ttp:cellResolution" use="optional"/>
+		<xs:attribute ref="ebuttp:sequenceIdentifier" use="required"/>
+		<xs:attribute ref="ebuttp:sequenceNumber" use="required"/>
+		<xs:attribute ref="ebuttm:authoringDelay" use="optional"/>
+		<xs:attribute ref="ebuttp:authorsGroupIdentifier" use="optional"/>
+		<xs:attribute ref="ebuttp:authorsGroupControlToken" use="optional"/>
+		<xs:attribute ref="ebuttm:authorsGroupControlRequest" use="optional"/>
+		<xs:attribute ref="ebuttp:referenceClockIdentifier" use="optional"/>
+		<xs:attribute ref="tts:extent" use="optional">
+			<xs:annotation>
+				<xs:documentation>Defines the width and height of the active video the subtitles
+					were authored for. Only length expressions in pixels shall be
+					used.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="xml:lang" use="required">
+			<xs:annotation>
+				<xs:documentation>The language for which the EBU-TT document is prepared. (STL
+					mapping: Language Code (LC))</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		
+
+	</xs:complexType>
+	<xs:complexType name="head">
+		<xs:annotation>
+			<xs:documentation>Contains metadata as well as layout and styling information that are
+				referenced by the subtitle blocks in the body.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:headMetadata" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Generic container for metadata information that applies to the
+						whole document.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="copyright" type="xs:string" minOccurs="0"/>
+			<xs:element name="styling" type="tt:styling" minOccurs="0"/>
+			<xs:element name="layout" type="tt:layout" minOccurs="0"/>
+		</xs:sequence>
+
+	</xs:complexType>
+	
+	
+	<xs:complexType name="styling">
+		<xs:annotation>
+			<xs:documentation>Container for styling information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:stylingMetadata" minOccurs="0"/>
+			<xs:element name="style" type="tt:style" maxOccurs="unbounded"/>
+		</xs:sequence>
+
+	</xs:complexType>
+	<xs:complexType name="style">
+		<xs:annotation>
+			<xs:documentation>Set of style information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="xml:id" use="required">
+			<xs:annotation>
+				<xs:documentation>ID of a tt:style element that is used by other elements for
+					reference.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="style" type="xs:IDREFS" use="optional">
+			<xs:annotation>
+				<xs:documentation>Reference to one or more other tt:style
+					elements.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="tts:direction" use="optional"/>
+		<xs:attribute ref="tts:fontFamily" use="optional"/>
+		<xs:attribute ref="tts:fontSize" use="optional"/>
+		<xs:attribute ref="tts:lineHeight" use="optional"/>
+		<xs:attribute ref="tts:textAlign" use="optional"/>
+		<xs:attribute ref="tts:color" use="optional"/>
+		<xs:attribute ref="tts:backgroundColor" use="optional"/>
+		<xs:attribute ref="tts:fontStyle" use="optional"/>
+		<xs:attribute ref="tts:fontWeight" use="optional"/>
+		<xs:attribute ref="tts:textDecoration" use="optional"/>
+		<xs:attribute ref="tts:unicodeBidi" use="optional"/>
+		<xs:attribute ref="tts:wrapOption" use="optional"/>
+		<xs:attribute ref="tts:padding" use="optional">
+			<xs:annotation>
+				<xs:documentation>Padding (or inset) space on all sides of a block area generated by
+					a tt:p element or an inline area generated by a tt:span
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ebutts:multiRowAlign" use="optional"/>
+		<xs:attribute ref="ebutts:linePadding" use="optional"/>
+
+	</xs:complexType>
+	<xs:complexType name="layout">
+		<xs:annotation>
+			<xs:documentation>Container element for layout information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+			<xs:element name="region" type="tt:region" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+
+	</xs:complexType>
+	<xs:complexType name="region">
+		<xs:annotation>
+			<xs:documentation>Defines a space or area for the display of subtitle
+				content.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="xml:id" use="required">
+			<xs:annotation>
+				<xs:documentation>ID of a region.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="tts:origin" use="required"/>
+		<xs:attribute ref="tts:extent" use="required">
+			<xs:annotation>
+				<xs:documentation>Width and height of a region area. Values in percentage shall be
+					relative to the width and height of the active picture.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="style" type="xs:IDREFS" use="optional">
+			<xs:annotation>
+				<xs:documentation>ID(s) of one or more style element(s).</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="tts:displayAlign" use="optional"/>
+		<xs:attribute ref="tts:padding" use="optional">
+			<xs:annotation>
+				<xs:documentation>Padding (or inset) space on all sides of a region
+					area.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="tts:writingMode" use="optional"/>
+		<xs:attribute ref="tts:showBackground" use="optional"/>
+		<xs:attribute ref="tts:overflow" use="optional"/>
+
+	</xs:complexType>
+	<xs:complexType name="body">
+		<xs:annotation>
+			<xs:documentation>Container of the subtitle and the timing
+				information.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+			<xs:element name="div" type="tt:div" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute ref="ttm:agent" use="optional"/>
+		<xs:attribute ref="ttm:role" use="optional"/>
+		<xs:attribute name="begin" type="ebuttdt:timingType" use="optional">
+			<xs:annotation>
+				<xs:documentation>Start point of a temporal interval associated with a tt:body
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="end" type="ebuttdt:timingType" use="optional">
+			<xs:annotation>
+				<xs:documentation>End point of a temporal interval associated with a tt:body
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="dur" type="ebuttdt:durationTimingType" use="optional">
+			<xs:annotation>
+				<xs:documentation>
+					The maximum duration of the document relative to the resolved begin time, as defined in TTML 1.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="div">
+		<xs:annotation>
+			<xs:documentation>Logical container of textual content.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:divMetadata" minOccurs="0"/>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="div" type="tt:div"/>
+				<xs:element name="p" type="tt:p"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute ref="xml:id">
+			<xs:annotation>
+				<xs:documentation>ID of a tt:div element that may be used by an external
+					application.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="region" type="xs:IDREF">
+			<xs:annotation>
+				<xs:documentation>Application of layout and style information through reference of a
+					region.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="style" type="xs:IDREFS">
+			<xs:annotation>
+				<xs:documentation>ID(s) of one or more style element(s). The style information shall
+					be applied to the enclosed content of the tt:div element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ttm:agent"/>
+		<xs:attribute ref="ttm:role"/>
+		<xs:attribute name="begin" type="ebuttdt:timingType" use="optional">
+			<xs:annotation>
+				<xs:documentation>Start point of a temporal interval associated with a tt:div
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="end" type="ebuttdt:timingType" use="optional">
+			<xs:annotation>
+				<xs:documentation>End point of a temporal interval associated with a tt:div
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+
+	</xs:complexType>
+
+	<xs:complexType name="p" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Logical paragraph.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:pMetadata" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="br" type="tt:br"/>
+				<xs:element name="span" type="tt:span"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute ref="xml:id" use="required">
+			<xs:annotation>
+				<xs:documentation>Unique ID of a subtitle.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="xml:space">
+			<xs:annotation>
+				<xs:documentation>Indicates the author’s intention of white space handling within
+					the content of the tt:p element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="xml:lang">
+			<xs:annotation>
+				<xs:documentation>Language identifier that overwrites the language identification of
+					the enclosed subtitle content.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="region" type="xs:IDREF">
+			<xs:annotation>
+				<xs:documentation>Application of layout information through reference of a
+					region.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="style" type="xs:IDREFS">
+			<xs:annotation>
+				<xs:documentation>ID(s) of one or more style element(s). The style information shall
+					be applied to the enclosed content of the tt:p element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="begin" type="ebuttdt:timingType">
+			<xs:annotation>
+				<xs:documentation>Start point of a temporal interval associated with a tt:p
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="end" type="ebuttdt:timingType">
+			<xs:annotation>
+				<xs:documentation>End point of a temporal interval associated with a tt:p
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ttm:agent"/>
+		<xs:attribute ref="ttm:role"/>
+	</xs:complexType>
+	<xs:complexType name="span" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Inline element to allow the application of local style information,
+				annotation or metadata.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="br" type="tt:br"/>
+				<xs:element name="span" type="tt:span"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute ref="xml:space">
+			<xs:annotation>
+				<xs:documentation>Indicates the authors’ intention of white space handling within
+					the content of the element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="xml:lang">
+			<xs:annotation>
+				<xs:documentation>Language identifier that overwrites the language identification of
+					the enclosed subtitle content.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="xml:id">
+			<xs:annotation>
+				<xs:documentation>ID of a tt:span element that may be used by an external
+					application.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="style" type="xs:IDREFS">
+			<xs:annotation>
+				<xs:documentation>ID(s) of one or more style element(s). The style information shall
+					be applied to the enclosed content of the tt:span element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="begin" type="ebuttdt:timingType">
+			<xs:annotation>
+				<xs:documentation>Start point of a temporal interval associated with the
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="end" type="ebuttdt:timingType">
+			<xs:annotation>
+				<xs:documentation>End point of a temporal interval associated with the
+					element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ttm:agent"/>
+		<xs:attribute ref="ttm:role"/>
+
+	</xs:complexType>
+	<xs:complexType name="br">
+		<xs:annotation>
+			<xs:documentation>Forced line break.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute ref="ttm:role"/>
+
+	</xs:complexType>
+
+	<xs:element name="tt" type="tt:tt"/>
+
+</xs:schema>
