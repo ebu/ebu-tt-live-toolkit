@@ -21,14 +21,16 @@ setup(
     description="EBU-TT Part 3 library implementing Specification EBU-3370",
     install_requires=[
         "PyXB",
-        "ipdb"  # This will eventually be removed from here
+        "ipdb",  # This will eventually be removed from here
+        "configobj"
     ],
     license="BSD3",
     packages=packages,
     entry_points={
         'console_scripts': [
             'ebu-dummy-encoder = ebu_tt_live.scripts.ebu_dummy_encoder:main',
-            'ebu-interactive-shell = ebu_tt_live.scripts.ebu_interactive_shell:main'
+            'ebu-interactive-shell = ebu_tt_live.scripts.ebu_interactive_shell:main',
+            'ebu-simple-consumer = ebu_tt_live.scripts.ebu_simple_consumer:main'
         ]
     }
 )
