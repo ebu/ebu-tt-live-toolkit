@@ -23,8 +23,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Root element of an EBU-TT XML document.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="head" type="tt:head"/>
-			<xs:element name="body" type="tt:body" minOccurs="0"/>
+			<xs:element ref="tt:head"/>
+			<xs:element ref="tt:body" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute ref="xml:space" use="optional">
 			<xs:annotation>
@@ -68,15 +68,15 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				referenced by the subtitle blocks in the body.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:headMetadata" minOccurs="0">
+			<xs:element ref="tt:metadata" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Generic container for metadata information that applies to the
 						whole document.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element ref="ttm:copyright" minOccurs="0"/>
-			<xs:element name="styling" type="tt:styling" minOccurs="0"/>
-			<xs:element name="layout" type="tt:layout" minOccurs="0"/>
+			<xs:element ref="tt:styling" minOccurs="0"/>
+			<xs:element ref="tt:layout" minOccurs="0"/>
 		</xs:sequence>
 
 	</xs:complexType>
@@ -87,8 +87,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Container for styling information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:stylingMetadata" minOccurs="0"/>
-			<xs:element name="style" type="tt:style" maxOccurs="unbounded"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
+			<xs:element ref="tt:style" maxOccurs="unbounded"/>
 		</xs:sequence>
 
 	</xs:complexType>
@@ -97,7 +97,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Set of style information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute ref="xml:id" use="required">
 			<xs:annotation>
@@ -139,8 +139,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Container element for layout information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
-			<xs:element name="region" type="tt:region" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
+			<xs:element ref="tt:region" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 
 	</xs:complexType>
@@ -150,7 +150,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				content.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute ref="xml:id" use="required">
 			<xs:annotation>
@@ -187,8 +187,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
-			<xs:element name="div" type="tt:div" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
+			<xs:element ref="tt:div" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute ref="ttm:agent" use="optional"/>
 		<xs:attribute ref="ttm:role" use="optional"/>
@@ -218,10 +218,10 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Logical container of textual content.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:divMetadata" minOccurs="0"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
 			<xs:choice maxOccurs="unbounded">
-				<xs:element name="div" type="tt:div"/>
-				<xs:element name="p" type="tt:p"/>
+				<xs:element ref="tt:div"/>
+				<xs:element ref="tt:p"/>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute ref="xml:id">
@@ -264,10 +264,10 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Logical paragraph.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:pMetadata" minOccurs="0"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="br" type="tt:br"/>
-				<xs:element name="span" type="tt:span"/>
+				<xs:element ref="tt:br"/>
+				<xs:element ref="tt:span"/>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute ref="xml:id" use="required">
@@ -320,10 +320,10 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				annotation or metadata.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0"/>
+			<xs:element ref="tt:metadata" minOccurs="0"/>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="br" type="tt:br"/>
-				<xs:element name="span" type="tt:span"/>
+				<xs:element ref="tt:br"/>
+				<xs:element ref="tt:span"/>
 			</xs:choice>
 		</xs:sequence>
 		<xs:attribute ref="xml:space">
@@ -371,12 +371,23 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Forced line break.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metadata" type="ebuttm:anyMetadata" minOccurs="0" maxOccurs="1"/>
+			<xs:element ref="tt:metadata" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute ref="ttm:role"/>
 
 	</xs:complexType>
 
+	<xs:element name="styling" type="tt:styling"/>
+	<xs:element name="br" type="tt:br"/>
+	<xs:element name="body" type="tt:body"/>
+	<xs:element name="head" type="tt:head"/>
+	<xs:element name="div" type="tt:div"/>
+	<xs:element name="span" type="tt:span"/>
+	<xs:element name="style" type="tt:style"/>
+	<xs:element name="p" type="tt:p"/>
+	<xs:element name="layout" type="tt:layout"/>
+	<xs:element name="region" type="tt:region"/>
+	<xs:element name="metadata" type="ebuttm:anyMetadata"/>
 	<xs:element name="tt" type="tt:tt"/>
 
 </xs:schema>
