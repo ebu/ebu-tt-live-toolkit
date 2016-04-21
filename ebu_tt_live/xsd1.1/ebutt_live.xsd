@@ -74,7 +74,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 						whole document.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="copyright" type="xs:string" minOccurs="0"/>
+			<xs:element ref="ttm:copyright" minOccurs="0"/>
 			<xs:element name="styling" type="tt:styling" minOccurs="0"/>
 			<xs:element name="layout" type="tt:layout" minOccurs="0"/>
 		</xs:sequence>

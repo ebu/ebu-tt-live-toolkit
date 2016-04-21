@@ -9,4 +9,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	targetNamespace="http://www.w3.org/ns/ttml#metadata">
 	<xs:attribute name="agent" type="xs:IDREFS"/>
 	<xs:attribute name="role" type="xs:NMTOKENS"/>
+	<xs:element name="agent" type="xs:string"/>
+	<xs:element name="title" type="xs:string"/>
+	<xs:element name="desc" type="xs:string"/>
+	<xs:element name="copyright" type="xs:string"/>
 </xs:schema>

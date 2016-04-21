@@ -6,8 +6,10 @@
 Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:ebu:tt:metadata"
 	xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttdt="urn:ebu:tt:datatypes"
+	xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
 	targetNamespace="urn:ebu:tt:metadata" elementFormDefault="qualified">
 	<xs:import namespace="urn:ebu:tt:datatypes" schemaLocation="ebutt_datatypes.xsd"/>
+	<xs:import namespace="http://www.w3.org/ns/ttml#metadata" schemaLocation="metadata.xsd"/>
 	<xs:complexType name="binaryData">
 		<xs:annotation>
 			<xs:documentation>Binary data of the input formats or associated documents used to
@@ -561,8 +563,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	
 	<xs:complexType name="metadataBase">
 		<xs:sequence>
-			<xs:element name="title" type="xs:string" minOccurs="0"/>
-			<xs:element name="desc" type="xs:string" minOccurs="0"/>
+			<xs:element ref="ttm:title" minOccurs="0"/>
+			<xs:element ref="ttm:desc" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -576,7 +578,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 							<xs:field xpath="."></xs:field>
 						</xs:unique>
 					</xs:element>
-					<xs:element name="agent" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element ref="ttm:agent" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="binaryData" type="binaryData" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
