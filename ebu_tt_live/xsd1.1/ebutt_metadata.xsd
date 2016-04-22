@@ -557,7 +557,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Container for metadata information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -619,5 +619,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	
+	<xs:element name="documentMetadata" type="documentMetadata"/>
 	
 </xs:schema>
