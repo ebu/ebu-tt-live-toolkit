@@ -16,8 +16,8 @@ def main():
         sequenceNumber='1',
         timeBase='smpte',
         lang='en-GB',
-        head=bindings.head(
-            metadata.headMetadata(
+        head=bindings.head_type(
+            metadata.headMetadata_type(
                 metadata.documentMetadata()
             ),
             bindings.styling(
@@ -28,13 +28,13 @@ def main():
             bindings.layout()
         ),
         body=BIND(
-            bindings.div(
-                bindings.p(
-                    bindings.span(
+            bindings.div_type(
+                bindings.p_type(
+                    bindings.span_type(
                         'Some example text...'
                     ),
-                    bindings.br(),
-                    bindings.span(
+                    bindings.br_type(),
+                    bindings.span_type(
                         'And another line'
                     ),
                     id='ID005',
