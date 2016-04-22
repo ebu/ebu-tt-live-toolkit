@@ -44,6 +44,20 @@ After this you are supposed to be able to launch the command line tools this pyt
 provides i.e.:
 
     ebu-dummy-encoder
+    
+Windows users
+=============
+
+Windows is not the best friend of Makefiles. So there is a make.bat file for those who would like to develop using 
+Windows. Assuming python 2.7 and virtualenv is installed and are on the PATH.
+
+    make
+    
+This will make sure a virtual environment is created and activated and installs all the tools into it.
+
+After that the following command should work:
+
+    ebu-dummy-encoder
 
 The Schema definitions XSD
 ==========================
