@@ -8,7 +8,9 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	xmlns:ebuttdt="urn:ebu:tt:datatypes" xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
 	xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
 	xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebutts="urn:ebu:tt:style"
-	xmlns:ebuttp="urn:ebu:tt:parameters" targetNamespace="http://www.w3.org/ns/ttml"
+	xmlns:ebuttp="urn:ebu:tt:parameters"
+	targetNamespace="http://www.w3.org/ns/ttml"
+	elementFormDefault="qualified"
 	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#styling" schemaLocation="styling.xsd"/>
