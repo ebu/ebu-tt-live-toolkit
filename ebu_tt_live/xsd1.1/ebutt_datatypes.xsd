@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2016, EBU, www.ebu.ch -->
+<!-- Version of XML Schema: 0.9 -->
+<!-- Creation: 05/04/2016 -->
+<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9. 
+Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ebuttdt="urn:ebu:tt:datatypes"
+	targetNamespace="urn:ebu:tt:datatypes">
+	<xs:simpleType name="cellResolutionType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="[0]*[1-9][0-9]*\s[0]*[1-9][0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="frameRateMultiplierType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="[0]*[1-9][0-9]*\s[0]*[1-9][0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="extentType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="(\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fontFamilyType">
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:simpleType name="fontSizeType">
+		<xs:restriction base="xs:token">
+			<xs:pattern
+				value="(\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"
+			/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fontStyleType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="normal"/>
+			<xs:enumeration value="italic"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fontWeightType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="normal"/>
+			<xs:enumeration value="bold"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="lineHeightType">
+		<xs:union memberTypes="ebuttdt:lengthType">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="normal"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:union>
+	</xs:simpleType>
+	<xs:simpleType name="colorType">
+		<xs:union
+			memberTypes="ebuttdt:rgbHexColorType ebuttdt:rgbaHexColorType ebuttdt:rgbColorType ebuttdt:rgbaColorType ebuttdt:namedColorType"
+		/>
+	</xs:simpleType>
+	<xs:simpleType name="originType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="paddingType">
+		<xs:restriction base="xs:token">
+			<xs:pattern
+				value="(\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"
+			/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="timingType">
+		<xs:union
+			memberTypes="ebuttdt:smpteTimingType ebuttdt:mediaTimingType ebuttdt:clockTimingType"/>
+	</xs:simpleType>
+	<xs:simpleType name="durationTimingType">
+		<xs:union 
+			memberTypes="ebuttdt:clockTimingType ebuttdt:mediaTimingType"/>
+	</xs:simpleType>
+	<xs:simpleType name="smpteTimingType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-1][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]:[0-9][0-9]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="clockTimingType">
+		<xs:union memberTypes="ebuttdt:limitedClockTimingType ebuttdt:timecountTimingType"/>
+	</xs:simpleType>
+	<xs:simpleType name="mediaTimingType">
+		<xs:union memberTypes="ebuttdt:timecountTimingType ebuttdt:fullClockTimingType"/>
+	</xs:simpleType>
+	<xs:simpleType name="timecountTimingType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9]+(\.[0-9]+)?(h|m|s|ms)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="authoringDelayType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[+-]?[0-9]+(\.[0-9]+)?(h|m|s|ms)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="limitedClockTimingType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9][0-9]:[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fullClockTimingType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[0-9][0-9]+:[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="lengthType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[+-]?\d*\.?\d+(px|c|%)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rgbHexColorType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="#[a-fA-F\d]{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rgbaHexColorType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="#[a-fA-F\d]{8}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rgbColorType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="rgb\(\d\d?\d?,\s?\d\d?\d?,\s?\d\d?\d?\)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rgbaColorType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="rgba\(\d\d?\d?,\s?\d\d?\d?,\s?\d\d?\d?,\s?\d\d?\d?\)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="namedColorType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="transparent"/>
+			<xs:enumeration value="black"/>
+			<xs:enumeration value="silver"/>
+			<xs:enumeration value="gray"/>
+			<xs:enumeration value="white"/>
+			<xs:enumeration value="maroon"/>
+			<xs:enumeration value="red"/>
+			<xs:enumeration value="purple"/>
+			<xs:enumeration value="fuchsia"/>
+			<xs:enumeration value="magenta"/>
+			<xs:enumeration value="green"/>
+			<xs:enumeration value="lime"/>
+			<xs:enumeration value="olive"/>
+			<xs:enumeration value="yellow"/>
+			<xs:enumeration value="navy"/>
+			<xs:enumeration value="blue"/>
+			<xs:enumeration value="teal"/>
+			<xs:enumeration value="aqua"/>
+			<xs:enumeration value="cyan"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="transitionStyleAttributeType">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="block"/>
+			<xs:enumeration value="line"/>
+			<xs:enumeration value="word"/>
+			<xs:enumeration value="partOfWord"/>
+			<xs:enumeration value="groupOfWords"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
