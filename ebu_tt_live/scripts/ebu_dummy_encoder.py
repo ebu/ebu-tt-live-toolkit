@@ -17,7 +17,7 @@ def main():
         timeBase='smpte',
         lang='en-GB',
         head=bindings.head(
-            bindings.metadata(
+            metadata.headMetadata(
                 metadata.documentMetadata()
             ),
             bindings.styling(
