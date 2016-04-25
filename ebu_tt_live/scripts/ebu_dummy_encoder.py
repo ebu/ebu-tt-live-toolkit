@@ -3,6 +3,7 @@ from .common import create_loggers
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from pyxb import BIND
+from pyxb.utils.domutils import BindingDOMSupport
 
 log = logging.getLogger('ebu_dummy_encoder')
 
@@ -46,7 +47,9 @@ def main():
     )
 
     print(
-        tt.toDOM().toprettyxml(
+        tt.toDOM(
+            bds=BindingDOMSupport(default_namespace=bindings.Namespace)
+        ).toprettyxml(
             indent='  '
         )
     )
