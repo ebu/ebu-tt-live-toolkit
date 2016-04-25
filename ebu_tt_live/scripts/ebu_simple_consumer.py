@@ -3,8 +3,6 @@ from argparse import ArgumentParser
 from .common import create_loggers, parse_config
 from ebu_tt_live.consumers import ConsumerFactory
 from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata
-from pyxb import BIND
 
 log = logging.getLogger('ebu_simple_consumer')
 parser = ArgumentParser()
@@ -23,4 +21,4 @@ def main():
     consumer = ConsumerFactory.create_consumer(
         config=config
     )
-    consumer.start()
+    #consumer.start()
