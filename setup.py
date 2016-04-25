@@ -22,7 +22,8 @@ setup(
     install_requires=[
         "PyXB",
         "ipdb",  # This will eventually be removed from here
-        "configobj"
+        "configobj",
+        "pyyaml"
     ],
     license="BSD3",
     packages=packages,
