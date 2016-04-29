@@ -25,4 +25,4 @@ def main():
     #)
     #consumer.start()
 
-    adapter.
+    
