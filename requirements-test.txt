@@ -1,4 +1,5 @@
 pytest
+pytest-bdd
 coverage
 pytest-cov
 sphinx

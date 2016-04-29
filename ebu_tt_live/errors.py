@@ -1,0 +1,3 @@
+
+class DocumentNotLoadedError(Exception):
+    pass

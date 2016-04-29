@@ -23,7 +23,8 @@ setup(
         "PyXB",
         "ipdb",  # This will eventually be removed from here
         "configobj",
-        "pyyaml"
+        "pyyaml",
+        "twisted"
     ],
     license="BSD3",
     packages=packages,
