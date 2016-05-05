@@ -3,3 +3,5 @@ from gettext import gettext
 
 # ERRORS
 ERR_CONV_NO_INPUT = gettext('The converter has no input set')
+ERR_TIME_WRONG_FORMAT = gettext('Wrong time format. datetime.timedelta is expected')
+ERR_TIME_FORMAT_OVERFLOW = gettext('Time value is out of format range')

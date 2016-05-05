@@ -12,17 +12,15 @@ parser = ArgumentParser()
 parser.add_argument('-c', '--config', dest='config', metavar='CONFIG')
 
 
+
+
 def main():
     args = parser.parse_args()
-    #config = parse_config(
-    #    config=args.config,
-    #    module_name='ebu_simple_consumer'
-    #)
     create_loggers()
     log.info('This is a Simple Consumer example')
-    #consumer = ConsumerFactory.create_consumer(
-    #    config=config
-    #)
-    #consumer.start()
 
-    
+
+
+
+
+

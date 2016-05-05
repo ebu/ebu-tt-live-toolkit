@@ -24,7 +24,8 @@ setup(
         "ipdb",  # This will eventually be removed from here
         "configobj",
         "pyyaml",
-        "twisted"
+        "twisted",
+        "nltk"
     ],
     license="BSD3",
     packages=packages,
@@ -32,7 +33,8 @@ setup(
         'console_scripts': [
             'ebu-dummy-encoder = ebu_tt_live.scripts.ebu_dummy_encoder:main',
             'ebu-interactive-shell = ebu_tt_live.scripts.ebu_interactive_shell:main',
-            'ebu-simple-consumer = ebu_tt_live.scripts.ebu_simple_consumer:main'
+            'ebu-simple-consumer = ebu_tt_live.scripts.ebu_simple_consumer:main',
+            'ebu-simple-producer = ebu_tt_live.scripts.ebu_simple_producer:main'
         ]
     }
 )
