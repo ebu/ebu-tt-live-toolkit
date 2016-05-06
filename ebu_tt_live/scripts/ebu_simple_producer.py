@@ -53,7 +53,6 @@ def tokenize_english_document(input_text):
         sentences = sentence_tokenizer.tokenize(block)
         # We have the sentences
         for sentence in sentences:
-            print sentence
             words = word_tokenizer.tokenize(sentence)
             reverse_words = words[::-1]
 
@@ -75,7 +74,6 @@ def tokenize_english_document(input_text):
                     current_line = longer_line
 
                 if line_full:
-                    print current_line
                     lines.append(current_line)
                     current_line = ''
                     line_full = False
@@ -83,6 +81,8 @@ def tokenize_english_document(input_text):
                 if len(lines) >= lines_per_subtitle:
                     end_list.append(lines)
                     lines = []
+            if current_line:
+                lines.append(current_line)
             if lines:
                 end_list.append(lines)
 
