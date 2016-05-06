@@ -1,7 +1,10 @@
 
 from Queue import Queue
 from nltk.tokenize import PunktSentenceTokenizer, BlanklineTokenizer, WhitespaceTokenizer
-from ebu_tt_live.clocks.media import MediaClock
+from datetime import timedelta
+from twisted.internet import task
+from twisted.internet import reactor
+
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.documents import EBUTT3Document, TimeBase
 from ebu_tt_live.bindings import div_type, p_type, br_type
@@ -10,27 +13,63 @@ from ebu_tt_live.bindings import div_type, p_type, br_type
 class SimpleProducer(object):
 
     _clock = None
-    _document_queue = None
     _input_lines = None
+    _scheduler = None
+    _id_seq = None
 
-    def __init__(self, reference_clock, input_file):
+    def __init__(self, reference_clock, input_blocks, scheduler):
         self._clock = reference_clock
-        self._document_queue = Queue()
-        self._input_lines = input_file.split('\n')
+        self._input_lines = input_blocks
+        self._scheduler = scheduler
+        self._id_seq = 0
 
-    def _create_fragment(self, lines, begin, dur):
-        # At this point we need to fix the timing format problems
+    def _interleave_line_breaks(self, items):
+        end_list = []
+        for item in items:
+            end_list.append(item)
+            end_list.append(br_type())
+        end_list.pop()
+        return end_list
+
+    def _create_fragment(self, lines):
+        self._id_seq += 1
         return div_type(
             p_type(
-                *zip(lines, lambda x: br_type())
-            ),
-            begin=begin,
-            dur=dur
+                *self._interleave_line_breaks(lines),
+                id='ID{:03d}'.format(self._id_seq)
+            )
         )
 
     def stream_documents(self):
-        while self._input_lines:
-            pass
+        # Fake a timed operation of a live feed.
+        start_time = self._clock.get_time()
+        current_delay = timedelta()
+
+        for lines in self._input_lines:
+            current_delay += timedelta(seconds=2)
+            document = EBUTT3Document(
+                time_base=TimeBase.CLOCK,
+                sequence_identifier='testSequence',
+                sequence_number=1,
+                lang='en-GB'
+            )
+
+            document.add_div(
+                self._create_fragment(
+                    lines
+                )
+            )
+
+            document.set_dur('1s')
+            document.set_begin(self._clock.get_full_clock_time(start_time + current_delay))
+
+            document.validate()
+
+            self._scheduler.schedule(SimpleProducer._print_stuff, current_delay-timedelta(seconds=1), document)
+
+    @staticmethod
+    def _print_stuff(document):
+        print(document.get_xml())
 
 
 def tokenize_english_document(input_text):
@@ -89,22 +128,32 @@ def tokenize_english_document(input_text):
     return end_list
 
 
+class TwistedScheduler(object):
+
+    _reactor = None
+
+    def __init__(self, reactor):
+        self._reactor = reactor
+
+    def schedule(self, function, delay, *args, **kwargs):
+        task.deferLater(self._reactor, delay.seconds, function, *args, **kwargs)
+
+
 def main():
 
     reference_clock = LocalMachineClock()
-
-    document = EBUTT3Document(
-        time_base=TimeBase.CLOCK,
-        sequence_identifier='testSequence',
-        sequence_number=1,
-        lang='en-GB'
-    )
 
     with open('blargh.txt', 'r') as infile:
         full_text = infile.read()
 
     subtitle_tokens = tokenize_english_document(full_text)
-    import ipdb
-    ipdb.set_trace()
 
+    producer = SimpleProducer(
+        input_blocks=subtitle_tokens,
+        reference_clock=reference_clock,
+        scheduler=TwistedScheduler(reactor)
+    )
 
+    producer.stream_documents()
+
+    reactor.run()

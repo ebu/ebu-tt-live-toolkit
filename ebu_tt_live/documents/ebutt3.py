@@ -35,4 +35,18 @@ class EBUTT3Document(SubtitleDocument):
 
     def add_div(self, div):
         body = self._ebutt3_content.body
+        body.append(div)
 
+    def set_begin(self, begin):
+        self._ebutt3_content.body.begin = begin
+
+    def set_end(self, end):
+        self._ebutt3_content.body.end = end
+
+    def set_dur(self, dur):
+        self._ebutt3_content.body.dur = dur
+
+    def get_xml(self):
+        return self._ebutt3_content.toDOM().toprettyxml(
+            indent='  '
+        )
