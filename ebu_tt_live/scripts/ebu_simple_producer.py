@@ -1,34 +1,41 @@
 
-from Queue import Queue
+from itertools import cycle
 from nltk.tokenize import PunktSentenceTokenizer, BlanklineTokenizer, WhitespaceTokenizer
 from datetime import timedelta
-from twisted.internet import task
-from twisted.internet import reactor
+from twisted.internet import task, reactor, interfaces
 from zope.interface import implementer
-import sys
 from twisted.python import log
+import logging
+from argparse import ArgumentParser
 
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.producers import IContentProducer
 from ebu_tt_live.streaming import BroadcastServerFactory, StreamingServerProtocol
 from ebu_tt_live.documents import EBUTT3Document, TimeBase
 from ebu_tt_live.bindings import div_type, p_type, br_type
 
 
-@implementer(IContentProducer)
-class SimpleProducer(object):
+parser = ArgumentParser()
+
+parser.add_argument('--reference-clock', dest='reference_clock',
+                    help='content should be reference clock times when the content was generated on the server',
+                    action='store_true', default=False)
+
+
+@implementer(interfaces.IPullProducer)
+class SimplePullDocumentProducer(object):
 
     _clock = None
     _input_lines = None
-    _scheduler = None
     _id_seq = None
-    _broadcaster = None
+    _consumer = None
 
-    def __init__(self, reference_clock, input_blocks, scheduler):
+    def __init__(self, consumer, reference_clock, input_blocks):
         self._clock = reference_clock
         self._input_lines = input_blocks
-        self._scheduler = scheduler
         self._id_seq = 1
+        self._consumer = consumer
+
+        self._consumer.registerProducer(self, False)
 
     def _interleave_line_breaks(self, items):
         end_list = []
@@ -46,46 +53,36 @@ class SimpleProducer(object):
             )
         )
 
-    def register_broadcaster(self, broadcaster):
-        self._broadcaster = broadcaster
+    def resumeProducing(self):
 
-    def stream_documents(self):
-        # Fake a timed operation of a live feed.
-        start_time = self._clock.get_time()
-        current_delay = timedelta()
+        lines = self._input_lines.next()
 
-        for lines in self._input_lines:
-            current_delay += timedelta(seconds=2)
-            document = EBUTT3Document(
-                time_base=TimeBase.CLOCK,
-                sequence_identifier='testSequence',
-                sequence_number=self._id_seq,
-                lang='en-GB'
+        activation_time = self._clock.get_time() + timedelta(seconds=1)
+
+        document = EBUTT3Document(
+            time_base=TimeBase.CLOCK,
+            sequence_identifier='testSequence',
+            sequence_number=self._id_seq,
+            lang='en-GB'
+        )
+
+        document.add_div(
+            self._create_fragment(
+                lines
             )
+        )
 
-            document.add_div(
-                self._create_fragment(
-                    lines
-                )
-            )
+        document.set_dur('1s')
+        document.set_begin(self._clock.get_full_clock_time(activation_time))
 
-            document.set_dur('1s')
-            document.set_begin(self._clock.get_full_clock_time(start_time + current_delay))
+        document.validate()
 
-            document.validate()
+        self._id_seq += 1
 
-            self._id_seq += 1
+        self._consumer.write(document.get_xml())
 
-            # self._scheduler.schedule(SimpleProducer._print_stuff, current_delay-timedelta(seconds=1), document)
-            if self._broadcaster:
-                self._scheduler.schedule(self.broadcast_document, current_delay-timedelta(seconds=1), document)
-
-    def broadcast_document(self, document):
-        self._broadcaster.broadcast(document.get_xml())
-
-    @staticmethod
-    def _print_stuff(document):
-        print(document.get_xml())
+    def stopProducing(self):
+        pass
 
 
 def tokenize_english_document(input_text):
@@ -144,32 +141,27 @@ def tokenize_english_document(input_text):
     return end_list
 
 
-class TwistedScheduler(object):
-
-    _reactor = None
-
-    def __init__(self, reactor):
-        self._reactor = reactor
-
-    def schedule(self, function, delay, *args, **kwargs):
-        task.deferLater(self._reactor, delay.seconds, function, *args, **kwargs)
-
-
 def main():
-    log.startLogging(sys.stdout)
+    log_observer = log.PythonLoggingObserver(loggerName='twisted')
+    log_observer.start()
+    logging.basicConfig(level=logging.INFO)
+
+    parsed_args = parser.parse_args()
 
     reference_clock = LocalMachineClock()
 
-    with open('blargh.txt', 'r') as infile:
-        full_text = infile.read()
+    if parsed_args.reference_clock:
 
-    subtitle_tokens = tokenize_english_document(full_text)
+        def gen_time():
+            while True:
+                yield [reference_clock.get_full_clock_time()]
 
-    producer = SimpleProducer(
-        input_blocks=subtitle_tokens,
-        reference_clock=reference_clock,
-        scheduler=TwistedScheduler(reactor)
-    )
+        subtitle_tokens = gen_time()
+    else:
+        with open('blargh.txt', 'r') as infile:
+            full_text = infile.read()
+
+        subtitle_tokens = cycle(tokenize_english_document(full_text))
 
     wsFactory = BroadcastServerFactory
 
@@ -177,10 +169,16 @@ def main():
 
     factory.protocol = StreamingServerProtocol
 
-    producer.register_broadcaster(factory)
-
     factory.listen()
 
-    producer.stream_documents()
+    SimplePullDocumentProducer(
+        consumer=factory,
+        input_blocks=subtitle_tokens,
+        reference_clock=reference_clock
+    )
+
+    looping_task = task.LoopingCall(factory.pull)
+
+    looping_task.start(2.0)
 
     reactor.run()
