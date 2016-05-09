@@ -1,4 +1,4 @@
-from .base import SubtitleDocument, Subtitle
+from .base import SubtitleDocument, Subtitle, TimeBase
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from pyxb import BIND
@@ -9,9 +9,12 @@ class EBUTT3Document(SubtitleDocument):
     # The XML binding holding the content of the document
     _ebutt3_content = None
 
-    def __init__(self, time_base, sequence_number, sequence_identifier, lang):
+    def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
+        if not clock_mode and time_base is TimeBase.CLOCK:
+            clock_mode = 'local'
         self._ebutt3_content = bindings.tt(
             timeBase=time_base,
+            clockMode=clock_mode,
             sequenceIdentifier=sequence_identifier,
             sequenceNumber=sequence_number,
             lang=lang,

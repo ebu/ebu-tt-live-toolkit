@@ -28,7 +28,7 @@ class SimpleProducer(object):
         self._clock = reference_clock
         self._input_lines = input_blocks
         self._scheduler = scheduler
-        self._id_seq = 0
+        self._id_seq = 1
 
     def _interleave_line_breaks(self, items):
         end_list = []
@@ -39,11 +39,10 @@ class SimpleProducer(object):
         return end_list
 
     def _create_fragment(self, lines):
-        self._id_seq += 1
         return div_type(
             p_type(
                 *self._interleave_line_breaks(lines),
-                id='ID{:03d}'.format(self._id_seq)
+                id='ID{:03d}'.format(1)
             )
         )
 
@@ -60,7 +59,7 @@ class SimpleProducer(object):
             document = EBUTT3Document(
                 time_base=TimeBase.CLOCK,
                 sequence_identifier='testSequence',
-                sequence_number=1,
+                sequence_number=self._id_seq,
                 lang='en-GB'
             )
 
@@ -74,6 +73,8 @@ class SimpleProducer(object):
             document.set_begin(self._clock.get_full_clock_time(start_time + current_delay))
 
             document.validate()
+
+            self._id_seq += 1
 
             # self._scheduler.schedule(SimpleProducer._print_stuff, current_delay-timedelta(seconds=1), document)
             if self._broadcaster:
