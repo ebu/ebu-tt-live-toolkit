@@ -25,6 +25,7 @@ setup(
         "configobj",
         "pyyaml",
         "twisted",
+        "autobahn",
         "nltk"
     ],
     license="BSD3",

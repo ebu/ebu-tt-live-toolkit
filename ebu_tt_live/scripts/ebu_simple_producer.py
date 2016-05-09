@@ -4,18 +4,25 @@ from nltk.tokenize import PunktSentenceTokenizer, BlanklineTokenizer, Whitespace
 from datetime import timedelta
 from twisted.internet import task
 from twisted.internet import reactor
+from zope.interface import implementer
+import sys
+from twisted.python import log
 
 from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.producers import IContentProducer
+from ebu_tt_live.streaming import BroadcastServerFactory, StreamingServerProtocol
 from ebu_tt_live.documents import EBUTT3Document, TimeBase
 from ebu_tt_live.bindings import div_type, p_type, br_type
 
 
+@implementer(IContentProducer)
 class SimpleProducer(object):
 
     _clock = None
     _input_lines = None
     _scheduler = None
     _id_seq = None
+    _broadcaster = None
 
     def __init__(self, reference_clock, input_blocks, scheduler):
         self._clock = reference_clock
@@ -39,6 +46,9 @@ class SimpleProducer(object):
                 id='ID{:03d}'.format(self._id_seq)
             )
         )
+
+    def register_broadcaster(self, broadcaster):
+        self._broadcaster = broadcaster
 
     def stream_documents(self):
         # Fake a timed operation of a live feed.
@@ -65,7 +75,12 @@ class SimpleProducer(object):
 
             document.validate()
 
-            self._scheduler.schedule(SimpleProducer._print_stuff, current_delay-timedelta(seconds=1), document)
+            # self._scheduler.schedule(SimpleProducer._print_stuff, current_delay-timedelta(seconds=1), document)
+            if self._broadcaster:
+                self._scheduler.schedule(self.broadcast_document, current_delay-timedelta(seconds=1), document)
+
+    def broadcast_document(self, document):
+        self._broadcaster.broadcast(document.get_xml())
 
     @staticmethod
     def _print_stuff(document):
@@ -140,6 +155,7 @@ class TwistedScheduler(object):
 
 
 def main():
+    log.startLogging(sys.stdout)
 
     reference_clock = LocalMachineClock()
 
@@ -153,6 +169,16 @@ def main():
         reference_clock=reference_clock,
         scheduler=TwistedScheduler(reactor)
     )
+
+    wsFactory = BroadcastServerFactory
+
+    factory = wsFactory(u"ws://127.0.0.1:9000")
+
+    factory.protocol = StreamingServerProtocol
+
+    producer.register_broadcaster(factory)
+
+    factory.listen()
 
     producer.stream_documents()
 

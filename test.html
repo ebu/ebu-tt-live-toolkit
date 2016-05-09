@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <script type="text/javascript">
+         var sock = null;
+         var ellog = null;
+
+         window.onload = function() {
+
+            var wsuri;
+            ellog = document.getElementById('log');
+
+            if (window.location.protocol === "file:") {
+               wsuri = "ws://localhost:9000";
+            } else {
+               wsuri = "ws://" + window.location.hostname + ":9000";
+            }
+
+            if ("WebSocket" in window) {
+               sock = new WebSocket(wsuri);
+            } else if ("MozWebSocket" in window) {
+               sock = new MozWebSocket(wsuri);
+            } else {
+               log("Browser does not support WebSocket!");
+            }
+
+            console.log(sock);
+
+            if (sock) {
+               sock.onopen = function() {
+                  log("Connected to " + wsuri);
+                  sock.send('test string');
+               }
+
+               sock.onclose = function(e) {
+                  log("Connection closed (wasClean = " + e.wasClean + ", code = " + e.code + ", reason = '" + e.reason + "')");
+                  sock = null;
+               }
+
+               sock.onmessage = function(e) {
+                  log(e.data);
+               }
+
+               sock.onerror = function(evt) {
+                  console.log(evt);
+               }
+            }
+         };
+
+         function broadcast() {
+            var msg = document.getElementById('message').value;
+            if (sock) {
+               sock.send(msg);
+               log("Sent: " + msg);
+            } else {
+               log("Not connected.");
+            }
+         };
+
+         function log(m) {
+            ellog.textContent = m + '\n';
+            ellog.scrollTop = 0;
+         };
+      </script>
+   </head>
+   <body>
+      <h1>Autobahn WebSocket Broadcast Demo</h1>
+      <noscript>You must enable JavaScript</noscript>
+      <form>
+         <p>Broadcast Message: <input id="message" type="text" size="50" maxlength="50" value="Hello from Browser!"></p>
+      </form>
+      <button onclick='broadcast();'>Broadcast Message</button>
+      <pre id="log" style="height: 20em; overflow-y: scroll; background-color: #faa;"></pre>
+   </body>
+</html>
