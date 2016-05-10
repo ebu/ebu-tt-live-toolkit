@@ -88,9 +88,6 @@ class SimplePullDocumentProducer(object):
         pass
 
 
-
-
-
 def main():
     create_loggers()
 
