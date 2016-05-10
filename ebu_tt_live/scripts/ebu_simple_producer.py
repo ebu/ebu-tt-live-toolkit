@@ -29,7 +29,7 @@ class SimplePullDocumentProducer(object):
     _id_seq = None
     _consumer = None
 
-    def __init__(self, consumer, reference_clock, input_blocks):
+    def __init__(self, consumer, reference_clock, input_blocks=None):
         self._clock = reference_clock
         self._input_lines = input_blocks
         self._id_seq = 1
@@ -55,9 +55,12 @@ class SimplePullDocumentProducer(object):
 
     def resumeProducing(self):
 
-        lines = self._input_lines.next()
-
         activation_time = self._clock.get_time() + timedelta(seconds=1)
+
+        if self._input_lines:
+            lines = self._input_lines.next()
+        else:
+            lines = [activation_time]
 
         document = EBUTT3Document(
             time_base=TimeBase.CLOCK,
@@ -96,17 +99,13 @@ def main():
     reference_clock = LocalMachineClock()
 
     if parsed_args.reference_clock:
-
-        def gen_time():
-            while True:
-                yield [reference_clock.get_full_clock_time()]
-
-        subtitle_tokens = gen_time()  # Instead of text we provide the availability time as content.
+        subtitle_tokens = None  # Instead of text we provide the availability time as content.
     else:
+        # Let's read our example conversation
         with open('blargh.txt', 'r') as infile:
             full_text = infile.read()
-
-        subtitle_tokens = cycle(tokenize_english_document(full_text))  # This makes the source cycle infinitely.
+        # This makes the source cycle infinitely.
+        subtitle_tokens = cycle(tokenize_english_document(full_text))
 
     factory = wsFactory(u"ws://127.0.0.1:9000")
 
