@@ -37,7 +37,8 @@ class SimplePullDocumentProducer(object):
 
         self._consumer.registerProducer(self, False)
 
-    def _interleave_line_breaks(self, items):
+    @staticmethod
+    def _interleave_line_breaks(items):
         end_list = []
         for item in items:
             end_list.append(item)

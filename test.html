@@ -4,17 +4,17 @@
       <script type="text/javascript">
          var sock = null;
          var ellog = null;
+         var connect_button = null;
+         var host_input = null;
 
-         window.onload = function() {
+         function connect() {
 
-            var wsuri;
-            ellog = document.getElementById('log');
-
-            if (window.location.protocol === "file:") {
-               wsuri = "ws://localhost:9000";
-            } else {
-               wsuri = "ws://" + window.location.hostname + ":9000";
+            if (sock) {
+               sock.close();
+               return;
             }
+
+            wsuri = host_input.value
 
             if ("WebSocket" in window) {
                sock = new WebSocket(wsuri);
@@ -24,17 +24,17 @@
                log("Browser does not support WebSocket!");
             }
 
-            console.log(sock);
-
             if (sock) {
                sock.onopen = function() {
                   log("Connected to " + wsuri);
                   sock.send('test string');
+                  connect_button.textContent = 'Disconnect';
                }
 
                sock.onclose = function(e) {
                   log("Connection closed (wasClean = " + e.wasClean + ", code = " + e.code + ", reason = '" + e.reason + "')");
                   sock = null;
+                  connect_button.textContent = 'Connect';
                }
 
                sock.onmessage = function(e) {
@@ -45,16 +45,17 @@
                   console.log(evt);
                }
             }
-         };
 
-         function broadcast() {
-            var msg = document.getElementById('message').value;
-            if (sock) {
-               sock.send(msg);
-               log("Sent: " + msg);
-            } else {
-               log("Not connected.");
-            }
+
+         }
+
+         window.onload = function() {
+
+            var wsuri;
+            ellog = document.getElementById('log');
+            connect_button = document.getElementById('connect_button');
+            host_input = document.getElementById('host_input');
+
          };
 
          function log(m) {
@@ -64,12 +65,12 @@
       </script>
    </head>
    <body>
-      <h1>Autobahn WebSocket Broadcast Demo</h1>
+      <h1>EBU-TT-Live WebSocket Broadcast Demo</h1>
       <noscript>You must enable JavaScript</noscript>
       <form>
-         <p>Broadcast Message: <input id="message" type="text" size="50" maxlength="50" value="Hello from Browser!"></p>
+         <p>Broadcast Message: <input id="host_input" type="text" size="50" maxlength="50" value="ws://localhost:9000"></p>
       </form>
-      <button onclick='broadcast();'>Broadcast Message</button>
+      <button id="connect_button" onclick='connect();'>Connect</button>
       <pre id="log" style="height: 20em; overflow-y: scroll; background-color: #faa;"></pre>
    </body>
 </html>
