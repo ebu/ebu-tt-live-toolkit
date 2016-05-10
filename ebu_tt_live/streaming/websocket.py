@@ -16,7 +16,7 @@ class StreamingServerProtocol(WebSocketServerProtocol):
         self.factory.register(self)
 
     def onMessage(self, payload, isBinary):
-        print(payload)
+        pass
 
     def connectionLost(self, reason):
         WebSocketServerProtocol.connectionLost(self, reason)
