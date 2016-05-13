@@ -1,6 +1,7 @@
-from .base import SubtitleDocument, Subtitle, TimeBase
+from .base import SubtitleDocument, TimeBase, CloningDocumentStream
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
+from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH
 from pyxb import BIND
 from pyxb.utils.domutils import BindingDOMSupport
 
@@ -27,6 +28,30 @@ class EBUTT3Document(SubtitleDocument):
             body=BIND()
         )
         self.validate()
+
+    def _cmp_key(self):
+        return self.sequence_number
+
+    def _cmp_checks(self, other):
+        if self.sequence_identifier != other.sequence_identifier:
+            raise ValueError(ERR_DOCUMENT_SEQUENCE_MISMATCH)
+
+    @property
+    def sequence_identifier(self):
+        return self._ebutt3_content.sequenceIdentifier
+
+    @sequence_identifier.setter
+    def sequence_identifier(self, value):
+        self._ebutt3_content.sequenceIdentifier = value
+
+    @property
+    def sequence_number(self):
+        return self._ebutt3_content.sequenceNumber
+
+    @sequence_number.setter
+    def sequence_number(self, value):
+        intvalue = int(value)
+        self._ebutt3_content.sequenceNumber = intvalue
 
     def validate(self):
         self._ebutt3_content.validateBinding()
@@ -56,3 +81,15 @@ class EBUTT3Document(SubtitleDocument):
         ).toprettyxml(
             indent='  '
         )
+
+
+class EBUTT3DocumentStream(CloningDocumentStream):
+    @classmethod
+    def create_from_document(cls, document):
+        pass
+
+    def new_document(self, *args, **kwargs):
+        pass
+
+    def fork(self, *args, **kwargs):
+        pass
