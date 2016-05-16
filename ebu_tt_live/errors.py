@@ -9,3 +9,7 @@ class TimeFormatError(Exception):
 
 class TimeFormatOverflowError(Exception):
     pass
+
+
+class XMLParsingFailed(Exception):
+    pass

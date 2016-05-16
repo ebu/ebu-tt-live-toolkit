@@ -1,7 +1,10 @@
 
-from ebu_tt_live.node import ProducerNode
+from ebu_tt_live.node import ProducerNode, ConsumerNode
 from twisted.internet import interfaces
 from zope.interface import implementer
+from ebu_tt_live.bindings import CreateFromDocument
+from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from ebu_tt_live.errors import XMLParsingFailed
 import logging
 
 
@@ -39,3 +42,39 @@ class TwistedPullProducer(object):
 
     def stopProducing(self):
         pass
+
+
+class TwistedConsumerMixin(ConsumerNode):
+
+    def on_new_data(self, data):
+        document = None
+        try:
+            document = CreateFromDocument(data)
+        except:
+            log.exception(ERR_DECODING_XML_FAILED)
+            raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
+
+        if document:
+            self.process_document(document)
+
+
+@implementer(interfaces.IConsumer)
+class TwistedConsumer(object):
+
+    _custom_consumer = None
+    _producer = None
+
+    def __init__(self, custom_consumer):
+        self._custom_consumer = custom_consumer
+
+    def registerProducer(self, producer, streaming):
+        self._producer = producer
+        if streaming:
+            self._producer.resumeProducing()
+
+    def unregisterProducer(self):
+        self._producer.stopProducing()
+        self._producer = None
+
+    def write(self, data):
+        self._custom_consumer.on_new_data(data)

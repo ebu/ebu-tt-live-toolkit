@@ -53,7 +53,7 @@ class ConsumerNode(Node):
     Node that receives documents and processes them.
     """
 
-    def on_document_arrival(self, document):
+    def on_new_data(self, data):
         """
         Implement protocol specific preprocessing here.
         :return:

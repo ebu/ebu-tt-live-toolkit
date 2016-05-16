@@ -2,26 +2,22 @@ import logging
 from argparse import ArgumentParser
 from .common import create_loggers
 from ebu_tt_live.clocks.local import LocalMachineClock
-from autobahn.twisted.websocket import WebSocketClientFactory, WebSocketClientProtocol, connectWS
+
+from ebu_tt_live.node import SimpleConsumer
+from ebu_tt_live.twisted import TwistedConsumerMixin, TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from twisted.internet import reactor
 
 
 log = logging.getLogger('ebu_simple_consumer')
+
+
 parser = ArgumentParser()
 
 parser.add_argument('-c', '--config', dest='config', metavar='CONFIG')
 
-items = [1,2,3,4,5,6,7]
 
-
-class ClientNodeProtocol(WebSocketClientProtocol):
-
-    def onOpen(self):
-        self.sendMessage('Hello')
-
-    def onMessage(self, payload, isBinary):
-
-        log.info(payload)
+class TwistedSimpleDocumentConsumer(TwistedConsumerMixin, SimpleConsumer):
+    pass
 
 
 def main():
@@ -29,9 +25,19 @@ def main():
     create_loggers()
     log.info('This is a Simple Consumer example')
 
-    factory = WebSocketClientFactory('ws://localhost:9000')
+    simple_consumer = TwistedSimpleDocumentConsumer(
+        node_id='simple-consumer'
+    )
+
+    factory = BroadcastClientFactory(
+        url='ws://localhost:9000',
+        channels=['TestSequence1'],
+        consumer=TwistedConsumer(
+            custom_consumer=simple_consumer
+        )
+    )
     factory.protocol = ClientNodeProtocol
 
-    connectWS(factory=factory)
+    factory.connect()
 
     reactor.run()

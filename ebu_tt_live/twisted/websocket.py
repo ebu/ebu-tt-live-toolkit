@@ -1,5 +1,7 @@
 
-from autobahn.twisted.websocket import WebSocketServerFactory, WebSocketServerProtocol, listenWS
+from autobahn.twisted.websocket import WebSocketClientProtocol, WebSocketServerFactory, WebSocketServerProtocol, \
+    listenWS, WebSocketClientFactory, connectWS
+
 from twisted.internet import interfaces
 from zope.interface import implementer
 from logging import getLogger
@@ -94,3 +96,68 @@ class BroadcastServerFactory(WebSocketServerFactory):
 
     def listen(self):
         listenWS(self)
+
+
+class ClientNodeProtocol(WebSocketClientProtocol):
+
+    def onOpen(self):
+        for channel in self.factory.channels:
+            self.subscribeChannel(channel)
+
+    def subscribeChannel(self, channel):
+        data = {
+            'subscribe': channel
+        }
+        self.sendMessage(json.dumps(data))
+
+    def unsubscribeChannel(self, channel):
+        data = {
+            'unsubscribe': channel
+        }
+        self.sendMessage(json.dumps(data))
+
+    def onMessage(self, payload, isBinary):
+        self.factory.dataReceived(payload)
+
+
+@implementer(interfaces.IPushProducer)
+class BroadcastClientFactory(WebSocketClientFactory):
+
+    _channels = None
+    _consumer = None
+    _stopped = None
+
+    def __init__(self, url, consumer, channels=None, *args, **kwargs):
+        super(BroadcastClientFactory, self).__init__(url=url, *args, **kwargs)
+
+        if not channels:
+            self._channels = []
+        else:
+            self._channels = channels
+
+        self._consumer = consumer
+        self._consumer.registerProducer(self, True)
+        self._stopped = True
+
+    @property
+    def channels(self):
+        return self._channels
+
+    @channels.setter
+    def channels(self, value):
+        self._channels = value
+
+    def dataReceived(self, data):
+        self._consumer.write(data)
+
+    def stopProducing(self):
+        self._stopped = True
+
+    def resumeProducing(self):
+        self._stopped = False
+
+    def pauseProducing(self):
+        self._stopped = True
+
+    def connect(self):
+        connectWS(self)
