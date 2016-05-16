@@ -1,2 +1,4 @@
 include LICENCE.txt
 include CHANGES.txt
+
+recursive-include ebu_tt_live/example_data *.txt

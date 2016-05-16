@@ -11,7 +11,11 @@ packages=[
     "ebu_tt_live",
     "ebu_tt_live.bindings",
     "ebu_tt_live.clocks",
-    "ebu_tt_live.scripts"
+    "ebu_tt_live.scripts",
+    "ebu_tt_live.twisted",
+    "ebu_tt_live.node",
+    "ebu_tt_live.documents",
+    "ebu_tt_live.example_data"
 ]
 
 
@@ -30,6 +34,9 @@ setup(
     ],
     license="BSD3",
     packages=packages,
+    package_data={
+        'ebu_tt_live.example_data': ['*.txt']
+    },
     entry_points={
         'console_scripts': [
             'ebu-dummy-encoder = ebu_tt_live.scripts.ebu_dummy_encoder:main',

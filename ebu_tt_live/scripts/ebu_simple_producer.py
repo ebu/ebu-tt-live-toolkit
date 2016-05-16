@@ -1,17 +1,15 @@
 
 from itertools import cycle
-from datetime import timedelta
-from twisted.internet import task, reactor, interfaces
-from zope.interface import implementer
-from twisted.python import log
-import logging
+from twisted.internet import task, reactor
 from argparse import ArgumentParser
 from .common import create_loggers, tokenize_english_document
 
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.streaming import BroadcastServerFactory as wsFactory, StreamingServerProtocol
-from ebu_tt_live.documents import EBUTT3Document, TimeBase
-from ebu_tt_live.bindings import div_type, p_type, br_type
+from ebu_tt_live.example_data import get_example_data
+from ebu_tt_live.documents import EBUTT3DocumentStream
+from ebu_tt_live.node import SimpleProducer
+from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
+    TwistedPullProducer, TwistedProducerMixin
 
 
 parser = ArgumentParser()
@@ -21,72 +19,10 @@ parser.add_argument('--reference-clock', dest='reference_clock',
                     action='store_true', default=False)
 
 
-@implementer(interfaces.IPullProducer)
-class SimplePullDocumentProducer(object):
-
-    _clock = None
-    _input_lines = None
-    _id_seq = None
-    _consumer = None
-
-    def __init__(self, consumer, reference_clock, input_blocks=None):
-        self._clock = reference_clock
-        self._input_lines = input_blocks
-        self._id_seq = 1
-        self._consumer = consumer
-
-        self._consumer.registerProducer(self, False)
-
-    @staticmethod
-    def _interleave_line_breaks(items):
-        end_list = []
-        for item in items:
-            end_list.append(item)
-            end_list.append(br_type())
-        end_list.pop()
-        return end_list
-
-    def _create_fragment(self, lines):
-        return div_type(
-            p_type(
-                *self._interleave_line_breaks(lines),
-                id='ID{:03d}'.format(1)
-            )
-        )
-
-    def resumeProducing(self):
-
-        activation_time = self._clock.get_time() + timedelta(seconds=1)
-
-        if self._input_lines:
-            lines = self._input_lines.next()
-        else:
-            lines = [activation_time]
-
-        document = EBUTT3Document(
-            time_base=TimeBase.CLOCK,
-            sequence_identifier='testSequence',
-            sequence_number=self._id_seq,
-            lang='en-GB'
-        )
-
-        document.add_div(
-            self._create_fragment(
-                lines
-            )
-        )
-
-        document.set_dur('1s')
-        document.set_begin(self._clock.get_full_clock_time(activation_time))
-
-        document.validate()
-
-        self._id_seq += 1
-
-        self._consumer.write(document.get_xml())
-
-    def stopProducing(self):
-        pass
+# Here we get our custom document producer mixed in with the twisted compatibility layer
+# This allows our document related custom code to be detached from the network library layer
+class TwistedSimpleDocumentProducer(TwistedProducerMixin, SimpleProducer):
+    pass
 
 
 def main():
@@ -95,13 +31,19 @@ def main():
     parsed_args = parser.parse_args()
 
     reference_clock = LocalMachineClock()
+    reference_clock.clock_mode = 'local'
+
+    document_stream = EBUTT3DocumentStream(
+        sequence_identifier='TestSequence1',
+        lang='en-GB',
+        reference_clock=reference_clock
+    )
 
     if parsed_args.reference_clock:
         subtitle_tokens = None  # Instead of text we provide the availability time as content.
     else:
         # Let's read our example conversation
-        with open('blargh.txt', 'r') as infile:
-            full_text = infile.read()
+        full_text = get_example_data('simple_producer.txt')
         # This makes the source cycle infinitely.
         subtitle_tokens = cycle(tokenize_english_document(full_text))
 
@@ -111,10 +53,17 @@ def main():
 
     factory.listen()
 
-    SimplePullDocumentProducer(
+    simple_producer = TwistedSimpleDocumentProducer(
+        node_id='simple-producer',
+        document_stream=document_stream,
+        input_blocks=subtitle_tokens
+    )
+
+    # We are using a pull producer because it is the looping_task timer that triggers the production from the websocket
+    # level. Every time the factory gets a pull signal from the timer it tells the producer to generate data.
+    TwistedPullProducer(
         consumer=factory,
-        input_blocks=subtitle_tokens,
-        reference_clock=reference_clock
+        custom_producer=simple_producer
     )
 
     looping_task = task.LoopingCall(factory.pull)

@@ -14,6 +14,7 @@ class MediaClock(Clock):
     from the last adjusted reference time.
     """
     _reference_mapping = None
+    _time_base = 'media'
 
     def __init__(self):
         self.adjust_time(timedelta())
@@ -38,3 +39,8 @@ class MediaClock(Clock):
         if local_time is None:
             local_time = self.get_machine_time()
         self._reference_mapping = ReferenceTime(local_time, current_time)
+
+
+class SMPTEClock(MediaClock):
+
+    _time_base = 'smpte'

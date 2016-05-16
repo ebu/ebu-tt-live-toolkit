@@ -4,9 +4,10 @@ from zope.interface import Interface
 
 class IBroadcaster(Interface):
 
-    def broadcast(self, msg):
+    def broadcast(self, channel, msg):
         """
         Broadcast message to all connected clients.
+        :param channel:
         :param msg:
         :return:
         """

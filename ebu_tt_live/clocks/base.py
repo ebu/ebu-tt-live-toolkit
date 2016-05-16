@@ -10,6 +10,9 @@ class Clock(object):
     functions are meant to stay here and the subclasses should implement get_time only.
     """
 
+    _clock_mode = None
+    _time_base = None
+
     def get_time(self):
         """
         Implemented in descendant classes
@@ -29,6 +32,18 @@ class Clock(object):
         hours += checked_time.days * 24
         minutes, seconds = divmod(seconds, 60)
         return hours, minutes, seconds, checked_time.microseconds
+
+    @property
+    def clock_mode(self):
+        return self._clock_mode
+
+    @clock_mode.setter
+    def clock_mode(self, value):
+        self._clock_mode = value
+
+    @property
+    def time_base(self):
+        return self._time_base
 
     def get_smpte_time(self, given_time=None):
         """

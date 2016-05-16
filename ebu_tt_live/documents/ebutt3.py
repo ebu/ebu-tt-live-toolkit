@@ -84,12 +84,35 @@ class EBUTT3Document(SubtitleDocument):
 
 
 class EBUTT3DocumentStream(CloningDocumentStream):
+
+    _sequence_identifier = None
+    _last_sequence_number = None
+    _reference_clock = None
+    _lang = None
+
+    def __init__(self, sequence_identifier, reference_clock, lang):
+        self._sequence_identifier = sequence_identifier
+        self._reference_clock = reference_clock
+        self._lang = lang
+        self._last_sequence_number = 0
+
+    @property
+    def reference_clock(self):
+        return self._reference_clock
+
     @classmethod
-    def create_from_document(cls, document):
+    def create_from_document(cls, document, *args, **kwargs):
         pass
 
     def new_document(self, *args, **kwargs):
-        pass
+        self._last_sequence_number += 1
+        return EBUTT3Document(
+            time_base=self._reference_clock.time_base,
+            clock_mode=self._reference_clock.clock_mode,
+            sequence_identifier=self._sequence_identifier,
+            sequence_number=self._last_sequence_number,
+            lang=self._lang
+        )
 
     def fork(self, *args, **kwargs):
         pass
