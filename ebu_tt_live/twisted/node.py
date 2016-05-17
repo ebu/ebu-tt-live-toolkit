@@ -5,6 +5,7 @@ from zope.interface import implementer
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from ebu_tt_live.errors import XMLParsingFailed
+from ebu_tt_live.documents import EBUTT3Document
 import logging
 
 
@@ -49,7 +50,7 @@ class TwistedConsumerMixin(ConsumerNode):
     def on_new_data(self, data):
         document = None
         try:
-            document = CreateFromDocument(data)
+            document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(data))
         except:
             log.exception(ERR_DECODING_XML_FAILED)
             raise XMLParsingFailed(ERR_DECODING_XML_FAILED)

@@ -74,6 +74,22 @@ The bindings will keep the validation sane and PyXB makes sure that updates are 
 expected. Should the schema be modified a regeneration can be run and the bindings will respect
 the changes.
 
+Scripts
+=======
+
+There are several scripts that emulate different components in the infrastructure. Assuming the Makefile worked,
+the package is installed in a virtual environment and the virtual environment is active the following scripts should
+be available directly from the command line.
+
+The simple producer is the beginning of the data pipeline. It generates
+EBU-TT-Live documents in a timed manner. In the repository root there is a *test.html* file that can be used for manual testing of the producer in any websocket capable browser.
+
+    ebu-simple-producer
+
+The simple consumer connects to the producer or later on in the pipeline, assumint there are more components inserted.
+
+    ebu-simple-consumer
+
 How to contribute
 =================
 
