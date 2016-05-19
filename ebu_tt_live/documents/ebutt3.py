@@ -3,7 +3,6 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH
 from pyxb import BIND
-from pyxb.utils.domutils import BindingDOMSupport
 
 
 class EBUTT3Document(SubtitleDocument):
@@ -83,11 +82,7 @@ class EBUTT3Document(SubtitleDocument):
         self._ebutt3_content.body.dur = dur
 
     def get_xml(self):
-        return self._ebutt3_content.toDOM(
-            bds=BindingDOMSupport(default_namespace=bindings.Namespace)
-        ).toprettyxml(
-            indent='  '
-        )
+        return self._ebutt3_content.toxml()
 
 
 class EBUTT3DocumentStream(CloningDocumentStream):

@@ -1,7 +1,6 @@
 import logging
 from argparse import ArgumentParser
 from .common import create_loggers
-from ebu_tt_live.clocks.local import LocalMachineClock
 
 from ebu_tt_live.node import SimpleConsumer
 from ebu_tt_live.twisted import TwistedConsumerMixin, TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
