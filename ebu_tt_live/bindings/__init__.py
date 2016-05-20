@@ -14,14 +14,14 @@ from . import _tts as tts
 from pyxb.utils.domutils import BindingDOMSupport
 
 namespace_prefix_map = {
-    'tt': 'http://www.w3.org/ns/ttml',
-    'ebuttdt': 'urn:ebu:tt:datatypes',
-    'ttp': 'http://www.w3.org/ns/ttml#parameter',
-    'tts': 'http://www.w3.org/ns/ttml#styling',
-    'ttm': 'http://www.w3.org/ns/ttml#metadata',
-    'ebuttm': 'urn:ebu:tt:metadata',
-    'ebutts': 'urn:ebu:tt:style',
-    'ebuttp': 'urn:ebu:tt:parameters'
+    'tt': raw.Namespace,
+    'ebuttdt': ebuttdt.Namespace,
+    'ttp': ttp.Namespace,
+    'tts': tts.Namespace,
+    'ttm': ttm.Namespace,
+    'ebuttm': ebuttm.Namespace,
+    'ebutts': ebutts.Namespace,
+    'ebuttp': ebuttp.Namespace
 }
 
 default_bds = BindingDOMSupport(

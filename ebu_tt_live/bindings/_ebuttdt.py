@@ -23,7 +23,6 @@ class _TimedeltaBindingMixin(object):
 
     @classmethod
     def _ConvertArguments_vx(cls, args, kw):
-        print args
         result = []
         for item in args:
             if isinstance(item, timedelta):
