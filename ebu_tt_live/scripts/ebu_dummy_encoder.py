@@ -40,11 +40,11 @@ def main():
                         'And another line'
                     ),
                     id='ID005',
-                    begin='00:00:00.50',
-                    end='00:00:03.24',
+                    begin=timedelta(seconds=.5),
+                    end=timedelta(seconds=3.42),
                 )
             ),
-            begin='00:00:00.50',
+            begin=timedelta(seconds=.5),
             dur=timedelta(seconds=5)
         )
     )
