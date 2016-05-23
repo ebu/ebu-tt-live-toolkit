@@ -50,8 +50,8 @@ class SimpleProducer(ProducerNode):
             )
         )
 
-        document.set_dur('1s')
-        document.set_begin(self._reference_clock.get_full_clock_time(activation_time))
+        document.set_dur(timedelta(seconds=1))
+        document.set_begin(activation_time)
 
         document.validate()
 

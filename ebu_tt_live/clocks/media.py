@@ -44,3 +44,6 @@ class MediaClock(Clock):
 class SMPTEClock(MediaClock):
 
     _time_base = 'smpte'
+    _framerate = None
+    _framerate_multiplier = None
+    _drop_mode = None

@@ -24,23 +24,28 @@ namespace_prefix_map = {
     'ebuttp': ebuttp.Namespace
 }
 
-default_bds = BindingDOMSupport(
-    default_namespace=raw.Namespace,
-    namespace_prefix_map=namespace_prefix_map
-)
-
 
 class tt_type(raw.tt_type):
 
-    def toDOM(self, bds=default_bds, parent=None, element_name=None):
+    @classmethod
+    def __check_bds(cls, bds):
+        if bds:
+            return bds
+        else:
+            return BindingDOMSupport(
+                default_namespace=raw.Namespace,
+                namespace_prefix_map=namespace_prefix_map
+            )
+
+    def toDOM(self, bds=None, parent=None, element_name=None):
         return super(tt_type, self).toDOM(
-            bds=bds,
+            bds=self.__check_bds(bds),
             parent=parent,
             element_name=element_name
         )
 
-    def toxml(self, encoding=None, bds=default_bds, root_only=False, element_name=None):
-        dom = self.toDOM(bds, element_name=element_name)
+    def toxml(self, encoding=None, bds=None, root_only=False, element_name=None):
+        dom = self.toDOM(self.__check_bds(bds), element_name=element_name)
         if root_only:
             dom = dom.documentElement
         return dom.toprettyxml(

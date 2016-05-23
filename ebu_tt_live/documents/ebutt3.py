@@ -30,10 +30,10 @@ class EBUTT3Document(SubtitleDocument):
 
     @classmethod
     def create_from_raw_binding(cls, binding):
-        self = cls.__new__(cls)
-        self._ebutt3_content = binding
-        self.validate()
-        return self
+        instance = cls.__new__(cls)
+        instance._ebutt3_content = binding
+        instance.validate()
+        return instance
 
     def _cmp_key(self):
         return self.sequence_number
