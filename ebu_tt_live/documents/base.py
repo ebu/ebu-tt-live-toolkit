@@ -16,7 +16,7 @@ class SubtitleDocument(ComparableMixin):
         raise NotImplementedError()
 
 
-class DocumentStream(object):
+class DocumentSequence(object):
     """
     Base class that facilitates most production-related workflows.
     The document stream should maintain the consistency accross critical document attributes. It should maintain
@@ -43,7 +43,7 @@ class DocumentStream(object):
         raise NotImplementedError()
 
 
-class CloningDocumentStream(DocumentStream):
+class CloningDocumentSequence(DocumentSequence):
     """
     Base class that picks up a document and creates an appropriate stream based on it.
     Bear in mind continuation/revision or reproduction of a received document stream.

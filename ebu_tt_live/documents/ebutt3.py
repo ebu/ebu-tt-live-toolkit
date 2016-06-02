@@ -1,4 +1,4 @@
-from .base import SubtitleDocument, TimeBase, CloningDocumentStream
+from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH
@@ -85,7 +85,7 @@ class EBUTT3Document(SubtitleDocument):
         return self._ebutt3_content.toxml()
 
 
-class EBUTT3DocumentStream(CloningDocumentStream):
+class EBUTT3DocumentSequence(CloningDocumentSequence):
 
     _sequence_identifier = None
     _last_sequence_number = None

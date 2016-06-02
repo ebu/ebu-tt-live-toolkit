@@ -6,7 +6,7 @@ from .common import create_loggers, tokenize_english_document
 
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.example_data import get_example_data
-from ebu_tt_live.documents import EBUTT3DocumentStream
+from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
 from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
     TwistedPullProducer, TwistedProducerMixin
@@ -33,7 +33,7 @@ def main():
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
-    document_stream = EBUTT3DocumentStream(
+    document_sequence = EBUTT3DocumentSequence(
         sequence_identifier='TestSequence1',
         lang='en-GB',
         reference_clock=reference_clock
@@ -55,7 +55,7 @@ def main():
 
     simple_producer = TwistedSimpleDocumentProducer(
         node_id='simple-producer',
-        document_stream=document_stream,
+        document_sequence=document_sequence,
         input_blocks=subtitle_tokens
     )
 

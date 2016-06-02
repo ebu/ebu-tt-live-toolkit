@@ -6,15 +6,15 @@ from ebu_tt_live.bindings import div_type, br_type, p_type
 
 class SimpleProducer(ProducerNode):
 
-    _document_stream = None
+    _document_sequence = None
     _input_blocks = None
     _reference_clock = None
 
-    def __init__(self, node_id, document_stream, input_blocks):
+    def __init__(self, node_id, document_sequence, input_blocks):
         super(SimpleProducer, self).__init__(node_id)
-        self._document_stream = document_stream
+        self._document_sequence = document_sequence
         self._input_blocks = input_blocks
-        self._reference_clock = document_stream.reference_clock
+        self._reference_clock = document_sequence.reference_clock
 
     @staticmethod
     def _interleave_line_breaks(items):
@@ -22,6 +22,7 @@ class SimpleProducer(ProducerNode):
         for item in items:
             end_list.append(item)
             end_list.append(br_type())
+        # We don't require the last linebreak so remove it.
         end_list.pop()
         return end_list
 
@@ -42,7 +43,7 @@ class SimpleProducer(ProducerNode):
         else:
             lines = [activation_time]
 
-        document = self._document_stream.new_document()
+        document = self._document_sequence.new_document()
 
         document.add_div(
             self._create_fragment(
