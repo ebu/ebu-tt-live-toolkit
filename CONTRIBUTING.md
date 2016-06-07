@@ -11,3 +11,19 @@ compatibility in style is more important than compliance with this standard.
 
 Twisted interfaces and mixins should belong to the ebu_tt_live.twisted subpackage and
 should preferably be providing that functionality through mixins.
+
+
+Test Suite
+==========
+
+For testing we use the py.test test runner. Based on the test type the test code can be in different locations.\
+
+## For unittesting:
+
+Inside the ebu_tt_live python package inside a test directory within the subpackage it is testing. 
+
+    I.e.: To test the clocks create a test directory inside the ebu_tt_live/clocks package. __init__.py is not needed. Place python sourcefiles with testing modules
+    
+## Functional/integration testing
+
+In the repository root outside the ebu_tt_live package in a directory called testing.
