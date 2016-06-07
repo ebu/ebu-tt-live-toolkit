@@ -62,12 +62,6 @@ class EBUTT3Document(SubtitleDocument):
     def validate(self):
         self._ebutt3_content.validateBinding()
 
-    def add_region(self, region):
-        self._ebutt3_content.validateBinding()
-
-    def add_style(self, style):
-        self._ebutt3_content.validateBinding()
-
     def add_div(self, div):
         body = self._ebutt3_content.body
         body.append(div)
@@ -104,6 +98,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
 
     @classmethod
     def create_from_document(cls, document, *args, **kwargs):
+        # TODO
         pass
 
     def new_document(self, *args, **kwargs):
