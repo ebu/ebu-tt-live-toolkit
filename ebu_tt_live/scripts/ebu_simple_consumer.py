@@ -24,7 +24,7 @@ def main():
 
     simple_consumer = SimpleConsumer(
         node_id='simple-consumer',
-        impl=consumer_impl
+        carriage_impl=consumer_impl
     )
 
     factory = BroadcastClientFactory(

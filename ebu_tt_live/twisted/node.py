@@ -1,5 +1,5 @@
 
-from ebu_tt_live.node import ProducerNode, ConsumerNode
+from ebu_tt_live.node import ProducerCarriageImpl, ConsumerCarriageImpl
 from twisted.internet import interfaces
 from zope.interface import implementer
 from ebu_tt_live.bindings import CreateFromDocument
@@ -12,7 +12,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class TwistedProducerImpl(ProducerNode):
+class TwistedProducerImpl(ProducerCarriageImpl):
 
     _twisted_producer = None
 
@@ -49,7 +49,7 @@ class TwistedPullProducer(object):
         pass
 
 
-class TwistedConsumerImpl(ConsumerNode):
+class TwistedConsumerImpl(ConsumerCarriageImpl):
 
     def on_new_data(self, data):
         document = None

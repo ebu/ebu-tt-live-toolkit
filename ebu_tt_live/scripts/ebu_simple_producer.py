@@ -52,7 +52,7 @@ def main():
 
     simple_producer = SimpleProducer(
         node_id='simple-producer',
-        impl=prod_impl,
+        carriage_impl=prod_impl,
         document_sequence=document_sequence,
         input_blocks=subtitle_tokens
     )

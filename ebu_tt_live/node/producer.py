@@ -10,8 +10,8 @@ class SimpleProducer(Node):
     _input_blocks = None
     _reference_clock = None
 
-    def __init__(self, node_id, impl, document_sequence, input_blocks):
-        super(SimpleProducer, self).__init__(node_id, impl)
+    def __init__(self, node_id, carriage_impl, document_sequence, input_blocks):
+        super(SimpleProducer, self).__init__(node_id, carriage_impl)
         self._document_sequence = document_sequence
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
@@ -56,4 +56,4 @@ class SimpleProducer(Node):
 
         document.validate()
 
-        self._impl.emit_document(document)
+        self._carriage_impl.emit_document(document)

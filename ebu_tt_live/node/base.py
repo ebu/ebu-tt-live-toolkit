@@ -1,16 +1,19 @@
 
 class Node(object):
     """
-    This is the foundation of all nodes that take part in the processing of subtitle documents
+    This is the foundation of all nodes that take part in the processing of subtitle documents.
+    The Node should deal with subtitles in a high level interface,
+    which is an instance of :class:`<ebu_tt_live.documents.SubtitleDocument>`. That is the interface which should
+    be used to communicate with the carriage machanism. See :class:`<CarriageImpl>`
     """
 
     _node_id = None
-    _impl = None
+    _carriage_impl = None
 
-    def __init__(self, node_id, impl):
+    def __init__(self, node_id, carriage_impl):
         self._node_id = node_id
-        self._impl = impl
-        self._impl.register(node=self)
+        self._carriage_impl = carriage_impl
+        self._carriage_impl.register(node=self)
 
     def __repr__(self):
         return '<{name}, ID:{id} at {address} >'.format(
@@ -37,9 +40,11 @@ class Node(object):
         raise NotImplementedError()
 
 
-class NodeImpl(object):
+class CarriageImpl(object):
     """
-    Protocol specific bindings that connects to the carriage mechanism meant to use in a dependency injection fashion.
+    Protocol specific bindings that connects the business logic to the carriage mechanism.
+    This is meant to use in a dependency injection fashion. Carriage mechanism can be anything from a network socket
+    through file system to a tape. This implementation is meant to receive
     """
     _node = None
 
@@ -47,7 +52,7 @@ class NodeImpl(object):
         self._node = node
 
 
-class ProducerNode(NodeImpl):
+class ProducerCarriageImpl(CarriageImpl):
     """
     Node that emits documents to an output interface, usually some network socket.
     """
@@ -61,7 +66,7 @@ class ProducerNode(NodeImpl):
         raise NotImplementedError()
 
 
-class ConsumerNode(NodeImpl):
+class ConsumerCarriageImpl(CarriageImpl):
     """
     Node that receives documents and processes them.
     """
@@ -74,7 +79,7 @@ class ConsumerNode(NodeImpl):
         raise NotImplementedError()
 
 
-class TransferNode(ConsumerNode, ProducerNode):
+class CombinedCarriageImpl(ConsumerCarriageImpl, ProducerCarriageImpl):
     """
     Node that receives and also emits documents by combining the Producer and Consumer tasks.
     """
