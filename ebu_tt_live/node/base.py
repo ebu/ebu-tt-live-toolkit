@@ -5,9 +5,12 @@ class Node(object):
     """
 
     _node_id = None
+    _impl = None
 
-    def __init__(self, node_id):
+    def __init__(self, node_id, impl):
         self._node_id = node_id
+        self._impl = impl
+        self._impl.register(node=self)
 
     def __repr__(self):
         return '<{name}, ID:{id} at {address} >'.format(
@@ -34,7 +37,17 @@ class Node(object):
         raise NotImplementedError()
 
 
-class ProducerNode(Node):
+class NodeImpl(object):
+    """
+    Protocol specific bindings that connects to the carriage mechanism meant to use in a dependency injection fashion.
+    """
+    _node = None
+
+    def register(self, node):
+        self._node = node
+
+
+class ProducerNode(NodeImpl):
     """
     Node that emits documents to an output interface, usually some network socket.
     """
@@ -48,7 +61,7 @@ class ProducerNode(Node):
         raise NotImplementedError()
 
 
-class ConsumerNode(Node):
+class ConsumerNode(NodeImpl):
     """
     Node that receives documents and processes them.
     """

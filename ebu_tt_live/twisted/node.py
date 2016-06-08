@@ -12,12 +12,16 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class TwistedProducerMixin(ProducerNode):
+class TwistedProducerImpl(ProducerNode):
 
     _twisted_producer = None
 
     def register_twisted_producer(self, producer):
         self._twisted_producer = producer
+
+    def resume_producing(self):
+        # None, since this is a producer module. It will produce a new document.
+        self._node.process_document(document=None)
 
     def emit_document(self, document):
         self._twisted_producer.emit_data(document.sequence_identifier, document.get_xml())
@@ -39,13 +43,13 @@ class TwistedPullProducer(object):
         self._consumer.write(channel, data)
 
     def resumeProducing(self):
-        self._custom_producer.process_document(None)
+        self._custom_producer.resume_producing()
 
     def stopProducing(self):
         pass
 
 
-class TwistedConsumerMixin(ConsumerNode):
+class TwistedConsumerImpl(ConsumerNode):
 
     def on_new_data(self, data):
         document = None
@@ -56,7 +60,7 @@ class TwistedConsumerMixin(ConsumerNode):
             raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
 
         if document:
-            self.process_document(document)
+            self._node.process_document(document)
 
 
 @implementer(interfaces.IConsumer)

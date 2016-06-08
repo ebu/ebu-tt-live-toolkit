@@ -9,7 +9,7 @@ from ebu_tt_live.example_data import get_example_data
 from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
 from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
-    TwistedPullProducer, TwistedProducerMixin
+    TwistedPullProducer, TwistedProducerImpl
 
 
 parser = ArgumentParser()
@@ -17,12 +17,6 @@ parser = ArgumentParser()
 parser.add_argument('--reference-clock', dest='reference_clock',
                     help='content should be reference clock times when the content was generated on the server',
                     action='store_true', default=False)
-
-
-# Here we get our custom document producer mixed in with the twisted compatibility layer
-# This allows our document related custom code to be detached from the network library layer
-class TwistedSimpleDocumentProducer(TwistedProducerMixin, SimpleProducer):
-    pass
 
 
 def main():
@@ -53,8 +47,12 @@ def main():
 
     factory.listen()
 
-    simple_producer = TwistedSimpleDocumentProducer(
+    # This object is used as flexible binding to the carriage mechanism and twisted integrated as dependency injection
+    prod_impl = TwistedProducerImpl()
+
+    simple_producer = SimpleProducer(
         node_id='simple-producer',
+        impl=prod_impl,
         document_sequence=document_sequence,
         input_blocks=subtitle_tokens
     )
@@ -63,7 +61,7 @@ def main():
     # level. Every time the factory gets a pull signal from the timer it tells the producer to generate data.
     TwistedPullProducer(
         consumer=factory,
-        custom_producer=simple_producer
+        custom_producer=prod_impl
     )
 
     looping_task = task.LoopingCall(factory.pull)

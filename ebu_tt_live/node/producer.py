@@ -1,17 +1,17 @@
 
-from .base import ProducerNode
+from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type
 
 
-class SimpleProducer(ProducerNode):
+class SimpleProducer(Node):
 
     _document_sequence = None
     _input_blocks = None
     _reference_clock = None
 
-    def __init__(self, node_id, document_sequence, input_blocks):
-        super(SimpleProducer, self).__init__(node_id)
+    def __init__(self, node_id, impl, document_sequence, input_blocks):
+        super(SimpleProducer, self).__init__(node_id, impl)
         self._document_sequence = document_sequence
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
@@ -56,4 +56,4 @@ class SimpleProducer(ProducerNode):
 
         document.validate()
 
-        self.emit_document(document)
+        self._impl.emit_document(document)
