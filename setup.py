@@ -1,7 +1,11 @@
 
 try:
     from setuptools import setup
-    extra = dict(test_suite="tests.test.suite", include_package_data=True, test_requires=[])
+    extra = dict(
+        include_package_data=True,
+        setup_requires=['pytest-runner'],
+        tests_require=['pytest-bdd', 'pytest-cov', 'coverage', 'pytest-runner', 'pytest']
+    )
 except ImportError:
     from distutils.core import setup
     extra = {}
@@ -44,5 +48,6 @@ setup(
             'ebu-simple-consumer = ebu_tt_live.scripts.ebu_simple_consumer:main',
             'ebu-simple-producer = ebu_tt_live.scripts.ebu_simple_producer:main'
         ]
-    }
+    },
+    **extra
 )
