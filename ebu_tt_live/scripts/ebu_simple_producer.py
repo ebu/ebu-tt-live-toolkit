@@ -15,7 +15,7 @@ from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingSe
 parser = ArgumentParser()
 
 parser.add_argument('--reference-clock', dest='reference_clock',
-                    help='content should be reference clock times when the content was generated on the server',
+                    help='content should reference clock times when the content was generated on the server',
                     action='store_true', default=False)
 
 
