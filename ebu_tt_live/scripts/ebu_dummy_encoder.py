@@ -3,7 +3,7 @@ from .common import create_loggers
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from pyxb import BIND
-from pyxb.utils.domutils import BindingDOMSupport
+from datetime import timedelta
 
 log = logging.getLogger('ebu_dummy_encoder')
 
@@ -15,7 +15,8 @@ def main():
     tt = bindings.tt(
         sequenceIdentifier='testSequence001',
         sequenceNumber='1',
-        timeBase='smpte',
+        timeBase='clock',
+        clockMode='local',
         lang='en-GB',
         head=bindings.head_type(
             metadata.headMetadata_type(
@@ -39,18 +40,17 @@ def main():
                         'And another line'
                     ),
                     id='ID005',
-                    begin='00:00:00:50',
-                    end='00:00:03:24',
+                    begin=timedelta(seconds=.5),
+                    end=timedelta(seconds=3.42),
                 )
-            )
+            ),
+            begin=timedelta(seconds=.5),
+            dur=timedelta(seconds=5)
         )
     )
 
     print(
-        tt.toDOM(
-            bds=BindingDOMSupport(default_namespace=bindings.Namespace)
-        ).toprettyxml(
-            indent='  '
-        )
+        tt.toxml()
     )
+
     log.info('XML output printed')
