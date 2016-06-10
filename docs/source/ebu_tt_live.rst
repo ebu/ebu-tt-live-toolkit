@@ -35,6 +35,7 @@ Subpackages
     ebu_tt_live.configspec
     ebu_tt_live.documents
     ebu_tt_live.example_data
+    nodes_and_carriage_mechanisms
     ebu_tt_live.node
     ebu_tt_live.scripts
     ebu_tt_live.twisted
