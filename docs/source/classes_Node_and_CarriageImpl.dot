@@ -1,0 +1,28 @@
+digraph "classes_Node_and_CarriageImpl" {
+charset="utf-8"
+rankdir=BT
+"0" [label="{BroadcastClientFactory|channels\l|connect()\ldataReceived()\lpauseProducing()\lresumeProducing()\lstopProducing()\l}", shape="record"];
+"1" [label="{BroadcastServerFactory|\l|broadcast()\llisten()\lpull()\lregister()\lregisterProducer()\lstopFactory()\lunregister()\lunregisterProducer()\lwrite()\l}", shape="record"];
+"2" [label="{CarriageImpl|\l|register()\l}", shape="record"];
+"3" [label="{ClientNodeProtocol|\l|onMessage()\lonOpen()\lsubscribeChannel()\lunsubscribeChannel()\l}", shape="record"];
+"4" [label="{CombinedCarriageImpl|\l|}", shape="record"];
+"5" [label="{ConsumerCarriageImpl|\l|on_new_data()\l}", shape="record"];
+"6" [label="{IBroadcaster|\l|broadcast()\lregister()\lunregister()\l}", shape="record"];
+"7" [label="{Node|node_id\l|process_document()\l}", shape="record"];
+"8" [label="{ProducerCarriageImpl|\l|emit_document()\l}", shape="record"];
+"9" [label="{SimpleConsumer|\l|process_document()\l}", shape="record"];
+"10" [label="{SimpleProducer|\l|process_document()\l}", shape="record"];
+"11" [label="{StreamingServerProtocol|\l|connectionLost()\lonMessage()\lonOpen()\lsendMessageOnChannel()\l}", shape="record"];
+"12" [label="{TwistedConsumer|\l|registerProducer()\lunregisterProducer()\lwrite()\l}", shape="record"];
+"13" [label="{TwistedConsumerImpl|\l|on_new_data()\l}", shape="record"];
+"14" [label="{TwistedProducerImpl|\l|emit_document()\lregister_twisted_producer()\lresume_producing()\l}", shape="record"];
+"15" [label="{TwistedPullProducer|\l|emit_data()\lresumeProducing()\lstopProducing()\l}", shape="record"];
+"4" -> "5" [arrowhead="empty", arrowtail="none"];
+"4" -> "8" [arrowhead="empty", arrowtail="none"];
+"5" -> "2" [arrowhead="empty", arrowtail="none"];
+"8" -> "2" [arrowhead="empty", arrowtail="none"];
+"9" -> "7" [arrowhead="empty", arrowtail="none"];
+"10" -> "7" [arrowhead="empty", arrowtail="none"];
+"13" -> "5" [arrowhead="empty", arrowtail="none"];
+"14" -> "8" [arrowhead="empty", arrowtail="none"];
+}

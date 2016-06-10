@@ -1,3 +1,8 @@
 --index-url https://pypi.python.org/simple/
 
+sphinx
+sphinx-autobuild
+recommonmark
+sphinx-rtd-theme
+
 -e .
