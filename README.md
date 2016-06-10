@@ -6,7 +6,9 @@ The kit is envisaged to contain a set of components for generating, testing and 
 
 This is an open source project. Anyone is welcome to contribute to the development of the components. Please see the [wiki](https://github.com/ebu/ebu-tt-live-toolkit/wiki) for the list of required components, guidelines and release plan. 
 
-If you would like to contribute, please contact <subtitling@ebu.ch> or <nigel.megitt@bbc.co.uk>
+We have a Slack team called [ebu-tt-lit](https://ebu-tt-lit.slack.com) for day to day communications, questions etc. Please join up!
+
+If you would like to contribute or join the Slack team, please contact <subtitling@ebu.ch> or <nigel.megitt@bbc.co.uk>
 
 Preparing the build environment
 ===============================
