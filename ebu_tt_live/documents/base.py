@@ -19,8 +19,8 @@ class SubtitleDocument(ComparableMixin):
 class DocumentSequence(object):
     """
     Base class that facilitates most production-related workflows.
-    The document stream should maintain the consistency accross critical document attributes. It should maintain
-    all sorts of counters and static information. It plays key role in the validation of an outgoing stream of
+    The document stream should maintain the consistency across critical document attributes. It should maintain
+    all sorts of counters and static information. It plays a key role in the validation of an outgoing stream of
     subtitle documents.
     """
 
