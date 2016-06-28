@@ -1,7 +1,6 @@
 from ebu_tt_live.documents import EBUTT3Document
 from pyxb import SimpleTypeValueError
 from pytest_bdd import given, then, scenario
-from .common import load_template
 import pytest
 
 
@@ -12,11 +11,6 @@ import pytest
 )
 def test_from_xml_to_binding():
     pass
-
-
-@given('a xml file <xml_file>')
-def template_file(xml_file):
-    return load_template(xml_file)
 
 
 @given('it has sequence identifier <seqID>')

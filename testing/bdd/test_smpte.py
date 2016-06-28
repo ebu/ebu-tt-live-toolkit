@@ -1,16 +1,9 @@
 
 from pytest_bdd import scenarios, given, then
 import pytest
-from .common import load_template
 from ebu_tt_live.documents import EBUTT3Document
 
 scenarios('features/validation/smpte_constraints.feature')
-
-@given(
-    'a xml file <xml_file>'
-)
-def template_file(xml_file):
-    return load_template(xml_file)
 
 @given(
     'it has timeBase <time_base>'
