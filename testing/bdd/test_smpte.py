@@ -5,14 +5,14 @@ from pytest_bdd import scenarios, given, then
 import pytest
 from ebu_tt_live.documents import EBUTT3Document
 
-scenarios('smpte_constraints.feature')
+scenarios('features/smpte_constraints.feature')
 
 @given(
     'an xml file <xml_file>'
 )
 def template_file(xml_file):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
-    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'testing_data')),
+    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
                          trim_blocks=True)
     return j2_env.get_template(xml_file)
 

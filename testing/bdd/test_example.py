@@ -8,7 +8,7 @@ import os
 
 
 @scenario(
-    'templating_example.feature',
+    'features/templating_example.feature',
     'From xml to binding (wrongs)',
     example_converters=dict(xml_file=str, seqID=str, seqN=str)
 )
@@ -19,7 +19,7 @@ def test_from_xml_to_binding():
 @given('an xml file <xml_file>')
 def template_file(xml_file):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
-    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'testing_data')),
+    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
                          trim_blocks=True)
     return j2_env.get_template('base.xml')
 
