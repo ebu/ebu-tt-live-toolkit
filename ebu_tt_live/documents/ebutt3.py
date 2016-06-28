@@ -35,6 +35,14 @@ class EBUTT3Document(SubtitleDocument):
         instance.validate()
         return instance
 
+    @classmethod
+    def create_from_xml(cls, xml):
+        instance = cls.create_from_raw_binding(
+            binding=bindings.CreateFromDocument(
+                xml_text=xml
+            )
+        )
+
     def _cmp_key(self):
         return self.sequence_number
 

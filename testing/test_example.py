@@ -38,4 +38,4 @@ def sequenceN(seqN):
 def is_invalid(template_file, seqID, sequenceN):
     xml = template_file.render(sequenceIdentifier=seqID, sequenceNumber=sequenceN)
     with pytest.raises(SimpleTypeValueError):
-        EBUTT3Document.create_from_raw_binding(CreateFromDocument(xml))
+        EBUTT3Document.create_from_xml(xml)
