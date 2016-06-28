@@ -42,6 +42,7 @@ class EBUTT3Document(SubtitleDocument):
                 xml_text=xml
             )
         )
+        return instance
 
     def _cmp_key(self):
         return self.sequence_number

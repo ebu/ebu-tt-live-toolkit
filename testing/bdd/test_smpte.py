@@ -18,13 +18,6 @@ def frame_rate(frame_rate):
     return frame_rate
 
 @then(
-    'document is valid'
-)
-def valid_doc(template_file, time_base, frame_rate=None):
-    xml_file = template_file.render(time_base=time_base, frame_rate=frame_rate)
-    document = EBUTT3Document.create_from_xml(xml_file)
-
-@then(
     'document is invalid'
 )
 def invalid_doc(template_file, time_base, frame_rate=None):
