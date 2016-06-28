@@ -10,7 +10,7 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  | 25         | smpte     |
     | smpte.xml  | 20         | smpte     |
 
-
+  # These tests are not all passing because the missing semantic validation piece
   Scenario: Invalid SMPTE head attributes
     Given an xml file <xml_file>
     And it has frameRate <frame_rate>
@@ -20,3 +20,4 @@ Feature: SMPTE-related attribute constraints
     Examples:
     | xml_file   | frame_rate | time_base |
     | smpte.xml  |            | smpte     |
+    | smpte.xml  | 25         | clock     |
