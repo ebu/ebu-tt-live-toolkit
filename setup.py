@@ -4,7 +4,7 @@ try:
     extra = dict(
         include_package_data=True,
         setup_requires=['pytest-runner'],
-        tests_require=['pytest-bdd', 'pytest-cov', 'coverage', 'pytest-runner', 'pytest']
+        tests_require=['pytest-bdd', 'pytest-cov', 'coverage', 'pytest-runner', 'pytest', 'jinja2']
     )
 except ImportError:
     from distutils.core import setup
