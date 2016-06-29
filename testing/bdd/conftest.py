@@ -15,9 +15,7 @@ def template_file(xml_file):
     return j2_env.get_template(xml_file)
 
 
-@then(
-    'document is valid'
-)
+@then('document is valid')
 def valid_doc(template_file, template_dict):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
