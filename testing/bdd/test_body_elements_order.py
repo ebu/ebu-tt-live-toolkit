@@ -1,7 +1,4 @@
-from ebu_tt_live.documents import EBUTT3Document
-from pyxb import ValidationError
-from pytest_bdd import given, then, scenarios
-import pytest
+from pytest_bdd import given, scenarios
 
 
 scenarios('features/validation/body_elements_order.feature')
@@ -17,12 +14,5 @@ def handle_element(element):
 
 
 @given('its body has a <body_element>')
-def xml_body_element(body_element):
-    return handle_element(body_element)
-
-
-@then('document is invalid')
-def invalid_doc(template_file, xml_body_element):
-    xml = template_file.render(body_content=xml_body_element)
-    with pytest.raises(ValidationError):
-        EBUTT3Document.create_from_xml(xml)
+def given_body_element(body_element, template_dict):
+    template_dict['body_content'] = handle_element(body_element)
