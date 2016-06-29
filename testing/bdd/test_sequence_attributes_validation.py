@@ -20,7 +20,6 @@ def sequence_number(seq_n):
 @then('document is invalid')
 def invalid_doc(template_file, sequence_id=None, sequence_number=None):
     xml = template_file.render(sequence_id=sequence_id, sequence_num=sequence_number)
-    print xml
     with pytest.raises(ValidationError):
         EBUTT3Document.create_from_xml(xml)
 
