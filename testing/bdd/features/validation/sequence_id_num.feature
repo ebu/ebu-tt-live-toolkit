@@ -12,6 +12,8 @@ Feature: Sequence ID and Sequence Number
         | sequence_id_num.xml |          | 5     |
         | sequence_id_num.xml | testSeq1 | a     |
         | sequence_id_num.xml | testSeq1 | -5    |
+        | sequence_id_num.xml | testSeq1 |       |
+        | sequence_id_num.xml |          |       |
 
     Scenario: Valid Sequence head attributes
         Given a xml file <xml_file>
