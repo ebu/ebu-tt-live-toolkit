@@ -16,14 +16,49 @@ should preferably be providing that functionality through mixins.
 Test Suite
 ==========
 
-For testing we use the py.test test runner. Based on the test type the test code can be in different locations.\
+For testing we use the py.test test runner.
 
-## For unittesting:
+## Initialization of the test suite
+
+After initializing the virtual environment and installing the package run the following command:
+
+    python setup.py test
+    
+This **installs te necessary packages** for testing and runs the tests.
+
+Subsequent runs can be done via either of the following 2 commands:
+
+    python setup.py test
+
+or:
+
+    py.test
+    
+**TODO: make test should work as well**
+
+## Structure
+
+Based on the test type the test code can be in different locations.
+
+### For unittesting
 
 Inside the ebu_tt_live python package inside a test directory within the subpackage it is testing. 
 
     I.e.: To test the clocks create a test directory inside the ebu_tt_live/clocks package. __init__.py is not needed. Place python sourcefiles with testing modules
     
-## Functional/integration testing
+### Functional/integration testing
 
 In the repository root outside the ebu_tt_live package in a directory called testing.
+Sturcture of the testing directory
+
+* testing
+    * bdd - Behaviour Driven Development
+        * features - feature files for BDD
+            * validation - features that tie in with the XML validation functionality
+                * *.feature - BDD feature files
+            * ...
+        * templates - Jinja2 template files for mostly XML documents
+            * *.xml - XML file templates
+            * ...
+        * *.py - Python files with the BDD handlers
+    * *.py - Other python based tests unrelated to BDD
