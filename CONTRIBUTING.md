@@ -51,14 +51,32 @@ Inside the ebu_tt_live python package inside a test directory within the subpack
 In the repository root outside the ebu_tt_live package in a directory called testing.
 Sturcture of the testing directory
 
-* testing
-    * bdd - Behaviour Driven Development
-        * features - feature files for BDD
-            * validation - features that tie in with the XML validation functionality
-                * *.feature - BDD feature files
-            * ...
-        * templates - Jinja2 template files for mostly XML documents
-            * *.xml - XML file templates
-            * ...
-        * *.py - Python files with the BDD handlers
-    * *.py - Other python based tests unrelated to BDD
+    testing
+    ├─bdd - Behaviour Driven Development
+    │ ├─features - feature files for BDD
+    │ │ ├─validation - features that tie in with the XML validation functionality
+    │ │ │ └─*.feature - BDD feature files
+    │ │ └─...
+    │ ├─templates - Jinja2 template files for mostly XML documents
+    │ │ ├─*.xml - XML file templates
+    │ │ └...
+    │ └*.py - Python iles with the BDD handlers
+    └─*.py - Other python based tests unrelated to BDD
+
+
+## Configuration files
+
+Testing configuration files are mostly in the project root:
+
+    pytest.ini - Pytest settings and command line switches
+    .coveragerc - Coverage settings and exclusion patterns
+    setup.cfg - setup.py integration settings
+    
+## Testing output
+
+Test suite generates multiple outputs:
+
+    htmlcov/ - Coverage of the ebu_tt_live python package in HTML for review
+    .coverage - Python raw coverage output
+    coverage.xml - Coverage data that XML based CI integration tools such as Jenkins Cobertura Plugin can understand and use
+    
