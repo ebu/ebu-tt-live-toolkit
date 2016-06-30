@@ -34,7 +34,7 @@ or:
 
     py.test
     
-**TODO: make test should work as well**
+**TODO: make test should work as well once implemented**
 
 ## Structure
 

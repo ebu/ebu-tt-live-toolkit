@@ -4,5 +4,10 @@ sphinx
 sphinx-autobuild
 recommonmark
 sphinx-rtd-theme
-
+pytest-bdd
+pytest-cov
+coverage
+pytest-runner
+pytest
+jinja2
 -e .
