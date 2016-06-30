@@ -20,13 +20,7 @@ For testing we use the py.test test runner.
 
 ## Initialization of the test suite
 
-After initializing the virtual environment and installing the package run the following command:
-
-    python setup.py test
-    
-This **installs the necessary packages** for testing and runs the tests.
-
-Subsequent runs can be done via either of the following 2 commands:
+After initializing the virtual environment and installing the package run either one of the following commands:
 
     python setup.py test
 
