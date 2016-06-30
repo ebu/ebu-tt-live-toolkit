@@ -122,6 +122,11 @@ following ways:
 After sphinx finished with a successful execution log the generated documentation should be accessible by opening the 
 docs/build/index.html in any web browser.
 
+Tests
+=====
+
+The test framework is described in CONTRIBUTING.md
+
 How to contribute
 =================
 
