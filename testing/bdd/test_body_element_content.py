@@ -1,7 +1,7 @@
 from pytest_bdd import given, scenarios
 
 
-scenarios('features/validation/body_elements_order.feature')
+scenarios('features/validation/body_element_content.feature')
 
 
 def handle_element(element):
@@ -13,6 +13,6 @@ def handle_element(element):
         return '<tt:br/>'
 
 
-@given('its body has a <body_element>')
-def given_body_element(body_element, template_dict):
-    template_dict['body_content'] = handle_element(body_element)
+@given('its body has a <child_element>')
+def given_child_element(child_element, template_dict):
+    template_dict['body_content'] = handle_element(child_element)

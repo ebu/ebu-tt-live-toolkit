@@ -6,7 +6,7 @@ from ebu_tt_live.documents import EBUTT3Document
 import pytest
 
 
-@given('a xml file <xml_file>')
+@given('an xml file <xml_file>')
 def template_file(xml_file):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),

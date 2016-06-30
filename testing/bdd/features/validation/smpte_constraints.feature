@@ -1,6 +1,6 @@
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
-    Given a xml file <xml_file>
+    Given an xml file <xml_file>
     And it has frameRate <frame_rate>
     And it has timeBase <time_base>
     Then document is valid
@@ -13,7 +13,7 @@ Feature: SMPTE-related attribute constraints
   # These tests are not all passing because the missing semantic validation piece
   @skip
   Scenario: Invalid SMPTE head attributes
-    Given a xml file <xml_file>
+    Given an xml file <xml_file>
     And it has frameRate <frame_rate>
     And it has timeBase <time_base>
     Then document is invalid

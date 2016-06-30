@@ -2,7 +2,7 @@ Feature: Sequence ID and Sequence Number
     Both are mandatory parameters and the sequence number has to be a number (no letters)
 
     Scenario: Invalid Sequence head attributes
-        Given a xml file <xml_file>
+        Given an xml file <xml_file>
         And it has sequence identifier <seq_id>
         And it has sequence number <seq_n>
         Then document is invalid
@@ -16,7 +16,7 @@ Feature: Sequence ID and Sequence Number
         | sequence_id_num.xml |          |       |
 
     Scenario: Valid Sequence head attributes
-        Given a xml file <xml_file>
+        Given an xml file <xml_file>
         And it has sequence identifier <seq_id>
         And it has sequence number <seq_n>
         Then document is valid
