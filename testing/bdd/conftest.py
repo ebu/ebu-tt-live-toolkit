@@ -3,7 +3,6 @@ import unittest
 from pytest_bdd import given, then
 from jinja2 import Environment, FileSystemLoader
 from ebu_tt_live.documents import EBUTT3Document
-from pyxb import ValidationError
 import pytest
 
 
@@ -25,7 +24,7 @@ def valid_doc(template_file, template_dict):
 @then('document is invalid')
 def invalid_doc(template_file, template_dict):
     xml = template_file.render(template_dict)
-    with pytest.raises(ValidationError):
+    with pytest.raises(Exception):
         EBUTT3Document.create_from_xml(xml)
 
 

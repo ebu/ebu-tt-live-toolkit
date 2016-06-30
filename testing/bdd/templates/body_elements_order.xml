@@ -6,20 +6,6 @@
     </tt:metadata>
   </tt:head>
   <tt:body>
-    {# {% if has_div_in_body %}
-    <tt:div>
-      {% if has_p_in_div %}
-      <tt:p xml:id="ID0005">
-        test
-      </tt:p>
-      {% endif %}
-    </tt:div>
-    {% endif %}
-
-    {% if has_p_in_body %}
-    <tt:p xml:id="ID006">
-    </tt:p>
-    {% endif %} #}
     {{ body_content }}
   </tt:body>
 </tt:tt>
