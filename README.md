@@ -38,7 +38,6 @@ can be built by typing make if you have GNU build tooling on your system.
 Alternatively:
 
     pip install -r requirements.txt
-    pip install -r requirements-test.txt
     python setup.py develop
 
     pyxbgen -r --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -u ebutt_live.xsd
