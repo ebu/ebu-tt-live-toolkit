@@ -124,9 +124,9 @@ docs/build/html/index.html in any web browser.
 Tests
 =====
 
-The test framework is described in CONTRIBUTING.md
+The test framework is described in [CONTRIBUTING.md](CONTRIBUTING.md) 
 
 How to contribute
 =================
 
-Please refer to CONTRIBUTING.md
+Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) 
