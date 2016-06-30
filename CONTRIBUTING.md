@@ -49,7 +49,7 @@ Inside the ebu_tt_live python package inside a test directory within the subpack
 ### Functional/integration testing
 
 In the repository root outside the ebu_tt_live package in a directory called testing.
-Sturcture of the testing directory
+Structure of the testing directory
 
     testing
     ├─bdd - Behaviour Driven Development
@@ -60,7 +60,7 @@ Sturcture of the testing directory
     │ ├─templates - Jinja2 template files for mostly XML documents
     │ │ ├─*.xml - XML file templates
     │ │ └...
-    │ └*.py - Python iles with the BDD handlers
+    │ └*.py - Python files with the BDD handlers
     └─*.py - Other python based tests unrelated to BDD
 
 
@@ -79,4 +79,4 @@ Test suite generates multiple outputs:
     htmlcov/ - Coverage of the ebu_tt_live python package in HTML for review
     .coverage - Python raw coverage output
     coverage.xml - Coverage data that XML based CI integration tools such as Jenkins Cobertura Plugin can understand and use
-    
+
