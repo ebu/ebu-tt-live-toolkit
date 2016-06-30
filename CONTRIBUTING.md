@@ -24,7 +24,7 @@ After initializing the virtual environment and installing the package run the fo
 
     python setup.py test
     
-This **installs te necessary packages** for testing and runs the tests.
+This **installs the necessary packages** for testing and runs the tests.
 
 Subsequent runs can be done via either of the following 2 commands:
 
@@ -44,7 +44,7 @@ Based on the test type the test code can be in different locations.
 
 Inside the ebu_tt_live python package inside a test directory within the subpackage it is testing. 
 
-    I.e.: To test the clocks create a test directory inside the ebu_tt_live/clocks package. __init__.py is not needed. Place python sourcefiles with testing modules
+    i.e.: To test the clocks create a test directory inside the ebu_tt_live/clocks package. __init__.py is not needed. Place python sourcefiles with testing modules
     
 ### Functional/integration testing
 
