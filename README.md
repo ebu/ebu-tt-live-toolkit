@@ -114,12 +114,12 @@ following ways:
     
 ## Calling the sphinx-build command line script that comes with sphinx. WARNING: Platform-dependent path-separators.
 
-    sphinx-build -b html docs/source/ docs/build/
+    sphinx-build -b html docs/source/ docs/build/html
     
 # Previewing the documentation
 
 After sphinx finished with a successful execution log the generated documentation should be accessible by opening the 
-docs/build/index.html in any web browser.
+docs/build/html/index.html in any web browser.
 
 Tests
 =====
