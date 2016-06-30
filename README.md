@@ -87,7 +87,7 @@ EBU-TT-Live documents in a timed manner. In the repository root there is a *test
 
     ebu-simple-producer
 
-The simple consumer connects to the producer or later on in the pipeline, assumint there are more components inserted.
+The simple consumer connects to the producer or later on in the pipeline, assuming there are more components inserted.
 
     ebu-simple-consumer
 
