@@ -3,8 +3,7 @@ try:
     from setuptools import setup
     extra = dict(
         include_package_data=True,
-        setup_requires=['pytest-runner'],
-        tests_require=['pytest-bdd', 'pytest-cov', 'coverage', 'pytest-runner', 'pytest']
+        setup_requires=['pytest-runner']
     )
 except ImportError:
     from distutils.core import setup
@@ -34,7 +33,8 @@ setup(
         "pyyaml",
         "twisted",
         "autobahn",
-        "nltk"
+        "nltk",
+        "django"
     ],
     license="BSD3",
     packages=packages,

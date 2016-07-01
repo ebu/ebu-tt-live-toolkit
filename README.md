@@ -38,7 +38,6 @@ can be built by typing make if you have GNU build tooling on your system.
 Alternatively:
 
     pip install -r requirements.txt
-    pip install -r requirements-test.txt
     python setup.py develop
 
     pyxbgen -r --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -u ebutt_live.xsd
@@ -88,7 +87,7 @@ EBU-TT-Live documents in a timed manner. In the repository root there is a *test
 
     ebu-simple-producer
 
-The simple consumer connects to the producer or later on in the pipeline, assumint there are more components inserted.
+The simple consumer connects to the producer or later on in the pipeline, assuming there are more components inserted.
 
     ebu-simple-consumer
 
@@ -115,14 +114,19 @@ following ways:
     
 ## Calling the sphinx-build command line script that comes with sphinx. WARNING: Platform-dependent path-separators.
 
-    sphinx-build -b html docs/source/ docs/build/
+    sphinx-build -b html docs/source/ docs/build/html
     
 # Previewing the documentation
 
 After sphinx finished with a successful execution log the generated documentation should be accessible by opening the 
-docs/build/index.html in any web browser.
+docs/build/html/index.html in any web browser.
+
+Tests
+=====
+
+The test framework is described in [CONTRIBUTING.md](CONTRIBUTING.md) 
 
 How to contribute
 =================
 
-Please refer to CONTRIBUTING.md
+Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) 

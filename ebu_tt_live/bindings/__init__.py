@@ -33,7 +33,6 @@ class tt_type(raw.tt_type):
             return bds
         else:
             return BindingDOMSupport(
-                default_namespace=raw.Namespace,
                 namespace_prefix_map=namespace_prefix_map
             )
 

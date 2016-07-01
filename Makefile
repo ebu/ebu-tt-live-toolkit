@@ -6,3 +6,6 @@ init:
 
 test:
 	python setup.py test
+
+docs:
+	python setup.py build_sphinx

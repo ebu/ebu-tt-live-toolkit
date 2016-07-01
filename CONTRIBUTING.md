@@ -16,14 +16,61 @@ should preferably be providing that functionality through mixins.
 Test Suite
 ==========
 
-For testing we use the py.test test runner. Based on the test type the test code can be in different locations.\
+For testing we use the py.test test runner.
 
-## For unittesting:
+## Initialization of the test suite
+
+After initializing the virtual environment and installing the package run either one of the following commands:
+
+    python setup.py test
+
+or:
+
+    py.test
+    
+**TODO: make test should work as well once implemented**
+
+## Structure
+
+Based on the test type the test code can be in different locations.
+
+### For unittesting
 
 Inside the ebu_tt_live python package inside a test directory within the subpackage it is testing. 
 
-    I.e.: To test the clocks create a test directory inside the ebu_tt_live/clocks package. __init__.py is not needed. Place python sourcefiles with testing modules
+    i.e.: To test the clocks create a test directory inside the ebu_tt_live/clocks package. __init__.py is not needed. Place python sourcefiles with testing modules
     
-## Functional/integration testing
+### Functional/integration testing
 
 In the repository root outside the ebu_tt_live package in a directory called testing.
+Structure of the testing directory
+
+    testing
+    ├─bdd - Behaviour Driven Development
+    │ ├─features - feature files for BDD
+    │ │ ├─validation - features that tie in with the XML validation functionality
+    │ │ │ └─*.feature - BDD feature files
+    │ │ └─...
+    │ ├─templates - Jinja2 template files for mostly XML documents
+    │ │ ├─*.xml - XML file templates
+    │ │ └...
+    │ └*.py - Python files with the BDD handlers
+    └─*.py - Other python based tests unrelated to BDD
+
+
+## Configuration files
+
+Testing configuration files are mostly in the project root:
+
+    pytest.ini - Pytest settings and command line switches
+    .coveragerc - Coverage settings and exclusion patterns
+    setup.cfg - setup.py integration settings
+    
+## Testing output
+
+Test suite generates multiple outputs:
+
+    htmlcov/ - Coverage of the ebu_tt_live python package in HTML for review
+    .coverage - Python raw coverage output
+    coverage.xml - Coverage data that XML based CI integration tools such as Jenkins Cobertura Plugin can understand and use
+
