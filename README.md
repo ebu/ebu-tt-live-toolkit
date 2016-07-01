@@ -100,7 +100,9 @@ autodoc.
 
 ## Prerequisite: Graphviz
 
-To display the images in the documentation, you need to have [Graphviz](http://www.graphviz.org/) installed and make sure the *dot* executable is on the PATH.
+To display the images in the documentation, you need to have [Graphviz](http://www.graphviz.org/) installed and make sure the *dot* executable is on the PATH. For example, for users of [homebrew](http://brew.sh/):
+
+    brew install graphviz
 
 ## Generating documentation
 
