@@ -22,7 +22,7 @@ Feature: ttp:timebase-related attribute constraints
 
     # These tests are not all passing because the missing semantic validation piece
   @skip
-  Scenario: Invalid types according to timebase
+  Scenario: Invalid times according to timebase
     Given an xml file <xml_file>
     And it has timeBase <time_base>
     And it has body begin time <body_begin>
@@ -42,8 +42,24 @@ Feature: ttp:timebase-related attribute constraints
     | timebase.xml  | media     |               |               | 225:59:60.9.3 |
 
 
+  Scenario: Valid times according to timebase in p
+    Given an xml file <xml_file>
+    And it has timeBase <time_base>
+    And it has p begin time <p_begin>
+    And it has p end time <p_end>
+    Then document is valid
+
+    Examples:
+    | xml_file      | time_base | p_begin     | p_end          |
+    | timebase.xml  | clock     | 15.58m      | 1.5h           |
+    | timebase.xml  | clock     | 42:05:60.8  | 45:00:47       |
+    | timebase.xml  | media     | 67.945s     | 125.0s         |
+    | timebase.xml  | media     | 999:09:60.8 | 1999:00:60.999 |
+
+
+
   @skip
-  Scenario: Invalid types according to timebase in p
+  Scenario: Invalid times according to timebase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>
     And it has body begin time <body_begin>
@@ -58,8 +74,24 @@ Feature: ttp:timebase-related attribute constraints
     | timebase.xml  | clock     | 14:05:60.8    | 15:00:47      |               | 245:45:24.54 |
 
 
+  Scenario: Valid times according to timebase in span
+    Given an xml file <xml_file>
+    And it has timeBase <time_base>
+    And it has span begin time <span_begin>
+    And it has span end time <span_end>
+    Then document is valid
+
+    Examples:
+    | xml_file      | time_base | span_begin  | span_end       |
+    | timebase.xml  | clock     | 15.58m      | 1.5h           |
+    | timebase.xml  | clock     | 42:05:60.8  | 45:00:47       |
+    | timebase.xml  | media     | 67.945s     | 125.0s         |
+    | timebase.xml  | media     | 999:09:60.8 | 1999:00:60.999 |
+
+
+
   @skip
-  Scenario: Invalid types according to timebase in span
+  Scenario: Invalid times according to timebase in span
     Given an xml file <xml_file>
     And it has timeBase <time_base>
     And it has body begin time <body_begin>
