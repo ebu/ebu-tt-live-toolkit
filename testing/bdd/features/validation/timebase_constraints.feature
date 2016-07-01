@@ -62,16 +62,14 @@ Feature: ttp:timebase-related attribute constraints
   Scenario: Invalid times according to timebase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>
-    And it has body begin time <body_begin>
-    And it has body end time <body_end>
     And it has p begin time <p_begin>
     And it has p end time <p_end>
     Then document is invalid
 
     Examples:
-    | xml_file      | time_base | body_begin    | body_end      | p_begin       | p_end        |
-    | timebase.xml  | clock     | 15.58m        | 1.5h          | 199:50:05.4   |              |
-    | timebase.xml  | clock     | 14:05:60.8    | 15:00:47      |               | 245:45:24.54 |
+    | xml_file      | time_base | p_begin       | p_end        |
+    | timebase.xml  | clock     | 199:50:05.4   |              |
+    | timebase.xml  | clock     |               | 245:45:24.54 |
 
 
   Scenario: Valid times according to timebase in span
@@ -94,13 +92,11 @@ Feature: ttp:timebase-related attribute constraints
   Scenario: Invalid times according to timebase in span
     Given an xml file <xml_file>
     And it has timeBase <time_base>
-    And it has body begin time <body_begin>
-    And it has body end time <body_end>
     And it has span begin time <span_begin>
     And it has span end time <span_end>
     Then document is invalid
 
     Examples:
-    | xml_file      | time_base | body_begin    | body_end      | span_begin | span_end     |
-    | timebase.xml  | clock     | 10:05:10.0    | 20:00:05.20   | 205:20:19  |              |
-    | timebase.xml  | clock     | 10:05:10.0    | 20:00:05.20   |            | 345:49:00    |
+    | xml_file      | time_base | span_begin | span_end     |
+    | timebase.xml  | clock     | 205:20:19  |              |
+    | timebase.xml  | clock     |            | 345:49:00    |
