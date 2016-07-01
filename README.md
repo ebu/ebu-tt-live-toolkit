@@ -112,14 +112,17 @@ following three ways:
 
 1. Calling setuptools
 
+
     python setup.py build_sphinx
     
 2. Running make in the docs directory where separate makefiles and a make.bat file is giving a variety of options.
+
 
     cd docs
     make html
     
 3. Calling the sphinx-build command line script that comes with sphinx. WARNING: Platform-dependent path-separators.
+
 
     sphinx-build -b html docs/source/ docs/build/html
     
