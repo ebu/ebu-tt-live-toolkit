@@ -6,7 +6,11 @@ install:
   - pip install pip==8.1.2
   - pip install --upgrade -r requirements.txt
   - python setup.py develop
+  - pip install coveralls
 
 script:
   - pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -r -u ebutt_live.xsd
   - python setup.py test
+
+after_success:
+  - coveralls
