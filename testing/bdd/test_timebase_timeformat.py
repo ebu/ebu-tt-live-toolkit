@@ -1,6 +1,6 @@
 from pytest_bdd import scenarios, given
 
-scenarios('features/validation/timebase_constraints.feature')
+scenarios('features/validation/timebase_timeformat_constraints.feature')
 
 
 @given('it has timeBase <time_base>')
