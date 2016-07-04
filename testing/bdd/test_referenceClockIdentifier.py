@@ -9,10 +9,10 @@ def given_time_base(time_base, template_dict):
 
 
 @given('it has clock mode <clock_mode>')
-def given_body_begin(clock_mode, template_dict):
+def given_clock_mode(clock_mode, template_dict):
     template_dict['clock_mode'] = clock_mode
 
 
 @given('it has reference clock identifier <ref_clock_id>')
-def given_body_end(ref_clock_id, template_dict):
+def given_ref_clock_id(ref_clock_id, template_dict):
     template_dict['ref_clock_id'] = ref_clock_id
