@@ -1,12 +1,14 @@
 language: python
 python:
-  - "2.7"
-  
+- '2.7'
 install:
-  - pip install pip==8.1.2
-  - pip install --upgrade -r requirements.txt
-  - python setup.py develop
-
+- pip install pip==8.1.2
+- pip install --upgrade -r requirements.txt
+- python setup.py develop
 script:
-  - pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -r -u ebutt_live.xsd
-  - python setup.py test
+- pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/
+  -r -u ebutt_live.xsd
+- python setup.py test
+notifications:
+  slack:
+    secure: RLs+ufYg4HcZfaTl73tTKKVja8DJ9LGk1WO+7B1qa4Fgpv0c/3uXcM+6tvDXllTlqcfLHgum0vbzvE4yapo0em0g/m75t1pEfkh5Pfrcas8IKAM9jg/xycWdYoAkKLRvNOcS4amO29FlzOHFaSSjX+V8JK8Mpm+QM2eGnqIbJokaXgBf/bQxHqGSRvYCeSisEG0f79Mn/0v5OOlbvmetFfvcQVNZDtgpA1CDbvK99F/vQT3qZ04Rh/vRnlcZyH9PEp/TEEJ0yX0NhHYEDnuBKPc86Ack/YCQpT12Ej2xTWjgoUrqv1pcr+h0ltYPXnnCyETrlbeLgNIMUsGW579MThqXekBZ7byRK2DMfjyL5+UgPSmTOIzEg7Qbc1u0r1bUuEi7nsJ5Vf65QeIAcewVASOUKmda9ag0MidTR/VoAsMtf5MzbDifSa1aBHRxZJToshNJVY9V8/lJLdwsbqsG2H+8v8ZuzyRLNiaFhNQTZQWpRXMipvbTDnnVxwpeFiLAqAwEKO9KIyGijqv2yeVvi4WtYvwzM7/1y/ycu7kTDFemKKuKmW2rzzBKJ30vo79ufMQCmn0riKkpaNxBf8R3EUEr86A9yuFpo6/Qc47i3PkeD7MszDqhEAfxl1+sQssWXOdVy6ALFb7RZ6EczpPvAjYLLO0aPa8OPaZjy3aJr+8=
