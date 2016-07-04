@@ -33,8 +33,7 @@ setup(
         "pyyaml",
         "twisted",
         "autobahn",
-        "nltk",
-        "django"
+        "nltk"
     ],
     license="BSD3",
     packages=packages,
