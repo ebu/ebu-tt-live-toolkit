@@ -50,11 +50,11 @@ Feature: ttp:timebase-related attribute constraints
     Then document is valid
 
     Examples:
-    | xml_file                 | time_base | p_begin     | p_end          |
-    | timebase_timeformat.xml  | clock     | 15.58m      | 1.5h           |
-    | timebase_timeformat.xml  | clock     | 42:05:60.8  | 45:00:47       |
-    | timebase_timeformat.xml  | media     | 67.945s     | 125.0s         |
-    | timebase_timeformat.xml  | media     | 999:09:60.8 | 1999:00:60.999 |
+    | xml_file                 | time_base | p_begin       | p_end          |
+    | timebase_timeformat.xml  | clock     | 999.99m       | 99999999.99s   |
+    | timebase_timeformat.xml  | clock     | 42:05:60.8    | 45:00:47       |
+    | timebase_timeformat.xml  | media     | 00.945ms      | 125.0h         |
+    | timebase_timeformat.xml  | media     | 999:09:60.8   | 001000:00:60.999  |
 
 
 
@@ -80,11 +80,11 @@ Feature: ttp:timebase-related attribute constraints
     Then document is valid
 
     Examples:
-    | xml_file                 | time_base | span_begin  | span_end       |
-    | timebase_timeformat.xml  | clock     | 15.58m      | 1.5h           |
-    | timebase_timeformat.xml  | clock     | 42:05:60.8  | 45:00:47       |
-    | timebase_timeformat.xml  | media     | 67.945s     | 125.0s         |
-    | timebase_timeformat.xml  | media     | 999:09:60.8 | 1999:00:60.999 |
+    | xml_file                 | time_base | span_begin     | span_end       |
+    | timebase_timeformat.xml  | clock     | 15.00m         | 99h            |
+    | timebase_timeformat.xml  | clock     | 00:05:60.8     | 45:00:47       |
+    | timebase_timeformat.xml  | media     | 199.45ms       | 15s           |
+    | timebase_timeformat.xml  | media     | 009900:09:60.8 | 1999:00:60.999 |
 
 
 
