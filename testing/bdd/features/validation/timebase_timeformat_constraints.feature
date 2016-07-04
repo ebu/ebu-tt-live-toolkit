@@ -21,7 +21,7 @@ Feature: ttp:timebase-related attribute constraints
 
 
     # These tests are not all passing because the missing semantic validation piece
-  @skip
+  #@skip
   Scenario: Invalid times according to timebase
     Given an xml file <xml_file>
     And it has timeBase <time_base>
@@ -33,13 +33,13 @@ Feature: ttp:timebase-related attribute constraints
     Examples:
     | xml_file                 | time_base | body_begin    | body_end      | body_dur      |
     | timebase_timeformat.xml  | clock     | 15.58a        | 1.5d          |               |
-    | timebase_timeformat.xml  | clock     | 0142:05:60.8  | 145:00:47     |               |
-    | timebase_timeformat.xml  | clock     |               |               | 199:00:60.4   |
-    | timebase_timeformat.xml  | media     | 42:05:08:60.8 | 45:00:47.0    |               |
+    #| timebase_timeformat.xml  | clock     | 0142:05:60.8  | 145:00:47     |               |
+    #| timebase_timeformat.xml  | clock     |               |               | 199:00:60.4   |
+    #| timebase_timeformat.xml  | media     | 42:05:08:60.8 | 45:00:47.0    |               |
     | timebase_timeformat.xml  | media     | 67.945q       | 125.0x        |               |
-    | timebase_timeformat.xml  | media     | 140:09:60.8.1 | 141:00:60.999 |               |
+    #| timebase_timeformat.xml  | media     | 140:09:60.8.1 | 141:00:60.999 |               |
     | timebase_timeformat.xml  | media     |               |               | 99.9l         |
-    | timebase_timeformat.xml  | media     |               |               | 225:59:60.9.3 |
+    #| timebase_timeformat.xml  | media     |               |               | 225:59:60.9.3 |
 
 
   Scenario: Valid times according to timebase in p
