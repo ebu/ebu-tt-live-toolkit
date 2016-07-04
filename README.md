@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/ebu/ebu-tt-live-toolkit.svg?branch=master)](https://travis-ci.org/ebu/ebu-tt-live-toolkit) 
+
 # ebu-tt-live-toolkit
 
 This is the repository for the interoperability kit of [EBU-TT Live](https://tech.ebu.ch/publications/tech3370). 
