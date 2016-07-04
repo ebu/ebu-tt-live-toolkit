@@ -3,7 +3,7 @@
         ebuttp:sequenceIdentifier="testSequence001"
         ebuttp:sequenceNumber="1"
         ttp:timeBase="{{ time_base }}"
-{% if timebase == 'smpte' %}
+{% if time_base == 'smpte' %}
         ttp:frameRate="25"
 {% endif %}
 {% if time_base == 'clock' %}
