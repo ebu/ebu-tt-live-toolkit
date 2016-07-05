@@ -14,6 +14,7 @@ class TestEBUTT3Document(TestCase):
         self.assertTrue(document2 >= document1)
         self.assertTrue(document1 <= document1)
         self.assertTrue(document1 >= document1)
+        self.assertTrue(document1 != document2)
 
     def test_comparison_different_sequences(self):
         document1 = EBUTT3Document("clock", 1, "testSeq1", "en-GB", "local")
@@ -24,3 +25,4 @@ class TestEBUTT3Document(TestCase):
         self.assertRaises(ValueError, lambda: document1 <= document2)
         self.assertRaises(ValueError, lambda: document1 >= document2)
         self.assertRaises(ValueError, lambda: document1 == document2)
+        self.assertRaises(ValueError, lambda: document1 != document2)
