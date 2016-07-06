@@ -23,6 +23,6 @@ class TestEBUTT3Document(TestCase):
         self.assertRaises(ValueError, lambda: document1 < document2)
         self.assertRaises(ValueError, lambda: document2 > document1)
         self.assertRaises(ValueError, lambda: document1 <= document2)
-        self.assertRaises(ValueError, lambda: document1 >= document2)
+        self.assertRaises(ValueError, lambda: document2 >= document1)
         self.assertRaises(ValueError, lambda: document1 == document2)
         self.assertRaises(ValueError, lambda: document1 != document2)
