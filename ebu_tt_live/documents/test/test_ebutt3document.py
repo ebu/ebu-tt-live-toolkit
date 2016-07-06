@@ -21,7 +21,7 @@ class TestEBUTT3Document(TestCase):
         document2 = EBUTT3Document("clock", 2, "testSeq2", "en-GB", "local")
         # assertRaises does not catch the error correctly without the lambda.
         self.assertRaises(ValueError, lambda: document1 < document2)
-        self.assertRaises(ValueError, lambda: document1 > document2)
+        self.assertRaises(ValueError, lambda: document2 > document1)
         self.assertRaises(ValueError, lambda: document1 <= document2)
         self.assertRaises(ValueError, lambda: document1 >= document2)
         self.assertRaises(ValueError, lambda: document1 == document2)
