@@ -16,6 +16,10 @@ class SimpleProducer(Node):
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
 
+    @property
+    def reference_clock(self):
+        return self._reference_clock
+
     @staticmethod
     def _interleave_line_breaks(items):
         end_list = []
@@ -39,7 +43,10 @@ class SimpleProducer(Node):
         activation_time = self._reference_clock.get_time() + timedelta(seconds=1)
 
         if self._input_blocks:
-            lines = self._input_blocks.next()
+            try:
+                lines = self._input_blocks.next()
+            except StopIteration:
+                return False
         else:
             lines = [activation_time]
 
@@ -57,3 +64,4 @@ class SimpleProducer(Node):
         document.validate()
 
         self._carriage_impl.emit_document(document)
+        return True
