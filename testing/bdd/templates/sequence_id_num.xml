@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <tt:tt
-{% if sequence_id not in [None, ''] %}
+{% if sequence_id %}
         ebuttp:sequenceIdentifier="{{ sequence_id }}"
 {% endif %}
-{% if sequence_num not in [None, ''] %}
+{% if sequence_num %}
         ebuttp:sequenceNumber="{{ sequence_num }}"
 {% endif %}
         ttp:clockMode="local"

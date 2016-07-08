@@ -3,7 +3,7 @@
         ebuttp:sequenceIdentifier="testSequence001"
         ebuttp:sequenceNumber="1"
         ttp:timeBase="{{ time_base }}"
-{% if frame_rate not in [None, ''] %}
+{% if frame_rate %}
         ttp:frameRate="{{ frame_rate }}"
 {% endif %}
         xml:lang="en-GB"
