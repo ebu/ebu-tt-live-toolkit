@@ -4,8 +4,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 
 ## SHALL requirements
 
-|-|-|-|
 |Section|Statement|Test|
+|---|---|---|
 |2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.| |
 | |If no document is active, or if a document with no content is active, no content shall be displayed. | |
 | |Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
@@ -13,12 +13,10 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | |A document shall be associated with exactly one sequence.| |
 | |the sequence identifier shall be present within every document| |
 | |Documents with the same sequence identifier shall contain a sequence number.| |
-| |Every
-distinct document with the same sequence identifier shall have a different sequence number.| |
+| |Every distinct document with the same sequence identifier shall have a different sequence number.| |
 | |Sequence numbers shall increase with the passage of time for each new document that is made available.| |
 | |Every document in a sequence shall be valid and self-contained.| |
-| |Every document in a sequence shall have an identical timing model as defined by using the same
-values for the ttp:timeBase and ttp:clockMode attributes. (Note issue to add frameRate, frameRateMultiplier and dropMode to this attribute set)| |
+| |Every document in a sequence shall have an identical timing model as defined by using the same values for the ttp:timeBase and ttp:clockMode attributes. (Note issue to add frameRate, frameRateMultiplier and dropMode to this attribute set)| |
 | |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s)| |
 | |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.| |
 |2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.| |
