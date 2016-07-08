@@ -33,7 +33,7 @@ class TwistedFileSystemProducerImpl(ProducerCarriageImpl):
         self._manifest_file.close()
 
     def emit_document(self, document):
-        filename = '{}_{:04d}.xml'.format(document.sequence_identifier, document.sequence_number)
+        filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
             f.write(document.get_xml())
