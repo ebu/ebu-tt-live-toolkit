@@ -24,6 +24,6 @@ Feature: Sequence ID and Sequence Number
         Examples:
         | xml_file            | seq_id   | seq_n     |
         | sequence_id_num.xml | testSeq1 | 5         |
-        | sequence_id_num.xml | a        | 10        |
+        | sequence_id_num.xml | a        | *?Empty?* |
         | sequence_id_num.xml | testSeq1 | 999999999 |
 
