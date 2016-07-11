@@ -9,7 +9,8 @@ from ebu_tt_live.example_data import get_example_data
 from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
 from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
-    TwistedPullProducer, TwistedProducerImpl, TwistedFileSystemProducerImpl
+    TwistedPullProducer
+from ebu_tt_live.carriage import FileSystemCarriageImpl, TwistedProducerImpl
 
 
 parser = ArgumentParser()
@@ -56,7 +57,7 @@ def main():
     # This object is used as flexible binding to the carriage mechanism and twisted integrated as dependency injection
     prod_impl = None
     if do_export:
-        prod_impl = TwistedFileSystemProducerImpl(parsed_args.folder_export)
+        prod_impl = FileSystemCarriageImpl(parsed_args.folder_export)
     else:
         prod_impl = TwistedProducerImpl()
 
