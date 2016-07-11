@@ -26,30 +26,59 @@
   </tt:head>
   <tt:body 
 {% if body_begin %}
-        tt:begin="{{ body_begin }}"
+  {% if body_begin == "*?Empty?*" %}
+
+      tt:begin=""
+  {% else %}
+      tt:begin="{{ body_begin }}"
+  {% endif %}
 {% endif %}
 {% if body_end %}
-        tt:end="{{ body_end }}"
+  {% if body_end == "*?Empty?*" %}
+      tt:end=""
+  {% else %}
+      tt:end="{{ body_end }}"
+  {% endif%}
 {% endif %}
 {% if body_dur %}
-        tt:dur="{{ body_dur }}"
+  {% if body_dur == "*?Empty?*" %}
+      tt:dur=""
+  {% else %}
+      tt:dur="{{ body_dur }}"
+  {% endif %}
 {% endif %}
     >
     <tt:div>
       <tt:p
 {% if p_begin %}
+  {% if p_begin == "*?Empty?*" %}
+            tt:begin=""
+  {% else %}
             tt:begin="{{ p_begin }}"
+  {% endif %}
 {% endif %}
 {% if p_end %}
+  {% if p_end == "*?Empty?*" %}
+            tt:end=""
+  {% else %}
             tt:end="{{ p_end }}"
+  {% endif %}
 {% endif %}
             xml:id="ID005">
             <tt:span
 {% if span_begin %}
+  {% if span_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
                 tt:begin="{{ span_begin }}"
+  {% endif %}
 {% endif %}
 {% if span_end %}
+  {% if span_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
                 tt:end="{{ span_end }}"
+  {% endif %}
 {% endif %}
             >
               Some example text...
