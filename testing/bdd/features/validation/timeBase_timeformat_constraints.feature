@@ -37,7 +37,8 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | media     | 42:05:08:60.8 | 45:00:47.0    |               |
     | timeBase_timeformat.xml  | media     | 140:09:60.8.1 | 141:00:60.999 |               |
     | timeBase_timeformat.xml  | media     |               |               | 225:59:60.9.3 |
-    @skip | timeBase_timeformat.xml  | clock     | 0142:05:60.8  | 145:00:47     |               |
+    @skip 
+    | timeBase_timeformat.xml  | clock     | 0142:05:60.8  | 145:00:47     |               |
     | timeBase_timeformat.xml  | clock     |               |               | 199:00:60.4   |
 
 
