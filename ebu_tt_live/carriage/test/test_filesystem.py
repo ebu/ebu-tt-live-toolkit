@@ -1,9 +1,5 @@
 from unittest import TestCase
-try:
-    from unittest.mock import patch, MagicMock
-except ImportError:
-    from mock import patch, MagicMock
-
+from mock import patch, MagicMock
 from ebu_tt_live.carriage import FileSystemCarriageImpl
 import os
 import tempfile
