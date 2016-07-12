@@ -17,6 +17,7 @@ def template_file(xml_file):
 @then('document is valid')
 def valid_doc(template_file, template_dict):
     xml_file = template_file.render(template_dict)
+    print xml_file
     document = EBUTT3Document.create_from_xml(xml_file)
     assert isinstance(document, EBUTT3Document)
 
@@ -24,6 +25,7 @@ def valid_doc(template_file, template_dict):
 @then('document is invalid')
 def invalid_doc(template_file, template_dict):
     xml_file = template_file.render(template_dict)
+    print xml_file
     with pytest.raises(Exception):
         EBUTT3Document.create_from_xml(xml_file)
 
