@@ -12,8 +12,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R3|2.2 |Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
 | R4|2.2 |Every distinct sequence shall have a unique sequence identifier.| |
 | R5|2.2 |A document shall be associated with exactly one sequence.| |
-| R6|2.2 |the sequence identifier shall be present within every document|(In)valid Sequence head attributes|
-| R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.|(In)valid Sequence head attributes|
+| R6|2.2 |the sequence identifier shall be present within every document|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
+| R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 | R8|2.2 |Every distinct document with the same sequence identifier shall have a different sequence number.| |
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.| |
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
@@ -40,9 +40,9 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R31|2.6|If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.| |
 |R32|3.2.2.1|`ttp:timeBase` Cardinality 1..1| |
 |R33|3.2.2.1|The `ttp:timeBase` element is as defined in [EBUTT1] with the addition that all time expressions of `dur` attributes shall denote a relative coordinate on the same timeline as the `begin` and `end` attributes.| |
-|R34|3.2.2.1|`ebuttp:sequenceIdentifier` Cardinality 1..1|(In)valid Sequence head attributes|
-|R35|3.2.2.1|The sequence to which every document belongs shall be identified using the `ebuttp:sequenceIdentifier` attribute.|(In)valid Sequence head attributes|
-|R36|3.2.2.1|`ebutt:sequenceNumber` Cardinality 1..1|(In)valid Sequence head attributes|
+|R34|3.2.2.1|`ebuttp:sequenceIdentifier` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
+|R35|3.2.2.1|The sequence to which every document belongs shall be identified using the `ebuttp:sequenceIdentifier` attribute.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
+|R36|3.2.2.1|`ebutt:sequenceNumber` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R37|3.2.2.1|Every document with the same `ebuttp:sequenceIdentifier` shall be uniquely numbered using the `ebuttp:sequenceNumber` attribute.| |
 |R38|3.2.2.2|The following additional metadata elements are defined by this specification. If used these elements shall be the first children of the `ebuttm:documentMetadata` element in the order documented below, after any metadata elements defined by EBU-TT Part 1 Tech 3350.| |
 |R39|3.2.2.2|Order of metadata elements (if present) in `ebuttm:documentMetadata` is: `ebuttm:originalSourceServiceIdentifier`, `ebuttm:intendedDestinationServiceIdentifier`, `ebuttm:documentFacet`, `ebuttm:trace`. | |
@@ -52,26 +52,26 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R43|3.2.2.2.1| `ebuttm:trace` `generatedBy` attribute Cardinality 1..1 | |
 |R44|3.2.2.3| A document that contains a `tt:body` element with no content shall be treated as being active as defined by the semantics described in § 2.3.1, and shall cause no content to be presented while it is active.| |
 |R45|3.2.2.3|`body` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
-|R46|3.2.2.3|`body` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |(In)valid times according to timeBase|
-|R47|3.2.2.3|`body` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |(In)valid times according to timeBase|
+|R46|3.2.2.3|`body` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
+|R47|3.2.2.3|`body` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
 |R48|3.2.2.3|`body` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
-|R49|3.2.2.3|`body` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |(In)valid times according to timeBase|
-|R50|3.2.2.3|`body` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |(In)valid times according to timeBase|
+|R49|3.2.2.3|`body` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
+|R50|3.2.2.3|`body` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
 |R51|3.2.2.3|`body` `dur` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. (NB this will be permitted when `markerMode="continuous"`, a change yet to be implemented in the spec)| |
-|R52|3.2.2.3|`body` `dur` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |(In)valid times according to timeBase|
-|R53|3.2.2.3|`body` `dur` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |(In)valid times according to timeBase|
+|R52|3.2.2.3|`body` `dur` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
+|R53|3.2.2.3|`body` `dur` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
 |R54|3.2.2.4|`div` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
 |R55|3.2.2.4|`div` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | |
 |R56|3.2.2.4|`div` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | |
 |R57|3.2.2.4|`div` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
 |R58|3.2.2.4|`div` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | |
 |R59|3.2.2.4|`div` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | |
-|R60|3.2.2.5|`p` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |(In)valid times according to timeBase in p|
-|R61|3.2.2.5|`p` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |(In)valid times according to timeBase in p|
-|R62|3.2.2.5|`p` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |(In)valid times according to timeBase in p|
+|R60|3.2.2.5|`p` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
+|R61|3.2.2.5|`p` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
+|R62|3.2.2.5|`p` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R63|3.2.2.5|`p` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
-|R64|3.2.2.5|`p` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |(In)valid times according to timeBase in p|
-|R65|3.2.2.5|`p` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |(In)valid times according to timeBase in p|
+|R64|3.2.2.5|`p` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
+|R65|3.2.2.5|`p` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.| |
 |R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.| |
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).| |
