@@ -3,14 +3,22 @@
     ebuttp:sequenceIdentifier="testSequence001"
     ebuttp:sequenceNumber="1"
 {% if clock_mode %}
+  {% if clock_mode == "*?Empty?*" %}
+    ttp:clockMode=""
+  {% else %}
     ttp:clockMode="{{ clock_mode }}"
+  {% endif %}
 {% endif %}
     ttp:timeBase="{{ time_base }}"
 {% if time_base == "smpte" %}
     ttp:frameRate="25"
 {% endif %}
 {% if ref_clock_id %}
+  {% if ref_clock_id == "*?Empty?*" %}
+    ebuttp:referenceClockIdentifier=""
+  {% else %}
     ebuttp:referenceClockIdentifier="{{ ref_clock_id }}"
+  {% endif %}
 {% endif %}
     xml:lang="en-GB"
     xmlns:ebuttm="urn:ebu:tt:metadata"
