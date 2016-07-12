@@ -2,7 +2,7 @@ from ebu_tt_live.node import ProducerCarriageImpl
 import os
 
 
-class FileSystemCarriageImpl(ProducerCarriageImpl):
+class FileSystemProducerImpl(ProducerCarriageImpl):
 
     _manifest_path = None
     _dirpath = None
