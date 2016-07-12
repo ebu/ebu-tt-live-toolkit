@@ -12,6 +12,8 @@
     ttp:timeBase="{{ time_base }}"
 {% if time_base == "smpte" %}
     ttp:frameRate="25"
+    ttp:frameRateMultiplier="1 1"
+    ttp:dropMode="nonDrop"
 {% endif %}
 {% if ref_clock_id %}
   {% if ref_clock_id == "*?Empty?*" %}
