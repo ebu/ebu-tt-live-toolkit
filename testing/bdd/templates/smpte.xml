@@ -4,7 +4,11 @@
         ebuttp:sequenceNumber="1"
         ttp:timeBase="{{ time_base }}"
 {% if frame_rate %}
+  {% if frame_rate == "*?Empty?*" %}
+        ttp:frameRate=""
+  {% else %}
         ttp:frameRate="{{ frame_rate }}"
+  {% endif %}
 {% endif %}
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
