@@ -4,7 +4,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 
 ## SHALL requirements
 
-|ID|Section|Statement|Test|
+|ID|Section|Statement|Scenario name|
 |---|---|---|---|---|
 | | **Tech3370**| | |
 | R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.| |
