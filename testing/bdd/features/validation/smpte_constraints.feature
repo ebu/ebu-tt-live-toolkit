@@ -10,7 +10,7 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  | 25         | smpte     |
     | smpte.xml  | 20         | smpte     |
 
-  # These tests are not all passing because the missing semantic validation piece
+  # These tests are not all passing because of the missing semantic validation piece
   @skip
   Scenario: Invalid SMPTE head attributes
     Given an xml file <xml_file>
