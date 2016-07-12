@@ -12,8 +12,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R3|2.2 |Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
 | R4|2.2 |Every distinct sequence shall have a unique sequence identifier.| |
 | R5|2.2 |A document shall be associated with exactly one sequence.| |
-| R6|2.2 |the sequence identifier shall be present within every document| |
-| R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.| |
+| R6|2.2 |the sequence identifier shall be present within every document|(In)valid Sequence head attributes|
+| R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.|(In)valid Sequence head attributes|
 | R8|2.2 |Every distinct document with the same sequence identifier shall have a different sequence number.| |
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.| |
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
