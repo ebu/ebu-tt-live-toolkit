@@ -5,6 +5,9 @@
         ttp:timeBase="{{ time_base }}"
 {% if time_base == 'smpte' %}
         ttp:frameRate="25"
+        ttp:frameRateMultiplier="1 1"
+        ttp:dropMode="nonDrop"
+        ttp:markerMode="discontinuous"
 {% endif %}
 {% if time_base == 'clock' %}
         ttp:clockMode='local'
