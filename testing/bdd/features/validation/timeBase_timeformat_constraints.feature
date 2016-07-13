@@ -34,14 +34,45 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | clock     | 15.58a        | 1.5d          |               |
     | timeBase_timeformat.xml  | media     | 67.945q       | 125.0x        |               |
     | timeBase_timeformat.xml  | media     |               |               | 99.9l         |
+    | timeBase_timeformat.xml  | media     |               |               | +12.25m       |
     | timeBase_timeformat.xml  | media     | 42:05:08:60.8 | 45:00:47.0    |               |
     | timeBase_timeformat.xml  | media     | 140:09:60.8.1 | 141:00:60.999 |               |
     | timeBase_timeformat.xml  | media     |               |               | 225:59:60.9.3 |
+    | timeBase_timeformat.xml  | media     | -45ms         |               |               |
+    | timeBase_timeformat.xml  | clock     | -45ms         |               |               |
     @skip 
     | timeBase_timeformat.xml  | clock     | 0142:05:60.8  | 145:00:47     |               |
     | timeBase_timeformat.xml  | clock     |               |               | 199:00:60.4   |
 
 
+  Scenario: Valid times according to timeBase in div
+    Given an xml file <xml_file>
+    And it has timeBase <time_base>
+    And it has div begin time <div_begin>
+    And it has div end time <div_end>
+    Then document is valid
+
+    Examples:
+    | xml_file                 | time_base | div_begin     | div_end          |
+    | timeBase_timeformat.xml  | clock     | 999.99m       | 99999999.99s     |
+    | timeBase_timeformat.xml  | clock     | 42:05:60.8    | 45:00:47         |
+    | timeBase_timeformat.xml  | media     | 00.945ms      | 125.0h           |
+    | timeBase_timeformat.xml  | media     | 999:09:60.8   | 001000:00:60.999 |
+
+
+
+  @skip
+  Scenario: Invalid times according to timeBase in div
+    Given an xml file <xml_file>
+    And it has timeBase <time_base>
+    And it has div begin time <div_begin>
+    And it has div end time <div_end>
+    Then document is invalid
+
+    Examples:
+    | xml_file                 | time_base | div_begin     | div_end      |
+    | timeBase_timeformat.xml  | clock     | 099:50:05.4   |              |
+    | timeBase_timeformat.xml  | clock     |               | 245:45:24.54 |
 
 
   Scenario: Valid times according to timeBase in p

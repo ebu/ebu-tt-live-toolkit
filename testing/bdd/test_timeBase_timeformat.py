@@ -23,6 +23,16 @@ def given_body_dur(body_dur, template_dict):
     template_dict['body_dur'] = body_dur
 
 
+@given('it has div begin time <div_begin>')
+def given_div_begin(div_begin, template_dict):
+    template_dict['div_begin'] = div_begin
+
+
+@given('it has div end time <div_end>')
+def given_div_end(div_end, template_dict):
+    template_dict['div_end'] = div_end
+
+
 @given('it has p begin time <p_begin>')
 def given_p_begin(p_begin, template_dict):
     template_dict['p_begin'] = p_begin
