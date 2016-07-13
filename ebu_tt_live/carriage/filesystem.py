@@ -1,5 +1,6 @@
 from ebu_tt_live.node import ProducerCarriageImpl
 import os
+import datetime
 
 
 class FileSystemProducerImpl(ProducerCarriageImpl):
@@ -27,7 +28,11 @@ class FileSystemProducerImpl(ProducerCarriageImpl):
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
             f.write(document.get_xml())
-        self._manifest_content += '{},{}\n'.format(self._node.reference_clock.get_time(), filename)
+        # To be able to format the output we need a datetime.time object and
+        # not a datetime.timedelta. The next line serves as a converter (adding
+        # a time with a timedelta gives a time)
+        time = (datetime.datetime.min + self._node.reference_clock.get_time()).time()
+        self._manifest_content += '{},{}\n'.format(time.strftime('%H:%M:%S.%f'), filename)
 
     def write_manifest(self):
         self._manifest_file = open(self._manifest_path, 'w')
