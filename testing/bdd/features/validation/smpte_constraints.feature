@@ -30,6 +30,7 @@ Feature: SMPTE-related attribute constraints
 
     Examples:
     | xml_file   | frame_rate | time_base | frame_rate_multiplier | drop_mode | marker_mode   |
+    | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | other value   |
     | smpte.xml  |            | smpte     |                       |           |               |
     | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | continuous    |
     | smpte.xml  | 30         | smpte     | 10001001              | dropPAL   | continuous    |
