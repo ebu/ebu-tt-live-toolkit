@@ -1,4 +1,4 @@
-# Conformance Requirements list for EBU-TT Part 3 Tech3370
+# Conformance Requirements list for EBU-TT Part 3 Tech 3370
 
 The conformance requirements for EBU-TT Part 3 derive from the specification itself, EBU-TT Part 1, TTML1SE and their referenced specifications - SMIL, XSL-FO etc. The following normative statements are present in Tech3370:
 
