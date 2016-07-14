@@ -56,6 +56,7 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
         if unit == 's':
             return timedelta(seconds=numerator)
         elif unit == 'm':
+            print "CIOCUOSUCOIUSFDU"
             return timedelta(minutes=numerator)
         elif unit == 'h':
             return timedelta(hours=numerator)
@@ -201,6 +202,10 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
     """
     Extending the string type with conversions to and from timedelta
     """
+
+    _groups_regex = re.compile('([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.[0-9]+)?')
+
+
     @classmethod
     def as_timedelta(cls, instance):
         pass
