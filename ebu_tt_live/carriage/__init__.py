@@ -1,2 +1,2 @@
-from filesystem import FileSystemProducerImpl
+from filesystem import FilesystemProducerImpl
 from twisted import TwistedConsumerImpl, TwistedProducerImpl

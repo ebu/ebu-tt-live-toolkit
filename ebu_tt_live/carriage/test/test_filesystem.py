@@ -1,12 +1,12 @@
 from unittest import TestCase
 from mock import patch, MagicMock
-from ebu_tt_live.carriage import FileSystemProducerImpl
+from ebu_tt_live.carriage import FilesystemProducerImpl
 import os
 import tempfile
 import shutil
 
 
-class TestFileSystemProducerImpl(TestCase):
+class TestFilesystemProducerImpl(TestCase):
 
     def setUp(self):
         self.test_dir = tempfile.mkdtemp()
@@ -16,12 +16,12 @@ class TestFileSystemProducerImpl(TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_instantiation(self):
-        fs_carriage = FileSystemProducerImpl(self.test_dir_path)
-        self.assertIsInstance(fs_carriage, FileSystemProducerImpl)
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        self.assertIsInstance(fs_carriage, FilesystemProducerImpl)
 
     @patch('ebu_tt_live.node.SimpleProducer')
     def test_resume_producing(self, node):
-        fs_carriage = FileSystemProducerImpl(self.test_dir_path)
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         node.process_document = MagicMock(return_value=False)
         fs_carriage.register(node)
         fs_carriage.resume_producing()
@@ -34,7 +34,7 @@ class TestFileSystemProducerImpl(TestCase):
         document.get_xml = MagicMock(return_value="test")
         node = MagicMock()
         node.reference_clock.get_time().return_value = 1
-        fs_carriage = FileSystemProducerImpl(self.test_dir_path)
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register(node)
         fs_carriage.emit_document(document)
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
