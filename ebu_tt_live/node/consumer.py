@@ -13,4 +13,4 @@ class SimpleConsumer(Node):
         super(SimpleConsumer, self).__init__(node_id, carriage_impl)
 
     def process_document(self, document):
-        log.info(document._ebutt3_content.body.begin.timedelta)
+        log.info(document)
