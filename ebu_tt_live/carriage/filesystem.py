@@ -1,9 +1,9 @@
-from ebu_tt_live.node import ProducerCarriageImpl
+from ebu_tt_live.node import ProducerCarriageImpl, ConsumerCarriageImpl
 import os
 import datetime
 
 
-class FileSystemProducerImpl(ProducerCarriageImpl):
+class FilesystemProducerImpl(ProducerCarriageImpl):
 
     _manifest_path = None
     _dirpath = None
@@ -38,4 +38,10 @@ class FileSystemProducerImpl(ProducerCarriageImpl):
         self._manifest_file = open(self._manifest_path, 'w')
         self._manifest_file.write(self._manifest_content)
         self._manifest_file.close()
+
+
+class FilesystemConsumerImpl(ConsumerCarriageImpl):
+
+    def on_new_data(self, data):
+        raise NotImplementedError()
 
