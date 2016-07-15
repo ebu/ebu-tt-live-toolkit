@@ -4,6 +4,26 @@ import datetime
 
 
 class FilesystemProducerImpl(ProducerCarriageImpl):
+    """
+    This class implements a carriage mechanism to output produced documents
+    to the file system. Its constructor takes a mandatory argument : the path to
+    the desired output folder. If the folder does not exist it will be created.
+    Each document handled by this carriage implementation is written in an xml file
+    in the output folder.
+    Along with the xml files, a manifest.txt file is also written in the output folder.
+    Each time an xml file is written, a line using the following format is added to the manifest :
+
+    `availability_time,path_to_xml_file`
+
+    The manifest file gives the availability time for each document along with the path to the
+    corresponding document.
+    The timeline used for the availability times is the same as the one used in the documents,
+    indeed the carriage implementation uses the same clock (or time reference) as the node that
+    produces the documents.
+    The writing order and thus the reading order is from top to bottom. Please note that depending
+    on the clock used by the producer node, time may loop (going to the next day), this is especially
+    the case with `ttp:timeBase="clock"`.
+    """
 
     _manifest_path = None
     _dirpath = None
