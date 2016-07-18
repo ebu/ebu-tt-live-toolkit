@@ -1,3 +1,3 @@
 from base import ConsumerCarriageImpl, ProducerCarriageImpl, CombinedCarriageImpl, CarriageImpl
-from filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader
+from filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, MANIFEST_TIME_CLOCK_FORMAT
 from twisted import TwistedConsumerImpl, TwistedProducerImpl

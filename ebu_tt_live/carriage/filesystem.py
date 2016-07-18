@@ -7,7 +7,7 @@ import logging
 import os
 import datetime
 
-MANIFEST_TIME_FORMAT = '%H:%M:%S.%f'
+MANIFEST_TIME_CLOCK_FORMAT = '%H:%M:%S.%f'
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +38,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     _dirpath = None
     _manifest_file = None
     _manifest_content = None
+    _manifest_time_format = None
 
     def __init__(self, dirpath):
         self._dirpath = dirpath
@@ -52,6 +53,10 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         self.write_manifest()
 
     def emit_document(self, document):
+        # Handle there the switch and checks to handle the string format to use
+        # for times in the manifest file depending on your time base.
+        if not self._manifest_time_format:
+            self._manifest_time_format = MANIFEST_TIME_CLOCK_FORMAT
         filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
@@ -60,7 +65,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
         time = (datetime.datetime.min + self._node.reference_clock.get_time()).time()
-        self._manifest_content += '{},{}\n'.format(time.strftime(MANIFEST_TIME_FORMAT), filename)
+        self._manifest_content += '{},{}\n'.format(time.strftime(self._manifest_time_format), filename)
 
     def write_manifest(self):
         self._manifest_file = open(self._manifest_path, 'w')
@@ -84,9 +89,14 @@ class FilesystemConsumerImpl(ConsumerCarriageImpl):
 
 
 class FilesystemReader(object):
+    """
+    This class is responsible for reading the manifest file and sending the corresponding
+    availability times and xml file's content to its _custom_consumer.
+    """
     _dirpath = None
     _manifest_lines_iter = None
     _custom_consumer = None
+    _manifest_time_format = None
 
     def __init__(self, dirpath, custom_consumer):
         self._dirpath = dirpath
@@ -96,13 +106,15 @@ class FilesystemReader(object):
             self._manifest_lines_iter = iter(manifest.readlines())
 
     def resume_reading(self):
+        if not self._manifest_time_format:
+            self._manifest_time_format = MANIFEST_TIME_CLOCK_FORMAT
         manifest_line = None
         try:
             manifest_line = self._manifest_lines_iter.next()
         except StopIteration:
             return False
-        availability_time_str, xml_file_name = manifest_line.split(',')
-        availability_time = datetime.strptime(availability_time_str, MANIFEST_TIME_FORMAT)
+        availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
+        availability_time = datetime.datetime.strptime(availability_time_str, MANIFEST_TIME_CLOCK_FORMAT).time()
         xml_file_path = os.path.join(self._dirpath, xml_file_name)
         xml_content = None
         with open(xml_file_path, 'r') as xml_file:
