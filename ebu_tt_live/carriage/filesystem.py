@@ -2,7 +2,7 @@ from .base import ProducerCarriageImpl, ConsumerCarriageImpl
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
-from ebu_tt_live.errors import XMLParsingFailed
+from ebu_tt_live.errors import XMLParsingFailed, EndOfData
 import logging
 import os
 import datetime
@@ -48,8 +48,11 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         self._manifest_content = ''
 
     def resume_producing(self):
-        while self._node.process_document(document=None):
-            pass
+        while True:
+            try:
+                self._node.process_document(document=None)
+            except EndOfData:
+                break
         self.write_manifest()
 
     def emit_document(self, document):
@@ -112,7 +115,7 @@ class FilesystemReader(object):
         try:
             manifest_line = self._manifest_lines_iter.next()
         except StopIteration:
-            return False
+            raise EndOfData
         availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
         availability_time = datetime.datetime.strptime(availability_time_str, MANIFEST_TIME_CLOCK_FORMAT).time()
         xml_file_path = os.path.join(self._dirpath, xml_file_name)
@@ -121,4 +124,3 @@ class FilesystemReader(object):
             xml_content = xml_file.read()
         data = [availability_time, xml_content]
         self._custom_consumer.on_new_data(data)
-        return True

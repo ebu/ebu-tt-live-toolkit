@@ -1,7 +1,7 @@
 from unittest import TestCase
 from mock import patch, MagicMock
 from ebu_tt_live.carriage import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, MANIFEST_TIME_CLOCK_FORMAT
-from ebu_tt_live.errors import XMLParsingFailed
+from ebu_tt_live.errors import XMLParsingFailed, EndOfData
 import os
 import tempfile
 import shutil
@@ -24,7 +24,7 @@ class TestFilesystemProducerImpl(TestCase):
     @patch('ebu_tt_live.node.SimpleProducer')
     def test_resume_producing(self, node):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
-        node.process_document = MagicMock(return_value=False)
+        node.process_document = MagicMock(side_effect=EndOfData())
         fs_carriage.register(node)
         fs_carriage.resume_producing()
         assert node.process_document.called

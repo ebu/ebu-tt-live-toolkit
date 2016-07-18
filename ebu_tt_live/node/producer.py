@@ -2,6 +2,8 @@
 from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type
+from ebu_tt_live.errors import EndOfData
+from ebu_tt_live.strings import END_OF_DATA
 
 
 class SimpleProducer(Node):
@@ -46,7 +48,7 @@ class SimpleProducer(Node):
             try:
                 lines = self._input_blocks.next()
             except StopIteration:
-                return False
+                raise EndOfData(END_OF_DATA)
         else:
             lines = [activation_time]
 
@@ -64,4 +66,3 @@ class SimpleProducer(Node):
         document.validate()
 
         self._carriage_impl.emit_document(document)
-        return True
