@@ -1,2 +1,3 @@
+from base import ConsumerCarriageImpl, ProducerCarriageImpl, CombinedCarriageImpl, CarriageImpl
 from filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader
 from twisted import TwistedConsumerImpl, TwistedProducerImpl

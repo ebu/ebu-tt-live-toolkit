@@ -1,4 +1,4 @@
-from ebu_tt_live.node import ProducerCarriageImpl, ConsumerCarriageImpl
+from .base import ProducerCarriageImpl, ConsumerCarriageImpl
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
