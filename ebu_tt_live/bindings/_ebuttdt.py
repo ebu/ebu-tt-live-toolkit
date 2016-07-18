@@ -42,7 +42,7 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
     """
 
     # NOTE: Update this regex should the spec change about this type
-    _groups_regex = re.compile('(?P<numerator>[0-9]+(?:\\.[0-9]+)?)(?P<unit>h|m|s|ms)')
+    _groups_regex = re.compile('(?P<numerator>[0-9]+(?:\\.[0-9]+)?)(?P<unit>h|ms|s|m)')
 
     @classmethod
     def as_timedelta(cls, instance):
