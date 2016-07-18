@@ -10,6 +10,7 @@ from . import _ebutts as ebutts
 from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
+from .validation import SemanticDocumentMixin, SemanticValidationMixin
 
 from pyxb.utils.domutils import BindingDOMSupport
 
@@ -25,7 +26,7 @@ namespace_prefix_map = {
 }
 
 
-class tt_type(raw.tt_type):
+class tt_type(SemanticDocumentMixin, raw.tt_type):
 
     @classmethod
     def __check_bds(cls, bds):
@@ -52,7 +53,12 @@ class tt_type(raw.tt_type):
             indent='  '
         )
 
+    def _semantic_after_traversal(self):
+        # Here we start looping over the structure again.
+        pass
+
 raw.tt_type._SetSupersedingClass(tt_type)
+
 
 # Namespace.setPrefix('tt')
 # _Namespace_ttm.setPrefix('ttm')
