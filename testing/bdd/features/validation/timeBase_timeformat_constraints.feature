@@ -49,7 +49,7 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | clock     |               |               | 199:00:60.4   |
 
 
-  # SPEC-CONFORMANCE :
+  # SPEC-CONFORMANCE : R55 R56 R58 R59
   Scenario: Valid times according to timeBase in div
     Given an xml file <xml_file>
     And it has timeBase <time_base>
