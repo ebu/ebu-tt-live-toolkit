@@ -1,10 +1,18 @@
 <?xml version="1.0" ?>
 <tt:tt
-{% if sequence_id not in [None, ''] %}
+{% if sequence_id %}
+  {% if sequence_id == "*?Empty?*" %}
+        ebuttp:sequenceIdentifier=""
+  {% else %}
         ebuttp:sequenceIdentifier="{{ sequence_id }}"
+  {% endif %}
 {% endif %}
-{% if sequence_num not in [None, ''] %}
+{% if sequence_num %}
+  {% if sequence_num == "*?Empty?*" %}
+        ebuttp:sequenceNumber=""
+  {% else %}
         ebuttp:sequenceNumber="{{ sequence_num }}"
+  {% endif %}
 {% endif %}
         ttp:clockMode="local"
         ttp:timeBase="clock"

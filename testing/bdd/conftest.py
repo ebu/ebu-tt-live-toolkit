@@ -23,9 +23,9 @@ def valid_doc(template_file, template_dict):
 
 @then('document is invalid')
 def invalid_doc(template_file, template_dict):
-    xml = template_file.render(template_dict)
+    xml_file = template_file.render(template_dict)
     with pytest.raises(Exception):
-        EBUTT3Document.create_from_xml(xml)
+        EBUTT3Document.create_from_xml(xml_file)
 
 
 @pytest.fixture
