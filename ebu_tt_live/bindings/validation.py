@@ -27,6 +27,7 @@ class SemanticValidationMixin(object):
         pass
 
     def _semantic_after_traversal(self, dataset):
+        log.info(self)
         pass
 
 
@@ -42,31 +43,34 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         """
         # Let's try to initiate DFS or BFS...
         semantic_dataset = {}
-        visited = set()
+        pre_visited = set()
+        post_visited = set()
         to_visit = []
-
-        visited.add(self)
 
         self._semantic_before_traversal(dataset=semantic_dataset)
 
         to_visit.extend(reversed(self._validatedChildren()))
 
-        log.info(to_visit)
-
         while to_visit:
             content = to_visit.pop()
-            log.info('{} is {}'.format(content.value, isinstance(content, NonElementContent)))
-            if isinstance(content, NonElementContent):
+            if content in post_visited or isinstance(content, NonElementContent):
                 continue
-            if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
-                content.value._semantic_before_traversal(dataset=semantic_dataset)
-                # WARNING: This should not be here TODO: move it
+            elif content in pre_visited:
+                log.info('post visit step: {}'.format(content.value))
                 content.value._semantic_after_traversal(dataset=semantic_dataset)
-                visited.add(content)
-            if hasattr(content.value, '_validatedChildren'):
-                ordered_children = reversed(content.value._validatedChildren())
-                filtered_children = [item for item in ordered_children if item not in visited]
-                to_visit.extend(filtered_children)
+                post_visited.add(content)
+            else:
+                log.info('pre visit step: {}'.format(content.value))
+                if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
+                    content.value._semantic_before_traversal(dataset=semantic_dataset)
+                    pre_visited.add(content)
+                    to_visit.append(content)
+
+                if hasattr(content.value, '_validatedChildren'):
+                    ordered_children = reversed(content.value._validatedChildren())
+                    to_visit.extend(ordered_children)
+
+        self._semantic_before_traversal(dataset=semantic_dataset)
 
     def _validateBinding_vx(self):
         # Step1: Before
