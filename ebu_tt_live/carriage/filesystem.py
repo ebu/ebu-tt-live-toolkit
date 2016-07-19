@@ -29,9 +29,9 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     The timeline used for the availability times is the same as the one used in the documents,
     indeed the carriage implementation uses the same clock (or time reference) as the node that
     produces the documents.
-    The writing order and thus the reading order is from top to bottom. Please note that depending
-    on the clock used by the producer node, time may loop (going to the next day), this is especially
-    the case with `ttp:timeBase="clock"`.
+    The writing order and thus the reading order is from top to bottom. Please note that depending on the
+    timebase used by the producer node time may loop (going to the next day). It can loop with
+    `ttp:timeBase="clock"` or `ttp:timeBase="smpte"`, but not with `ttp:timeBase="media"`.
     """
 
     _manifest_path = None
