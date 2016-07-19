@@ -53,7 +53,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             indent='  '
         )
 
-    def _semantic_after_traversal(self):
+    def _semantic_after_validation(self):
         # Here we start looping over the structure again.
         pass
 

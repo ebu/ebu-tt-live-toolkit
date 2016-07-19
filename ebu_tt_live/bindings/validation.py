@@ -30,9 +30,15 @@ class SemanticValidationMixin(object):
 
 class SemanticDocumentMixin(SemanticValidationMixin):
 
+    def _semantic_before_validation(self):
+        pass
+
+    def _semantic_after_validation(self):
+        pass
+
     def _validateBinding_vx(self):
         # Step1: Before
-        self._semantic_before_traversal()
+        self._semantic_before_validation()
 
         # Step2: DFS
         # This line is hacky as f*** and non-standard way of getting the desired behaviour but python and MRO are not
@@ -40,4 +46,4 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         self.__class__.__bases__[1]._validateBinding_vx(self)
 
         # Step3: Process current object
-        self._semantic_after_traversal()
+        self._semantic_after_validation()
