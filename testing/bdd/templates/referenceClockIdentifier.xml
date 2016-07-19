@@ -14,6 +14,7 @@
     ttp:frameRate="25"
     ttp:frameRateMultiplier="1 1"
     ttp:dropMode="nonDrop"
+    ttp:markerMode="continuous"
 {% endif %}
 {% if ref_clock_id %}
   {% if ref_clock_id == "*?Empty?*" %}
