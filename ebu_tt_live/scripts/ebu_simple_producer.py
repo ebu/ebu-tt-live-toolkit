@@ -10,7 +10,8 @@ from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
 from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
     TwistedPullProducer
-from ebu_tt_live.carriage import FilesystemProducerImpl, TwistedProducerImpl
+from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
+from ebu_tt_live.carriage.twisted import TwistedProducerImpl
 
 
 parser = ArgumentParser()

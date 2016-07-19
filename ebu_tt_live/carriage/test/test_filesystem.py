@@ -1,6 +1,6 @@
 from unittest import TestCase
 from mock import patch, MagicMock
-from ebu_tt_live.carriage import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, MANIFEST_TIME_CLOCK_FORMAT
+from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, MANIFEST_TIME_CLOCK_FORMAT
 from ebu_tt_live.errors import XMLParsingFailed, EndOfData
 import os
 import tempfile
@@ -76,7 +76,7 @@ class TestFilesystemReader(TestCase):
     def setUp(self):
         self.test_data_dir_path = os.path.join(os.path.dirname(__file__), 'test_data')
 
-    @patch('ebu_tt_live.carriage.FilesystemConsumerImpl')
+    @patch('ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl')
     def test_resume_reading(self, fs_carriage_impl):
         fs_carriage_impl.on_new_data = MagicMock(return_value=None)
         fs_reader = FilesystemReader(self.test_data_dir_path, fs_carriage_impl)
