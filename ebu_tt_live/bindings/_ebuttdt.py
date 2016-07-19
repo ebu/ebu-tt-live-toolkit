@@ -6,6 +6,7 @@ import re
 from pyxb.exceptions_ import SimpleTypeValueError
 from ebu_tt_live.errors import TimeFormatOverflowError
 from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW
+from .validation import SemanticValidationMixin
 
 
 def _get_time_members(checked_time):
@@ -104,12 +105,21 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
 ebuttdt_raw.timecountTimingType._SetSupersedingClass(TimecountTimingType)
 
 
-class FullClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.fullClockTimingType):
+class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebuttdt_raw.fullClockTimingType):
     """
     Extending the string type with conversions to and from timedelta
     """
 
     _groups_regex = re.compile('([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.[0-9]+)?')
+    _compatible_timebases = {
+        'begin': ['clock', 'media'],
+        'dur': ['clock', 'media'],
+        'end': ['clock', 'media']
+    }
+
+    @classmethod
+    def compatible_timebases(cls):
+        return cls._compatible_timebases
 
     @classmethod
     def as_timedelta(cls, instance):

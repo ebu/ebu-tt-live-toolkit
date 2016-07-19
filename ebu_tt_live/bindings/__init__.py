@@ -10,7 +10,7 @@ from . import _ebutts as ebutts
 from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
-from .validation import SemanticDocumentMixin, SemanticValidationMixin
+from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimeBaseValidationMixin
 
 from pyxb.utils.domutils import BindingDOMSupport
 
@@ -53,7 +53,18 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             indent='  '
         )
 
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        dataset['tt_element'] = self
+
 raw.tt_type._SetSupersedingClass(tt_type)
+
+
+class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+
+raw.p_type._SetSupersedingClass(p_type)
 
 
 # Namespace.setPrefix('tt')

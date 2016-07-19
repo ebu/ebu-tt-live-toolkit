@@ -2,6 +2,7 @@ import logging
 from .common import create_loggers
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
+from ebu_tt_live.bindings import _ebuttdt as datatypes
 from pyxb import BIND
 from datetime import timedelta
 
@@ -15,7 +16,7 @@ def main():
     tt = bindings.tt(
         sequenceIdentifier='testSequence001',
         sequenceNumber='1',
-        timeBase='clock',
+        timeBase='smpte',
         clockMode='local',
         lang='en-GB',
         head=bindings.head_type(
@@ -40,7 +41,7 @@ def main():
                         'And another line'
                     ),
                     id='ID005',
-                    begin=timedelta(seconds=.5),
+                    begin=datatypes.FullClockTimingType(timedelta(seconds=.5)),
                     end=timedelta(seconds=3.42),
                 )
             ),

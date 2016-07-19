@@ -4,6 +4,7 @@ This file contains all the pyxb helpers needed for enabling a concise semantic v
 
 from pyxb import ValidationConfig, GlobalValidationConfig
 from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
+from ebu_tt_live.errors import SemanticValidationError
 import logging
 
 log = logging.getLogger(__name__)
@@ -22,11 +23,11 @@ class SemanticValidationMixin(object):
 
     _validationConfig_ = SemanticValidationConfig
 
-    def _semantic_before_traversal(self, dataset):
+    def _semantic_before_traversal(self, dataset, element_content=None):
         log.info(self)
         pass
 
-    def _semantic_after_traversal(self, dataset):
+    def _semantic_after_traversal(self, dataset, element_content=None):
         log.info(self)
         pass
 
@@ -57,12 +58,12 @@ class SemanticDocumentMixin(SemanticValidationMixin):
                 continue
             elif content in pre_visited:
                 log.info('post visit step: {}'.format(content.value))
-                content.value._semantic_after_traversal(dataset=semantic_dataset)
+                content.value._semantic_after_traversal(dataset=semantic_dataset, element_content=content)
                 post_visited.add(content)
             else:
                 log.info('pre visit step: {}'.format(content.value))
                 if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
-                    content.value._semantic_before_traversal(dataset=semantic_dataset)
+                    content.value._semantic_before_traversal(dataset=semantic_dataset, element_content=content)
                     pre_visited.add(content)
                     to_visit.append(content)
 
@@ -83,3 +84,16 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Step3: Process current object
         self._semantic_after_validation()
+
+
+class TimeBaseValidationMixin(object):
+    # The mixin approach is used since the inspected elements are all attributes of the element so they do not
+    # take part in the traversal directly.
+
+    def _semantic_timebase_validation(self, dataset, element_content):
+        time_base = dataset['tt_element'].timeBase
+        # Check typing against
+        if hasattr(self, 'begin'):
+            timebases = self.begin.compatible_timebases()
+            if time_base not in timebases['begin']:
+                raise SemanticValidationError('BKLAAARTGH')
