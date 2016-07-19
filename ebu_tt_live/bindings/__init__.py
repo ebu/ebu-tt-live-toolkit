@@ -53,10 +53,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             indent='  '
         )
 
-    def _semantic_after_validation(self):
-        # Here we start looping over the structure again.
-        pass
-
 raw.tt_type._SetSupersedingClass(tt_type)
 
 

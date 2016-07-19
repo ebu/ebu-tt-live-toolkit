@@ -49,6 +49,8 @@ def main():
         )
     )
 
+    tt.validateBinding()
+
     print(
         tt.toxml()
     )
