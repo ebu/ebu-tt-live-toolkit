@@ -77,6 +77,11 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
 
 
 class FilesystemConsumerImpl(ConsumerCarriageImpl):
+    """
+    This class is where the logic for availability times should be implemented. This allows us to implement different
+    interpretation of availability times by simply adding new CarriageMechanism, the reading of the files itself being
+    done in ebutt_live.carriage.FilesystemReader file.
+    """
 
     def on_new_data(self, data):
         document = None
