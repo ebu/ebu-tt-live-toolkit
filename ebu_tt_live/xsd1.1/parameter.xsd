@@ -63,14 +63,15 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	</xs:attribute>
 	<xs:attribute name="markerMode">
 		<xs:annotation>
-			<xs:documentation>If the timebase is “smpte” ttp:markerMode shall be specified and shall
-				have the value “discontinuous”. The value “discontinuous” implies that because of
-				the marker mode of operation no assumption may be made regarding linearity or
-				monotonicity of time coordinates.</xs:documentation>
+			<xs:documentation>If the timebase is “smpte” ttp:markerMode shall be specified. 
+				The value “discontinuous” implies that because of the marker mode of operation no assumption 
+				may be made regarding linearity or monotonicity of time coordinates. The value "continuous" implies
+				that we assume linearity and monotonicity of time coordinates.</xs:documentation>
 		</xs:annotation>
 		<xs:simpleType>
 			<xs:restriction base="xs:token">
 				<xs:enumeration value="discontinuous"/>
+				<xs:enumeration value="continuous"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:attribute>
