@@ -93,7 +93,7 @@ class TimeBaseValidationMixin(object):
     def _semantic_timebase_validation(self, dataset, element_content):
         time_base = dataset['tt_element'].timeBase
         # Check typing against
-        if hasattr(self, 'begin'):
+        if hasattr(self, 'begin') and self.begin is not None:
             timebases = self.begin.compatible_timebases()
             if time_base not in timebases['begin']:
                 raise SemanticValidationError('BKLAAARTGH')

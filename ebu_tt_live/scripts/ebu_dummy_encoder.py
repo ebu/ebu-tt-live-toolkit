@@ -16,7 +16,7 @@ def main():
     tt = bindings.tt(
         sequenceIdentifier='testSequence001',
         sequenceNumber='1',
-        timeBase='smpte',
+        timeBase='clock',
         clockMode='local',
         lang='en-GB',
         head=bindings.head_type(

@@ -67,6 +67,15 @@ class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
 raw.p_type._SetSupersedingClass(p_type)
 
 
+# TODO: Why does overriding span_type lose mixed content in the XML render
+# class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type):
+#
+#     def _semantic_before_traversal(self, dataset, element_content=None):
+#         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+
+# raw.span_type._SetSupersedingClass(span_type)
+
+
 # Namespace.setPrefix('tt')
 # _Namespace_ttm.setPrefix('ttm')
 # _Namespace_ttp.setPrefix('ttp')

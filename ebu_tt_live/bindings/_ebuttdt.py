@@ -22,6 +22,16 @@ class _TimedeltaBindingMixin(object):
     Wiring in timedelta assignment and conversion operators
     """
 
+    _compatible_timebases = {
+        'begin': ['clock', 'media', 'smpte'],
+        'dur': ['clock', 'media', 'smpte'],
+        'end': ['clock', 'media', 'smpte']
+    }
+
+    @classmethod
+    def compatible_timebases(cls):
+        return cls._compatible_timebases
+
     @classmethod
     def _ConvertArguments_vx(cls, args, kw):
         result = []
