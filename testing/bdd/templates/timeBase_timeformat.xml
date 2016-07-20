@@ -7,7 +7,7 @@
         ttp:frameRate="25"
         ttp:frameRateMultiplier="1 1"
         ttp:dropMode="nonDrop"
-        ttp:markerMode="discontinuous"
+        ttp:markerMode="continuous"
 {% endif %}
 {% if time_base == 'clock' %}
         ttp:clockMode='local'
