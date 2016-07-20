@@ -20,7 +20,7 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | media     |             |                | 2225:59:60.9 |
 
 
-    # These tests are not all passing because of the missing semantic validation piece
+    # These tests are not all passing because the missing semantic validation piece
   Scenario: Invalid times according to timeBase
     Given an xml file <xml_file>
     And it has timeBase <time_base>

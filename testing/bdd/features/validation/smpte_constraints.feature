@@ -17,7 +17,7 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  | 30         | smpte     | 1000 1001             | dropPAL   | continuous    |
     | smpte.xml  | 30         | smpte     | 1000 1001             | dropPAL   | discontinuous |
 
-  # These tests are not all passing because of the missing semantic validation piece
+  # These tests are not all passing because the missing semantic validation piece
   @skip
   Scenario: Invalid SMPTE head attributes
     Given an xml file <xml_file>
