@@ -1,6 +1,7 @@
 Feature: Sequence ID and Sequence Number
   Both are mandatory parameters and the sequence number has to be a number (no letters)
 
+  # SPEC-CONFORMANCE: R6 R7 R34 R35 R36
   Scenario: Invalid Sequence head attributes
     Given an xml file <xml_file>
     And it has sequence identifier <seq_id>
@@ -15,6 +16,7 @@ Feature: Sequence ID and Sequence Number
     | sequence_id_num.xml | testSeq1 |       |
     | sequence_id_num.xml |          |       |
 
+  # SPEC-CONFORMANCE: R6 R7 R34 R35 R36
   Scenario: Valid Sequence head attributes
     Given an xml file <xml_file>
     And it has sequence identifier <seq_id>
