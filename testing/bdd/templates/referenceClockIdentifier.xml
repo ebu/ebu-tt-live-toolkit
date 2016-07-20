@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<tt:tt
+    ebuttp:sequenceIdentifier="testSequence001"
+    ebuttp:sequenceNumber="1"
+{% if clock_mode %}
+  {% if clock_mode == "*?Empty?*" %}
+    ttp:clockMode=""
+  {% else %}
+    ttp:clockMode="{{ clock_mode }}"
+  {% endif %}
+{% endif %}
+    ttp:timeBase="{{ time_base }}"
+{% if time_base == "smpte" %}
+    ttp:frameRate="25"
+    ttp:frameRateMultiplier="1 1"
+    ttp:dropMode="nonDrop"
+    ttp:markerMode="continuous"
+{% endif %}
+{% if ref_clock_id %}
+  {% if ref_clock_id == "*?Empty?*" %}
+    ebuttp:referenceClockIdentifier=""
+  {% else %}
+    ebuttp:referenceClockIdentifier="{{ ref_clock_id }}"
+  {% endif %}
+{% endif %}
+    xml:lang="en-GB"
+    xmlns:ebuttm="urn:ebu:tt:metadata"
+    xmlns:ebuttp="urn:ebu:tt:parameters"
+    xmlns:tt="http://www.w3.org/ns/ttml"
+    xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+  <tt:body>
+    <tt:div>
+      <tt:p xml:id="ID005">
+        <tt:span>Some example text...</tt:span>
+        <tt:br/>
+        <tt:span>And another line</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
