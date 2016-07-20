@@ -1,4 +1,6 @@
 Feature: ttp:timeBase-related attribute constraints
+
+  # SPEC-CONFORMANCE: R46 R47 R49 R50 R52 R53
   Scenario: Valid times according to timeBase
     Given an xml file <xml_file>
     And it has timeBase <time_base>
@@ -23,6 +25,7 @@ Feature: ttp:timeBase-related attribute constraints
 
 
   # These tests are not all passing because the missing semantic validation piece
+  # SPEC-CONFORMANCE: R46 R47 R49 R50 R52 R53
   Scenario: Invalid times according to timeBase
     Given an xml file <xml_file>
     And it has timeBase <time_base>
@@ -90,7 +93,7 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | clock     |               |               |
 
 
-
+  # SPEC-CONFORMANCE: R61 R62 R64 R65
   Scenario: Valid times according to timeBase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>
@@ -108,6 +111,8 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | smpte     |               | 08:59:59:99      |
 
 
+  # SPEC-CONFORMANCE: R61 R62 R64 R65
+  @skip
   Scenario: Invalid times according to timeBase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>
