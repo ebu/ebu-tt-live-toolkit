@@ -10,6 +10,27 @@
         ttp:frameRate="{{ frame_rate }}"
   {% endif %}
 {% endif %}
+{% if frame_rate_multiplier %}
+  {% if frame_rate_multiplier == "*?Empty?*" %}
+        ttp:frameRateMultiplier=""
+  {% else %}
+        ttp:frameRateMultiplier="{{ frame_rate_multiplier }}"
+  {% endif %}
+{% endif %}
+{% if drop_mode %}
+  {% if drop_mode == "*?Empty?*" %}
+        ttp:dropMode=""
+  {% else %}
+        ttp:dropMode="{{ drop_mode }}"
+  {% endif %}
+{% endif %}
+{% if marker_mode %}
+  {% if marker_mode == "*?Empty?*" %}
+        ttp:markerMode=""
+  {% else %}
+        ttp:markerMode="{{ marker_mode }}"
+  {% endif %}
+{% endif %}
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"
