@@ -14,7 +14,16 @@ class Clock(object):
     # time that we can read back later.
     _saved_time = None
 
-    def get_time(self):
+    def get_time(self, use_saved_time=False):
+        """
+        :return: datetime.timedelta object
+        """
+        if use_saved_time:
+            return self._saved_time
+        else:
+            return self.current_time()
+
+    def current_time(self):
         """
         Implemented in descendant classes
         :return: datetime.timedelta object
@@ -33,12 +42,7 @@ class Clock(object):
     def time_base(self):
         return self._time_base
 
-    @property
-    def saved_time(self):
-        return self._saved_time
-
-    @saved_time.setter
-    def saved_time(self, value):
+    def save_time(self, value):
         if not isinstance(value, timedelta):
             raise TypeError
         else:
