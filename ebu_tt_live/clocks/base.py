@@ -13,12 +13,13 @@ class Clock(object):
     # Implemented to be used with the manifest file, allows us to save a fix
     # time that we can read back later.
     _saved_time = None
+    _use_saved_time = False
 
-    def get_time(self, use_saved_time=False):
+    def get_time(self):
         """
         :return: datetime.timedelta object
         """
-        if use_saved_time:
+        if self._use_saved_time:
             return self._saved_time
         else:
             return self.current_time()
@@ -47,6 +48,12 @@ class Clock(object):
             raise TypeError
         else:
             self._saved_time = value
+
+    def saved_time_mode(self):
+        self.use_saved_time = True
+
+    def is_saved_time_mode(self):
+        return self._use_saved_time
 
     def start(self):
         pass
