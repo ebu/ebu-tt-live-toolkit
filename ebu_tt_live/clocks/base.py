@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 
 class Clock(object):
     """
@@ -8,6 +10,9 @@ class Clock(object):
 
     _clock_mode = None
     _time_base = None
+    # Implemented to be used with the manifest file, allows us to save a fix
+    # time that we can read back later.
+    _saved_time = None
 
     def get_time(self):
         """
@@ -27,6 +32,17 @@ class Clock(object):
     @property
     def time_base(self):
         return self._time_base
+
+    @property
+    def saved_time(self):
+        return self._saved_time
+
+    @saved_time.setter
+    def saved_time(self, value):
+        if not isinstance(value, timedelta):
+            raise TypeError
+        else:
+            self._saved_time = value
 
     def start(self):
         pass
