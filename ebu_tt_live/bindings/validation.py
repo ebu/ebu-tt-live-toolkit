@@ -4,24 +4,14 @@ This file contains all the pyxb helpers needed for enabling a concise semantic v
 
 from pyxb import ValidationConfig, GlobalValidationConfig
 from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
+from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE
 from ebu_tt_live.errors import SemanticValidationError
 import logging
 
 log = logging.getLogger(__name__)
 
 
-class SemanticValidationConfig(ValidationConfig):
-
-    def __init__(self):
-        log.warning('SemanticValidationConfig init {}'.format(hex(id(self))))
-
-    def __del__(self):
-        log.warning('SemanticValidationConfig deleted {}'.format(hex(id(self))))
-
-
 class SemanticValidationMixin(object):
-
-    _validationConfig_ = SemanticValidationConfig
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         log.info(self)
@@ -92,8 +82,38 @@ class TimeBaseValidationMixin(object):
 
     def _semantic_timebase_validation(self, dataset, element_content):
         time_base = dataset['tt_element'].timeBase
-        # Check typing against
+        # Check typing of timing arguments against the timebase
         if hasattr(self, 'begin') and self.begin is not None and hasattr(self.begin, 'compatible_timebases'):
             timebases = self.begin.compatible_timebases()
             if time_base not in timebases['begin']:
-                raise SemanticValidationError('BKLAAARTGH')
+                raise SemanticValidationError(
+                    ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_type=type(self.begin),
+                        attr_value=self.begin,
+                        attr_name='begin',
+                        time_base=time_base
+                    )
+                )
+        if hasattr(self, 'dur') and self.dur is not None and hasattr(self.dur, 'compatible_timebases'):
+            timebases = self.dur.compatible_timebases()
+            if time_base not in timebases['dur']:
+                raise SemanticValidationError(
+                    ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_type=type(self.dur),
+                        attr_value=self.dur,
+                        attr_name='dur',
+                        time_base=time_base
+                    )
+                )
+        if hasattr(self, 'end') and self.end is not None and hasattr(self.end, 'compatible_timebases'):
+            timebases = self.end.compatible_timebases()
+            if time_base not in timebases['end']:
+                raise SemanticValidationError(
+                    ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_type=type(self.end),
+                        attr_value=self.end,
+                        attr_name='end',
+                        time_base=time_base
+                    )
+                )
+

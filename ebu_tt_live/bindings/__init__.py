@@ -54,6 +54,8 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         )
 
     def _semantic_before_traversal(self, dataset, element_content=None):
+        # The tt element adds itself to the semantic dataset to help classes lower down the line to locate contraining
+        # attributes.
         dataset['tt_element'] = self
 
 raw.tt_type._SetSupersedingClass(tt_type)
@@ -67,13 +69,12 @@ class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
 raw.p_type._SetSupersedingClass(p_type)
 
 
-# TODO: Why does overriding span_type lose mixed content in the XML render
-# class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type):
-#
-#     def _semantic_before_traversal(self, dataset, element_content=None):
-#         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type):
 
-# raw.span_type._SetSupersedingClass(span_type)
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+
+raw.span_type._SetSupersedingClass(span_type)
 
 
 # Namespace.setPrefix('tt')
