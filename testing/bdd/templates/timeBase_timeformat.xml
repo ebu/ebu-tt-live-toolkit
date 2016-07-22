@@ -5,6 +5,9 @@
         ttp:timeBase="{{ time_base }}"
 {% if time_base == 'smpte' %}
         ttp:frameRate="25"
+        ttp:frameRateMultiplier="1 1"
+        ttp:dropMode="nonDrop"
+        ttp:markerMode="continuous"
 {% endif %}
 {% if time_base == 'clock' %}
         ttp:clockMode='local'
@@ -47,7 +50,21 @@
   {% endif %}
 {% endif %}
     >
-    <tt:div>
+    <tt:div
+{% if div_begin %}
+  {% if div_begin == "*?Empty?*" %}
+        tt:begin=""
+  {% else %}
+        tt:begin="{{ div_begin }}"
+  {% endif %}
+{% endif %}
+{% if div_end %}
+  {% if div_end == "*?Empty?*" %}
+        tt:end=""
+  {% else %}
+        tt:end="{{ div_end }}"
+  {% endif %}
+{% endif %}>
       <tt:p
 {% if p_begin %}
   {% if p_begin == "*?Empty?*" %}
