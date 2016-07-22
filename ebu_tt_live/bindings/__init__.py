@@ -29,6 +29,14 @@ namespace_prefix_map = {
 class tt_type(SemanticDocumentMixin, raw.tt_type):
 
     @classmethod
+    def _ConvertArguments_vx(cls, args, kw):
+        # There is a bit of trickery and sorcery here.
+        kw['_ebu_context'] = {
+            'time_base': kw.get('timeBase')
+        }
+        return args
+
+    @classmethod
     def __check_bds(cls, bds):
         if bds:
             return bds
@@ -75,6 +83,14 @@ class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
 
 raw.span_type._SetSupersedingClass(span_type)
+
+
+class div_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.div_type):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+
+raw.div_type._SetSupersedingClass(div_type)
 
 
 # Namespace.setPrefix('tt')

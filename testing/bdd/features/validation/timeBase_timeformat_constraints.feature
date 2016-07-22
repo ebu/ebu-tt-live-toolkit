@@ -42,8 +42,6 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | clock     |               |               | 199:00:60.4   |
 
 
-
-
   Scenario: Valid times according to timeBase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>
@@ -59,8 +57,6 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | media     | 999:09:60.8   | 001000:00:60.999 |
 
 
-
-  @skip
   Scenario: Invalid times according to timeBase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>
@@ -89,8 +85,6 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml  | media     | 009900:09:60.8 | 1999:00:60.999 |
 
 
-
-  @skip
   Scenario: Invalid times according to timeBase in span
     Given an xml file <xml_file>
     And it has timeBase <time_base>

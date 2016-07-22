@@ -41,12 +41,12 @@ def main():
                         'And another line'
                     ),
                     id='ID005',
-                    begin=datatypes.FullClockTimingType(timedelta(seconds=.5)),
-                    end=timedelta(seconds=3.42),
+                    begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
+                    end=datatypes.LimitedClockTimingType(timedelta(seconds=3.42)),
                 )
             ),
-            begin=timedelta(seconds=.5),
-            dur=timedelta(seconds=5)
+            begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
+            dur=datatypes.LimitedClockTimingType(timedelta(seconds=5))
         )
     )
 

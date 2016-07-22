@@ -23,9 +23,9 @@ class _TimedeltaBindingMixin(object):
     """
 
     _compatible_timebases = {
-        'begin': ['clock', 'media', 'smpte'],
-        'dur': ['clock', 'media', 'smpte'],
-        'end': ['clock', 'media', 'smpte']
+        'begin': [],
+        'dur': [],
+        'end': []
     }
 
     @classmethod
@@ -47,6 +47,12 @@ class _TimedeltaBindingMixin(object):
         return self.as_timedelta(self)
 
 
+class TimingType(ebuttdt_raw.timingType):
+    pass
+
+ebuttdt_raw.timingType._SetSupersedingClass(TimingType)
+
+
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
     """
     Extending the string type with conversions to and from timedelta
@@ -54,6 +60,12 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
 
     # NOTE: Update this regex should the spec change about this type
     _groups_regex = re.compile('(?P<numerator>[0-9]+(?:\\.[0-9]+)?)(?P<unit>h|ms|s|m)')
+    # TODO: Consult and restrict this in an intuitive way if possible
+    _compatible_timebases = {
+        'begin': ['clock', 'media'],
+        'dur': ['clock', 'media'],
+        'end': ['clock', 'media']
+    }
 
     @classmethod
     def as_timedelta(cls, instance):
@@ -122,9 +134,9 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
 
     _groups_regex = re.compile('([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.[0-9]+)?')
     _compatible_timebases = {
-        'begin': ['clock', 'media'],
-        'dur': ['clock', 'media'],
-        'end': ['clock', 'media']
+        'begin': ['media'],
+        'dur': ['media'],
+        'end': ['media']
     }
 
     @classmethod
@@ -173,6 +185,11 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
     """
 
     _groups_regex = re.compile('([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.[0-9]+)?')
+    _compatible_timebases = {
+        'begin': ['clock'],
+        'dur': ['clock'],
+        'end': ['clock']
+    }
 
     @classmethod
     def as_timedelta(cls, instance):
