@@ -132,12 +132,12 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
     Extending the string type with conversions to and from timedelta
     """
 
-    _groups_regex = re.compile('([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.[0-9]+)?')
     _compatible_timebases = {
         'begin': ['media'],
         'dur': ['media'],
         'end': ['media']
     }
+    _groups_regex = re.compile('([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?')
 
     @classmethod
     def compatible_timebases(cls):
@@ -150,8 +150,8 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds = cls._groups_regex.match(instance).groups()
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds)
+        hours, minutes, seconds, milliseconds = map(lambda x: int(x), cls._groups_regex.match(instance).groups())
+        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -184,12 +184,12 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
     Extending the string type with conversions to and from timedelta
     """
 
-    _groups_regex = re.compile('([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.[0-9]+)?')
     _compatible_timebases = {
         'begin': ['clock'],
         'dur': ['clock'],
         'end': ['clock']
     }
+    _groups_regex = re.compile('([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?')
 
     @classmethod
     def as_timedelta(cls, instance):
@@ -198,8 +198,8 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds = cls._groups_regex.match(instance).groups()
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds)
+        hours, minutes, seconds, milliseconds = map(lambda x: int(x), cls._groups_regex.match(instance).groups())
+        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
     def from_timedelta(cls, instance):
