@@ -10,6 +10,7 @@ from . import _ebutts as ebutts
 from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
+from .pyxb_utils import get_xml_parsing_context, reset_xml_parsing_context
 from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimeBaseValidationMixin
 
 from pyxb.utils.domutils import BindingDOMSupport
@@ -26,14 +27,32 @@ namespace_prefix_map = {
 }
 
 
+def CreateFromDocument(*args, **kwargs):
+    """
+    Resetting the parsing context on start
+    :return:
+    """
+    reset_xml_parsing_context()
+    return raw.CreateFromDocument(*args, **kwargs)
+
+
+def CreateFromDOM(*args, **kwargs):
+    """
+    Resetting the parsing context on start
+    :return:
+    """
+    reset_xml_parsing_context()
+    return raw.CreateFromDOM(*args, **kwargs)
+
+
 class tt_type(SemanticDocumentMixin, raw.tt_type):
 
     @classmethod
     def _ConvertArguments_vx(cls, args, kw):
         # There is a bit of trickery and sorcery here.
-        kw['_ebu_context'] = {
+        get_xml_parsing_context().update({
             'time_base': kw.get('timeBase')
-        }
+        })
         return args
 
     @classmethod
