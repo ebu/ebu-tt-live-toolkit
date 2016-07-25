@@ -1,5 +1,6 @@
 --index-url https://pypi.python.org/simple/
 
+ipython==4.2.0
 sphinx
 sphinx-autobuild
 recommonmark
