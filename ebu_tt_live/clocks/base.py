@@ -66,7 +66,7 @@ class Clock(object):
         """
         if not isinstance(value, bool):
             raise TypeError
-        self.use_saved_time = value
+        self._use_fixed_time = value
 
     def is_fixed_time_mode(self):
         """
