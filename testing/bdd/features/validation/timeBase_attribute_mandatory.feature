@@ -22,17 +22,7 @@ Feature: ttp:timeBase attribute is mandatory
     Then document is valid
 
     Examples:
-    | xml_file                         | time_base |
-    | timeBase_attribute_mandatory.xml | clock     |
-    | timeBase_attribute_mandatory.xml | media     |
-
-
-    # SPEC-CONFORMANCE: R32
-  Scenario: Valid ttp:timeBase for SMPTE
-    Given an xml file <xml_file>
-    And it has ttp:timeBase attribute <time_base>
-    Then document is valid
-
-    Examples:
-    | xml_file                         | time_base |
-    | timeBase_attribute_mandatory.xml | smpte     |
+    | xml_file                               | time_base |
+    | timeBase_attribute_mandatory.xml       | clock     |
+    | timeBase_attribute_mandatory.xml       | media     |
+    | timeBase_attribute_mandatory_smpte.xml | smpte     |
