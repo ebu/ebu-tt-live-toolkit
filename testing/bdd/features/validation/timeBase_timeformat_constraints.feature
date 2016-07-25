@@ -64,7 +64,7 @@ Feature: ttp:timeBase-related attribute constraints
 
 
   # SPEC-CONFORMANCE: R61 R62 R64 R65
-  
+  @skip
   Scenario: Invalid times according to timeBase in p
     Given an xml file <xml_file>
     And it has timeBase <time_base>

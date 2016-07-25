@@ -9,8 +9,8 @@ trusted_timedeltas = [
     timedelta(minutes=30),
     timedelta(seconds=42),
     timedelta(milliseconds=67),
-    timedelta(hours=42, minutes=5, seconds=60),
-    timedelta(hours=999, minutes=9, seconds=60)
+    timedelta(hours=42, minutes=5, seconds=60, milliseconds=234),
+    timedelta(hours=999, minutes=9, seconds=60, milliseconds=5)
 ]
 
 
@@ -28,4 +28,4 @@ def given_body_begin(body_begin, template_dict):
 def check_correct_parsing(template_file, template_dict, trusted_timedeltas_index):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
-    assert document._ebutt3_content.body.begin.timedelta() == trusted_timedeltas[trusted_timedeltas_index]
+    assert document._ebutt3_content.body.begin.timedelta == trusted_timedeltas[trusted_timedeltas_index]

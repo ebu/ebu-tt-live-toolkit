@@ -11,10 +11,10 @@ Feature: Regex parsing TimecountTimingType values
     # the correctness of the parsing.
 
     Examples:
-    | xml_file                | time_base | body_begin  | trusted_timedeltas_index |
-    | time_regex_parsing.xml  | clock     | 15h         | 0                        |
-    | time_regex_parsing.xml  | clock     | 30m         | 1                        |
-    | time_regex_parsing.xml  | clock     | 42s         | 2                        |
-    | time_regex_parsing.xml  | clock     | 67ms        | 3                        |
-    | time_regex_parsing.xml  | clock     | 42:05:60.0  | 4                        |
-    | time_regex_parsing.xml  | media     | 999:09:60.0 | 5                        |
+    | xml_file                | time_base | body_begin    | trusted_timedeltas_index |
+    | time_regex_parsing.xml  | clock     | 15h           | 0                        |
+    | time_regex_parsing.xml  | clock     | 30m           | 1                        |
+    | time_regex_parsing.xml  | clock     | 42s           | 2                        |
+    | time_regex_parsing.xml  | clock     | 67ms          | 3                        |
+    | time_regex_parsing.xml  | clock     | 42:05:60.234  | 4                        |
+    | time_regex_parsing.xml  | media     | 999:09:60.005 | 5                        |
