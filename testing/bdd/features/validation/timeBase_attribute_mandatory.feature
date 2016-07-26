@@ -22,7 +22,7 @@ Feature: ttp:timeBase attribute is mandatory
     Then document is valid
 
     Examples:
-    | xml_file                               | time_base |
-    | timeBase_attribute_mandatory.xml       | clock     |
-    | timeBase_attribute_mandatory.xml       | media     |
-    | timeBase_attribute_mandatory_smpte.xml | smpte     |
+    | xml_file                         | time_base |
+    | timeBase_attribute_mandatory.xml | clock     |
+    | timeBase_attribute_mandatory.xml | media     |
+    | timeBase_attribute_mandatory.xml | smpte     |
