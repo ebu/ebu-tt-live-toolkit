@@ -24,6 +24,16 @@ class SemanticValidationMixin(object):
 
 class SemanticDocumentMixin(SemanticValidationMixin):
 
+    # This dictionary exists to override attribute setters. Used in contextual parsing
+    _attr_en = {}
+
+    def _setAttribute(self, attr_en, value_lex):
+        au = self.__class__.__bases__[1]._setAttribute(self, attr_en, value_lex)
+        uri_tuple = attr_en.uriTuple()
+        if uri_tuple in self._attr_en:
+            self._attr_en[uri_tuple](self)
+        return au
+
     def _semantic_before_validation(self):
         pass
 

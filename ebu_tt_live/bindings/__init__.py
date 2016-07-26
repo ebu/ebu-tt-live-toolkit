@@ -49,13 +49,15 @@ def CreateFromDOM(*args, **kwargs):
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
 
-    @classmethod
-    def _ConvertArguments_vx(cls, args, kw):
-        # There is a bit of trickery and sorcery here.
-        get_xml_parsing_context().update({
-            'time_base': kw.get('timeBase')
-        })
-        return args
+    def __post_time_base_set_attribute(self):
+        context = get_xml_parsing_context()
+        if context is not None:
+            # This means we are in parsing mode
+            context['timeBase'] = self.timeBase
+
+    _attr_en = {
+        (pyxb.namespace.ExpandedName(ttp.Namespace, 'timeBase')).uriTuple(): __post_time_base_set_attribute
+    }
 
     @classmethod
     def __check_bds(cls, bds):
