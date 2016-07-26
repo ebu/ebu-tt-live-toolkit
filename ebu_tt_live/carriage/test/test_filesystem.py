@@ -27,8 +27,6 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage.register(node)
         fs_carriage.resume_producing()
         assert node.process_document.called
-        manifest_path = os.path.join(self.test_dir_path, 'manifest.txt')
-        assert os.path.exists(manifest_path)
 
     def test_emit_document(self):
         document = MagicMock(sequence_identifier="testSeq", sequence_number=1)
@@ -40,3 +38,5 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage.emit_document(document)
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
+        manifest_path = os.path.join(self.test_dir_path, 'manifest.txt')
+        assert os.path.exists(manifest_path)

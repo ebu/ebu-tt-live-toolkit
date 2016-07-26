@@ -50,7 +50,6 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
                 self._node.process_document(document=None)
             except EndOfData:
                 break
-        self.write_manifest()
 
     def emit_document(self, document):
         # Handle there the switch and checks to handle the string format to use
@@ -65,9 +64,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
         time = (datetime.datetime.min + self._node.reference_clock.get_time()).time()
-        self._manifest_content += '{},{}\n'.format(time.strftime(self._manifest_time_format), filename)
-
-    def write_manifest(self):
-        self._manifest_file = open(self._manifest_path, 'w')
-        self._manifest_file.write(self._manifest_content)
-        self._manifest_file.close()
+        new_manifest_line = '{},{}\n'.format(time.strftime(self._manifest_time_format), filename)
+        self._manifest_content += new_manifest_line
+        with open(self._manifest_path, 'a') as f:
+            f.write(new_manifest_line)
