@@ -10,7 +10,7 @@ from . import _ebutts as ebutts
 from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
-from .pyxb_utils import get_xml_parsing_context, reset_xml_parsing_context
+from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
 from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimeBaseValidationMixin
 
 from pyxb.utils.domutils import BindingDOMSupport
@@ -32,8 +32,9 @@ def CreateFromDocument(*args, **kwargs):
     Resetting the parsing context on start
     :return:
     """
-    reset_xml_parsing_context()
-    return raw.CreateFromDocument(*args, **kwargs)
+    with xml_parsing_context():
+        result = raw.CreateFromDocument(*args, **kwargs)
+    return result
 
 
 def CreateFromDOM(*args, **kwargs):
@@ -41,8 +42,9 @@ def CreateFromDOM(*args, **kwargs):
     Resetting the parsing context on start
     :return:
     """
-    reset_xml_parsing_context()
-    return raw.CreateFromDOM(*args, **kwargs)
+    with xml_parsing_context():
+        result = raw.CreateFromDOM(*args, **kwargs)
+    return result
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):

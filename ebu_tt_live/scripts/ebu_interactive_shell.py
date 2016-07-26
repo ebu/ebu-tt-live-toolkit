@@ -20,5 +20,5 @@ def main():
         with open(args.input_file, 'r') as ifile:
             document = bindings.CreateFromDocument(ifile.read())
 
-    import ipdb
-    ipdb.set_trace()
+    pass
+    document.validateBinding()
