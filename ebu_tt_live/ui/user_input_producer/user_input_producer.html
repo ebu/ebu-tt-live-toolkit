@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8">
+      <script
+         src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+      </script>
+   </head>
+   <body>
+      <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
+      <div id="new-sequence-div" style="display: none">
+         <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
+         <button type="button" name="validate-new-sequence-button" id="validate-new-sequence-button">Validate</button>
+         <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
+         <span id="new-sequence-notification-span"></span>
+      </div>
+      <form action="" id="subtitle-form">
+         <select id="sequence-selector" name="sequence-selector"></select><br>
+         <textarea id="subtitle-content" name="subtitle-content" style="resize: both;"></textarea><br>
+         <button id="reset-all" name="reset-all" type="reset">Reset</button>
+         <button type="button" name="submit-subtitle" id="submit-subtitle">Submit</button><br>
+         <span id="subtitle-form-notification-span" style="color: red;"></span>
+      </form>
+      <script>
+         $(document).ready(function(){
+
+            if (typeof(Storage) === "undefined") {
+               window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences !");
+            }
+
+            if (localStorage.sequence_selector) {
+               $("#sequence-selector").html(localStorage.sequence_selector);
+            }
+
+            function notifyError(element, notification) {
+               element.css("color", "red");
+               element.text(notification);
+            }
+
+            function notifySuccess(element, notification) {
+               element.css("color", "green");
+               element.text(notification);
+            }
+
+            function hideNewSequenceDiv() {
+               $("#new-sequence-div").hide();
+               $("#create-new-sequence-button").show();
+               // Clear input on cancel
+               $("#new-sequence-identifier-input").val("");
+               $("#new-sequence-notification-span").text("");
+            }
+
+            // Toggle the display of the form to create a new sequence.
+            $("#create-new-sequence-button").click(function(){
+               if ($("#new-sequence-div").css("display") == "none") {
+                  $("#new-sequence-div").show();
+                  $("#create-new-sequence-button").hide();
+               }
+            });
+
+            // Cancel the creation of a new sequence.
+            $("#cancel-new-sequence-button").click(function(){
+               if (!($("#new-sequence-div").css("display") == "none")) {
+                  hideNewSequenceDiv();
+               }
+            });
+
+            // Create a new sequence
+            $("#validate-new-sequence-button").click(function(){
+               if ($("#new-sequence-identifier-input").val() == "") {
+                  notifyError($("#new-sequence-notification-span"), "The sequence identifier cannot be empty");
+               } else {
+                  var sequence_identifier = $("#new-sequence-identifier-input").val();
+                  $("#sequence-selector")
+                     .append($("<option></option>")
+                        .attr("value", sequence_identifier)
+                        .text(sequence_identifier));
+                  if (typeof(Storage) !== "undefined") {
+                     localStorage.sequence_selector = $("#sequence-selector").html();
+                  }
+                  hideNewSequenceDiv();
+               }
+            });
+
+            // Reset the whole page
+            $("#reset-all").click(function(){
+               $("#sequence-selector").html("");
+               if (typeof(Storage) !== "undefined") {
+                  $("#subtitle-form-notification-span").text("");
+                  localStorage.clear();
+               }
+            });
+
+            $("#submit-subtitle").click(function(){
+               var sequence_identifier = $("#sequence-selector").val();
+               if (sequence_identifier == null) {
+                  notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
+               } else {
+                  data = $("#subtitle-form").serialize();
+                  $.post("http://127.0.0.1:9898/", data)
+                     .done(function() {
+                        notifySuccess($("#subtitle-form-notification-span"), "Subtitle succesfully sent");
+                     })
+                     .fail(function() {
+                        notifyError($("#subtitle-form-notification-span"), "Error when sending subtitle. Check if the server is running.");
+                     });
+               }
+            });
+         });
+      </script>
+   </body>
+</html>
