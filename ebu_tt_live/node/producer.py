@@ -22,6 +22,10 @@ class SimpleProducer(Node):
     def reference_clock(self):
         return self._reference_clock
 
+    @property
+    def document_sequence(self):
+        return self._document_sequence
+
     @staticmethod
     def _interleave_line_breaks(items):
         end_list = []

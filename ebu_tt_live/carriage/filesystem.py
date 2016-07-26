@@ -45,6 +45,16 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         self._manifest_content = ''
 
     def resume_producing(self):
+        if os.path.exists(self._manifest_path):
+            with open(self._manifest_path, 'r') as f:
+                for last_line in f:
+                    pass
+                # Line has format: time,filename
+                # Where filename has the format:
+                # sequenceIdentifier_sequenceNumber.xml
+                _, last_filename = last_line.split(',')
+                last_sequence_number, _ = last_filename.split('_')[1].split('.')
+                self._node.document_sequence.last_sequence_number = int(last_sequence_number)
         while True:
             try:
                 self._node.process_document(document=None)

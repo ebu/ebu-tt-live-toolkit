@@ -105,6 +105,14 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
     def reference_clock(self):
         return self._reference_clock
 
+    @property
+    def last_sequence_number(self):
+        return self._last_sequence_number
+
+    @last_sequence_number.setter
+    def last_sequence_number(self, value):
+        self._last_sequence_number = value
+
     @classmethod
     def create_from_document(cls, document, *args, **kwargs):
         # TODO
