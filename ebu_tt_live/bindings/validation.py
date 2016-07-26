@@ -6,12 +6,26 @@ from pyxb import ValidationConfig, GlobalValidationConfig
 from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE
 from ebu_tt_live.errors import SemanticValidationError
+from .pyxb_utils import get_xml_parsing_context
 import logging
 
 log = logging.getLogger(__name__)
 
 
 class SemanticValidationMixin(object):
+
+    # This dictionary exists to override attribute setters. Used in contextual parsing
+    _attr_en_pre = {}
+    _attr_en_post = {}
+
+    def _setAttribute(self, attr_en, value_lex):
+        uri_tuple = attr_en.uriTuple()
+        if uri_tuple in self._attr_en_pre:
+            self._attr_en_pre[uri_tuple](self, attr_en, value_lex)
+        au = super(SemanticValidationMixin, self)._setAttribute(attr_en, value_lex)
+        if uri_tuple in self._attr_en_post:
+            self._attr_en_post[uri_tuple](self, au)
+        return au
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         log.info(self)
@@ -23,16 +37,6 @@ class SemanticValidationMixin(object):
 
 
 class SemanticDocumentMixin(SemanticValidationMixin):
-
-    # This dictionary exists to override attribute setters. Used in contextual parsing
-    _attr_en = {}
-
-    def _setAttribute(self, attr_en, value_lex):
-        au = self.__class__.__bases__[1]._setAttribute(self, attr_en, value_lex)
-        uri_tuple = attr_en.uriTuple()
-        if uri_tuple in self._attr_en:
-            self._attr_en[uri_tuple](self)
-        return au
 
     def _semantic_before_validation(self):
         pass
@@ -87,9 +91,23 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
 
 class TimeBaseValidationMixin(object):
+
+    def _pre_timing_set_attribute(self, attr_en, attr_use):
+        # Pass in the timing_attribute_name to the context to help the timing type constructor refuse creation
+        context = get_xml_parsing_context()
+        if context is not None:
+            # This means we are in XML parsing mode
+            context['timing_attribute_name'] = attr_en.localName()
+
+    def _post_timing_set_attribute(self, attr_use):
+        context = get_xml_parsing_context()
+        if context is not None:
+            # Clean up after successful creation
+            context.pop('timing_attribute_name', None)
+
+
     # The mixin approach is used since the inspected elements are all attributes of the element so they do not
     # take part in the traversal directly.
-
     def _semantic_timebase_validation(self, dataset, element_content):
         time_base = dataset['tt_element'].timeBase
         # Check typing of timing arguments against the timebase

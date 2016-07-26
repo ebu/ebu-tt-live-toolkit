@@ -2,11 +2,15 @@
 from raw._ebuttdt import *
 from raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
-import re
+import re, logging
 from pyxb.exceptions_ import SimpleTypeValueError
 from ebu_tt_live.errors import TimeFormatOverflowError
-from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW
+from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE
+from .pyxb_utils import get_xml_parsing_context
 from .validation import SemanticValidationMixin
+
+
+log = logging.getLogger(__name__)
 
 
 def _get_time_members(checked_time):
@@ -35,6 +39,28 @@ class _TimedeltaBindingMixin(object):
     @classmethod
     def _ConvertArguments_vx(cls, args, kw):
         result = []
+        # In parsing mode check timebase compatibility at instantiation time. This prevents pyxb instantiating
+        # the wrong type given 2 types having overlapping values in a union as it happens in full and limited
+        # clock timing types.
+        context = get_xml_parsing_context()
+        if context is not None:
+            # This means we are in XML parsing context. There should be a timeBase and a timing_attribute_name in the
+            # context object.
+            time_base = context['timeBase']
+            timing_att_name = context['timing_attribute_name']
+            if time_base not in cls._compatible_timebases[timing_att_name]:
+                log.info(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                    attr_name=timing_att_name,
+                    attr_type=cls,
+                    attr_value=args,
+                    time_base=time_base
+                ))
+                raise pyxb.SimpleTypeValueError(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                    attr_name=timing_att_name,
+                    attr_type=cls,
+                    attr_value=args,
+                    time_base=time_base
+                ))
         for item in args:
             if isinstance(item, timedelta):
                 result.append(cls.from_timedelta(item))
@@ -45,12 +71,6 @@ class _TimedeltaBindingMixin(object):
     @property
     def timedelta(self):
         return self.as_timedelta(self)
-
-
-class TimingType(ebuttdt_raw.timingType):
-    pass
-
-ebuttdt_raw.timingType._SetSupersedingClass(TimingType)
 
 
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):

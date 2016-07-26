@@ -49,13 +49,13 @@ def CreateFromDOM(*args, **kwargs):
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
 
-    def __post_time_base_set_attribute(self):
+    def __post_time_base_set_attribute(self, attr_use):
         context = get_xml_parsing_context()
         if context is not None:
-            # This means we are in parsing mode
+            # This means we are in XML parsing mode
             context['timeBase'] = self.timeBase
 
-    _attr_en = {
+    _attr_en_post = {
         (pyxb.namespace.ExpandedName(ttp.Namespace, 'timeBase')).uriTuple(): __post_time_base_set_attribute
     }
 
@@ -94,6 +94,11 @@ raw.tt_type._SetSupersedingClass(tt_type)
 
 class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
 
+    _attr_en_pre = {
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+    }
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
 
@@ -101,6 +106,11 @@ raw.p_type._SetSupersedingClass(p_type)
 
 
 class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type):
+
+    _attr_en_pre = {
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+    }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
@@ -110,10 +120,29 @@ raw.span_type._SetSupersedingClass(span_type)
 
 class div_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.div_type):
 
+    _attr_en_pre = {
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+    }
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
 
 raw.div_type._SetSupersedingClass(div_type)
+
+
+class body_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.body_type):
+
+    _attr_en_pre = {
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'dur')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+    }
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+
+raw.body_type._SetSupersedingClass(body_type)
 
 
 # Namespace.setPrefix('tt')
