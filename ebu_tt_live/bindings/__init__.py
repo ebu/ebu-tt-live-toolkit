@@ -86,33 +86,38 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             indent='  '
         )
 
-    def __semantic_test_smpte_attrs_presence(self, present=True):
+    def __semantic_test_smpte_attrs_present(self):
         smpte_attrs = [
             'frameRate',
-            'frameRateMultiplier',
+            # 'frameRateMultiplier',
             'dropMode',
             'markerMode'
         ]
-        if present is True:
-            missing_attrs = self._semantic_attributes_missing(smpte_attrs)
-            if missing_attrs:
-                raise SemanticValidationError(
-                    ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES.format(
-                        elem_name='tt:tt',
-                        attr_names=missing_attrs
-                    )
+        missing_attrs = self._semantic_attributes_missing(smpte_attrs)
+        if missing_attrs:
+            raise SemanticValidationError(
+                ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES.format(
+                    elem_name='tt:tt',
+                    attr_names=missing_attrs
                 )
-        if present is False:
-            extra_attrs = self._semantic_attributes_present(smpte_attrs)
-            if extra_attrs:
-                raise SemanticValidationError(
-                    ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES.format(
-                        elem_name='tt:tt',
-                        attr_names=extra_attrs
-                    )
+            )
+
+    def __semantic_test_smpte_attrs_absent(self):
+        smpte_attrs = [
+            'dropMode',
+            'markerMode'
+        ]
+        extra_attrs = self._semantic_attributes_present(smpte_attrs)
+        if extra_attrs:
+            raise SemanticValidationError(
+                ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES.format(
+                    elem_name='tt:tt',
+                    attr_names=extra_attrs
                 )
+            )
 
     def __semantic_test_smpte_attr_combinations(self):
+        # TODO: SMPTE validation(low priority) #52
         pass
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -120,9 +125,9 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # attributes.
         dataset['tt_element'] = self
         if self.timeBase == 'smpte':
-            self.__semantic_test_smpte_attrs_presence()
+            self.__semantic_test_smpte_attrs_present()
         else:
-            self.__semantic_test_smpte_attrs_presence(present=False)
+            self.__semantic_test_smpte_attrs_absent()
 
 raw.tt_type._SetSupersedingClass(tt_type)
 
