@@ -23,7 +23,6 @@ Feature: ttp:timeBase attribute is mandatory
 
     Examples:
     | xml_file                         | time_base |
-    | timeBase_attribute_mandatory.xml | smpte     |
     | timeBase_attribute_mandatory.xml | clock     |
     | timeBase_attribute_mandatory.xml | media     |
-
+    | timeBase_attribute_mandatory.xml | smpte     |
