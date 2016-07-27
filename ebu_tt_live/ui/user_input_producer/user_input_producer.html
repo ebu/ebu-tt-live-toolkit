@@ -7,15 +7,19 @@
    <body>
       <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
       <div id="new-sequence-div" style="display: none">
+         <label for="new-sequence-identifier-input">Sequence Identifier : </label>
          <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
          <button type="button" name="validate-new-sequence-button" id="validate-new-sequence-button">Validate</button>
          <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
          <span id="new-sequence-notification-span"></span>
       </div>
       <br><br>
+      <label for="post-url-input">Server URL: </label>
       <input type="url" id="post-url-input" name="post-url-input" value="http://127.0.0.1:9898" required><br>
       <form action="" id="subtitle-form">
+         <label for="sequence-selector">Choose document sequence : </label>
          <select id="sequence-selector" name="sequence-selector"></select><br>
+         <label for="subtitle-content">Subtitles text : </label>
          <textarea id="subtitle-content" name="subtitle-content" style="resize: both;" cols="160" rows="25"></textarea><br>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
          <button type="button" name="submit-subtitle" id="submit-subtitle">Submit</button><br>
