@@ -29,6 +29,9 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     The writing order and thus the reading order is from top to bottom. Please note that depending on the
     timebase used by the producer node time may loop (going to the next day). It can loop with
     `ttp:timeBase="clock"` or `ttp:timeBase="smpte"`, but not with `ttp:timeBase="media"`.
+    If the output folder already exists and it contains a manifest.txt file for the same document sequence,
+    the last line of the existing manifest file is parsed to get the last used sequence number and the current
+    sequence is set to start from the next sequence number.
     """
 
     _manifest_path = None
