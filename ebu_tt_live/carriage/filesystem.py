@@ -1,8 +1,12 @@
-from .base import ProducerCarriageImpl
-from ebu_tt_live.errors import EndOfData
+from .base import ProducerCarriageImpl, ConsumerCarriageImpl
+from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.bindings import CreateFromDocument
+from ebu_tt_live.errors import EndOfData, XMLParsingFailed
+from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 import logging
 import os
 import datetime
+import time
 
 MANIFEST_TIME_CLOCK_FORMAT = '%H:%M:%S.%f'
 
@@ -82,3 +86,67 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
             f.write(new_manifest_line)
+
+
+class FilesystemConsumerImpl(ConsumerCarriageImpl):
+    """
+    This class is where the logic for availability times should be implemented. This allows us to implement different
+    interpretation of availability times by simply adding new CarriageMechanism, the reading of the files itself being
+    done in ebutt_live.carriage.FilesystemReader file.
+    """
+
+    def on_new_data(self, data):
+        document = None
+        availability_time, xml_content = data
+        try:
+            document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(xml_content))
+        except:
+            log.exception(ERR_DECODING_XML_FAILED)
+            raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
+
+        if document:
+            self._node.process_document(document)
+
+
+class FilesystemReader(object):
+    """
+    This class is responsible for reading the manifest file and sending the corresponding
+    availability times and xml file's content to its _custom_consumer.
+    """
+    _dirpath = None
+    _manifest_path = None
+    _custom_consumer = None
+    _manifest_time_format = None
+    _do_tail = None
+
+    def __init__(self, manifest_path, custom_consumer, do_tail):
+        self._dirpath = os.path.dirname(manifest_path)
+        self._manifest_path = manifest_path
+        self._custom_consumer = custom_consumer
+        self._do_tail = do_tail
+        with open(manifest_path, 'r') as manifest:
+            self._manifest_lines_iter = iter(manifest.readlines())
+
+    def resume_reading(self):
+        if not self._manifest_time_format:
+            self._manifest_time_format = MANIFEST_TIME_CLOCK_FORMAT
+        with open(self._manifest_path, 'r') as manifest_file:
+            while True:
+                manifest_line = manifest_file.readline()
+                if not manifest_line:
+                    if self._do_tail:
+                        try:
+                            time.sleep(0.5)
+                        except KeyboardInterrupt:
+                            break
+                    else:
+                        break
+                else:
+                    availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
+                    availability_time = datetime.datetime.strptime(availability_time_str, MANIFEST_TIME_CLOCK_FORMAT).time()
+                    xml_file_path = os.path.join(self._dirpath, xml_file_name)
+                    xml_content = None
+                    with open(xml_file_path, 'r') as xml_file:
+                        xml_content = xml_file.read()
+                    data = [availability_time, xml_content]
+                    self._custom_consumer.on_new_data(data)
