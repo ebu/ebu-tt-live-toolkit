@@ -16,7 +16,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     the desired output folder. If the folder does not exist it will be created.
     Each document handled by this carriage implementation is written in an xml file
     in the output folder.
-    Along with the xml files, a manifest.txt file is also written in the output folder.
+    Along with the xml files, a manifest_sequenceIdentifier.txt file is also written in the output folder.
     Each time an xml file is written, a line using the following format is added to the manifest :
 
     `availability_time,path_to_xml_file`
@@ -29,9 +29,9 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     The writing order and thus the reading order is from top to bottom. Please note that depending on the
     timebase used by the producer node time may loop (going to the next day). It can loop with
     `ttp:timeBase="clock"` or `ttp:timeBase="smpte"`, but not with `ttp:timeBase="media"`.
-    If the output folder already exists and it contains a manifest.txt file for the same document sequence,
-    the last line of the existing manifest file is parsed to get the last used sequence number and the current
-    sequence is set to start from the next sequence number.
+    If the output folder already exists and it contains a manifest_sequenceIdentifier.txt file for the same
+    document sequence, the last line of the existing manifest file is parsed to get the last used sequence number
+    and the current sequence is set to start from the next sequence number.
     """
 
     _manifest_path = None
