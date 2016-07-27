@@ -35,6 +35,15 @@ class SemanticValidationMixin(object):
         log.info(self)
         pass
 
+    def _semantic_attributes_missing(self, attr_names):
+        result = [attr for attr in attr_names if getattr(self, attr) is None]
+        return result
+
+    def _semantic_attributes_present(self, attr_names):
+        result = [attr for attr in attr_names if getattr(self, attr) is not None]
+        return result
+
+
 
 class SemanticDocumentMixin(SemanticValidationMixin):
 

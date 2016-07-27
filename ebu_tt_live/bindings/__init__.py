@@ -12,6 +12,8 @@ from . import _ttp as ttp
 from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
 from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimeBaseValidationMixin
+from ebu_tt_live.errors import SemanticValidationError
+from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
 
 from pyxb.utils.domutils import BindingDOMSupport
 
@@ -84,10 +86,43 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             indent='  '
         )
 
+    def __semantic_test_smpte_attrs_presence(self, present=True):
+        smpte_attrs = [
+            'frameRate',
+            'frameRateMultiplier',
+            'dropMode',
+            'markerMode'
+        ]
+        if present is True:
+            missing_attrs = self._semantic_attributes_missing(smpte_attrs)
+            if missing_attrs:
+                raise SemanticValidationError(
+                    ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES.format(
+                        elem_name='tt:tt',
+                        attr_names=missing_attrs
+                    )
+                )
+        if present is False:
+            extra_attrs = self._semantic_attributes_present(smpte_attrs)
+            if extra_attrs:
+                raise SemanticValidationError(
+                    ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES.format(
+                        elem_name='tt:tt',
+                        attr_names=extra_attrs
+                    )
+                )
+
+    def __semantic_test_smpte_attr_combinations(self):
+        pass
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate contraining
         # attributes.
         dataset['tt_element'] = self
+        if self.timeBase == 'smpte':
+            self.__semantic_test_smpte_attrs_presence()
+        else:
+            self.__semantic_test_smpte_attrs_presence(present=False)
 
 raw.tt_type._SetSupersedingClass(tt_type)
 

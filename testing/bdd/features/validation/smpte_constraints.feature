@@ -16,9 +16,15 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  | 30         | smpte     | 1000 1001             | dropNTSC  | discontinuous |
     | smpte.xml  | 30         | smpte     | 1000 1001             | dropPAL   | continuous    |
     | smpte.xml  | 30         | smpte     | 1000 1001             | dropPAL   | discontinuous |
+    @skip
+    | smpte.xml  | 20         | smpte     | 1 1                   |           | discontinuous |
+    | smpte.xml  | 20         | smpte     | 1 1                   |           | continuous    |
+    | smpte.xml  | 20         | smpte     |                       |           | discontinuous |
+    | smpte.xml  | 20         | smpte     |                       |           | continuous    |
+    | smpte.xml  | 20         | smpte     |                       | nonDrop   | discontinuous |
+    | smpte.xml  | 20         | smpte     |                       | nonDrop   | continuous    |
 
   # These tests are not all passing because of the missing semantic validation piece
-  @skip
   Scenario: Invalid SMPTE head attributes
     Given an xml file <xml_file>
     And it has frameRate <frame_rate>
@@ -32,7 +38,6 @@ Feature: SMPTE-related attribute constraints
     | xml_file   | frame_rate | time_base | frame_rate_multiplier | drop_mode | marker_mode   |
     | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | other value   |
     | smpte.xml  |            | smpte     |                       |           |               |
-    | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | continuous    |
     | smpte.xml  | 30         | smpte     | 10001001              | dropPAL   | continuous    |
     | smpte.xml  | 25         | smpte     |                       | dropPAL   | continuous    |
     | smpte.xml  | 25         | smpte     | 1 1                   |           | continuous    |
@@ -42,10 +47,12 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  |            | clock     |                       | nonDrop   |               |
     | smpte.xml  |            | clock     |                       |           |  continuous   |
     | smpte.xml  |            | clock     |                       |           | discontinuous |
-    | smpte.xml  |            | clock     |                       |           |               |
     | smpte.xml  | 25         | media     |                       |           |               |
     | smpte.xml  |            | media     | 1 1                   |           |               |
     | smpte.xml  |            | media     |                       | nonDrop   |               |
     | smpte.xml  |            | media     |                       |           |  continuous   |
     | smpte.xml  |            | media     |                       |           | discontinuous |
+    @skip
+    | smpte.xml  |            | clock     |                       |           |               |
     | smpte.xml  |            | media     |                       |           |               |
+    | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | continuous    |
