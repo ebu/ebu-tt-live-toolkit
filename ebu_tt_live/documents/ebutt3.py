@@ -106,6 +106,10 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         return self._reference_clock
 
     @property
+    def sequence_identifier(self):
+        return self._sequence_identifier
+
+    @property
     def last_sequence_number(self):
         return self._last_sequence_number
 

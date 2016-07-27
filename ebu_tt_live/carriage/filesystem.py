@@ -44,10 +44,11 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         self._dirpath = dirpath
         if not os.path.exists(self._dirpath):
             os.makedirs(self._dirpath)
-        self._manifest_path = os.path.join(dirpath, 'manifest.txt')
         self._manifest_content = ''
 
     def resume_producing(self):
+        manifest_filename = "manifest_" + self._node.document_sequence.sequence_identifier + ".txt"
+        self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         if os.path.exists(self._manifest_path):
             with open(self._manifest_path, 'r') as f:
                 for last_line in f:
