@@ -2,7 +2,7 @@
 <tt:tt
         ebuttp:sequenceIdentifier="testSequence001"
         ebuttp:sequenceNumber="1"
-        ttp:timeBase="clock"
+        ttp:timeBase="{{ time_base }}"
 {% if time_base == 'clock' %}
         ttp:clockMode='local'
 {% endif %}

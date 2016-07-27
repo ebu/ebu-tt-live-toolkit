@@ -4,7 +4,8 @@ from .common import create_loggers
 
 from ebu_tt_live.node import SimpleConsumer
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.twisted import TwistedConsumerImpl, TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
+from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
 from twisted.internet import reactor
 
 
