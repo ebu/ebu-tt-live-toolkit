@@ -31,6 +31,7 @@ Subpackages
 .. toctree::
 
     ebu_tt_live.bindings
+    ebu_tt_live.carriage
     ebu_tt_live.clocks
     ebu_tt_live.configspec
     ebu_tt_live.documents
