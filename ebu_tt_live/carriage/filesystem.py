@@ -12,12 +12,12 @@ import time
 log = logging.getLogger(__name__)
 
 
-def timedelta_to_str_manifest(time, time_base):
+def timedelta_to_str_manifest(timed, time_base):
     if time_base == 'clock' or time_base == 'media':
-        hours, seconds = divmod(time.seconds, 3600)
-        hours += time.days * 24
+        hours, seconds = divmod(timed.seconds, 3600)
+        hours += timed.days * 24
         minutes, seconds = divmod(seconds, 60)
-        milliseconds, _ = divmod(time.microseconds, 1000)
+        milliseconds, _ = divmod(timed.microseconds, 1000)
         return '{:02d}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, seconds, milliseconds)
     elif time_base == 'smpte':
         raise NotImplementedError()
