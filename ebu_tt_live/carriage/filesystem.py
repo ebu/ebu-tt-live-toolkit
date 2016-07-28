@@ -134,7 +134,9 @@ class FilesystemConsumerImpl(ConsumerCarriageImpl):
 class FilesystemReader(object):
     """
     This class is responsible for reading the manifest file and sending the corresponding
-    availability times and xml file's content to its _custom_consumer.
+    availability times and xml file's content to its _custom_consumer. Important note : the
+    manifest file and the xml documents have to be in the same folder (it is the default behavior
+    of the producer).
     """
     _dirpath = None
     _manifest_path = None
