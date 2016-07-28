@@ -13,6 +13,8 @@ class EBUTT3Document(SubtitleDocument):
     # The availability time can be set by the carriage implementation for
     # example
     _availability_time = None
+    _resolved_begin_time = None
+    _resolved_end_time = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
@@ -71,6 +73,19 @@ class EBUTT3Document(SubtitleDocument):
     def sequence_number(self, value):
         intvalue = int(value)
         self._ebutt3_content.sequenceNumber = intvalue
+
+    def calculate_timing(self):
+        # TODO: get the logic together for this.
+        self._resolved_begin_time = timedelta()
+        self._resolved_end_time = timedelta()
+
+    @property
+    def resolved_begin_time(self):
+        return self._resolved_begin_time
+
+    @property
+    def resolved_end_time(self):
+        return self._resolved_end_time
 
     @property
     def availability_time(self):
