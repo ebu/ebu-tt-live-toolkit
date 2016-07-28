@@ -2,6 +2,8 @@
 from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type
+from ebu_tt_live.errors import EndOfData
+from ebu_tt_live.strings import END_OF_DATA
 
 
 class SimpleProducer(Node):
@@ -15,6 +17,14 @@ class SimpleProducer(Node):
         self._document_sequence = document_sequence
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
+
+    @property
+    def reference_clock(self):
+        return self._reference_clock
+
+    @property
+    def document_sequence(self):
+        return self._document_sequence
 
     @staticmethod
     def _interleave_line_breaks(items):
@@ -39,7 +49,10 @@ class SimpleProducer(Node):
         activation_time = self._reference_clock.get_time() + timedelta(seconds=1)
 
         if self._input_blocks:
-            lines = self._input_blocks.next()
+            try:
+                lines = self._input_blocks.next()
+            except StopIteration:
+                raise EndOfData(END_OF_DATA)
         else:
             lines = [activation_time]
 

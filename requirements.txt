@@ -11,4 +11,5 @@ coverage
 pytest-runner
 pytest
 jinja2
+mock
 -e .

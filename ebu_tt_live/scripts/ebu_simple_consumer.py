@@ -3,7 +3,9 @@ from argparse import ArgumentParser
 from .common import create_loggers
 
 from ebu_tt_live.node import SimpleConsumer
-from ebu_tt_live.twisted import TwistedConsumerImpl, TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
+from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
 from twisted.internet import reactor
 
 
@@ -22,9 +24,13 @@ def main():
 
     consumer_impl = TwistedConsumerImpl()
 
+    reference_clock = LocalMachineClock()
+    reference_clock.clock_mode = 'local'
+
     simple_consumer = SimpleConsumer(
         node_id='simple-consumer',
-        carriage_impl=consumer_impl
+        carriage_impl=consumer_impl,
+        reference_clock=reference_clock
     )
 
     factory = BroadcastClientFactory(

@@ -17,3 +17,7 @@ class XMLParsingFailed(Exception):
 
 class SemanticValidationError(Exception):
     pass
+
+
+class EndOfData(Exception):
+    pass
