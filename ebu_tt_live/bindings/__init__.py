@@ -16,6 +16,7 @@ from ebu_tt_live.errors import SemanticValidationError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
 
 from pyxb.utils.domutils import BindingDOMSupport
+from datetime import timedelta
 
 namespace_prefix_map = {
     'tt': raw.Namespace,
@@ -50,6 +51,9 @@ def CreateFromDOM(*args, **kwargs):
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
+
+    _resolved_begin_time = None
+    _resolved_end_time = None
 
     def __post_time_base_set_attribute(self, attr_use):
         context = get_xml_parsing_context()
@@ -128,6 +132,19 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             self.__semantic_test_smpte_attrs_present()
         else:
             self.__semantic_test_smpte_attrs_absent()
+
+    def calculate_timing(self):
+        # TODO: get the logic together for this.
+        self._resolved_begin_time = timedelta()
+        self._resolved_end_time = timedelta()
+
+    @property
+    def resolved_begin_time(self):
+        return self._resolved_begin_time
+
+    @property
+    def resolved_end_time(self):
+        return self._resolved_end_time
 
 raw.tt_type._SetSupersedingClass(tt_type)
 

@@ -74,19 +74,6 @@ class EBUTT3Document(SubtitleDocument):
         intvalue = int(value)
         self._ebutt3_content.sequenceNumber = intvalue
 
-    def calculate_timing(self):
-        # TODO: get the logic together for this.
-        self._resolved_begin_time = timedelta()
-        self._resolved_end_time = timedelta()
-
-    @property
-    def resolved_begin_time(self):
-        return self._resolved_begin_time
-
-    @property
-    def resolved_end_time(self):
-        return self._resolved_end_time
-
     @property
     def availability_time(self):
         return self._availability_time
@@ -96,6 +83,14 @@ class EBUTT3Document(SubtitleDocument):
         if not isinstance(value, timedelta):
             raise TypeError
         self._availability_time = value
+
+    @property
+    def resolved_begin_time(self):
+        return self._ebutt3_content.resolved_begin_time
+
+    @property
+    def resolved_end_time(self):
+        return self._ebutt3_content.resolved_end_time
 
     def validate(self):
         self._ebutt3_content.validateBinding()
