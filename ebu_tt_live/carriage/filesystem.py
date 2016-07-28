@@ -3,14 +3,31 @@ from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from datetime import timedelta
 import logging
 import os
 import datetime
 import time
 
+
 MANIFEST_TIME_CLOCK_FORMAT = '%H:%M:%S.%f'
 
 log = logging.getLogger(__name__)
+
+
+def timedelta_to_str_manifest(time, time_base):
+    if time_base == 'clock' or time_base == 'media':
+        hours, seconds = divmod(time.seconds, 3600)
+        hours += time.days * 24
+        minutes, seconds = divmod(seconds, 60)
+        milliseconds, _ = divmod(time.microseconds, 1000)
+        return '{:02d}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, seconds, milliseconds)
+
+
+def timestr_manifest_to_timedelta(timestr, time_base):
+    hours, minutes, rest = timestr.split(":")
+    seconds, milliseconds = rest.split(".")
+    return timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds), milliseconds=int(milliseconds))
 
 
 class FilesystemProducerImpl(ProducerCarriageImpl):
@@ -81,8 +98,9 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         # To be able to format the output we need a datetime.time object and
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
-        time = (datetime.datetime.min + self._node.reference_clock.get_time()).time()
-        new_manifest_line = '{},{}\n'.format(time.strftime(self._manifest_time_format), filename)
+        time = self._node.reference_clock.get_time()
+        time_base = self._node.reference_clock.time_base
+        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
             f.write(new_manifest_line)
@@ -90,14 +108,13 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
 
 class FilesystemConsumerImpl(ConsumerCarriageImpl):
     """
-    This class is where the logic for availability times should be implemented. This allows us to implement different
-    interpretation of availability times by simply adding new CarriageMechanism, the reading of the files itself being
-    done in ebutt_live.carriage.FilesystemReader file.
+    This class is responsible for setting the document object from the xml and set its availability time.
+    The document is then sent to the node.
     """
 
     def on_new_data(self, data):
         document = None
-        availability_time, xml_content = data
+        availability_time_str, xml_content = data
         try:
             document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(xml_content))
         except:
@@ -105,6 +122,8 @@ class FilesystemConsumerImpl(ConsumerCarriageImpl):
             raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
 
         if document:
+            availability_time = timestr_manifest_to_timedelta(availability_time_str, self._node.reference_clock.time_base)
+            document.availability_time = availability_time
             self._node.process_document(document)
 
 
@@ -143,10 +162,9 @@ class FilesystemReader(object):
                         break
                 else:
                     availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
-                    availability_time = datetime.datetime.strptime(availability_time_str, MANIFEST_TIME_CLOCK_FORMAT).time()
                     xml_file_path = os.path.join(self._dirpath, xml_file_name)
                     xml_content = None
                     with open(xml_file_path, 'r') as xml_file:
                         xml_content = xml_file.read()
-                    data = [availability_time, xml_content]
+                    data = [availability_time_str, xml_content]
                     self._custom_consumer.on_new_data(data)
