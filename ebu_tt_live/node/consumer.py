@@ -17,6 +17,7 @@ class SimpleConsumer(Node):
 
     def process_document(self, document):
         log.info(document)
+        print(" " + str(document.sequence_identifier) + "_" + str(document.sequence_number))
 
     @property
     def reference_clock(self):

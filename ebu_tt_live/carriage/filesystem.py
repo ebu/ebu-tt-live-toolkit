@@ -1,12 +1,39 @@
-from .base import ProducerCarriageImpl
-from ebu_tt_live.errors import EndOfData
+from .base import ProducerCarriageImpl, ConsumerCarriageImpl
+from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.bindings import CreateFromDocument
+from ebu_tt_live.errors import EndOfData, XMLParsingFailed
+from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from datetime import timedelta
 import logging
 import os
-import datetime
+import time
 
-MANIFEST_TIME_CLOCK_FORMAT = '%H:%M:%S.%f'
 
 log = logging.getLogger(__name__)
+
+
+def timedelta_to_str_manifest(timed, time_base):
+    if time_base == 'clock' or time_base == 'media':
+        hours, seconds = divmod(timed.seconds, 3600)
+        hours += timed.days * 24
+        minutes, seconds = divmod(seconds, 60)
+        milliseconds, _ = divmod(timed.microseconds, 1000)
+        return '{:02d}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, seconds, milliseconds)
+    elif time_base == 'smpte':
+        raise NotImplementedError()
+    else:
+        raise ValueError()
+
+
+def timestr_manifest_to_timedelta(timestr, time_base):
+    if time_base == 'clock' or time_base == 'media':
+        hours, minutes, rest = timestr.split(":")
+        seconds, milliseconds = rest.split(".")
+        return timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds), milliseconds=int(milliseconds))
+    elif time_base == 'smpte':
+        raise NotImplementedError()
+    else:
+        raise ValueError()
 
 
 class FilesystemProducerImpl(ProducerCarriageImpl):
@@ -68,8 +95,6 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     def emit_document(self, document):
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
-        if not self._manifest_time_format:
-            self._manifest_time_format = MANIFEST_TIME_CLOCK_FORMAT
         filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
@@ -77,8 +102,73 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         # To be able to format the output we need a datetime.time object and
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
-        time = (datetime.datetime.min + self._node.reference_clock.get_time()).time()
-        new_manifest_line = '{},{}\n'.format(time.strftime(self._manifest_time_format), filename)
+        time = self._node.reference_clock.get_time()
+        time_base = self._node.reference_clock.time_base
+        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
             f.write(new_manifest_line)
+
+
+class FilesystemConsumerImpl(ConsumerCarriageImpl):
+    """
+    This class is responsible for setting the document object from the xml and set its availability time.
+    The document is then sent to the node.
+    """
+
+    def on_new_data(self, data):
+        document = None
+        availability_time_str, xml_content = data
+        try:
+            document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(xml_content))
+        except:
+            log.exception(ERR_DECODING_XML_FAILED)
+            raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
+
+        if document:
+            availability_time = timestr_manifest_to_timedelta(availability_time_str, self._node.reference_clock.time_base)
+            document.availability_time = availability_time
+            self._node.process_document(document)
+
+
+class FilesystemReader(object):
+    """
+    This class is responsible for reading the manifest file and sending the corresponding
+    availability times and xml file's content to its _custom_consumer. Important note : the
+    manifest file and the xml documents have to be in the same folder (it is the default behavior
+    of the producer).
+    """
+    _dirpath = None
+    _manifest_path = None
+    _custom_consumer = None
+    _manifest_time_format = None
+    _do_tail = None
+
+    def __init__(self, manifest_path, custom_consumer, do_tail):
+        self._dirpath = os.path.dirname(manifest_path)
+        self._manifest_path = manifest_path
+        self._custom_consumer = custom_consumer
+        self._do_tail = do_tail
+        with open(manifest_path, 'r') as manifest:
+            self._manifest_lines_iter = iter(manifest.readlines())
+
+    def resume_reading(self):
+        with open(self._manifest_path, 'r') as manifest_file:
+            while True:
+                manifest_line = manifest_file.readline()
+                if not manifest_line:
+                    if self._do_tail:
+                        try:
+                            time.sleep(0.5)
+                        except KeyboardInterrupt:
+                            break
+                    else:
+                        break
+                else:
+                    availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
+                    xml_file_path = os.path.join(self._dirpath, xml_file_name)
+                    xml_content = None
+                    with open(xml_file_path, 'r') as xml_file:
+                        xml_content = xml_file.read()
+                    data = [availability_time_str, xml_content]
+                    self._custom_consumer.on_new_data(data)
