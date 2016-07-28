@@ -13,6 +13,10 @@ log = logging.getLogger(__name__)
 
 
 class SemanticValidationMixin(object):
+    """
+    This mixin contains the necessary boilerplate to enable semantic validation as well as enabling _setAttribute hooks
+    to help populate the context object with useful data.
+    """
 
     # This dictionary exists to override attribute setters. Used in contextual parsing
     _attr_en_pre = {}
@@ -28,18 +32,36 @@ class SemanticValidationMixin(object):
         return au
 
     def _semantic_before_traversal(self, dataset, element_content=None):
-        log.info(self)
+        """
+        Semantic validation preprocess hook.
+        :param dataset: semantic context object
+        :param element_content: the element itself
+        """
         pass
 
     def _semantic_after_traversal(self, dataset, element_content=None):
-        log.info(self)
+        """
+        Semantic validation postprocess hook.
+        :param dataset: semantic context object
+        :param element_content: the element itself
+        """
         pass
 
     def _semantic_attributes_missing(self, attr_names):
+        """
+        Making sure that attributes specified in attr_names have no value defined on the binding.
+        :param attr_names: The attributes that were defined on the element.
+        :return:
+        """
         result = [attr for attr in attr_names if getattr(self, attr) is None]
         return result
 
     def _semantic_attributes_present(self, attr_names):
+        """
+        Making sure that attributes specified in attr_names have a value defined on the binding
+        :param attr_names: The missing attributes that were not defined.
+        :return:
+        """
         result = [attr for attr in attr_names if getattr(self, attr) is not None]
         return result
 
@@ -48,19 +70,28 @@ class SemanticValidationMixin(object):
 class SemanticDocumentMixin(SemanticValidationMixin):
 
     def _semantic_before_validation(self):
+        """
+        Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.
+        """
         pass
 
     def _semantic_after_validation(self):
         """
+        After PyXB successfully validated the syntax this hook runs where the user may execute custom code.
+
         At this point the validation of syntax has passed and the semantic validation can now begin.
         A new traversal of the structure is needed to get the appropriate context down to individual parts of the nodes.
         """
-        # Let's try to initiate DFS or BFS...
+        # Let's initiate DFS
+
+        # Create new semantic context object
         semantic_dataset = {}
+        # Collections of visited elements
         pre_visited = set()
         post_visited = set()
         to_visit = []
 
+        # Call preprocess hooks for tt element
         self._semantic_before_traversal(dataset=semantic_dataset)
 
         to_visit.extend(reversed(self._validatedChildren()))
@@ -68,14 +99,19 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         while to_visit:
             content = to_visit.pop()
             if content in post_visited or isinstance(content, NonElementContent):
+                # This means we visited the current element already.
                 continue
             elif content in pre_visited:
-                log.info('post visit step: {}'.format(content.value))
+                # This means we visited the current element's preprocessing and now postprocessing is in order
+                log.debug('post visit step: {}'.format(content.value))
+                # Call postprocess hooks of current element
                 content.value._semantic_after_traversal(dataset=semantic_dataset, element_content=content)
                 post_visited.add(content)
             else:
-                log.info('pre visit step: {}'.format(content.value))
+                # This means the current element has not been processed yet. Preprocessing is in order.
+                log.debug('pre visit step: {}'.format(content.value))
                 if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
+                    # Call preprocess hooks of current element
                     content.value._semantic_before_traversal(dataset=semantic_dataset, element_content=content)
                     pre_visited.add(content)
                     to_visit.append(content)
@@ -84,9 +120,14 @@ class SemanticDocumentMixin(SemanticValidationMixin):
                     ordered_children = reversed(content.value._validatedChildren())
                     to_visit.extend(ordered_children)
 
-        self._semantic_before_traversal(dataset=semantic_dataset)
+        # Call postprocess hooks for tt element
+        self._semantic_after_traversal(dataset=semantic_dataset)
 
     def _validateBinding_vx(self):
+        """
+        At this point we can hook into PyXB's validation flow and call our hooks:
+        _semantic_before_validation() and _semantic_after_validation()
+        """
         # Step1: Before
         self._semantic_before_validation()
 
@@ -100,6 +141,10 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
 
 class TimeBaseValidationMixin(object):
+    """
+    This mixin is meant to be applied to timed elements (body, div, p, span) and provides parser hooks for timing
+    attributes as well as a generic semantic validation for timing attributes in the document's timeBase.
+    """
 
     def _pre_timing_set_attribute(self, attr_en, attr_use):
         # Pass in the timing_attribute_name to the context to help the timing type constructor refuse creation

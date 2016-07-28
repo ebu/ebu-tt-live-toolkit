@@ -26,6 +26,8 @@ class _TimedeltaBindingMixin(object):
     Wiring in timedelta assignment and conversion operators
     """
 
+    # For each timing attribute a list of timeBases is specified, which represents the valid timeBase, timing attribute
+    # and timing type semantic constraint.
     _compatible_timebases = {
         'begin': [],
         'dur': [],
@@ -38,6 +40,17 @@ class _TimedeltaBindingMixin(object):
 
     @classmethod
     def _ConvertArguments_vx(cls, args, kw):
+        """
+        This hook is called before the type in question is instantiated. This is meant to do some normalization
+        of input parameters and convert them to tuple. In this function we check the timeBase and the attribute name
+        against our compatible_timebases mapping inside the timing type class. If an invalid scenario is encountered
+        SimpleTypeValueError is raised, which effectively prevents the timingType union to instantiate the type.
+
+        :raises pyxb.SimpleTypeValueError:
+        :param args:
+        :param kw:
+        :return: tuple of converted input parameters.
+        """
         result = []
         # In parsing mode check timebase compatibility at instantiation time. This prevents pyxb instantiating
         # the wrong type given 2 types having overlapping values in a union as it happens in full and limited
@@ -80,7 +93,7 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
 
     # NOTE: Update this regex should the spec change about this type
     _groups_regex = re.compile('(?P<numerator>[0-9]+(?:\\.[0-9]+)?)(?P<unit>h|ms|s|m)')
-    # TODO: Consult and restrict this in an intuitive way if possible
+    # TODO: Consult and restrict this in an intuitive way to avoid awkward timing type combinations on the timing attributes.
     _compatible_timebases = {
         'begin': ['clock', 'media'],
         'dur': ['clock', 'media'],
