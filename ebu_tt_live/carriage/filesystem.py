@@ -6,11 +6,8 @@ from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from datetime import timedelta
 import logging
 import os
-import datetime
 import time
 
-
-MANIFEST_TIME_CLOCK_FORMAT = '%H:%M:%S.%f'
 
 log = logging.getLogger(__name__)
 
@@ -22,12 +19,21 @@ def timedelta_to_str_manifest(time, time_base):
         minutes, seconds = divmod(seconds, 60)
         milliseconds, _ = divmod(time.microseconds, 1000)
         return '{:02d}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, seconds, milliseconds)
+    elif time_base == 'smpte':
+        raise NotImplementedError()
+    else:
+        raise ValueError()
 
 
 def timestr_manifest_to_timedelta(timestr, time_base):
-    hours, minutes, rest = timestr.split(":")
-    seconds, milliseconds = rest.split(".")
-    return timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds), milliseconds=int(milliseconds))
+    if time_base == 'clock' or time_base == 'media':
+        hours, minutes, rest = timestr.split(":")
+        seconds, milliseconds = rest.split(".")
+        return timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds), milliseconds=int(milliseconds))
+    elif time_base == 'smpte':
+        raise NotImplementedError()
+    else:
+        raise ValueError()
 
 
 class FilesystemProducerImpl(ProducerCarriageImpl):
@@ -89,8 +95,6 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     def emit_document(self, document):
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
-        if not self._manifest_time_format:
-            self._manifest_time_format = MANIFEST_TIME_CLOCK_FORMAT
         filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
@@ -147,8 +151,6 @@ class FilesystemReader(object):
             self._manifest_lines_iter = iter(manifest.readlines())
 
     def resume_reading(self):
-        if not self._manifest_time_format:
-            self._manifest_time_format = MANIFEST_TIME_CLOCK_FORMAT
         with open(self._manifest_path, 'r') as manifest_file:
             while True:
                 manifest_line = manifest_file.readline()
