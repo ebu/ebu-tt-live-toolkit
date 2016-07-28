@@ -66,15 +66,16 @@ bindings Package
     :show-inheritance:
 
 :mod:`validation` Module
-------------------
+------------------------
 
 .. automodule:: ebu_tt_live.bindings.validation
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 
 :mod:`pyxb_utils` Module
-------------------
+------------------------
 
 .. automodule:: ebu_tt_live.bindings.pyxb_utils
     :members:
