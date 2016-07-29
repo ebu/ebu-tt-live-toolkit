@@ -2,6 +2,7 @@ import logging
 from .common import create_loggers
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
+from ebu_tt_live.bindings import _ebuttdt as datatypes
 from pyxb import BIND
 from datetime import timedelta
 
@@ -40,14 +41,16 @@ def main():
                         'And another line'
                     ),
                     id='ID005',
-                    begin=timedelta(seconds=.5),
-                    end=timedelta(seconds=3.42),
+                    begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
+                    end=datatypes.LimitedClockTimingType(timedelta(seconds=3.42)),
                 )
             ),
-            begin=timedelta(seconds=.5),
-            dur=timedelta(seconds=5)
+            begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
+            dur=datatypes.LimitedClockTimingType(timedelta(seconds=5))
         )
     )
+
+    tt.validateBinding()
 
     print(
         tt.toxml()
