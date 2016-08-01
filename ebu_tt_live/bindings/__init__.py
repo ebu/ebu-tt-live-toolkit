@@ -125,8 +125,12 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         pass
 
     def _semantic_before_traversal(self, dataset, element_content=None):
-        # The tt element adds itself to the semantic dataset to help classes lower down the line to locate contraining
+        # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
         # attributes.
+        dataset['timing_begin_stack'] = []
+        dataset['timing_end_stack'] = []
+        dataset['timing_resolved_begin'] = None
+        dataset['timing_resolved_end'] = None
         dataset['tt_element'] = self
         if self.timeBase == 'smpte':
             self.__semantic_test_smpte_attrs_present()
@@ -158,6 +162,10 @@ class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+
+    def _semantic_after_traversal(self, dataset, element_content=None):
+        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
 
 raw.p_type._SetSupersedingClass(p_type)
 
@@ -171,6 +179,10 @@ class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type)
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+
+    def _semantic_after_traversal(self, dataset, element_content=None):
+        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
 
 raw.span_type._SetSupersedingClass(span_type)
 
@@ -184,6 +196,10 @@ class div_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.div_type):
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+
+    def _semantic_after_traversal(self, dataset, element_content=None):
+        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
 
 raw.div_type._SetSupersedingClass(div_type)
 
@@ -198,6 +214,10 @@ class body_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.body_type)
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+
+    def _semantic_after_traversal(self, dataset, element_content=None):
+        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
 
 raw.body_type._SetSupersedingClass(body_type)
 

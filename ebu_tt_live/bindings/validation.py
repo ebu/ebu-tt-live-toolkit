@@ -159,43 +159,70 @@ class TimeBaseValidationMixin(object):
             # Clean up after successful creation
             context.pop('timing_attribute_name', None)
 
+    def _semantic_preprocess_timing(self, dataset, element_content):
+        if hasattr(self, 'begin') and self.begin is not None:
+            # Let's push it onto the stack
+            dataset['timing_begin_stack'].append(self.begin)
 
-    # The mixin approach is used since the inspected elements are all attributes of the element so they do not
-    # take part in the traversal directly.
+        if hasattr(self, 'dur') and self.dur is not None:
+            # if self.begin is None:
+            #     raise NotImplementedError('Availability time needed to process timing')
+            pass
+
+        if hasattr(self, 'end') and self.end is not None:
+            # Let's push it onto the stack
+            dataset['timing_end_stack'].append(self.end)
+
+    def _semantic_postprocess_timing(self, dataset, element_content):
+        if hasattr(self, 'begin') and self.begin is not None:
+            # We pushed on the stack it is time to pop it
+            dataset['timing_begin_stack'].pop()
+
+        if hasattr(self, 'end') and self.end is not None:
+            # We pushed on the stack it is time to pop it
+            dataset['timing_end_stack'].pop()
+
+    # The mixin approach is used since there are multiple timed elements types.
+    # The inspected elements are all attributes of the element so they do not
+    # take part in the traversal directly we process them in the timed element's context instead: body, div, p, span
     def _semantic_timebase_validation(self, dataset, element_content):
         time_base = dataset['tt_element'].timeBase
-        # Check typing of timing arguments against the timebase
-        if hasattr(self, 'begin') and self.begin is not None and hasattr(self.begin, 'compatible_timebases'):
-            timebases = self.begin.compatible_timebases()
-            if time_base not in timebases['begin']:
-                raise SemanticValidationError(
-                    ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                        attr_type=type(self.begin),
-                        attr_value=self.begin,
-                        attr_name='begin',
-                        time_base=time_base
+        if hasattr(self, 'begin') and self.begin is not None:
+            if hasattr(self.begin, 'compatible_timebases'):
+                # Check typing of begin attribute against the timebase
+                timebases = self.begin.compatible_timebases()
+                if time_base not in timebases['begin']:
+                    raise SemanticValidationError(
+                        ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                            attr_type=type(self.begin),
+                            attr_value=self.begin,
+                            attr_name='begin',
+                            time_base=time_base
+                        )
                     )
-                )
-        if hasattr(self, 'dur') and self.dur is not None and hasattr(self.dur, 'compatible_timebases'):
-            timebases = self.dur.compatible_timebases()
-            if time_base not in timebases['dur']:
-                raise SemanticValidationError(
-                    ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                        attr_type=type(self.dur),
-                        attr_value=self.dur,
-                        attr_name='dur',
-                        time_base=time_base
+        if hasattr(self, 'dur') and self.dur is not None:
+            if hasattr(self.dur, 'compatible_timebases'):
+                # Check typing of dur attribute against the timebase
+                timebases = self.dur.compatible_timebases()
+                if time_base not in timebases['dur']:
+                    raise SemanticValidationError(
+                        ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                            attr_type=type(self.dur),
+                            attr_value=self.dur,
+                            attr_name='dur',
+                            time_base=time_base
+                        )
                     )
-                )
-        if hasattr(self, 'end') and self.end is not None and hasattr(self.end, 'compatible_timebases'):
-            timebases = self.end.compatible_timebases()
-            if time_base not in timebases['end']:
-                raise SemanticValidationError(
-                    ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                        attr_type=type(self.end),
-                        attr_value=self.end,
-                        attr_name='end',
-                        time_base=time_base
+        if hasattr(self, 'end') and self.end is not None:
+            if hasattr(self.end, 'compatible_timebases'):
+                # Check typing of end attribute against the timebase
+                timebases = self.end.compatible_timebases()
+                if time_base not in timebases['end']:
+                    raise SemanticValidationError(
+                        ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                            attr_type=type(self.end),
+                            attr_value=self.end,
+                            attr_name='end',
+                            time_base=time_base
+                        )
                     )
-                )
-
