@@ -92,6 +92,10 @@ class EBUTT3Document(SubtitleDocument):
     def resolved_end_time(self):
         return self._ebutt3_content.resolved_end_time
 
+    @property
+    def time_base(self):
+        return self._ebutt3_content.timeBase
+
     def validate(self):
         self._ebutt3_content.validateBinding()
 

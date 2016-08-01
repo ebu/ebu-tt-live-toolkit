@@ -1,9 +1,11 @@
-import os
-import unittest
 from pytest_bdd import given, then
 from jinja2 import Environment, FileSystemLoader
 from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType
+from datetime import timedelta
 import pytest
+import os
+import unittest
 
 
 @given('an xml file <xml_file>')
@@ -26,6 +28,39 @@ def invalid_doc(template_file, template_dict):
     xml_file = template_file.render(template_dict)
     with pytest.raises(Exception):
         EBUTT3Document.create_from_xml(xml_file)
+
+
+@given('the document is generated')
+def gen_document(template_file, template_dict):
+    xml_file = template_file.render(template_dict)
+    document = EBUTT3Document.create_from_xml(xml_file)
+    return document
+
+
+def timestr_to_timedelta(time_str, time_base):
+    if time_base == 'clock':
+        return LimitedClockTimingType(time_str).timedelta
+    elif time_base == 'media':
+        return FullClockTimingType(time_str).timedelta
+    elif time_base == 'smpte':
+        raise NotImplementedError('SMPTE needs implementation')
+
+
+@then('it has resolved begin time <resolved_begin>')
+def valid_resolved_begin_time(resolved_begin, gen_document):
+    resolved_begin_timedelta = timestr_to_timedelta(resolved_begin, gen_document.time_base)
+    assert gen_document.resolved_begin_time == resolved_begin_timedelta
+
+
+@then('it has resolved end time <resolved_end>')
+def valid_resolved_end_time(resolved_end, gen_document):
+    resolved_end_timedelta = timestr_to_timedelta(resolved_end, gen_document.time_base)
+    assert gen_document.resolved_end_time == resolved_end_timedelta
+
+
+@given('it has availability time <avail_time>')
+def given_avail_time(avail_time, template_dict, gen_document):
+    gen_document.availability_time = timestr_to_timedelta(avail_time, template_dict['time_base'])
 
 
 @pytest.fixture
