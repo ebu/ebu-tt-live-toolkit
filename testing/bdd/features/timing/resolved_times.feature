@@ -1,4 +1,4 @@
-@timing
+@timing @timingresolution
 Feature: Resolved times computation
 
   # SPEC-CONFORMANCE:

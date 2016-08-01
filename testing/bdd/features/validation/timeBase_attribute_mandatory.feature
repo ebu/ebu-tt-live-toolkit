@@ -1,3 +1,4 @@
+@timing
 Feature: ttp:timeBase attribute is mandatory
   Every document shall declare ttp:timeBase
 

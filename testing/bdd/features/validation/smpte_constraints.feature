@@ -1,3 +1,4 @@
+@timing
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
     Given an xml file <xml_file>

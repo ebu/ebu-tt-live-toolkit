@@ -1,3 +1,4 @@
+@timing
 Feature: ttp:timeBase-related attribute constraints
 
   # SPEC-CONFORMANCE: R46 R47 R49 R50 R52 R53
