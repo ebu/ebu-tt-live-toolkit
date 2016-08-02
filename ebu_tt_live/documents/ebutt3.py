@@ -100,6 +100,8 @@ class EBUTT3Document(SubtitleDocument):
         result = self._ebutt3_content.validateBinding(
             availability_time=self.availability_time
         )
+        self._resolved_begin_time = result['semantic_dataset']['timing_resolved_begin']
+        self._resolved_end_time = result['semantic_dataset']['timing_resolved_end']
 
     def add_div(self, div):
         body = self._ebutt3_content.body

@@ -184,6 +184,7 @@ class TimeBaseValidationMixin(object):
         if hasattr(self, 'begin') and self.begin is not None:
             # Let's push it onto the stack
             dataset['timing_begin_stack'].append(self.begin)
+            dataset['timing_accum_begin'] += self.begin.timedelta
 
         if hasattr(self, 'dur') and self.dur is not None:
             # if self.begin is None:

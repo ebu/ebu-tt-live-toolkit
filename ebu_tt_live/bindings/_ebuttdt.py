@@ -108,7 +108,7 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
         :return:
         """
         numerator, unit = cls._groups_regex.match(instance).groups()
-        numerator = int(numerator)
+        numerator = float(numerator)
         if unit == 's':
             return timedelta(seconds=numerator)
         elif unit == 'm':
@@ -271,14 +271,22 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
     """
     Extending the string type with conversions to and from timedelta
     """
+    _compatible_timebases = {
+        'begin': ['smpte'],
+        'dur': ['smpte'],
+        'end': ['smpte']
+    }
+
     @classmethod
     def as_timedelta(cls, instance):
-        pass
+        # TODO: implement SMPTE
+        return timedelta()
 
     @classmethod
     def from_timedelta(cls, instance):
-        pass
+        # TODO: implement SMPTE
+        return SMPTETimingType('00:00:00:00')
 
 
 # TODO: SMPTE frameRate and frameRateMultiplier value from tt element.
-# ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
+ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
