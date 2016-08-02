@@ -181,34 +181,61 @@ class TimeBaseValidationMixin(object):
             context.pop('timing_attribute_name', None)
 
     def _semantic_preprocess_timing(self, dataset, element_content):
-        if hasattr(self, 'begin') and self.begin is not None:
+        begin_timedelta = None
+        dur_timedelta = None
+        end_timedelta = None
+
+        if hasattr(self, 'end') and self.end is not None:
+            end_timedelta = self.end.timedelta
+
+            proposed_end = dataset['timing_syncbase'] + end_timedelta
+
+            if not dataset['timing_end_stack']:
+                # We are at an outermost timing container
+                old_resolved_end = None
+            else:
+                old_resolved_end = dataset['timing_resolved_end']
+
+            if dataset['timing_resolved_end'] is not None:
+                new_resolved_end = min(old_resolved_end, proposed_end)
+            else:
+                new_resolved_end = proposed_end
+
+            dataset['timing_resolved_end'] = new_resolved_end
+
             # Let's push it onto the stack
+            dataset['timing_end_stack'].append(end_timedelta)
+
+        if hasattr(self, 'begin') and self.begin is not None:
             begin_timedelta = self.begin.timedelta
+
             if not dataset['timing_begin_stack']:
                 # This means we are at a outermost timing container
                 if dataset['timing_resolved_begin'] is None or dataset['timing_resolved_begin'] < begin_timedelta:
                     dataset['timing_resolved_begin'] = begin_timedelta
+
+            # Let's push it onto the stack
             dataset['timing_begin_stack'].append(begin_timedelta)
             dataset['timing_syncbase'] += begin_timedelta
 
         if hasattr(self, 'dur') and self.dur is not None:
-            # if self.begin is None:
-            #     raise NotImplementedError('Availability time needed to process timing')
+            dur_timedelta = self.dur.timedelta
             pass
 
-        if hasattr(self, 'end') and self.end is not None:
-            # Let's push it onto the stack
-            dataset['timing_end_stack'].append(self.end)
-
     def _semantic_postprocess_timing(self, dataset, element_content):
+        begin_timedelta = None
+        end_timedelta = None
+
+        if hasattr(self, 'end') and self.end is not None:
+            # We pushed on the stack it is time to pop it
+            dataset['timing_end_stack'].pop()
+
         if hasattr(self, 'begin') and self.begin is not None:
             # We pushed on the stack it is time to pop it
             begin_timedelta = dataset['timing_begin_stack'].pop()
             dataset['timing_syncbase'] -= begin_timedelta
 
-        if hasattr(self, 'end') and self.end is not None:
-            # We pushed on the stack it is time to pop it
-            dataset['timing_end_stack'].pop()
+
 
     # The mixin approach is used since there are multiple timed elements types.
     # The inspected elements are all attributes of the element so they do not
