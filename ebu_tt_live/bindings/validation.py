@@ -220,7 +220,12 @@ class TimeBaseValidationMixin(object):
 
         if hasattr(self, 'dur') and self.dur is not None:
             dur_timedelta = self.dur.timedelta
-            pass
+            if end_timedelta:
+                proposed_end = min(dur_timedelta + dataset['timing_syncbase'], end_timedelta)
+            else:
+                proposed_end = dur_timedelta + dataset['timing_syncbase']
+
+            dataset['timing_resolved_end'] = proposed_end
 
     def _semantic_postprocess_timing(self, dataset, element_content):
         begin_timedelta = None
