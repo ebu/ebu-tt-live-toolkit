@@ -126,7 +126,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # attributes.
         dataset['timing_begin_stack'] = []
         dataset['timing_end_stack'] = []
-        dataset['timing_accum_begin'] = timedelta()
+        dataset['timing_syncbase'] = timedelta()
         dataset['timing_accum_end'] = timedelta()
         dataset['timing_resolved_begin'] = None
         dataset['timing_resolved_end'] = None

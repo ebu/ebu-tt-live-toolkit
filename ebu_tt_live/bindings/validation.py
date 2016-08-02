@@ -185,13 +185,11 @@ class TimeBaseValidationMixin(object):
             # Let's push it onto the stack
             begin_timedelta = self.begin.timedelta
             if not dataset['timing_begin_stack']:
-                # This means we are at a first timing container
-                print 'new firt timecontainer detected'
+                # This means we are at a outermost timing container
                 if dataset['timing_resolved_begin'] is None or dataset['timing_resolved_begin'] < begin_timedelta:
-                    print 'adding timing_resolved_begin {}'.format(begin_timedelta)
                     dataset['timing_resolved_begin'] = begin_timedelta
             dataset['timing_begin_stack'].append(begin_timedelta)
-            dataset['timing_accum_begin'] += begin_timedelta
+            dataset['timing_syncbase'] += begin_timedelta
 
         if hasattr(self, 'dur') and self.dur is not None:
             # if self.begin is None:
@@ -205,7 +203,8 @@ class TimeBaseValidationMixin(object):
     def _semantic_postprocess_timing(self, dataset, element_content):
         if hasattr(self, 'begin') and self.begin is not None:
             # We pushed on the stack it is time to pop it
-            dataset['timing_begin_stack'].pop()
+            begin_timedelta = dataset['timing_begin_stack'].pop()
+            dataset['timing_syncbase'] -= begin_timedelta
 
         if hasattr(self, 'end') and self.end is not None:
             # We pushed on the stack it is time to pop it
