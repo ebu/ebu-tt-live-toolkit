@@ -197,7 +197,7 @@ class TimeBaseValidationMixin(object):
                 old_resolved_end = dataset['timing_resolved_end']
 
             if dataset['timing_resolved_end'] is not None:
-                new_resolved_end = min(old_resolved_end, proposed_end)
+                new_resolved_end = old_resolved_end is not None and min(old_resolved_end, proposed_end) or proposed_end
             else:
                 new_resolved_end = proposed_end
 

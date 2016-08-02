@@ -36,6 +36,13 @@ class _TimedeltaBindingMixin(object):
     }
 
     @classmethod
+    def _int_or_none(cls, value):
+        try:
+            return int(value)
+        except TypeError:
+            return 0
+
+    @classmethod
     def compatible_timebases(cls):
         return cls._compatible_timebases
 
@@ -184,7 +191,10 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(lambda x: int(x), cls._groups_regex.match(instance).groups())
+        hours, minutes, seconds, milliseconds = map(
+            lambda x: cls._int_or_none(x),
+            cls._groups_regex.match(instance).groups()
+        )
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
@@ -232,7 +242,10 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(lambda x: int(x), cls._groups_regex.match(instance).groups())
+        hours, minutes, seconds, milliseconds = map(
+            lambda x: cls._int_or_none(x),
+            cls._groups_regex.match(instance).groups()
+        )
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
