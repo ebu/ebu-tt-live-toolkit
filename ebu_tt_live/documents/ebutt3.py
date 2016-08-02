@@ -97,10 +97,22 @@ class EBUTT3Document(SubtitleDocument):
         return self._ebutt3_content.timeBase
 
     def validate(self):
+        # This is assuming availability from the beginning of our time coordinate system.
+        availability_time = self.availability_time or timedelta()
+        # Run validation
         result = self._ebutt3_content.validateBinding(
-            availability_time=self.availability_time
+            availability_time=availability_time
         )
-        self._resolved_begin_time = result['semantic_dataset']['timing_resolved_begin']
+        # Extract results
+
+        # Begin times
+        resolved_begin = result['semantic_dataset']['timing_resolved_begin']
+        if resolved_begin is not None:
+            self._resolved_begin_time = max(availability_time, resolved_begin)
+        else:
+            self._resolved_begin_time = availability_time
+
+        # End times
         self._resolved_end_time = result['semantic_dataset']['timing_resolved_end']
 
     def add_div(self, div):

@@ -183,8 +183,15 @@ class TimeBaseValidationMixin(object):
     def _semantic_preprocess_timing(self, dataset, element_content):
         if hasattr(self, 'begin') and self.begin is not None:
             # Let's push it onto the stack
-            dataset['timing_begin_stack'].append(self.begin)
-            dataset['timing_accum_begin'] += self.begin.timedelta
+            begin_timedelta = self.begin.timedelta
+            if not dataset['timing_begin_stack']:
+                # This means we are at a first timing container
+                print 'new firt timecontainer detected'
+                if dataset['timing_resolved_begin'] is None or dataset['timing_resolved_begin'] < begin_timedelta:
+                    print 'adding timing_resolved_begin {}'.format(begin_timedelta)
+                    dataset['timing_resolved_begin'] = begin_timedelta
+            dataset['timing_begin_stack'].append(begin_timedelta)
+            dataset['timing_accum_begin'] += begin_timedelta
 
         if hasattr(self, 'dur') and self.dur is not None:
             # if self.begin is None:

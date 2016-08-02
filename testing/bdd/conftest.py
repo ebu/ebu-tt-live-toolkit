@@ -34,6 +34,7 @@ def invalid_doc(template_file, template_dict):
 def gen_document(template_file, template_dict):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
+    document.validate()
     return document
 
 
