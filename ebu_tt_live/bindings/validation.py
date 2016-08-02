@@ -75,7 +75,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         """
         pass
 
-    def _semantic_after_validation(self):
+    def _semantic_after_validation(self, **extra_kwargs):
         """
         After PyXB successfully validated the syntax this hook runs where the user may execute custom code.
 
@@ -86,6 +86,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Create new semantic context object
         semantic_dataset = {}
+        semantic_dataset.update(extra_kwargs)
         # Collections of visited elements
         pre_visited = set()
         post_visited = set()
@@ -123,7 +124,9 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
 
-    def _validateBinding_vx(self):
+        return semantic_dataset
+
+    def _validateBinding_vx(self, **extra_kwargs):
         """
         At this point we can hook into PyXB's validation flow and call our hooks:
         _semantic_before_validation() and _semantic_after_validation()
@@ -137,7 +140,25 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         self.__class__.__bases__[1]._validateBinding_vx(self)
 
         # Step3: Process current object
-        self._semantic_after_validation()
+        semantic_dataset = self._semantic_after_validation(**extra_kwargs)
+
+        return semantic_dataset
+
+    def validateBinding (self, **extra_kwargs):
+        """Check whether the binding content matches its content model.
+
+        @return: C{True} if validation was not performed due to settings.
+        @return: Complex result dictionary with success and semantic_dataset keys.
+        @raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...
+        @raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints
+        """
+        if self._performValidation():
+            result = self._validateBinding_vx(**extra_kwargs)
+            return {
+                "success": True,
+                "semantic_dataset": result
+            }
+        return True
 
 
 class TimeBaseValidationMixin(object):

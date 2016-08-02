@@ -86,18 +86,20 @@ class EBUTT3Document(SubtitleDocument):
 
     @property
     def resolved_begin_time(self):
-        return self._ebutt3_content.resolved_begin_time
+        return self._resolved_begin_time
 
     @property
     def resolved_end_time(self):
-        return self._ebutt3_content.resolved_end_time
+        return self._resolved_end_time
 
     @property
     def time_base(self):
         return self._ebutt3_content.timeBase
 
     def validate(self):
-        self._ebutt3_content.validateBinding()
+        result = self._ebutt3_content.validateBinding(
+            availability_time=self.availability_time
+        )
 
     def add_div(self, div):
         body = self._ebutt3_content.body
