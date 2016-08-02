@@ -55,7 +55,10 @@ def valid_resolved_begin_time(resolved_begin, gen_document):
 
 @then('it has resolved end time <resolved_end>')
 def valid_resolved_end_time(resolved_end, gen_document):
-    resolved_end_timedelta = timestr_to_timedelta(resolved_end, gen_document.time_base)
+    if resolved_end:
+        resolved_end_timedelta = timestr_to_timedelta(resolved_end, gen_document.time_base)
+    else:
+        resolved_end_timedelta = None
     assert gen_document.resolved_end_time == resolved_end_timedelta
 
 

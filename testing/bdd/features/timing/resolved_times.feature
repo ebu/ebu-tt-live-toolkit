@@ -17,7 +17,7 @@ Feature: Resolved times computation
     Examples:
     | xml_file                 | time_base | sequence_number | body_begin  | body_end     | body_dur | resolved_begin | resolved_end | avail_time  |
     | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              |          | 00:00:10.0     |              | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               |             | 00:00:10.0   |          | 00:00:00.0     |              | 00:00:00.0  |
+    | timeBase_timeformat.xml  | clock     | 1               |             | 00:00:10.0   |          | 00:00:00.0     | 00:00:10.0   | 00:00:00.0  |
     | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              | 1h       | 00:00:10.0     | 01:00:10.0   | 00:00:00.0  |
     | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  | 00:00:20.0   |          | 00:00:10.0     | 00:00:20.0   | 00:00:00.0  |
     | timeBase_timeformat.xml  | media     | 1               | 109:01:00.0 | 110:12:00.15 |          | 109:01:00.0    | 110:12:00.15 | 109:00:00.0 |
