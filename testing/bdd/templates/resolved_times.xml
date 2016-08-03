@@ -48,12 +48,40 @@
 {% endif %}
     >
     <tt:div>
-      <tt:p xml:id="ID005">
-            <tt:span>
+      <tt:p 
+{% if p_begin %}
+  {% if p_begin == "*?Empty?*" %}
+        tt:begin=""
+  {% else %}
+        tt:begin="{{ p_begin }}"
+  {% endif %}
+{% endif %}
+{% if p_end %}
+  {% if p_end == "*?Empty?*" %}
+        tt:end=""
+  {% else %}
+        tt:end="{{ p_end }}"
+  {% endif%}
+{% endif %}
+        xml:id="ID005">
+            <tt:span
+{% if span_begin %}
+  {% if span_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
+                tt:begin="{{ span_begin }}"
+  {% endif %}
+{% endif %}
+{% if span_end %}
+  {% if span_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
+                tt:end="{{ span_end }}"
+  {% endif%}
+{% endif %}
+              >
               Some example text...
             </tt:span>
-        <tt:br/>
-        <tt:span>And another line</tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
