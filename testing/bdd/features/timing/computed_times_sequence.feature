@@ -5,7 +5,7 @@ Feature: Resolved times computation in sequence
   | xml_file           | sequence_identifier | time_base | doc1_avail_time | doc1_begin  | doc1_end   | doc1_dur | doc2_avail_time | doc2_begin | doc2_end | doc2_dur  |
   | resolved_times.xml | testSequence1       | clock     | 00:00:00.0      | 00:00:10.0  | 00:00:20.0 |          | 00:00:10.0      | 00:00:30.0 |          | 10s       |
 
-
+  @skip
   # SPEC-CONFORMANCE: R16 R17
   Scenario: Resolved times in sequence
     Given a sequence <sequence_identifier> with timeBase <time_base>
