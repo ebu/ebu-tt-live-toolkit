@@ -1,4 +1,4 @@
-@timing @resolution
+@timing @resolution @document
 Feature: Computed times computation
 
   Examples:
@@ -39,5 +39,4 @@ Feature: Computed times computation
     | clock     | 00:00:10.0  |              |          |            |            |            | 00:00:05.0 |            |            | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
     | clock     | 00:00:10.0  |              |          |            |            |            |            | 00:00:15.0 |            | 00:00:10.0     |              | 00:00:00.0  |
     | clock     | 00:00:10.0  |              |          |            |            |            |            |            | 00:00:05.0 | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
-    @skip           |         | 
     | clock     | 00:00:10.0  | 00:00:20.0   |          |            |            |            | 00:00:30.0 |            |            | 00:00:10.0     | 00:00:20.0   | 00:00:00.0  |
