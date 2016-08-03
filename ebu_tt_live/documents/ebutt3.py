@@ -1,9 +1,11 @@
 from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
-from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH
+from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE
+from ebu_tt_live.errors import IncompatibleSequenceError
 from datetime import timedelta
 from pyxb import BIND
+from sortedcontainers import sortedset
 
 
 class EBUTT3Document(SubtitleDocument):
@@ -15,6 +17,7 @@ class EBUTT3Document(SubtitleDocument):
     _availability_time = None
     _computed_begin_time = None
     _computed_end_time = None
+    _sequence = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
@@ -66,6 +69,17 @@ class EBUTT3Document(SubtitleDocument):
         self._ebutt3_content.sequenceIdentifier = value
 
     @property
+    def sequence(self):
+        if self._sequence is None:
+            raise ValueError(ERR_DOCUMENT_NOT_PART_OF_SEQUENCE)
+        return self._sequence
+
+    @sequence.setter
+    def sequence(self, value):
+        if value.sequence_identifier != self.sequence_identifier:
+            raise ValueError(ERR_DOCUMENT_SEQUENCE_MISMATCH)
+
+    @property
     def sequence_number(self):
         return self._ebutt3_content.sequenceNumber
 
@@ -91,6 +105,14 @@ class EBUTT3Document(SubtitleDocument):
     @property
     def computed_end_time(self):
         return self._computed_end_time
+
+    @property
+    def resolved_begin_time(self):
+        return self.sequence.resolved_begin_time(self)
+
+    @property
+    def resolved_end_time(self):
+        return self.sequence.resolved_end_time(self)
 
     @property
     def time_base(self):
@@ -138,12 +160,14 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
     _last_sequence_number = None
     _reference_clock = None
     _lang = None
+    _documents = None
 
     def __init__(self, sequence_identifier, reference_clock, lang):
         self._sequence_identifier = sequence_identifier
         self._reference_clock = reference_clock
         self._lang = lang
         self._last_sequence_number = 0
+        self._documents = sortedset.SortedSet()
 
     @property
     def reference_clock(self):
@@ -166,6 +190,13 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         # TODO
         pass
 
+    def _check_document_compatibility(self, document):
+        if self.sequence_identifier != document.sequence_identifier:
+            raise IncompatibleSequenceError(
+                ERR_DOCUMENT_NOT_COMPATIBLE
+            )
+        return True
+
     def new_document(self, *args, **kwargs):
         self._last_sequence_number += 1
         return EBUTT3Document(
@@ -175,6 +206,20 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             sequence_number=self._last_sequence_number,
             lang=self._lang
         )
+
+    def add_document(self, document):
+        self._check_document_compatibility(document)
+        document.sequence = self
+        self._documents.add(document)
+
+    def get_document(self, seq_id):
+        return self._documents[seq_id]
+
+    def resolved_begin_time(self, document):
+        return timedelta()
+
+    def resolved_end_time(self, document):
+        return timedelta()
 
     def fork(self, *args, **kwargs):
         pass
