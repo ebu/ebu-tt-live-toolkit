@@ -1,6 +1,8 @@
-from pytest_bdd import given, then
+from pytest_bdd import when, given, then
 from jinja2 import Environment, FileSystemLoader
-from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType
 from datetime import timedelta
 import pytest
@@ -14,6 +16,19 @@ def template_file(xml_file):
     j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
                          trim_blocks=True)
     return j2_env.get_template(xml_file)
+
+
+@given('a sequence <sequence_identifier> with timeBase <time_base>')
+def sequence(sequence_identifier, time_base):
+    ref_clock = None
+    if time_base == 'clock':
+        ref_clock = LocalMachineClock()
+    elif time_base == 'media':
+        ref_clock = MediaClock()
+    elif time_base == 'smpte':
+        raise NotImplementedError()
+    sequence = EBUTT3DocumentSequence(sequence_identifier, ref_clock, 'en-GB')
+    return sequence
 
 
 @then('document is valid')
