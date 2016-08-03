@@ -192,16 +192,16 @@ class TimeBaseValidationMixin(object):
 
             if not dataset['timing_end_stack']:
                 # We are at an outermost timing container
-                old_resolved_end = None
+                old_computed_end = None
             else:
-                old_resolved_end = dataset['timing_resolved_end']
+                old_computed_end = dataset['timing_computed_end']
 
-            if dataset['timing_resolved_end'] is not None:
-                new_resolved_end = old_resolved_end is not None and min(old_resolved_end, proposed_end) or proposed_end
+            if dataset['timing_computed_end'] is not None:
+                new_computed_end = old_computed_end is not None and min(old_computed_end, proposed_end) or proposed_end
             else:
-                new_resolved_end = proposed_end
+                new_computed_end = proposed_end
 
-            dataset['timing_resolved_end'] = new_resolved_end
+            dataset['timing_computed_end'] = new_computed_end
 
             # Let's push it onto the stack
             dataset['timing_end_stack'].append(end_timedelta)
@@ -211,8 +211,8 @@ class TimeBaseValidationMixin(object):
 
             if not dataset['timing_begin_stack']:
                 # This means we are at a outermost timing container
-                if dataset['timing_resolved_begin'] is None or dataset['timing_resolved_begin'] < begin_timedelta:
-                    dataset['timing_resolved_begin'] = begin_timedelta
+                if dataset['timing_computed_begin'] is None or dataset['timing_computed_begin'] < begin_timedelta:
+                    dataset['timing_computed_begin'] = begin_timedelta
 
             # Let's push it onto the stack
             dataset['timing_begin_stack'].append(begin_timedelta)
@@ -225,7 +225,7 @@ class TimeBaseValidationMixin(object):
             else:
                 proposed_end = dur_timedelta + dataset['timing_syncbase']
 
-            dataset['timing_resolved_end'] = proposed_end
+            dataset['timing_computed_end'] = proposed_end
 
     def _semantic_postprocess_timing(self, dataset, element_content):
         begin_timedelta = None

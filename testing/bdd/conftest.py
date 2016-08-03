@@ -47,19 +47,19 @@ def timestr_to_timedelta(time_str, time_base):
         raise NotImplementedError('SMPTE needs implementation')
 
 
-@then('it has resolved begin time <resolved_begin>')
-def valid_resolved_begin_time(resolved_begin, gen_document):
-    resolved_begin_timedelta = timestr_to_timedelta(resolved_begin, gen_document.time_base)
-    assert gen_document.resolved_begin_time == resolved_begin_timedelta
+@then('it has computed begin time <computed_begin>')
+def valid_computed_begin_time(computed_begin, gen_document):
+    computed_begin_timedelta = timestr_to_timedelta(computed_begin, gen_document.time_base)
+    assert gen_document.computed_begin_time == computed_begin_timedelta
 
 
-@then('it has resolved end time <resolved_end>')
-def valid_resolved_end_time(resolved_end, gen_document):
-    if resolved_end:
-        resolved_end_timedelta = timestr_to_timedelta(resolved_end, gen_document.time_base)
+@then('it has computed end time <computed_end>')
+def valid_computed_end_time(computed_end, gen_document):
+    if computed_end:
+        computed_end_timedelta = timestr_to_timedelta(computed_end, gen_document.time_base)
     else:
-        resolved_end_timedelta = None
-    assert gen_document.resolved_end_time == resolved_end_timedelta
+        computed_end_timedelta = None
+    assert gen_document.computed_end_time == computed_end_timedelta
 
 
 @given('it has availability time <avail_time>')

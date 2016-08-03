@@ -1,6 +1,6 @@
 from pytest_bdd import scenarios, given
 
-scenarios('features/timing/resolved_times.feature')
+scenarios('features/timing/computed_times.feature')
 
 
 @given('it has timeBase <time_base>')

@@ -13,8 +13,8 @@ class EBUTT3Document(SubtitleDocument):
     # The availability time can be set by the carriage implementation for
     # example
     _availability_time = None
-    _resolved_begin_time = None
-    _resolved_end_time = None
+    _computed_begin_time = None
+    _computed_end_time = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
@@ -85,12 +85,12 @@ class EBUTT3Document(SubtitleDocument):
         self._availability_time = value
 
     @property
-    def resolved_begin_time(self):
-        return self._resolved_begin_time
+    def computed_begin_time(self):
+        return self._computed_begin_time
 
     @property
-    def resolved_end_time(self):
-        return self._resolved_end_time
+    def computed_end_time(self):
+        return self._computed_end_time
 
     @property
     def time_base(self):
@@ -106,14 +106,14 @@ class EBUTT3Document(SubtitleDocument):
         # Extract results
 
         # Begin times
-        resolved_begin = result['semantic_dataset']['timing_resolved_begin']
-        if resolved_begin is not None:
-            self._resolved_begin_time = max(availability_time, resolved_begin)
+        computed_begin = result['semantic_dataset']['timing_computed_begin']
+        if computed_begin is not None:
+            self._computed_begin_time = max(availability_time, computed_begin)
         else:
-            self._resolved_begin_time = availability_time
+            self._computed_begin_time = availability_time
 
         # End times
-        self._resolved_end_time = result['semantic_dataset']['timing_resolved_end']
+        self._computed_end_time = result['semantic_dataset']['timing_computed_end']
 
     def add_div(self, div):
         body = self._ebutt3_content.body

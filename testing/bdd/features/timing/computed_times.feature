@@ -1,5 +1,5 @@
 @timing @resolution
-Feature: Resolved times computation
+Feature: Computed times computation
 
   Examples:
   | xml_file           | sequence_identifier | sequence_number |
@@ -20,11 +20,11 @@ Feature: Resolved times computation
     And it has span end time <span_end>
     And the document is generated  # implicitly means it is valid.
     And it has availability time <avail_time>
-    Then it has resolved begin time <resolved_begin>
-    And it has resolved end time <resolved_end>
+    Then it has computed begin time <computed_begin>
+    And it has computed end time <computed_end>
 
     Examples:
-    | time_base | body_begin  | body_end     | body_dur | p_begin     | p_end      | span_begin | span_end   | resolved_begin | resolved_end | avail_time  |
+    | time_base | body_begin  | body_end     | body_dur | p_begin     | p_end      | span_begin | span_end   | computed_begin | computed_end | avail_time  |
     | clock     | 00:00:10.0  |              |          |             |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
     | clock     |             | 00:00:10.0   |          |             |            |            |            | 00:00:00.0     | 00:00:10.0   | 00:00:00.0  |
     | clock     | 00:00:10.0  |              | 1h       |             |            |            |            | 00:00:10.0     | 01:00:10.0   | 00:00:00.0  |
