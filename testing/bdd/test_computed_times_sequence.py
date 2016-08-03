@@ -106,7 +106,7 @@ def when_doc3_added_to_seq(doc3_avail_time, template_file, template_dict, sequen
 @then('doc1 has computed begin time <c_begin_doc1>')
 def valid_computed_begin_time_doc1(c_begin_doc1, sequence):
     computed_begin_timedelta = timestr_to_timedelta(c_begin_doc1, sequence.reference_clock.time_base)
-    assert sequence.docs[0].computed_begin_time == computed_begin_timedelta
+    assert sequence.docs[0].resolved_begin_time == computed_begin_timedelta
 
 
 @then('doc1 has computed end time <c_end_doc1>')
@@ -115,13 +115,13 @@ def valid_computed_end_time_doc1(c_end_doc1, sequence):
         computed_end_timedelta = timestr_to_timedelta(c_end_doc1, sequence.reference_clock.time_base)
     else:
         computed_end_timedelta = None
-    assert sequence.docs[0].computed_end_time == computed_end_timedelta
+    assert sequence.docs[0].resolved_end_time == computed_end_timedelta
 
 
 @then('doc2 has computed begin time <c_begin_doc2>')
 def valid_computed_begin_time_doc2(c_begin_doc2, sequence):
     computed_begin_timedelta = timestr_to_timedelta(c_begin_doc2, sequence.reference_clock.time_base)
-    assert sequence.docs[1].computed_begin_time == computed_begin_timedelta
+    assert sequence.docs[1].resolved_begin_time == computed_begin_timedelta
 
 
 @then('doc2 has computed end time <c_end_doc2>')
@@ -130,13 +130,13 @@ def valid_computed_end_time_doc2(c_end_doc2, sequence):
         computed_end_timedelta = timestr_to_timedelta(c_end_doc2, sequence.reference_clock.time_base)
     else:
         computed_end_timedelta = None
-    assert sequence.docs[1].computed_end_time == computed_end_timedelta
+    assert sequence.docs[1].resolved_end_time == computed_end_timedelta
 
 
 @then('doc3 has computed begin time <c_begin_doc3>')
 def valid_computed_begin_time_doc3(c_begin_doc3, sequence):
     computed_begin_timedelta = timestr_to_timedelta(c_begin_doc3, sequence.reference_clock.time_base)
-    assert sequence.docs[2].computed_begin_time == computed_begin_timedelta
+    assert sequence.docs[2].resolved_begin_time == computed_begin_timedelta
 
 
 @then('doc3 has computed end time <c_end_doc3>')
@@ -145,4 +145,4 @@ def valid_computed_end_time_doc3(c_end_doc3, sequence):
         computed_end_timedelta = timestr_to_timedelta(c_end_doc3, sequence.reference_clock.time_base)
     else:
         computed_end_timedelta = None
-    assert sequence.docs[2].computed_end_time == computed_end_timedelta
+    assert sequence.docs[2].resolved_end_time == computed_end_timedelta
