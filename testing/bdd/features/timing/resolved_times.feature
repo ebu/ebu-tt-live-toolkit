@@ -32,15 +32,15 @@ Feature: Resolved times computation in sequence
     And it has doc3 body end time <doc3_end>
     And it has doc3 body duration <doc3_dur>
     And doc3 is added to the sequence with availability time <doc3_avail_time>
-    Then doc1 has computed begin time <c_begin_doc1>
-    And doc1 has computed end time <c_end_doc1>
-    And doc2 has computed begin time <c_begin_doc2>
-    And doc2 has computed end time <c_end_doc2>
-    And doc3 has computed begin time <c_begin_doc3>
-    And doc3 has computed end time <c_end_doc3>
+    Then doc1 has resolved begin time <r_begin_doc1>
+    And doc1 has resolved end time <r_end_doc1>
+    And doc2 has resolved begin time <r_begin_doc2>
+    And doc2 has resolved end time <r_end_doc2>
+    And doc3 has resolved begin time <r_begin_doc3>
+    And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | c_begin_doc1 | c_end_doc1 | c_begin_doc2 | c_end_doc2 | c_begin_doc3 | c_end_doc3 |
+    | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc2 | r_end_doc2 | r_begin_doc3 | r_end_doc3 |
     | 00:00:20.0      | 00:00:50.0  | 00:01:00.00  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |
     | 00:00:20.0      | 00:00:35.0  | 00:01:00.00  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:35.0 | 00:00:35.0   | 00:01:00.0 |
     #| 00:00:15.0      | 00:00:16.0  | 00:00:35.00  |          | 00:00:10.0   | 00:00:15.0 | 00:00:30.0   | 00:00:35.0 | 00:00:35.0   | 00:01:00.0 |

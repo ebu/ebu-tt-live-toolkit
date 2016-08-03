@@ -2,7 +2,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType
 from pytest_bdd import scenarios, then, when, parsers
 
-scenarios('features/timing/computed_times_sequence.feature')
+scenarios('features/timing/resolved_times.feature')
 
 
 def timestr_to_timedelta(time_str, time_base):
@@ -103,46 +103,46 @@ def when_doc3_added_to_seq(doc3_avail_time, template_file, template_dict, sequen
     sequence.add_document(document)
 
 
-@then('doc1 has computed begin time <c_begin_doc1>')
-def valid_computed_begin_time_doc1(c_begin_doc1, sequence):
-    computed_begin_timedelta = timestr_to_timedelta(c_begin_doc1, sequence.reference_clock.time_base)
-    assert sequence.docs[0].resolved_begin_time == computed_begin_timedelta
+@then('doc1 has resolved begin time <r_begin_doc1>')
+def valid_resolved_begin_time_doc1(r_begin_doc1, sequence):
+    resolved_begin_timedelta = timestr_to_timedelta(r_begin_doc1, sequence.reference_clock.time_base)
+    assert sequence.docs[0].resolved_begin_time == resolved_begin_timedelta
 
 
-@then('doc1 has computed end time <c_end_doc1>')
-def valid_computed_end_time_doc1(c_end_doc1, sequence):
-    if c_end_doc1:
-        computed_end_timedelta = timestr_to_timedelta(c_end_doc1, sequence.reference_clock.time_base)
+@then('doc1 has resolved end time <r_end_doc1>')
+def valid_resolved_end_time_doc1(r_end_doc1, sequence):
+    if r_end_doc1:
+        resolved_end_timedelta = timestr_to_timedelta(r_end_doc1, sequence.reference_clock.time_base)
     else:
-        computed_end_timedelta = None
-    assert sequence.docs[0].resolved_end_time == computed_end_timedelta
+        resolved_end_timedelta = None
+    assert sequence.docs[0].resolved_end_time == resolved_end_timedelta
 
 
-@then('doc2 has computed begin time <c_begin_doc2>')
-def valid_computed_begin_time_doc2(c_begin_doc2, sequence):
-    computed_begin_timedelta = timestr_to_timedelta(c_begin_doc2, sequence.reference_clock.time_base)
-    assert sequence.docs[1].resolved_begin_time == computed_begin_timedelta
+@then('doc2 has resolved begin time <r_begin_doc2>')
+def valid_resolved_begin_time_doc2(r_begin_doc2, sequence):
+    resolved_begin_timedelta = timestr_to_timedelta(r_begin_doc2, sequence.reference_clock.time_base)
+    assert sequence.docs[1].resolved_begin_time == resolved_begin_timedelta
 
 
-@then('doc2 has computed end time <c_end_doc2>')
-def valid_computed_end_time_doc2(c_end_doc2, sequence):
-    if c_end_doc2:
-        computed_end_timedelta = timestr_to_timedelta(c_end_doc2, sequence.reference_clock.time_base)
+@then('doc2 has resolved end time <r_end_doc2>')
+def valid_resolved_end_time_doc2(r_end_doc2, sequence):
+    if r_end_doc2:
+        resolved_end_timedelta = timestr_to_timedelta(r_end_doc2, sequence.reference_clock.time_base)
     else:
-        computed_end_timedelta = None
-    assert sequence.docs[1].resolved_end_time == computed_end_timedelta
+        resolved_end_timedelta = None
+    assert sequence.docs[1].resolved_end_time == resolved_end_timedelta
 
 
-@then('doc3 has computed begin time <c_begin_doc3>')
-def valid_computed_begin_time_doc3(c_begin_doc3, sequence):
-    computed_begin_timedelta = timestr_to_timedelta(c_begin_doc3, sequence.reference_clock.time_base)
-    assert sequence.docs[2].resolved_begin_time == computed_begin_timedelta
+@then('doc3 has resolved begin time <r_begin_doc3>')
+def valid_resolved_begin_time_doc3(r_begin_doc3, sequence):
+    resolved_begin_timedelta = timestr_to_timedelta(r_begin_doc3, sequence.reference_clock.time_base)
+    assert sequence.docs[2].resolved_begin_time == resolved_begin_timedelta
 
 
-@then('doc3 has computed end time <c_end_doc3>')
-def valid_computed_end_time_doc3(c_end_doc3, sequence):
-    if c_end_doc3:
-        computed_end_timedelta = timestr_to_timedelta(c_end_doc3, sequence.reference_clock.time_base)
+@then('doc3 has resolved end time <r_end_doc3>')
+def valid_resolved_end_time_doc3(r_end_doc3, sequence):
+    if r_end_doc3:
+        resolved_end_timedelta = timestr_to_timedelta(r_end_doc3, sequence.reference_clock.time_base)
     else:
-        computed_end_timedelta = None
-    assert sequence.docs[2].resolved_end_time == computed_end_timedelta
+        resolved_end_timedelta = None
+    assert sequence.docs[2].resolved_end_time == resolved_end_timedelta
