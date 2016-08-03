@@ -2,8 +2,8 @@
 Feature: Resolved times computation
 
   Examples:
-  | xml_file           | sequence_identifier |
-  | resolved_times.xml | testSequence1       |
+  | xml_file           | sequence_identifier | sequence_number |
+  | resolved_times.xml | testSequence1       | 1               |
 
   # SPEC-CONFORMANCE: R16 R17
   Scenario: Resolved times on a single document
@@ -24,14 +24,14 @@ Feature: Resolved times computation
     And it has resolved end time <resolved_end>
 
     Examples:
-    | time_base | sequence_number | body_begin  | body_end     | body_dur | p_begin     | p_end      | span_begin | span_end   | resolved_begin | resolved_end | avail_time  |
-    | clock     | 1               | 00:00:10.0  |              |          |             |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
-    | clock     | 1               |             | 00:00:10.0   |          |             |            |            |            | 00:00:00.0     | 00:00:10.0   | 00:00:00.0  |
-    | clock     | 1               | 00:00:10.0  |              | 1h       |             |            |            |            | 00:00:10.0     | 01:00:10.0   | 00:00:00.0  |
-    | clock     | 1               | 00:00:10.0  | 00:00:20.0   |          |             |            |            |            | 00:00:10.0     | 00:00:20.0   | 00:00:00.0  |
-    | media     | 1               | 109:01:00.0 | 110:12:00.15 |          |             |            |            |            | 109:01:00.0    | 110:12:00.15 | 109:00:00.0 |
-    | media     | 1               | 109:00:10.0 | 109:10:00.0  | 5m       |             |            |            |            | 109:00:10.0    | 109:05:10.0  | 109:00:00.0 |
-    | clock     | 1               | 00:00:10.0  |              |          | 00:00:15.0  |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
-    | clock     | 1               | 00:00:10.0  |              |          |             | 00:00:05.0 |            |            | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
-    | clock     | 1               | 00:00:10.0  |              |          |             |            | 00:00:15.0 |            | 00:00:10.0     |              | 00:00:00.0  |
-    | clock     | 1               | 00:00:10.0  |              |          |             |            |            | 00:00:05.0 | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
+    | time_base | body_begin  | body_end     | body_dur | p_begin     | p_end      | span_begin | span_end   | resolved_begin | resolved_end | avail_time  |
+    | clock     | 00:00:10.0  |              |          |             |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
+    | clock     |             | 00:00:10.0   |          |             |            |            |            | 00:00:00.0     | 00:00:10.0   | 00:00:00.0  |
+    | clock     | 00:00:10.0  |              | 1h       |             |            |            |            | 00:00:10.0     | 01:00:10.0   | 00:00:00.0  |
+    | clock     | 00:00:10.0  | 00:00:20.0   |          |             |            |            |            | 00:00:10.0     | 00:00:20.0   | 00:00:00.0  |
+    | media     | 109:01:00.0 | 110:12:00.15 |          |             |            |            |            | 109:01:00.0    | 110:12:00.15 | 109:00:00.0 |
+    | media     | 109:00:10.0 | 109:10:00.0  | 5m       |             |            |            |            | 109:00:10.0    | 109:05:10.0  | 109:00:00.0 |
+    | clock     | 00:00:10.0  |              |          | 00:00:15.0  |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
+    | clock     | 00:00:10.0  |              |          |             | 00:00:05.0 |            |            | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
+    | clock     | 00:00:10.0  |              |          |             |            | 00:00:15.0 |            | 00:00:10.0     |              | 00:00:00.0  |
+    | clock     | 00:00:10.0  |              |          |             |            |            | 00:00:05.0 | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
