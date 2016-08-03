@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <tt:tt
-        ebuttp:sequenceIdentifier="testSequence001"
+  ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
         ebuttp:sequenceNumber="{{sequence_number}}"
         ttp:timeBase="{{ time_base }}"
 {% if time_base == 'smpte' %}
@@ -85,4 +85,4 @@
       </tt:p>
     </tt:div>
   </tt:body>
-<
+</tt:tt>

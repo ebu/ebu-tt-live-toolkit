@@ -8,6 +8,11 @@ def given_time_base(time_base, template_dict):
     template_dict['time_base'] = time_base
 
 
+@given('it has sequenceIdentifier <sequence_identifier>')
+def given_seq_id(sequence_identifier, template_dict):
+    template_dict['sequence_identifier'] = sequence_identifier
+
+
 @given('it has sequenceNumber <sequence_number>')
 def given_sequence_number(sequence_number, template_dict):
     template_dict['sequence_number'] = sequence_number

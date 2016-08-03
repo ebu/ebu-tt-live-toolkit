@@ -1,9 +1,14 @@
 @timing @resolution
 Feature: Resolved times computation
 
+  Examples:
+  | xml_file           | sequence_identifier |
+  | resolved_times.xml | testSequence1       |
+
   # SPEC-CONFORMANCE: R16 R17
   Scenario: Resolved times on a single document
     Given an xml file <xml_file>
+    And it has sequenceIdentifier <sequence_identifier>
     And it has timeBase <time_base>
     And it has sequenceNumber <sequence_number>
     And it has body begin time <body_begin>
@@ -19,14 +24,14 @@ Feature: Resolved times computation
     And it has resolved end time <resolved_end>
 
     Examples:
-    | xml_file                 | time_base | sequence_number | body_begin  | body_end     | body_dur | p_begin     | p_end      | span_begin | span_end   | resolved_begin | resolved_end | avail_time  |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              |          |             |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               |             | 00:00:10.0   |          |             |            |            |            | 00:00:00.0     | 00:00:10.0   | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              | 1h       |             |            |            |            | 00:00:10.0     | 01:00:10.0   | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  | 00:00:20.0   |          |             |            |            |            | 00:00:10.0     | 00:00:20.0   | 00:00:00.0  |
-    | timeBase_timeformat.xml  | media     | 1               | 109:01:00.0 | 110:12:00.15 |          |             |            |            |            | 109:01:00.0    | 110:12:00.15 | 109:00:00.0 |
-    | timeBase_timeformat.xml  | media     | 1               | 109:00:10.0 | 109:10:00.0  | 5m       |             |            |            |            | 109:00:10.0    | 109:05:10.0  | 109:00:00.0 |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              |          | 00:00:15.0  |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              |          |             | 00:00:05.0 |            |            | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              |          |             |            | 00:00:15.0 |            | 00:00:10.0     |              | 00:00:00.0  |
-    | timeBase_timeformat.xml  | clock     | 1               | 00:00:10.0  |              |          |             |            |            | 00:00:05.0 | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
+    | time_base | sequence_number | body_begin  | body_end     | body_dur | p_begin     | p_end      | span_begin | span_end   | resolved_begin | resolved_end | avail_time  |
+    | clock     | 1               | 00:00:10.0  |              |          |             |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
+    | clock     | 1               |             | 00:00:10.0   |          |             |            |            |            | 00:00:00.0     | 00:00:10.0   | 00:00:00.0  |
+    | clock     | 1               | 00:00:10.0  |              | 1h       |             |            |            |            | 00:00:10.0     | 01:00:10.0   | 00:00:00.0  |
+    | clock     | 1               | 00:00:10.0  | 00:00:20.0   |          |             |            |            |            | 00:00:10.0     | 00:00:20.0   | 00:00:00.0  |
+    | media     | 1               | 109:01:00.0 | 110:12:00.15 |          |             |            |            |            | 109:01:00.0    | 110:12:00.15 | 109:00:00.0 |
+    | media     | 1               | 109:00:10.0 | 109:10:00.0  | 5m       |             |            |            |            | 109:00:10.0    | 109:05:10.0  | 109:00:00.0 |
+    | clock     | 1               | 00:00:10.0  |              |          | 00:00:15.0  |            |            |            | 00:00:10.0     |              | 00:00:00.0  |
+    | clock     | 1               | 00:00:10.0  |              |          |             | 00:00:05.0 |            |            | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
+    | clock     | 1               | 00:00:10.0  |              |          |             |            | 00:00:15.0 |            | 00:00:10.0     |              | 00:00:00.0  |
+    | clock     | 1               | 00:00:10.0  |              |          |             |            |            | 00:00:05.0 | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |
