@@ -21,3 +21,7 @@ class SemanticValidationError(Exception):
 
 class EndOfData(Exception):
     pass
+
+
+class IncompatibleSequenceError(Exception):
+    pass

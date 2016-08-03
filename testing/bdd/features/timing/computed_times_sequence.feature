@@ -1,4 +1,4 @@
-@timing @resolution
+@timing @resolution @sequence
 Feature: Resolved times computation in sequence
 
   Examples:
@@ -6,7 +6,6 @@ Feature: Resolved times computation in sequence
   | resolved_times.xml | testSequence1       | clock     | 00:00:00.0      | 00:00:10.0  | 00:00:20.0 |          | 00:00:10.0      | 00:00:30.0 |          | 10s       |
 
 
-  @skip
   # SPEC-CONFORMANCE: R16 R17
   Scenario: Resolved times in sequence
     Given a sequence <sequence_identifier> with timeBase <time_base>
