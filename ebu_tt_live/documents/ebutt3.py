@@ -2,6 +2,7 @@ from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH
+from datetime import timedelta
 from pyxb import BIND
 
 
@@ -9,6 +10,9 @@ class EBUTT3Document(SubtitleDocument):
 
     # The XML binding holding the content of the document
     _ebutt3_content = None
+    # The availability time can be set by the carriage implementation for
+    # example
+    _availability_time = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
@@ -68,6 +72,16 @@ class EBUTT3Document(SubtitleDocument):
         intvalue = int(value)
         self._ebutt3_content.sequenceNumber = intvalue
 
+    @property
+    def availability_time(self):
+        return self._availability_time
+
+    @availability_time.setter
+    def availability_time(self, value):
+        if not isinstance(value, timedelta):
+            raise TypeError
+        self._availability_time = value
+
     def validate(self):
         self._ebutt3_content.validateBinding()
 
@@ -104,6 +118,18 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
     @property
     def reference_clock(self):
         return self._reference_clock
+
+    @property
+    def sequence_identifier(self):
+        return self._sequence_identifier
+
+    @property
+    def last_sequence_number(self):
+        return self._last_sequence_number
+
+    @last_sequence_number.setter
+    def last_sequence_number(self, value):
+        self._last_sequence_number = value
 
     @classmethod
     def create_from_document(cls, document, *args, **kwargs):

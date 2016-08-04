@@ -104,3 +104,6 @@ gen
 
 # Generated bindings should not appear in the repo
 ebu_tt_live/bindings/raw
+
+# Test export files from file system carriage
+test_export/

@@ -13,3 +13,11 @@ class TimeFormatOverflowError(Exception):
 
 class XMLParsingFailed(Exception):
     pass
+
+
+class SemanticValidationError(Exception):
+    pass
+
+
+class EndOfData(Exception):
+    pass
