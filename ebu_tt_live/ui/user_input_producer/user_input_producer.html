@@ -3,6 +3,7 @@
    <head>
       <meta charset="UTF-8"></meta>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+      <script src="nunjucks.js"></script>
    </head>
    <body>
       <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
@@ -28,12 +29,18 @@
       <script>
          $(document).ready(function(){
 
+            var sequence_numbers = {}
+
             if (typeof(Storage) === "undefined") {
                window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences.");
             }
 
             if (localStorage.sequence_selector) {
                $("#sequence-selector").html(localStorage.sequence_selector);
+            }
+            if (localStorage.sequence_numbers) {
+               console.log(localStorage.sequence_numbers);
+               sequence_numbers = JSON.parse(localStorage.sequence_numbers);
             }
 
             function notifyError(element, notification) {
@@ -88,8 +95,11 @@
                      .append($("<option></option>")
                         .attr("value", sequence_identifier)
                         .text(sequence_identifier));
+                  sequence_numbers[sequence_identifier] = 1;
+                  console.log(sequence_numbers);
                   if (typeof(Storage) !== "undefined") {
                      localStorage.sequence_selector = $("#sequence-selector").html();
+                     localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
                   }
                   hideNewSequenceDiv();
                }
@@ -104,23 +114,28 @@
                }
             });
 
+            var exampleSocket = new WebSocket("ws://localhost:9000");
+
+            nunjucks.configure('template', { autoescape: true });
+
             $("#submit-subtitle").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
-               var post_url = $("#post-url-input").val();
-               if (post_url == "" || !isValidURL(post_url)) {
+               var template_data = {
+                  sequence_identifier: sequence_identifier,
+                  sequence_number: sequence_numbers[sequence_identifier],
+                  body_content: $("#subtitle-content").val()
+               };
+               /*if (post_url == "" || !isValidURL(post_url)) {
                   console.log("SALUT!");
                   notifyError($("#subtitle-form-notification-span"), "Please enter a valid URL in the corresponding field.");
-               } else if (sequence_identifier == null) {
+               } else*/ if (sequence_identifier == null) {
                   notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
                } else {
-                  data = $("#subtitle-form").serialize();
-                  $.post(post_url, data)
-                     .done(function() {
-                        notifySuccess($("#subtitle-form-notification-span"), "Subtitle succesfully sent");
-                     })
-                     .fail(function() {
-                        notifyError($("#subtitle-form-notification-span"), "Error when sending subtitle. Check if the server is running.");
-                     });
+                  var rendered_document = nunjucks.render('user_input_producer_template.xml', template_data);
+                  console.log(rendered_document);
+                  exampleSocket.send(rendered_document);
+                  sequence_numbers[sequence_identifier] += 1;
+                  localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
                }
             });
          });

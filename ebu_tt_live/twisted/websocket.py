@@ -13,6 +13,49 @@ from .base import IBroadcaster
 log = getLogger(__name__)
 
 
+class UserInputServerProtocol(WebSocketServerProtocol):
+    def onOpen(self):
+        self.factory.register(self)
+
+    def onMessage(self, payload, isBinary):
+        self.factory.write(payload)
+
+    def connectionLost(self, reason):
+        WebSocketServerProtocol.connectionLost(self, reason)
+
+
+@implementer(IBroadcaster, interfaces.IConsumer)
+class UserInputServerFactory(WebSocketServerFactory):
+    _consumer = None
+    _clients = None
+
+    def __init__(self, url, consumer):
+        super(UserInputServerFactory, self).__init__(url, protocols=[13])
+        self._consumer = consumer
+        self._consumer.registerProducer(self, True)
+        self._clients = []
+
+    def write(self, data):
+        log.info(data)
+        self._consumer.write(data)
+
+    def resumeProducing(self):
+        pass
+
+    def register(self, client):
+        if client not in self._clients:
+            log.info("registered client {}".format(client.peer))
+            self._clients.append(client)
+
+    def unregister(self, client):
+        if client in self._clients:
+            log.info("unregistered client {}".format(client.peer))
+            self._clients.remove(client)
+
+    def listen(self):
+        listenWS(self)
+
+
 class StreamingServerProtocol(WebSocketServerProtocol):
 
     _channels = None
