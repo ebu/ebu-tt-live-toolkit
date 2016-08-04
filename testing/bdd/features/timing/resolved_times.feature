@@ -3,7 +3,7 @@ Feature: Resolved times computation in sequence
 
   Examples:
   | xml_file           | sequence_identifier | time_base | doc1_avail_time | doc1_begin  | doc1_end   | doc1_dur | doc2_avail_time | doc2_begin | doc2_end | doc2_dur  |
-  | resolved_times.xml | testSequence1       | clock     | 00:00:00.0      | 00:00:10.0  | 00:00:20.0 |          | 00:00:05.0      | 00:00:30.0 |          | 10s       |
+  | resolved_times.xml | testSequence1       | clock     | 00:00:01.0      | 00:00:10.0  | 00:00:20.0 |          | 00:00:05.0      | 00:00:30.0 |          | 10s       |
 
   @skip
   # SPEC-CONFORMANCE: R16 R17
@@ -40,9 +40,10 @@ Feature: Resolved times computation in sequence
     And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc2 | r_end_doc2 | r_begin_doc3 | r_end_doc3 |
-    | 00:00:20.0      | 00:00:50.0  | 00:01:00.00  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |
-    | 00:00:20.0      | 00:00:35.0  | 00:01:00.00  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:35.0 | 00:00:35.0   | 00:01:00.0 |
+    | doc3_avail_time | doc3_begin  | doc3_end    | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc2 | r_end_doc2 | r_begin_doc3 | r_end_doc3 |
+    | 00:00:20.0      | 00:00:50.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |
+    | 00:00:20.0      | 00:00:35.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:35.0 | 00:00:35.0   | 00:01:00.0 |
+    | 00:00:03.0      | 00:00:50.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |
 
 
   @skip
@@ -73,12 +74,15 @@ Feature: Resolved times computation in sequence
     And it has doc3 body duration <doc3_dur>
     And doc3 is added to the sequence with availability time <doc3_avail_time>
     Then doc2 has resolved_end < resolved_begin and is skipped
+    And doc1 has resolved begin time <r_begin_doc1>
+    And doc1 has resolved end time <r_end_doc1>
     And doc3 has resolved begin time <r_begin_doc3>
     And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | r_begin_doc3 | r_end_doc3 |
-    | 00:00:15.0      | 00:00:16.0  | 00:00:35.00  |          | 00:00:16.0   | 00:00:35.0 |
+    | doc3_avail_time | doc3_begin  | doc3_end    | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc3 | r_end_doc3 |
+    | 00:00:15.0      | 00:00:16.0  | 00:00:35.0  |          | 00:00:10.0   | 00:00:16.0 | 00:00:16.0   | 00:00:35.0 |
+    | 00:00:02.0      | 00:00:25.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:25.0   | 00:01:00.0 |
 
 
   @skip
@@ -113,5 +117,6 @@ Feature: Resolved times computation in sequence
     And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | r_begin_doc3 | r_end_doc3 |
-    | 00:00:08.0      | 00:00:09.0  |              | 1h       | 00:00:09.0   | 00:01:09.0 |
+    | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | r_begin_doc3 | r_end_doc3  |
+    | 00:00:08.0      | 00:00:09.23 |              | 1h       | 00:00:09.23  | 00:01:09.23 |
+    | 00:00:00.0      | 00:00:09.0  |              | 1h       | 00:00:09.0   | 00:01:09.0  |
