@@ -120,3 +120,4 @@ Feature: Resolved times computation in sequence
     | doc3_avail_time | doc3_begin  | doc3_end     | doc3_dur | r_begin_doc3 | r_end_doc3  |
     | 00:00:08.0      | 00:00:09.23 |              | 1h       | 00:00:09.23  | 00:01:09.23 |
     | 00:00:00.0      | 00:00:09.0  |              | 1h       | 00:00:09.0   | 00:01:09.0  |
+    | 00:00:00.0      | 00:00:04.0  |              | 1h       | 00:00:04.0   | 00:01:04.0  |
