@@ -146,3 +146,13 @@ def valid_resolved_end_time_doc3(r_end_doc3, sequence):
     else:
         resolved_end_timedelta = None
     assert sequence[2].resolved_end_time == resolved_end_timedelta
+
+
+@then('doc2 has resolved_end < resolved_begin and is skipped')
+def then_doc2_skipped(sequence):
+    document = sequence[1]
+    assert document.resolved_end_time < document.resolved_begin_time
+    # next line is a pure guess but I think we will have a status attribute on
+    # documents. We could also simply delete the document from the sequence
+    # when this happens.
+    assert document.status == 'skipped' # or document.skip = True
