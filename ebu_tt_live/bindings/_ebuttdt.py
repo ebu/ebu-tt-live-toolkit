@@ -70,7 +70,7 @@ class _TimedeltaBindingMixin(object):
             time_base = context['timeBase']
             timing_att_name = context['timing_attribute_name']
             if time_base not in cls._compatible_timebases[timing_att_name]:
-                log.info(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                log.debug(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
                     attr_name=timing_att_name,
                     attr_type=cls,
                     attr_value=args,

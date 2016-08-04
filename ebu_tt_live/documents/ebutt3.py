@@ -4,6 +4,7 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE
 from ebu_tt_live.errors import IncompatibleSequenceError
+from ebu_tt_live.clocks import get_clock_from_document
 from datetime import timedelta
 from pyxb import BIND
 from sortedcontainers import sortedset
@@ -105,6 +106,14 @@ class EBUTT3Document(SubtitleDocument):
         self._ebutt3_content.sequenceIdentifier = value
 
     @property
+    def lang(self):
+        return self._ebutt3_content.lang
+
+    @property
+    def clock_mode(self):
+        return self._ebutt3_content.clockMode
+
+    @property
     def sequence(self):
         if self._sequence is None:
             raise ValueError(ERR_DOCUMENT_NOT_PART_OF_SEQUENCE)
@@ -197,6 +206,8 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
     _sequence_identifier = None
     _last_sequence_number = None
     _reference_clock = None
+    _time_base = None
+    _clock_mode = None
     _lang = None
     _documents = None
     _timeline = None
@@ -227,8 +238,13 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
 
     @classmethod
     def create_from_document(cls, document, *args, **kwargs):
-        # TODO
-        pass
+        if not isinstance(document, EBUTT3Document):
+            raise ValueError()
+        return cls(
+            sequence_identifier=kwargs.get('sequence_identifier', document.sequence_identifier),
+            reference_clock=kwargs.get('reference_clock', get_clock_from_document(document)),
+            lang=kwargs.get('lang', document.lang)
+        )
 
     def _check_document_compatibility(self, document):
         if self.sequence_identifier != document.sequence_identifier:
