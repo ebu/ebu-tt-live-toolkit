@@ -97,6 +97,7 @@ class EBUTT3Document(SubtitleDocument):
         if not isinstance(value, timedelta):
             raise TypeError
         self._availability_time = value
+        self.validate()
 
     @property
     def computed_begin_time(self):
