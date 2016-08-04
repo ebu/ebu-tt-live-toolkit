@@ -156,3 +156,16 @@ def then_doc2_skipped(sequence):
     # documents. We could also simply delete the document from the sequence
     # when this happens.
     assert document.status == 'skipped' # or document.skip = True
+
+
+@then('doc1 and doc2 have resolved_end < resolved_begin and are skipped')
+def then_doc1_doc2_skipped(sequence):
+    document1 = sequence[0]
+    document2 = sequence[1]
+    assert document1.resolved_end_time < document1.resolved_begin_time
+    # next line is a pure guess but I think we will have a status attribute on
+    # documents. We could also simply delete the document from the sequence
+    # when this happens.
+    assert document1.status == 'skipped' # or document.skip = True
+    assert document2.resolved_end_time < document2.resolved_begin_time
+    assert document2.status == 'skipped' # or document.skip = True
