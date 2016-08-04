@@ -29,7 +29,6 @@ class TwistedConsumerImpl(ConsumerCarriageImpl):
 
     def on_new_data(self, data):
         document = None
-        print data
         try:
             document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(data))
         except:

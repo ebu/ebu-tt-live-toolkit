@@ -36,7 +36,6 @@ class UserInputServerFactory(WebSocketServerFactory):
         self._clients = []
 
     def write(self, data):
-        log.info(data)
         self._consumer.write(data)
 
     def resumeProducing(self):

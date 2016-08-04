@@ -20,6 +20,10 @@
     <tt:layout/>
   </tt:head>
   <tt:body>
-    {{body_content}}
+    <tt:div>
+      <tt:p xml:id="ID001">
+        {{body_content}}
+      </tt:p>
+    </tt:div>
   </tt:body>
 </tt:tt>
