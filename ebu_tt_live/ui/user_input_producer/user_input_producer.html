@@ -15,26 +15,32 @@
          <span id="new-sequence-notification-span"></span>
       </div>
       <br><br>
-      <label for="post-url-input">Server URL: </label>
-      <input type="url" id="post-url-input" name="post-url-input" value="http://127.0.0.1:9898" required><br>
+      <label for="websocket-url-input">Websocket server URL: </label>
+      <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9000" required>
+      <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
+      <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
+      <span id="websocket-notifications-span" style="color: green">Disconnected</span><br>
       <form action="" id="subtitle-form">
          <label for="sequence-selector">Choose document sequence : </label>
          <select id="sequence-selector" name="sequence-selector"></select><br>
-         <label for="subtitle-content">Subtitles text : </label>
-         <textarea id="subtitle-content" name="subtitle-content" style="resize: both;" cols="160" rows="25"></textarea><br>
+         <label for="subtitle-content-textarea">Subtitles text : </label>
+         <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea><br>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
-         <button type="button" name="submit-subtitle" id="submit-subtitle">Submit</button><br>
-         <span id="subtitle-form-notification-span" style="color: red;"></span>
+         <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button><br>
+         <span id="subtitle-form-notification-span"></span>
       </form>
       <script>
          $(document).ready(function(){
 
-            var sequence_numbers = {}
+            var sequence_numbers = {};
 
             if (typeof(Storage) === "undefined") {
                window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences.");
             }
 
+
+            // Get data from local storage if it exists (we retain some data, like existing sequences and sequence numbers
+            // on page reload. Also works when the browser is closed and reopened.
             if (localStorage.sequence_selector) {
                $("#sequence-selector").html(localStorage.sequence_selector);
             }
@@ -42,6 +48,12 @@
                sequence_numbers = JSON.parse(localStorage.sequence_numbers);
             }
 
+
+
+
+
+
+            /************************************************** Helper functions ******************************************/
             function notifyError(element, notification) {
                element.css("color", "red");
                element.text(notification);
@@ -61,13 +73,60 @@
             }
 
             function isValidURL(str)  {
-               var pattern = new RegExp('^(https?:\\/\\/)?'+
+               var pattern = new RegExp('^(ws?:\\/\\/)?'+
                   '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+
                   '((\\d{1,3}\\.){3}\\d{1,3}))'+
                   '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*');
                return pattern.test(str);
             }
 
+
+
+
+
+
+            /******************************************* Websocket logic ***********************************************/
+
+            var socket = {connected: false};
+
+            function websocketOnError(e) {
+               notifyError($("#websocket-notifications-span"), "Error: cannot connect to websocket server.");
+               socket.connected = false;
+               socket.websocket = null;
+               $("#websocket-connect-button").show();
+               $("#websocket-disconnect-button").hide();
+            }
+
+            function websocketOnOpen(e) {
+               notifySuccess($("#websocket-notifications-span"), "Connected to websocket server");
+               socket.connected = true;
+               $("#websocket-connect-button").hide();
+               $("#websocket-disconnect-button").show();
+               socket.websocket.onclose = websocketOnClose;
+            }
+
+            function websocketOnClose(e) {
+               notifySuccess($("#websocket-notifications-span"), "Connection to websocket server closed.");
+               socket.connected = false;
+               socket.websocket = null;
+               $("#websocket-connect-button").show();
+               $("#websocket-disconnect-button").hide();
+            }
+
+            function websocketOnMessage(e) {
+               if (e.data == ("SUCCESS")) {
+                  notifySuccess($("#subtitle-form-notification-span"), "Document successfully sent to server");
+               } else {
+                  console.log(e.data);
+               }
+            }
+
+
+
+
+
+
+            /******************************************************** Page elements logic ***************************************/
             // Toggle the display of the form to create a new sequence.
             $("#create-new-sequence-button").click(function(){
                if ($("#new-sequence-div").css("display") == "none") {
@@ -111,25 +170,37 @@
                }
             });
 
-            var exampleSocket = new WebSocket("ws://localhost:9000");
+            $("#websocket-connect-button").click(function(){
+               if (socket.connected == false) {
+                  var websocket_url = $("#websocket-url-input").val();
+                  socket.websocket = new WebSocket(websocket_url);
+                  socket.websocket.onerror = websocketOnError;
+                  socket.websocket.onopen = websocketOnOpen;
+                  socket.websocket.onmessage = websocketOnMessage;
+               }
+            });
+
+            $("#websocket-disconnect-button").click(function(){
+               if (socket.connected == true) {
+                  socket.websocket.close();
+               }
+            });
+
 
             nunjucks.configure('template', { autoescape: true });
 
-            $("#submit-subtitle").click(function(){
+            $("#submit-subtitle-button").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
                var template_data = {
                   sequence_identifier: sequence_identifier,
                   sequence_number: sequence_numbers[sequence_identifier],
-                  body_content: $("#subtitle-content").val()
+                  body_content: $("#subtitle-content-textarea").val()
                };
-               /*if (post_url == "" || !isValidURL(post_url)) {
-                  console.log("SALUT!");
-                  notifyError($("#subtitle-form-notification-span"), "Please enter a valid URL in the corresponding field.");
-               } else*/ if (sequence_identifier == null) {
+               if (sequence_identifier == null) {
                   notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
                } else {
                   var rendered_document = nunjucks.render('user_input_producer_template.xml', template_data);
-                  exampleSocket.send(rendered_document);
+                  socket.websocket.send(rendered_document);
                   sequence_numbers[sequence_identifier] += 1;
                   localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
                }

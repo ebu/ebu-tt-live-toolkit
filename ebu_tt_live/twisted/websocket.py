@@ -18,10 +18,25 @@ class UserInputServerProtocol(WebSocketServerProtocol):
         self.factory.register(self)
 
     def onMessage(self, payload, isBinary):
-        self.factory.write(payload)
+        try:
+            self.factory.write(payload)
+            log.info(payload)
+        except Exception as e:
+            self.sendMessage(str(e))
+            return
+        self.sendMessage('SUCCESS')
 
     def connectionLost(self, reason):
         WebSocketServerProtocol.connectionLost(self, reason)
+
+    def sendMessage(self, payload, isBinary=False, fragmentSize=None, sync=False, doNotCompress=False):
+        super(UserInputServerProtocol, self).sendMessage(
+            payload=payload,
+            isBinary=isBinary,
+            fragmentSize=fragmentSize,
+            sync=sync,
+            doNotCompress=doNotCompress
+        )
 
 
 @implementer(IBroadcaster, interfaces.IConsumer)
