@@ -1,3 +1,4 @@
+import logging
 from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
@@ -6,6 +7,41 @@ from ebu_tt_live.errors import IncompatibleSequenceError
 from datetime import timedelta
 from pyxb import BIND
 from sortedcontainers import sortedset
+from sortedcontainers import sortedlist
+
+
+log = logging.getLogger(__name__)
+
+
+class TimingEvent(object):
+
+    _document = None
+    _when = None
+
+    def __init__(self, document, when):
+        self._document = document
+        self.when = when
+
+    @property
+    def when(self):
+        return self._when
+
+    @when.setter
+    def when(self, value):
+        if not isinstance(value, timedelta):
+            ValueError()
+
+
+class TimingEventBegin(TimingEvent):
+
+    def __init__(self, document):
+        super(TimingEventBegin, self).__init__(document, document.computed_begin_time)
+
+
+class TimingEventEnd(TimingEvent):
+
+    def __init__(self, document):
+        super(TimingEventEnd, self).__init__(document, document.computed_end_time)
 
 
 class EBUTT3Document(SubtitleDocument):
@@ -78,6 +114,7 @@ class EBUTT3Document(SubtitleDocument):
     def sequence(self, value):
         if value.sequence_identifier != self.sequence_identifier:
             raise ValueError(ERR_DOCUMENT_SEQUENCE_MISMATCH)
+        self._sequence = value
 
     @property
     def sequence_number(self):
@@ -162,6 +199,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
     _reference_clock = None
     _lang = None
     _documents = None
+    _timeline = None
 
     def __init__(self, sequence_identifier, reference_clock, lang):
         self._sequence_identifier = sequence_identifier
@@ -169,6 +207,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         self._lang = lang
         self._last_sequence_number = 0
         self._documents = sortedset.SortedSet()
+        self._timeline = sortedlist.SortedList()
 
     @property
     def reference_clock(self):
@@ -212,6 +251,16 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         self._check_document_compatibility(document)
         document.sequence = self
         self._documents.add(document)
+        if document.computed_begin_time is not None:
+            log.debug('Creating begin event for {} at {}'.format(
+                document, document.computed_begin_time
+            ))
+            self._timeline.add(TimingEventBegin(document))
+        if document.computed_end_time is not None:
+            log.debug('Creating end event for {} at {}'.format(
+                document, document.computed_end_time
+            ))
+            self._timeline.add(TimingEventEnd(document))
 
     def get_document(self, seq_id):
         return self._documents[seq_id]
