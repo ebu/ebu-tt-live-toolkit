@@ -63,6 +63,10 @@
             </select>
          </span>
          <br>
+         <label for="body-begin-input">Body begin time : </label>
+         <input type="text" id="body-begin-input" name="body-begin-input">
+         <label for="body-end-input">Body end time : </label>
+         <input type="text" id="body-end-input" name="body-end-input">
          <label for="dur-input">Duration : </label>
          <input type="text" id="dur-input" name="dur-input">
          <br>
@@ -277,6 +281,8 @@
                   template_data["drop_mode"] = $("#drop-mode-selector").val();
                }
                template_data["body_content"] = $("#subtitle-content-textarea").val();
+               template_data["body_begin"] = $("#body-begin-input").val();
+               template_data["body_end"] = $("#body-end-input").val();
                template_data["dur"] = $("#dur-input").val();
                return template_data;
             }
