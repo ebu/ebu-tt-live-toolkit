@@ -264,9 +264,29 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             lang=self._lang
         )
 
+    def _get_overwritten_documents(self):
+        """
+        Work out which documents aren't valid anymore.
+        :return: tuple with trimmed and a list of discarded documents
+        """
+        return None, []
+
+    def _trim_and_discard(self, trimmed, discarded):
+        """
+        This will eliminate any offending documents taking into account sequence
+        numbers and timing.
+        :param trimmed:
+        :param discarded:
+        :return:
+        """
+        pass
+
     def add_document(self, document):
         self._check_document_compatibility(document)
         document.sequence = self
+
+        self._get_overwritten_documents()
+
         self._documents.add(document)
         if document.computed_begin_time is not None:
             log.debug('Creating begin event for {} at {}'.format(
