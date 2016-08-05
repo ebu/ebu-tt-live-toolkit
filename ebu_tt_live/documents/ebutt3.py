@@ -9,7 +9,6 @@ from datetime import timedelta
 from pyxb import BIND
 from sortedcontainers import sortedset
 from sortedcontainers import sortedlist
-from threading import Lock
 
 
 log = logging.getLogger(__name__)
@@ -32,18 +31,29 @@ class TimingEvent(object):
     def when(self, value):
         if not isinstance(value, timedelta):
             ValueError()
+        self._when = value
+
+    @property
+    def document(self):
+        return self._document
 
 
 class TimingEventBegin(TimingEvent):
 
     def __init__(self, document):
-        super(TimingEventBegin, self).__init__(document, document.computed_begin_time)
+        super(TimingEventBegin, self).__init__(
+            document=document,
+            when=document.computed_begin_time
+        )
 
 
 class TimingEventEnd(TimingEvent):
 
     def __init__(self, document):
-        super(TimingEventEnd, self).__init__(document, document.computed_end_time)
+        super(TimingEventEnd, self).__init__(
+            document=document,
+            when=document.computed_end_time
+        )
 
 
 class EBUTT3Document(SubtitleDocument):
@@ -55,6 +65,12 @@ class EBUTT3Document(SubtitleDocument):
     _availability_time = None
     _computed_begin_time = None
     _computed_end_time = None
+
+    # These are used when the sequence discarded the documents.
+    _resolved_begin_time = None
+    _resolved_end_time = None
+
+    # The sequence the document belongs to
     _sequence = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
@@ -156,11 +172,28 @@ class EBUTT3Document(SubtitleDocument):
 
     @property
     def resolved_begin_time(self):
-        return self.sequence.resolved_begin_time(self)
+        if self._resolved_begin_time is not None:
+            return self._resolved_begin_time
+        else:
+            return self.sequence.resolved_begin_time(self)
+
+    def discard_document(self, resolved_end_time):
+        """
+        This function discards the document by setting a resolved end time
+        before the document begins.
+        :param resolved_end_time:
+        """
+        if resolved_end_time > self.computed_begin_time:
+            raise ValueError()
+        self._resolved_end_time = resolved_end_time
+        self._resolved_begin_time = self.computed_begin_time
 
     @property
     def resolved_end_time(self):
-        return self.sequence.resolved_end_time(self)
+        if self._resolved_end_time is not None:
+            return self._resolved_end_time
+        else:
+            return self.sequence.resolved_end_time(self)
 
     @property
     def time_base(self):
@@ -219,7 +252,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         self._lang = lang
         self._last_sequence_number = 0
         self._documents = sortedset.SortedSet()
-        self._timeline = sortedlist.SortedList()
+        self._timeline = sortedlist.SortedListWithKey(key=lambda item: item.when)
 
     @property
     def reference_clock(self):
@@ -264,12 +297,21 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             lang=self._lang
         )
 
-    def _get_overwritten_documents(self):
+    def _get_overwritten_documents(self, document):
         """
         Work out which documents aren't valid anymore.
         :return: tuple with trimmed and a list of discarded documents
         """
-        return None, []
+        trimmed = None
+        discarded = []
+        began = {}
+        ended = {}
+        for item in self._timeline.irange(TimingEventBegin(document)):
+            if isinstance(item, TimingEventEnd):
+                ended[item.document] = item
+            elif isinstance(item, TimingEventBegin):
+                began[item.document] = item
+        return ended and ended.keys()[0] or None, discarded
 
     def _trim_and_discard(self, trimmed, discarded):
         """
@@ -279,13 +321,15 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         :param discarded:
         :return:
         """
-        pass
+        log.info(trimmed)
+        log.info(discarded)
 
     def add_document(self, document):
         self._check_document_compatibility(document)
         document.sequence = self
 
-        self._get_overwritten_documents()
+        # Let's create space for the documents
+        self._trim_and_discard(*self._get_overwritten_documents(document))
 
         self._documents.add(document)
         if document.computed_begin_time is not None:
