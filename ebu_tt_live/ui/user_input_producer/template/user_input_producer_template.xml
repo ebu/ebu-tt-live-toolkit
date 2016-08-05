@@ -27,7 +27,7 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body 
+  <tt:body
   {% if dur %}
     tt:dur="{{ dur }}"
   {% endif %}
