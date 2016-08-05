@@ -32,7 +32,9 @@ and assumes the environment variables that the activation script sets):
 
     source ./env/bin/activate
 
-After having created the python virtual environment and having activated it the package
+To build the project you will also need node.js. Please read the instructions for your system [here](https://nodejs.org/en/download/package-manager/).
+
+After having created the python virtual environment, having activated it and having installed node.js the package
 can be built by typing make if you have GNU build tooling on your system.
 
     make
@@ -44,6 +46,9 @@ Alternatively:
     python setup.py develop
 
     pyxbgen -r --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -u ebutt_live.xsd
+
+    npm install nunjucks
+    node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
 
 After this you are supposed to be able to launch the command line tools this python package
 provides i.e.:

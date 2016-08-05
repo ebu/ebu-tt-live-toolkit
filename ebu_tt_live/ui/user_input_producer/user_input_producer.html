@@ -287,7 +287,7 @@
                   notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
                } else {
                   var template_data = createTemplateDict();
-                  var rendered_document = nunjucks.render('user_input_producer_template.xml', template_data);
+                  var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
                   console.log(rendered_document);
                   socket.websocket.send(rendered_document);
                   sequence_numbers[sequence_identifier] += 1;
