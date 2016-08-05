@@ -3,6 +3,7 @@
    <head>
       <meta charset="UTF-8"></meta>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+      <script src="template/user_input_producer_template.js"></script>
       <script src="nunjucks.js"></script>
    </head>
    <body>
@@ -258,8 +259,6 @@
                handleTimeBaseDependingOptions();
             });
 
-
-            nunjucks.configure('template', { autoescape: true });
 
             function createTemplateDict() {
                var template_data = {};
