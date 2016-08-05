@@ -100,7 +100,7 @@ The simple consumer connects to the producer or later on in the pipeline, assumi
     ebu-simple-consumer
 
 The user input consumer script is intended to receive data from the user input producer. The user input producer is a user interface that allows users to create documents
-and to send them live.
+and to send them live (see the documentation for details).
 
     ebu-user-input-consumer
 
