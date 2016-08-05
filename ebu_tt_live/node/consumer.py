@@ -26,8 +26,8 @@ class SimpleConsumer(Node):
             self._sequence = EBUTT3DocumentSequence.create_from_document(document)
             self._reference_clock = self._sequence.reference_clock
             document.availability_time = self._reference_clock.get_time()
-        log.info(document)
-        print(" " + str(document.sequence_identifier) + "_" + str(document.sequence_number))
+        log.debug(document)
+        log.debug(" " + str(document.sequence_identifier) + "_" + str(document.sequence_number))
 
     @property
     def reference_clock(self):

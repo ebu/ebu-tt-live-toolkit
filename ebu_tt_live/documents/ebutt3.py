@@ -9,6 +9,7 @@ from datetime import timedelta
 from pyxb import BIND
 from sortedcontainers import sortedset
 from sortedcontainers import sortedlist
+from threading import Lock
 
 
 log = logging.getLogger(__name__)
@@ -277,6 +278,8 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
                 document, document.computed_end_time
             ))
             self._timeline.add(TimingEventEnd(document))
+        if document.sequence_number > self._last_sequence_number:
+            self._last_sequence_number = document.sequence_number
 
     def get_document(self, seq_id):
         return self._documents[seq_id]
