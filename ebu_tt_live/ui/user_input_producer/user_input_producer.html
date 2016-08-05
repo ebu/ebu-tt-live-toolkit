@@ -62,6 +62,9 @@
             </select>
          </span>
          <br>
+         <label for="dur-input">Duration : </label>
+         <input type="text" id="dur-input" name="dur-input">
+         <br>
          <label for="subtitle-content-textarea">Subtitles text : </label><br>
          <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea>
          <br>
@@ -179,7 +182,7 @@
                if (e.data == ("SUCCESS")) {
                   notifySuccess($("#subtitle-form-notification-span"), "Document successfully sent to server");
                } else {
-                  console.log(e.data);
+                  notifyError($("#subtitle-form-notification-span"), e.data);
                }
             }
 
@@ -274,15 +277,17 @@
                   template_data["marker_mode"] = $("#marker-mode-selector").val();
                   template_data["drop_mode"] = $("#drop-mode-selector").val();
                }
+               template_data["body_content"] = $("#subtitle-content-textarea").val();
+               template_data["dur"] = $("#dur-input").val();
                return template_data;
             }
 
             $("#submit-subtitle-button").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
-               var template_data = createTemplateDict();
                if (sequence_identifier == null) {
                   notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
                } else {
+                  var template_data = createTemplateDict();
                   var rendered_document = nunjucks.render('user_input_producer_template.xml', template_data);
                   console.log(rendered_document);
                   socket.websocket.send(rendered_document);

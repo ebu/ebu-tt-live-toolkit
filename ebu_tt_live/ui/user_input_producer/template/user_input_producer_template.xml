@@ -27,7 +27,7 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body>
+  <tt:body tt:dur="{{ dur }}">
     <tt:div>
       <tt:p xml:id="ID001">
         {{body_content}}

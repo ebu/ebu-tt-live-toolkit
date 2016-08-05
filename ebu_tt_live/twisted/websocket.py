@@ -21,7 +21,7 @@ class UserInputServerProtocol(WebSocketServerProtocol):
         try:
             self.factory.write(payload)
         except Exception as e:
-            self.sendMessage(str(e))
+            self.sendMessage("ERROR: " + str(e))
             return
         self.sendMessage('SUCCESS')
 
