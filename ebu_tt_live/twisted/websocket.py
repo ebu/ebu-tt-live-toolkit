@@ -20,7 +20,6 @@ class UserInputServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         try:
             self.factory.write(payload)
-            log.info(payload)
         except Exception as e:
             self.sendMessage(str(e))
             return

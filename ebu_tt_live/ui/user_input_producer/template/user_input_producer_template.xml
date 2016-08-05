@@ -2,8 +2,16 @@
 <tt:tt
         ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
         ebuttp:sequenceNumber="{{ sequence_number }}"
-        ttp:clockMode="local"
-        ttp:timeBase="clock"
+        ttp:timeBase="{{ time_base }}"
+      {% if clock_mode %}
+        ttp:clockMode="{{ clock_mode }}"
+      {% endif %}
+      {% if time_base == "smpte" %}
+        ttp:frameRate="{{ frame_rate }}"
+        ttp:frameRateMultiplier="{{frm_numerator}} {{frm_denominator}}"
+        ttp:markerMode="{{ marker_mode }}"
+        ttp:dropMode="{{ drop_mode}}"
+      {% endif %}
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"

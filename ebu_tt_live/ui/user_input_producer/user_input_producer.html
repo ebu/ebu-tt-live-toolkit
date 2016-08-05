@@ -19,12 +19,52 @@
       <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9000" required>
       <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
       <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
-      <span id="websocket-notifications-span" style="color: green">Disconnected</span><br>
+      <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
+      <br>
       <form action="" id="subtitle-form">
          <label for="sequence-selector">Choose document sequence : </label>
-         <select id="sequence-selector" name="sequence-selector"></select><br>
-         <label for="subtitle-content-textarea">Subtitles text : </label>
-         <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea><br>
+         <select id="sequence-selector" name="sequence-selector"></select>
+         <br>
+         <label for ="time-base-selector">Time base : </label>
+         <select id="time-base-selector" name="time-base-selector">
+            <option value="clock" selected="selected">Clock</option>
+            <option value="media">Media</option>
+            <option value="smpte">SMPTE</option>
+         </select>
+         <span id="clock-mode-span">
+            <label for="clock-mode-selector">Clock mode : </label>
+            <select id="clock-mode-selector" name="clock-mode-selector">
+               <option value="local" selected="selected">Local</option>
+               <option value="utc">UTC</option>
+               <option value="gps">GPS</option>
+            </select>
+         </span>
+         <br>
+         <span id="smpte-attributes-span" style="display: none">
+            <label for="frame-rate-input">Frame rate : </label>
+            <input type="text" id="frame-rate-input" name="frame-rate-input">
+            <br>
+            <label for="frm-numerator-input"> Frame rate multiplier numerator : </label>
+            <input type="text" id="frm-numerator-input" name="frm-numerator-input">
+            <label for="frm-denominator-input">Frame rate multiplier denominator : </label>
+            <input type="text" id="frm-denominator-input" name="frm-denominator-input">
+            <br>
+            <label for="marker-mode-selector">Marker mode : </label>
+            <select id="marker-mode-selector" name="marker-mode-selector">
+               <option value="continuous">continuous</option>
+            </select>
+            <br>
+            <label for="drop-mode-selector">Drop mode : </label>
+            <select id="drop-mode-selector" name="drop-mode-selector">
+               <option value="nonDrop">nonDrop</option>
+               <option value="dropNTSC">dropNTSC</option>
+               <option value="dropPAL">dropPAL</option>
+            </select>
+         </span>
+         <br>
+         <label for="subtitle-content-textarea">Subtitles text : </label><br>
+         <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea>
+         <br>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button><br>
          <span id="subtitle-form-notification-span"></span>
@@ -56,6 +96,11 @@
             /************************************************** Helper functions ******************************************/
             function notifyError(element, notification) {
                element.css("color", "red");
+               element.text(notification);
+            }
+
+            function notifyWarning(element, notification) {
+               element.css("color", "orange");
                element.text(notification);
             }
 
@@ -106,7 +151,7 @@
             }
 
             function websocketOnClose(e) {
-               notifySuccess($("#websocket-notifications-span"), "Connection to websocket server closed.");
+               notifyWarning($("#websocket-notifications-span"), "Connection to websocket server closed.");
                socket.connected = false;
                socket.websocket = null;
                $("#websocket-connect-button").show();
@@ -174,6 +219,9 @@
                if (socket.connected == false) {
                   var websocket_url = $("#websocket-url-input").val();
                   socket.websocket = new WebSocket(websocket_url);
+                  // onclose hook is not set yet because we need to know if the connection has been established
+                  // and to get an error if not. However if onclose is defined it is called instead of onerror.
+                  // So we define onclose in the onopen hook.
                   socket.websocket.onerror = websocketOnError;
                   socket.websocket.onopen = websocketOnOpen;
                   socket.websocket.onmessage = websocketOnMessage;
@@ -186,20 +234,51 @@
                }
             });
 
+            $("#time-base-selector").change(function(){
+               var selected_time_base = $("#time-base-selector").val();
+               console.log(selected_time_base);
+               if (selected_time_base == "clock") {
+                  $("#clock-mode-span").show();
+                  $("#smpte-attributes-span").hide();
+               } else if (selected_time_base == "smpte") {
+                  $("#clock-mode-span").hide();
+                  $("#smpte-attributes-span").show();
+               } else {
+                  $("#clock-mode-span").hide();
+                  $("#smpte-attributes-span").hide();
+               }
+            });
+
 
             nunjucks.configure('template', { autoescape: true });
 
+            function createTemplateDict() {
+               var template_data = {};
+               sequence_identifier = $("#sequence-selector").val();
+               template_data["sequence_identifier"] = sequence_identifier
+               template_data["sequence_number"] = sequence_numbers[sequence_identifier] + 1;
+               time_base = $("#time-base-selector").val();
+               template_data["time_base"] = time_base;
+               if (time_base == "clock") {
+                  template_data["clock_mode"] = $("#clock-mode-selector").val();
+               } else if (time_base == "smpte") {
+                  template_data["frame_rate"] = $("#frame-rate-input").val();
+                  template_data["frm_numerator"] = $("#frm-numerator-input").val();
+                  template_data["frm_denominator"] = $("#frm-denominator-input").val();
+                  template_data["marker_mode"] = $("#marker-mode-selector").val();
+                  template_data["drop_mode"] = $("#drop-mode-selector").val();
+               }
+               return template_data;
+            }
+
             $("#submit-subtitle-button").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
-               var template_data = {
-                  sequence_identifier: sequence_identifier,
-                  sequence_number: sequence_numbers[sequence_identifier],
-                  body_content: $("#subtitle-content-textarea").val()
-               };
+               var template_data = createTemplateDict();
                if (sequence_identifier == null) {
                   notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
                } else {
                   var rendered_document = nunjucks.render('user_input_producer_template.xml', template_data);
+                  console.log(rendered_document);
                   socket.websocket.send(rendered_document);
                   sequence_numbers[sequence_identifier] += 1;
                   localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
