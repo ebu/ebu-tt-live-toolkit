@@ -36,7 +36,7 @@ def main():
     )
 
     factory = UserInputServerFactory(
-        url='ws://localhost:9000',
+        url='ws://127.0.0.1:9000',
         consumer=TwistedConsumer(
             custom_consumer=consumer_impl
         )
