@@ -40,7 +40,7 @@
             </select>
          </span>
          <br>
-         <span id="smpte-attributes-span" style="display: none">
+         <span id="smpte-attributes-span">
             <label for="frame-rate-input">Frame rate : </label>
             <input type="text" id="frame-rate-input" name="frame-rate-input">
             <br>
@@ -87,6 +87,23 @@
             if (localStorage.sequence_numbers) {
                sequence_numbers = JSON.parse(localStorage.sequence_numbers);
             }
+
+
+            function handleTimeBaseDependingOptions() {
+               var selected_time_base = $("#time-base-selector").val();
+               if (selected_time_base == "clock") {
+                  $("#clock-mode-span").show();
+                  $("#smpte-attributes-span").hide();
+               } else if (selected_time_base == "smpte") {
+                  $("#clock-mode-span").hide();
+                  $("#smpte-attributes-span").show();
+               } else {
+                  $("#clock-mode-span").hide();
+                  $("#smpte-attributes-span").hide();
+               }
+            }
+
+            handleTimeBaseDependingOptions();
 
 
 
@@ -235,18 +252,7 @@
             });
 
             $("#time-base-selector").change(function(){
-               var selected_time_base = $("#time-base-selector").val();
-               console.log(selected_time_base);
-               if (selected_time_base == "clock") {
-                  $("#clock-mode-span").show();
-                  $("#smpte-attributes-span").hide();
-               } else if (selected_time_base == "smpte") {
-                  $("#clock-mode-span").hide();
-                  $("#smpte-attributes-span").show();
-               } else {
-                  $("#clock-mode-span").hide();
-                  $("#smpte-attributes-span").hide();
-               }
+               handleTimeBaseDependingOptions();
             });
 
 
