@@ -349,10 +349,22 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         return self._documents[seq_id]
 
     def resolved_begin_time(self, document):
-        return timedelta()
+        # TODO: Fix this too hungry
+        if document not in self._documents:
+            raise LookupError()
+        for item in self._timeline.irange(TimingEventBegin(document)):
+            if item.document == document and isinstance(item, TimingEventBegin):
+                return item.when
+        raise KeyError()
 
     def resolved_end_time(self, document):
-        return timedelta()
+        # TODO: Fix this too hungry
+        if document not in self._documents:
+            raise LookupError()
+        for item in self._timeline.irange(TimingEventBegin(document)):
+            if item.document == document and isinstance(item, TimingEventEnd):
+                return item.when
+        raise KeyError()
 
     def fork(self, *args, **kwargs):
         pass
