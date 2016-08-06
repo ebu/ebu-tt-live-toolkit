@@ -25,3 +25,11 @@ class EndOfData(Exception):
 
 class IncompatibleSequenceError(Exception):
     pass
+
+
+class DocumentDiscardedError(Exception):
+    offending_document = None
+
+
+class SequenceOverridden(Exception):
+    pass

@@ -2,8 +2,11 @@ import logging
 from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
-from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE
-from ebu_tt_live.errors import IncompatibleSequenceError
+from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
+    ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY
+from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
+    SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
 from datetime import timedelta
 from pyxb import BIND
@@ -297,74 +300,138 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             lang=self._lang
         )
 
-    def _get_overwritten_documents(self, document):
+    def _insert_or_discard(self, document):
         """
         Work out which documents aren't valid anymore.
         :return: tuple with trimmed and a list of discarded documents
         """
-        trimmed = None
+        # Our document's begin and end times
+        this_begins = TimingEventBegin(document)
+        this_ends = TimingEventEnd(document)
+        # The one this document might trim
+        begins_before = None
+        # The one this document definitely trims
+        ends_after = None
+        # The one that will trim this document. One with a higher seq number
+        trims_this = None
+        # These documents all began and ended after document so they were discarded
         discarded = []
-        began = {}
-        ended = {}
-        for item in self._timeline.irange(TimingEventBegin(document)):
-            if isinstance(item, TimingEventEnd):
-                ended[item.document] = item
-            elif isinstance(item, TimingEventBegin):
-                began[item.document] = item
-        return ended and ended.keys()[0] or None, discarded
 
-    def _trim_and_discard(self, trimmed, discarded):
-        """
-        This will eliminate any offending documents taking into account sequence
-        numbers and timing.
-        :param trimmed:
-        :param discarded:
-        :return:
-        """
-        log.info(trimmed)
-        log.info(discarded)
+        _end_found = False
+        for item in self._timeline.irange(
+            maximum=this_begins,
+            reverse=True
+        ):
+            # This loop goes backwards and checks for trimmed documents
+
+            # If any found event is higher sequence number we quit
+            if item.document.sequence_number > document.sequence_number:
+                # Oops we got discarded.... :(
+                discarderror = DocumentDiscardedError()
+                discarderror.offending_document = item.document
+                raise discarderror
+
+            if isinstance(item, TimingEventBegin):
+                if not _end_found or _end_found.document != item.document:
+                    # This will be trimmed
+                    begins_before = item
+                # Once a begin event is found we quit
+                break
+            elif isinstance(item, TimingEventEnd):
+                if _end_found:
+                    raise ValueError(ERR_DOCUMENT_SEQUENCE_INCONSISTENCY)
+                _end_found = item
+
+        for item in self._timeline.irange(this_begins):
+            # This loop goes forward looking at offending events
+            if isinstance(item, TimingEventEnd):
+                ends_after = item
+                if ends_after.document != begins_before.document:
+                    raise ValueError(ERR_DOCUMENT_SEQUENCE_INCONSISTENCY)
+
+            elif isinstance(item, TimingEventBegin):
+                if document.sequence_number > item.document.sequence_number:
+                    raise SequenceOverridden()
+                if item.document.sequence_number > document.sequence_number:
+                    #This means our document may get trimmed into shape
+                    if this_ends.when > item.when:
+                        trims_this = item
+                    break
+
+        if trims_this:
+            # Trim this one
+            this_ends.when = trims_this.when
+        if begins_before:
+            # Move up previous document's end
+            if ends_after:
+                self._timeline.remove(ends_after)
+            else:
+                ends_after = TimingEventEnd(begins_before.document)
+            ends_after.when = this_begins.when
+            self._timeline.add(ends_after)
+
+        self._insert_document(document, ends=this_ends)
+
+    def _insert_document(self, document, ends=None):
+        self._documents.add(document)
+        self._timeline.add(TimingEventBegin(document))
+        if ends is not None and ends.when is not None:
+            self._timeline.add(ends)
+        else:
+            computed_end = TimingEventEnd(document)
+            if computed_end.when is not None:
+                self._timeline.add(computed_end)
+
+    def _override_sequence(self, document):
+        pass
 
     def add_document(self, document):
         self._check_document_compatibility(document)
         document.sequence = self
 
         # Let's create space for the documents
-        self._trim_and_discard(*self._get_overwritten_documents(document))
+        try:
+            self._insert_or_discard(document)
+        except SequenceOverridden:
+            self._override_sequence(document)
+        except DocumentDiscardedError as exc:
+            pass
 
-        self._documents.add(document)
-        if document.computed_begin_time is not None:
-            log.debug('Creating begin event for {} at {}'.format(
-                document, document.computed_begin_time
-            ))
-            self._timeline.add(TimingEventBegin(document))
-        if document.computed_end_time is not None:
-            log.debug('Creating end event for {} at {}'.format(
-                document, document.computed_end_time
-            ))
-            self._timeline.add(TimingEventEnd(document))
         if document.sequence_number > self._last_sequence_number:
             self._last_sequence_number = document.sequence_number
 
     def get_document(self, seq_id):
         return self._documents[seq_id]
 
-    def resolved_begin_time(self, document):
+    def _find_resolved_begin_event(self, document):
         # TODO: Fix this too hungry
         if document not in self._documents:
             raise LookupError()
         for item in self._timeline.irange(TimingEventBegin(document)):
             if item.document == document and isinstance(item, TimingEventBegin):
-                return item.when
+                return item
+        # This means the document is not part of this sequence
         raise KeyError()
 
-    def resolved_end_time(self, document):
+    def resolved_begin_time(self, document):
+        return self._find_resolved_begin_event(document).when
+
+    def _find_resolved_end_event(self, document):
         # TODO: Fix this too hungry
         if document not in self._documents:
             raise LookupError()
         for item in self._timeline.irange(TimingEventBegin(document)):
             if item.document == document and isinstance(item, TimingEventEnd):
-                return item.when
-        raise KeyError()
+                return item
+        if document.computed_end_time is not None:
+            # This means we have consistency issues in the timeline
+            raise LookupError(ERR_DOCUMENT_SEQUENCE_INCONSISTENCY)
+        # This means this document has no computed end time nor it is trimmed
+        return None
+
+    def resolved_end_time(self, document):
+        item = self._find_resolved_end_event(document)
+        return item and item.when or None
 
     def fork(self, *args, **kwargs):
         pass

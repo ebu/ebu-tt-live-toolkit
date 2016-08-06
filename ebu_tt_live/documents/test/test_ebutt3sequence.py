@@ -26,13 +26,58 @@ class TestEBUTT3Sequence(TestCase):
             lang='en-GB'
         )
 
-        self.document1 = self._create_document(1,2)
-        self.document2 = self._create_document(5, 6)
-        self.document3 = self._create_document(3, 4)
+        self.document1 = self._create_document(1, 2)
+        self.document2 = self._create_document(3, 4)
+        self.document3 = self._create_document(5, 6)
 
     def test_sequence_add1(self):
+        """
+        This tests an out of order document reception
+        :return:
+        """
+        self.sequence.add_document(self.document1)
+        self.sequence.add_document(self.document3)
+        self.sequence.add_document(self.document2)
+
+        self.assertEqual(
+            self.document1.resolved_begin_time,
+            timedelta(seconds=1)
+        )
+        self.assertEqual(
+            self.document2.resolved_begin_time,
+            timedelta(seconds=3)
+        )
+        self.assertEqual(
+            self.document3.resolved_begin_time,
+            timedelta(seconds=5)
+        )
+
+        self.assertEqual(
+            self.document1.resolved_end_time,
+            timedelta(seconds=2)
+        )
+        self.assertEqual(
+            self.document2.resolved_end_time,
+            timedelta(seconds=4)
+        )
+        self.assertEqual(
+            self.document3.resolved_end_time,
+            timedelta(seconds=6)
+        )
+
+    def test_sequence_add2(self):
+        """
+        This test swaps 2 sequence numbers thereby creating an erasure
+        :return:
+        """
+        self.document2.sequence_number = 3
+        self.document3.sequence_number = 2
+        self.document2.validate()
+        self.document3.validate()
 
         self.sequence.add_document(self.document1)
-        self.sequence.add_document(self.document2)
         self.sequence.add_document(self.document3)
-        pass
+        self.sequence.add_document(self.document2)
+
+        # We expect document2 to erase document3
+        # TODO: Finish these on this unittesting level
