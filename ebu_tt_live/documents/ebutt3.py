@@ -202,6 +202,10 @@ class EBUTT3Document(SubtitleDocument):
     def time_base(self):
         return self._ebutt3_content.timeBase
 
+    @property
+    def discarded(self):
+        return self.resolved_begin_time >= self.resolved_end_time
+
     def validate(self):
         # This is assuming availability from the beginning of our time coordinate system.
         availability_time = self.availability_time or timedelta()
