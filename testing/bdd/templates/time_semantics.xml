@@ -97,6 +97,24 @@
               >
               Some example text...
             </tt:span>
+            <tt:span
+{% if span2_begin %}
+  {% if span2_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
+                tt:begin="{{ span2_begin }}"
+  {% endif %}
+{% endif %}
+{% if span2_end %}
+  {% if span2_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
+                tt:end="{{ span2_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text 2...
+            </tt:span>
       </tt:p>
     </tt:div>
   </tt:body>

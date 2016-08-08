@@ -61,3 +61,13 @@ def given_span_begin(span_begin, template_dict):
 @given('it has span end time <span_end>')
 def given_span_end(span_end, template_dict):
     template_dict['span_end'] = span_end
+
+
+@given('it has span2 begin time <span2_begin>')
+def given_span2_begin(span2_begin, template_dict):
+    template_dict['span2_begin'] = span2_begin
+
+
+@given('it has span2 end time <span2_end>')
+def given_span2_end(span2_end, template_dict):
+    template_dict['span2_end'] = span2_end

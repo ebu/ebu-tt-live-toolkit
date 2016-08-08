@@ -64,6 +64,7 @@ def timestr_to_timedelta(time_str, time_base):
 
 @then('it has computed begin time <computed_begin>')
 def valid_computed_begin_time(computed_begin, gen_document):
+    print gen_document.get_xml()
     computed_begin_timedelta = timestr_to_timedelta(computed_begin, gen_document.time_base)
     assert gen_document.computed_begin_time == computed_begin_timedelta
 
