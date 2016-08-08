@@ -211,7 +211,7 @@ class TimeBaseValidationMixin(object):
 
             if not dataset['timing_begin_stack']:
                 # This means we are at a outermost timing container
-                if dataset['timing_computed_begin'] is None or dataset['timing_computed_begin'] < begin_timedelta:
+                if dataset['timing_computed_begin'] is None or dataset['timing_computed_begin'] > begin_timedelta:
                     dataset['timing_computed_begin'] = begin_timedelta
 
             # Let's push it onto the stack
