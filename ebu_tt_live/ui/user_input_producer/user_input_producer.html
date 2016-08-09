@@ -303,7 +303,7 @@
                   sending_time.setMinutes(sending_time_parsed[2]);
                   sending_time.setSeconds(sending_time_parsed[3]);
                   var timeout = sending_time.getTime() - Date.now();
-                  setTimeout(function(){ send(doc, socket) }, timeout, doc, socket);
+                  setTimeout(function(doc, socket){ socket.websocket.send(doc) }, timeout, doc, socket);
                }
             }
 
