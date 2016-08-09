@@ -10,6 +10,7 @@ from .pyxb_utils import get_xml_parsing_context
 import logging
 
 log = logging.getLogger(__name__)
+document_logger = logging.getLogger('document_logger')
 
 
 class SemanticValidationMixin(object):
@@ -83,7 +84,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         A new traversal of the structure is needed to get the appropriate context down to individual parts of the nodes.
         """
         # Let's initiate DFS
-
+        document_logger.info('Syntactic validation successful')
         # Create new semantic context object
         semantic_dataset = {}
         semantic_dataset.update(extra_kwargs)
@@ -123,7 +124,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
-
+        document_logger.info('Semantic validation successful')
         return semantic_dataset
 
     def _validateBinding_vx(self, **extra_kwargs):
