@@ -403,6 +403,8 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         for item in self._timeline.irange(resolved_begin):
             if item.document.sequence_number < sequence_number:
                 if isinstance(item, TimingEventEnd) and item.document not in discarded_timing_events:
+                    # We found the end event of a document whose begin event was not encountered. Meaning that instead
+                    # of discarding it we are supposed to trim it.
                     continue
                 else:
                     discarded_timing_events.setdefault(item.document, []).append(item)
