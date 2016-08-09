@@ -23,8 +23,8 @@
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
       <br><br>
       <br><br>
-      Send documents live : <input type="radio" name="sending-type-radio-input" value="live" checked>
-      Send documents on defined time : <input type="radio" name="sending-type-radio-input" value="set_time">
+      <input type="radio" name="sending-type-radio-input" value="live" checked> Send document "live"
+      <input type="radio" name="sending-type-radio-input" value="scheduled_time"> Send document on scheduled time
       <form action="" id="subtitle-form">
          <label for="sequence-selector">Choose document sequence : </label>
          <select id="sequence-selector" name="sequence-selector"></select>
@@ -76,11 +76,14 @@
          <label for="subtitle-content-textarea">Subtitles text : </label><br>
          <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea>
          <br>
-         Sending time : <input type="text" id="sending-time-input" name="sending-time-input">
+         <span id="scheduled-time-span">
+            <label for="scheduled-time-input">Scheduled time : </label>
+            <input type="text" id="scheduled-time-input" name="scheduled-time-input">
+         </span>
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button>
          <br><br>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
-         <span id="subtitle-form-notification-span"></span>
+         <div id="subtitle-form-notification-div"></div>
       </form>
       <script>
          $(document).ready(function(){
@@ -120,7 +123,15 @@
 
 
             function handleSendingTypeDependingOptions() {
+               var sending_type = $("input[name=sending-type-radio-input]:checked").val();
+               if (sending_type == "scheduled_time") {
+                  $("#scheduled-time-span").show();
+               } else {
+                  $("#scheduled-time-span").hide();
+               }
             }
+
+            handleSendingTypeDependingOptions();
 
 
 
@@ -191,9 +202,9 @@
 
             function websocketOnMessage(e) {
                if (e.data == ("SUCCESS")) {
-                  notifySuccess($("#subtitle-form-notification-span"), "Document successfully sent to server");
+                  notifySuccess($("#subtitle-form-notification-div"), "Document successfully sent to server");
                } else {
-                  notifyError($("#subtitle-form-notification-span"), e.data);
+                  notifyError($("#subtitle-form-notification-div"), e.data);
                }
             }
 
@@ -241,7 +252,7 @@
             $("#reset-all").click(function(){
                $("#sequence-selector").html("");
                if (typeof(Storage) !== "undefined") {
-                  $("#subtitle-form-notification-span").text("");
+                  $("#subtitle-form-notification-div").text("");
                   localStorage.clear();
                }
             });
@@ -269,6 +280,17 @@
                handleTimeBaseDependingOptions();
             });
 
+            $("input[name=sending-type-radio-input").click( function() {
+               if ($(this).is(':checked')) {
+                  handleSendingTypeDependingOptions();
+               }
+            });
+
+
+
+
+
+
 
             function createTemplateDict() {
                var template_data = {};
@@ -295,14 +317,14 @@
 
             function sendDocument(doc, socket) {
                var sending_type = $("input[name=sending-type-radio-input]:checked").val();
-               if (sending_type == "set_time") {
-                  var sending_time = new Date(Date.now());
-                  sending_time_input = $("#sending-time-input").val();
-                  sending_time_parsed = sending_time_input.match(/(\d\d):(\d\d):(\d\d)/);
-                  sending_time.setHours(sending_time_parsed[1]);
-                  sending_time.setMinutes(sending_time_parsed[2]);
-                  sending_time.setSeconds(sending_time_parsed[3]);
-                  var timeout = sending_time.getTime() - Date.now();
+               if (sending_type == "scheduled_time") {
+                  var scheduled_time = new Date(Date.now());
+                  scheduled_time_input = $("#scheduled-time-input").val();
+                  scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
+                  scheduled_time.setHours(scheduled_time_parsed[1]);
+                  scheduled_time.setMinutes(scheduled_time_parsed[2]);
+                  scheduled_time.setSeconds(scheduled_time_parsed[3]);
+                  var timeout = scheduled_time.getTime() - Date.now();
                   setTimeout(function(doc, socket){ socket.websocket.send(doc) }, timeout, doc, socket);
                }
             }
@@ -310,12 +332,11 @@
             $("#submit-subtitle-button").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
                if (sequence_identifier == null) {
-                  notifyError($("#subtitle-form-notification-span"), "The sequence identifier cannot be undefined. Please create a new sequence.");
+                  notifyError($("#subtitle-form-notification-div"), "The sequence identifier cannot be undefined. Please create a new sequence.");
                } else {
                   var template_data = createTemplateDict();
                   var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
                   console.log(rendered_document);
-                  //socket.websocket.send(rendered_document);
                   sendDocument(rendered_document, socket);
                   sequence_numbers[sequence_identifier] += 1;
                   localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
