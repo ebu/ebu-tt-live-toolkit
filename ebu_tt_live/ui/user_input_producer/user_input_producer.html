@@ -307,7 +307,7 @@
             $("#asynchronous-send-start-button").click( function() {
                if (!interval_send) {
                   var interval = parseInt($("#asynchronous-send-interval-input").val());
-                  interval_send = setInterval(asyncSend, interval*1000);
+                  interval_send = setInterval(renderSendDocument, interval*1000);
                   notifySuccess($("#asynchronous-send-status-span"), "Running...", false);
                }
             });
@@ -347,7 +347,7 @@
                return template_data;
             }
 
-            function sendDocument(doc, socket) {
+            function submitDocument() {
                var sending_type = $("input[name=sending-type-radio-input]:checked").val();
                if (sending_type == "scheduled_send") {
                   var scheduled_time = new Date(Date.now());
@@ -357,17 +357,21 @@
                   scheduled_time.setMinutes(scheduled_time_parsed[2]);
                   scheduled_time.setSeconds(scheduled_time_parsed[3]);
                   var timeout = scheduled_time.getTime() - Date.now();
-                  setTimeout(function(doc, socket){ socket.websocket.send(doc) }, timeout, doc, socket);
+                  setTimeout(renderSendDocument, timeout);
                   notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
                } else {
-                  socket.websocket.send(doc);
+                  renderSendDocument();
                }
             }
 
-            function asyncSend() {
+            function renderSendDocument() {
                var template_data = createTemplateDict();
                var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-               socket.websocket.send(rendered_document);
+               if (socket.websocket) {
+                  socket.websocket.send(rendered_document);
+               } else {
+                  notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
+               }
                sequence_numbers[sequence_identifier] += 1;
                localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
             }
@@ -377,12 +381,7 @@
                if (sequence_identifier == null) {
                   notifyError($("#subtitle-form-notification-div"), "The sequence identifier cannot be undefined. Please create a new sequence.", false);
                } else {
-                  var template_data = createTemplateDict();
-                  var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-                  console.log(rendered_document);
-                  sendDocument(rendered_document, socket);
-                  sequence_numbers[sequence_identifier] += 1;
-                  localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
+                  submitDocument();
                }
             });
          });
