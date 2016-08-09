@@ -18,6 +18,10 @@ log = logging.getLogger(__name__)
 
 
 class TimingEvent(object):
+    """
+    This class wraps a document and an associated resolved timing event into an object that can be placed
+    on the timeline.
+    """
 
     _document = None
     _when = None
@@ -41,7 +45,11 @@ class TimingEvent(object):
         return self._document
 
 
+# R16
 class TimingEventBegin(TimingEvent):
+    """
+    Document resolved begin time
+    """
 
     def __init__(self, document):
         super(TimingEventBegin, self).__init__(
@@ -49,9 +57,11 @@ class TimingEventBegin(TimingEvent):
             when=document.computed_begin_time
         )
 
-
+# R17
 class TimingEventEnd(TimingEvent):
-
+    """
+    Document resolved end time.
+    """
     def __init__(self, document):
         super(TimingEventEnd, self).__init__(
             document=document,
@@ -60,6 +70,10 @@ class TimingEventEnd(TimingEvent):
 
 
 class EBUTT3Document(SubtitleDocument):
+    """
+    This class wraps the binding object representation of the XML and provides the features the applications in the
+    specification require. e.g:availability time.
+    """
 
     # The XML binding holding the content of the document
     _ebutt3_content = None
@@ -243,6 +257,16 @@ class EBUTT3Document(SubtitleDocument):
 
 
 class EBUTT3DocumentSequence(CloningDocumentSequence):
+    """
+    EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.
+    The sequence object can be used in 2 different modes:
+     - It can be used to produce a sequence(i.e.: new_document method)
+     - as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
+       (i.e.: add_document method.
+
+    The sequence is responsible to keep the documents ordered and filter those documents out, which were eventually
+    overwritten. It ensures that at any given time exactly 0 or 1 document is active (R14).
+    """
 
     _sequence_identifier = None
     _last_sequence_number = None
@@ -309,10 +333,18 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
 
     def _insert_or_discard(self, document):
         """
-        Work out which documents aren't valid anymore.
-        :return: tuple with trimmed and a list of discarded documents
+        This function does the heavy lifting of timing resolution. It inspects the close vicinity in which the
+        new document is coming by looking at the timeline in both directions.
+
+        Based on that information it can detect 3 different cases:
+          - out of order delivery of documents in which case it inserts and trims the document,
+          - sequence override scenario in which case an exception is raised.
+          - Document discard scenario in which case the document is already overwritten in the sequence so
+            it will not get inserted.
+
+        :raises ValueError, SequenceOverridden, DocumentDiscardedError
         """
-        # Our document's begin and end times
+        # Our document's begin and end times. Initially they correspond with the computed document begin- and end times.
         this_begins = TimingEventBegin(document)
         this_ends = TimingEventEnd(document)
         # The one this document might trim
@@ -364,10 +396,10 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
                     break
 
         if trims_this:
-            # Trim this one
+            # Trim this one. This happens with out of order delivery.
             this_ends.when = trims_this.when
         if begins_before:
-            # Move up previous document's end
+            # Move up previous document's end R17
             if ends_after:
                 self._timeline.remove(ends_after)
             else:
@@ -378,6 +410,12 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         self._insert_document(document, ends=this_ends)
 
     def _insert_document(self, document, ends=None):
+        """
+        In the end this function adds the document to the sequence registers.
+        :param document:
+        :param ends:
+        :return:
+        """
         self._documents.add(document)
         self._timeline.add(TimingEventBegin(document))
         if ends is not None and ends.when is not None:
@@ -404,7 +442,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             if item.document.sequence_number < sequence_number:
                 if isinstance(item, TimingEventEnd) and item.document not in discarded_timing_events:
                     # We found the end event of a document whose begin event was not encountered. Meaning that instead
-                    # of discarding it we are supposed to trim it.
+                    # of discarding it we are supposed to trim it. R17
                     continue
                 else:
                     discarded_timing_events.setdefault(item.document, []).append(item)
@@ -419,7 +457,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         self._check_document_compatibility(document)
         document.sequence = self
 
-        # Let's create space for the documents
+        # Let's create space for the document
         try:
             self._insert_or_discard(document)
         except SequenceOverridden:
