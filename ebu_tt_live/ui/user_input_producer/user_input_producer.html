@@ -21,7 +21,10 @@
       <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
       <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
-      <br>
+      <br><br>
+      <br><br>
+      Send documents live : <input type="radio" name="sending-type-radio-input" value="live" checked>
+      Send documents on defined time : <input type="radio" name="sending-type-radio-input" value="set_time">
       <form action="" id="subtitle-form">
          <label for="sequence-selector">Choose document sequence : </label>
          <select id="sequence-selector" name="sequence-selector"></select>
@@ -73,8 +76,10 @@
          <label for="subtitle-content-textarea">Subtitles text : </label><br>
          <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea>
          <br>
+         Sending time : <input type="text" id="sending-time-input" name="sending-time-input">
+         <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button>
+         <br><br>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
-         <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button><br>
          <span id="subtitle-form-notification-span"></span>
       </form>
       <script>
@@ -114,7 +119,8 @@
             handleTimeBaseDependingOptions();
 
 
-
+            function handleSendingTypeDependingOptions() {
+            }
 
 
 
@@ -287,6 +293,20 @@
                return template_data;
             }
 
+            function sendDocument(doc, socket) {
+               var sending_type = $("input[name=sending-type-radio-input]:checked").val();
+               if (sending_type == "set_time") {
+                  var sending_time = new Date(Date.now());
+                  sending_time_input = $("#sending-time-input").val();
+                  sending_time_parsed = sending_time_input.match(/(\d\d):(\d\d):(\d\d)/);
+                  sending_time.setHours(sending_time_parsed[1]);
+                  sending_time.setMinutes(sending_time_parsed[2]);
+                  sending_time.setSeconds(sending_time_parsed[3]);
+                  var timeout = sending_time.getTime() - Date.now();
+                  setTimeout(function(){ send(doc, socket) }, timeout, doc, socket);
+               }
+            }
+
             $("#submit-subtitle-button").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
                if (sequence_identifier == null) {
@@ -295,7 +315,8 @@
                   var template_data = createTemplateDict();
                   var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
                   console.log(rendered_document);
-                  socket.websocket.send(rendered_document);
+                  //socket.websocket.send(rendered_document);
+                  sendDocument(rendered_document, socket);
                   sequence_numbers[sequence_identifier] += 1;
                   localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
                }
