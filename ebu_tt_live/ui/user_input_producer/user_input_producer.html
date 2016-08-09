@@ -24,7 +24,15 @@
       <br><br>
       <br><br>
       <input type="radio" name="sending-type-radio-input" value="live" checked> Send document "live"
-      <input type="radio" name="sending-type-radio-input" value="scheduled_time"> Send document on scheduled time
+      <input type="radio" name="sending-type-radio-input" value="scheduled_send"> Send document on scheduled time
+      <input type="radio" name="sending-type-radio-input" value="asynchronous_send"> Send documents asynchronously
+      <div id="asynchronous-send-div">
+         <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds) : </label>
+         <input type="text" id="asynchronous-send-interval-input" name="asynchronous-send-interval-input">
+         <button type="button" id="asynchronous-send-start-button" name="asynchronous-send-start-button"> Start </button>
+         <button type="button" id="asynchronous-send-stop-button" name="asynchronous-send-stop-button"> Stop </button>
+         <span id="asynchronous-send-status-span"></span>
+      </div>
       <form action="" id="subtitle-form">
          <label for="sequence-selector">Choose document sequence : </label>
          <select id="sequence-selector" name="sequence-selector"></select>
@@ -81,6 +89,7 @@
             <input type="text" id="scheduled-time-input" name="scheduled-time-input">
          </span>
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button>
+         <span id="scheduled-confirmation-span"></span>
          <br><br>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
          <div id="subtitle-form-notification-div"></div>
@@ -89,6 +98,7 @@
          $(document).ready(function(){
 
             var sequence_numbers = {};
+            var interval_send = null;
 
             if (typeof(Storage) === "undefined") {
                window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences.");
@@ -124,10 +134,20 @@
 
             function handleSendingTypeDependingOptions() {
                var sending_type = $("input[name=sending-type-radio-input]:checked").val();
-               if (sending_type == "scheduled_time") {
+               if (sending_type == "scheduled_send") {
                   $("#scheduled-time-span").show();
+                  $("#asynchronous-send-div").hide();
+                  $("#submit-subtitle-button").show();
+                  $("#submit-subtitle-button").html("Schedule");
+               } else if (sending_type == "asynchronous_send") {
+                  $("#scheduled-time-span").hide();
+                  $("#asynchronous-send-div").show();
+                  $("#submit-subtitle-button").hide();
                } else {
                   $("#scheduled-time-span").hide();
+                  $("#asynchronous-send-div").hide();
+                  $("#submit-subtitle-button").show();
+                  $("#submit-subtitle-button").html("Send");
                }
             }
 
@@ -136,19 +156,25 @@
 
 
             /************************************************** Helper functions ******************************************/
-            function notifyError(element, notification) {
+            function notifyError(element, notification, fade_out) {
                element.css("color", "red");
                element.text(notification);
+               if (fade_out)
+                  setTimeout(function () { element.text(""); }, 3000);
             }
 
-            function notifyWarning(element, notification) {
+            function notifyWarning(element, notification, fade_out) {
                element.css("color", "orange");
                element.text(notification);
+               if (fade_out)
+                  setTimeout(function () { element.text(""); }, 3000);
             }
 
-            function notifySuccess(element, notification) {
+            function notifySuccess(element, notification, fade_out) {
                element.css("color", "green");
                element.text(notification);
+               if (fade_out)
+                  setTimeout(function () { element.text(""); }, 3000);
             }
 
             function hideNewSequenceDiv() {
@@ -157,14 +183,6 @@
                // Clear input on cancel
                $("#new-sequence-identifier-input").val("");
                $("#new-sequence-notification-span").text("");
-            }
-
-            function isValidURL(str)  {
-               var pattern = new RegExp('^(ws?:\\/\\/)?'+
-                  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+
-                  '((\\d{1,3}\\.){3}\\d{1,3}))'+
-                  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*');
-               return pattern.test(str);
             }
 
 
@@ -177,7 +195,7 @@
             var socket = {connected: false};
 
             function websocketOnError(e) {
-               notifyError($("#websocket-notifications-span"), "Error: cannot connect to websocket server.");
+               notifyError($("#websocket-notifications-span"), "Error: cannot connect to websocket server.", false);
                socket.connected = false;
                socket.websocket = null;
                $("#websocket-connect-button").show();
@@ -185,7 +203,7 @@
             }
 
             function websocketOnOpen(e) {
-               notifySuccess($("#websocket-notifications-span"), "Connected to websocket server");
+               notifySuccess($("#websocket-notifications-span"), "Connected to websocket server", false);
                socket.connected = true;
                $("#websocket-connect-button").hide();
                $("#websocket-disconnect-button").show();
@@ -193,7 +211,7 @@
             }
 
             function websocketOnClose(e) {
-               notifyWarning($("#websocket-notifications-span"), "Connection to websocket server closed.");
+               notifyWarning($("#websocket-notifications-span"), "Connection to websocket server closed.", false);
                socket.connected = false;
                socket.websocket = null;
                $("#websocket-connect-button").show();
@@ -202,9 +220,9 @@
 
             function websocketOnMessage(e) {
                if (e.data == ("SUCCESS")) {
-                  notifySuccess($("#subtitle-form-notification-div"), "Document successfully sent to server");
+                  notifySuccess($("#subtitle-form-notification-div"), "Document successfully sent to server", true);
                } else {
-                  notifyError($("#subtitle-form-notification-div"), e.data);
+                  notifyError($("#subtitle-form-notification-div"), e.data, false);
                }
             }
 
@@ -232,7 +250,7 @@
             // Create a new sequence
             $("#validate-new-sequence-button").click(function(){
                if ($("#new-sequence-identifier-input").val() == "") {
-                  notifyError($("#new-sequence-notification-span"), "The sequence identifier cannot be empty");
+                  notifyError($("#new-sequence-notification-span"), "The sequence identifier cannot be empty", false);
                } else {
                   var sequence_identifier = $("#new-sequence-identifier-input").val();
                   $("#sequence-selector")
@@ -286,7 +304,21 @@
                }
             });
 
+            $("#asynchronous-send-start-button").click( function() {
+               if (!interval_send) {
+                  var interval = parseInt($("#asynchronous-send-interval-input").val());
+                  interval_send = setInterval(asyncSend, interval*1000);
+                  notifySuccess($("#asynchronous-send-status-span"), "Running...", false);
+               }
+            });
 
+            $("#asynchronous-send-stop-button").click( function() {
+               if (interval_send) {
+                  clearInterval(interval_send);
+                  interval_send = null;
+                  $("#asynchronous-send-status-span").text("");
+               }
+            });
 
 
 
@@ -317,7 +349,7 @@
 
             function sendDocument(doc, socket) {
                var sending_type = $("input[name=sending-type-radio-input]:checked").val();
-               if (sending_type == "scheduled_time") {
+               if (sending_type == "scheduled_send") {
                   var scheduled_time = new Date(Date.now());
                   scheduled_time_input = $("#scheduled-time-input").val();
                   scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
@@ -326,13 +358,24 @@
                   scheduled_time.setSeconds(scheduled_time_parsed[3]);
                   var timeout = scheduled_time.getTime() - Date.now();
                   setTimeout(function(doc, socket){ socket.websocket.send(doc) }, timeout, doc, socket);
+                  notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
+               } else {
+                  socket.websocket.send(doc);
                }
+            }
+
+            function asyncSend() {
+               var template_data = createTemplateDict();
+               var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+               socket.websocket.send(rendered_document);
+               sequence_numbers[sequence_identifier] += 1;
+               localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
             }
 
             $("#submit-subtitle-button").click(function(){
                var sequence_identifier = $("#sequence-selector").val();
                if (sequence_identifier == null) {
-                  notifyError($("#subtitle-form-notification-div"), "The sequence identifier cannot be undefined. Please create a new sequence.");
+                  notifyError($("#subtitle-form-notification-div"), "The sequence identifier cannot be undefined. Please create a new sequence.", false);
                } else {
                   var template_data = createTemplateDict();
                   var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
