@@ -160,3 +160,4 @@ Feature: Resolved times computation in sequence
     Examples:
     | doc3_avail_time | doc3_begin  | doc3_end    | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc2 | r_end_doc2 | r_begin_doc3 | r_end_doc3 |
     | 00:00:03.0      | 00:00:50.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |
+    | 00:00:03.0      | 00:00:38.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:38.0 | 00:00:50.0   | 00:01:00.0 |
