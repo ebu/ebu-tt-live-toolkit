@@ -4,7 +4,7 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
-    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
@@ -15,6 +15,7 @@ from sortedcontainers import sortedlist
 
 
 log = logging.getLogger(__name__)
+document_logger = logging.getLogger('document_logger')
 
 
 class TimingEvent(object):
@@ -202,6 +203,10 @@ class EBUTT3Document(SubtitleDocument):
         """
         if resolved_end_time > self.computed_begin_time:
             raise ValueError()
+        document_logger.info(DOC_DISCARDED.format(
+            sequence_identifier=self.sequence_identifier,
+            sequence_number=self.sequence_number)
+        )
         self._resolved_end_time = resolved_end_time
         self._resolved_begin_time = self.computed_begin_time
 
@@ -398,6 +403,12 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         if trims_this:
             # Trim this one. This happens with out of order delivery.
             this_ends.when = trims_this.when
+            document_logger.info(DOC_TRIMMED.format(
+                sequence_identifier=document.sequence_identifier,
+                sequence_number=document.sequence_number,
+                resolved_begin_time=this_begins.when,
+                resolved_end_time=this_ends.when
+            ))
         if begins_before:
             # Move up previous document's end R17
             if ends_after:
@@ -405,6 +416,12 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             else:
                 ends_after = TimingEventEnd(begins_before.document)
             ends_after.when = this_begins.when
+            document_logger.info(DOC_TRIMMED.format(
+                sequence_identifier=begins_before.document.sequence_identifier,
+                sequence_number=begins_before.document.sequence_number,
+                resolved_begin_time=begins_before.when,
+                resolved_end_time=ends_after.when
+            ))
             self._timeline.add(ends_after)
 
         self._insert_document(document, ends=this_ends)

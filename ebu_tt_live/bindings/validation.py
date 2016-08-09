@@ -4,7 +4,8 @@ This file contains all the pyxb helpers needed for enabling a concise semantic v
 
 from pyxb import ValidationConfig, GlobalValidationConfig
 from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
-from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE
+from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
+    DOC_SYNTACTIC_VALIDATION_SUCCESSFUL
 from ebu_tt_live.errors import SemanticValidationError
 from .pyxb_utils import get_xml_parsing_context
 import logging
@@ -84,7 +85,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         A new traversal of the structure is needed to get the appropriate context down to individual parts of the nodes.
         """
         # Let's initiate DFS
-        document_logger.info('Syntactic validation successful')
+        document_logger.info(DOC_SYNTACTIC_VALIDATION_SUCCESSFUL)
         # Create new semantic context object
         semantic_dataset = {}
         semantic_dataset.update(extra_kwargs)
@@ -124,7 +125,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
-        document_logger.info('Semantic validation successful')
+        document_logger.info(DOC_SEMANTIC_VALIDATION_SUCCESSFUL)
         return semantic_dataset
 
     def _validateBinding_vx(self, **extra_kwargs):

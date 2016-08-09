@@ -14,3 +14,9 @@ ERR_DOCUMENT_NOT_COMPATIBLE = gettext('Document is not compatible with the seque
 ERR_DOCUMENT_NOT_PART_OF_SEQUENCE = gettext('Document is not part of any sequence')
 ERR_DOCUMENT_SEQUENCE_INCONSISTENCY = gettext('Timeline consistency problem.')
 END_OF_DATA = gettext('End of available data reached')
+
+
+DOC_SYNTACTIC_VALIDATION_SUCCESSFUL = gettext('Syntactic validation successful')
+DOC_SEMANTIC_VALIDATION_SUCCESSFUL = gettext('Semantic validation successful')
+DOC_DISCARDED = gettext('Document {sequence_identifier}__{sequence_number} is discarded')
+DOC_TRIMMED = gettext('Document {sequence_identifier}__{sequence_number} activation change: [{resolved_begin_time}; {resolved_end_time}]')
