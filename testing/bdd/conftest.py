@@ -85,3 +85,8 @@ def given_avail_time(avail_time, template_dict, gen_document):
 @pytest.fixture
 def template_dict():
     return dict()
+
+
+@pytest.fixture
+def test_context():
+    return dict()

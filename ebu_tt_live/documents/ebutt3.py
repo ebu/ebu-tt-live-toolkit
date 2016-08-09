@@ -258,7 +258,10 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         self._reference_clock = reference_clock
         self._lang = lang
         self._last_sequence_number = 0
+        # The documents are kept in a sorted set that is sorted by the documents's sequence number
         self._documents = sortedset.SortedSet()
+        # The timing events that mark the beginning and end of a document are kept on a timeline,
+        # which iw a sorted list. IMPORTANT: Not sorted set as there are overlapping begins and ends.
         self._timeline = sortedlist.SortedListWithKey(key=lambda item: item.when)
 
     @property
@@ -387,7 +390,30 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
                 self._timeline.add(computed_end)
 
     def _override_sequence(self, document):
-        pass
+        """
+        This function clears the timeline and the associated documents after the document in the parameter.
+        This happens when a document with a higher sequence number is added preceding some other documents with lower
+        sequence numbers.
+        :param document:
+        :return:
+        """
+        discarded_documents = set()
+        discarded_timing_events = []
+
+        sequence_number = document.sequence_number
+        resolved_begin = TimingEventBegin(document)
+
+        for item in self._timeline.irange(resolved_begin):
+            if item.document.sequence_number < sequence_number:
+                discarded_timing_events.append(item)
+                discarded_documents.add(item.document)
+
+        for item in discarded_documents:
+            item.discard_document(resolved_end_time=resolved_begin.when)
+            self._documents.remove(item)
+
+        for item in discarded_timing_events:
+            self._timeline.remove(item)
 
     def add_document(self, document):
         self._check_document_compatibility(document)
@@ -397,9 +423,12 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         try:
             self._insert_or_discard(document)
         except SequenceOverridden:
+            # First we fix the timeline
             self._override_sequence(document)
+            # And retry the insertion operation
+            self._insert_or_discard(document)
         except DocumentDiscardedError as exc:
-            pass
+            document.discard_document(resolved_end_time=timedelta())
 
         if document.sequence_number > self._last_sequence_number:
             self._last_sequence_number = document.sequence_number

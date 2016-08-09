@@ -74,6 +74,7 @@ class TestEBUTT3Sequence(TestCase):
         self.document3.sequence_number = 2
         self.document2.validate()
         self.document3.validate()
+        self.document1.validate()
 
         self.sequence.add_document(self.document1)
         self.sequence.add_document(self.document3)
