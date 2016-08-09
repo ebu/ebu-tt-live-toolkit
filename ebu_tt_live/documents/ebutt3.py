@@ -321,8 +321,6 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         ends_after = None
         # The one that will trim this document. One with a higher seq number
         trims_this = None
-        # These documents all began and ended after document so they were discarded
-        discarded = []
 
         _end_found = False
         for item in self._timeline.irange(
@@ -397,23 +395,23 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         :param document:
         :return:
         """
-        discarded_documents = set()
-        discarded_timing_events = []
+        discarded_timing_events = {}
 
         sequence_number = document.sequence_number
         resolved_begin = TimingEventBegin(document)
 
         for item in self._timeline.irange(resolved_begin):
             if item.document.sequence_number < sequence_number:
-                discarded_timing_events.append(item)
-                discarded_documents.add(item.document)
+                if isinstance(item, TimingEventEnd) and item.document not in discarded_timing_events:
+                    continue
+                else:
+                    discarded_timing_events.setdefault(item.document, []).append(item)
 
-        for item in discarded_documents:
+        for item, events in discarded_timing_events.items():
             item.discard_document(resolved_end_time=resolved_begin.when)
             self._documents.remove(item)
-
-        for item in discarded_timing_events:
-            self._timeline.remove(item)
+            for event in events:
+                self._timeline.remove(event)
 
     def add_document(self, document):
         self._check_document_compatibility(document)
@@ -428,7 +426,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             # And retry the insertion operation
             self._insert_or_discard(document)
         except DocumentDiscardedError as exc:
-            document.discard_document(resolved_end_time=timedelta())
+            document.discard_document(resolved_end_time=exc.offending_document.resolved_begin_time)
 
         if document.sequence_number > self._last_sequence_number:
             self._last_sequence_number = document.sequence_number
