@@ -137,7 +137,14 @@
 
 
 
-            /********************************************************** Options to show or not depending on other options ****************************/
+            /********************************************************** Options to show or not depending on other options and general purpose functions****************************/
+
+            function stopResetMediaClock() {
+                  $("#running-media-clock").html("");
+                  scheduled_send_media_clock_offset = null;
+                  if (interval_media_clock_interface != null)
+                     clearInterval(interval_media_clock_interface);
+            }
 
             function handleTimeBaseDependingOptions() {
                var selected_time_base = $("#time-base-selector").val();
@@ -169,12 +176,14 @@
                   $("#scheduled-send-setup-div").hide();
                   $("#asynchronous-send-setup-div").show();
                   $("#submit-subtitle-button").hide();
+                  stopResetMediaClock();
                } else {
                   $("#scheduled-time-span").hide();
                   $("#scheduled-send-setup-div").hide();
                   $("#asynchronous-send-setup-div").hide();
                   $("#submit-subtitle-button").show();
                   $("#submit-subtitle-button").html("Send");
+                  stopResetMediaClock();
                }
             }
 
@@ -185,11 +194,7 @@
                var selected_clock_type = $("#scheduled-send-clock-selector").val();
                if (selected_clock_type == "local") {
                   $("#synchronize-media-clock-button").hide();
-                  $("#running-media-clock").html("");
-                  $("#running-media-clock").hide();
-                  scheduled_send_media_clock_offset = null;
-                  if (interval_media_clock_interface != null)
-                     clearInterval(interval_media_clock_interface);
+                  stopResetMediaClock();
                } else {
                   $("#synchronize-media-clock-button").show();
                   $("#running-media-clock").show();
