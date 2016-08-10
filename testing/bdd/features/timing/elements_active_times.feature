@@ -7,7 +7,7 @@ Feature: Computed element active begin and end times
   | xml_file           | sequence_identifier | sequence_number | time_base |
   | time_semantics.xml | testSeq             | 1               | media     |
 
-  
+  @skip
   Scenario: Parent with one child element
     Given an xml file <xml_file>
     When it has sequenceIdentifier <sequence_identifier>
@@ -44,7 +44,7 @@ Feature: Computed element active begin and end times
 
 
   # Given a parent element with two child elements, the computed active parent and child begin and active parent end times are valid:
-  
+  @skip
   Scenario: Parent with two child elements
     Given an xml file <xml_file>
     When it has sequenceIdentifier <sequence_identifier>
