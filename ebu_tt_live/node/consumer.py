@@ -1,11 +1,13 @@
 
 from .base import Node
 from ebu_tt_live.documents import EBUTT3DocumentSequence
+from ebu_tt_live.strings import DOC_RECEIVED
 from datetime import timedelta
 import logging
 
 
 log = logging.getLogger(__name__)
+document_logger = logging.getLogger('document_logger')
 
 
 class SimpleConsumer(Node):
@@ -26,8 +28,14 @@ class SimpleConsumer(Node):
             self._sequence = EBUTT3DocumentSequence.create_from_document(document)
             self._reference_clock = self._sequence.reference_clock
             document.availability_time = self._reference_clock.get_time()
-        log.debug(document)
-        log.debug(" " + str(document.sequence_identifier) + "_" + str(document.sequence_number))
+
+        document_logger.info(DOC_RECEIVED.format(
+            sequence_number=document.sequence_number,
+            sequence_identifier=document.sequence_identifier,
+            computed_begin_time=document.computed_begin_time,
+            computed_end_time=document.computed_end_time
+        ))
+        self._sequence.add_document(document)
 
     @property
     def reference_clock(self):
