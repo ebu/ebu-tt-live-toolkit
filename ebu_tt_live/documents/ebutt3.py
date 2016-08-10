@@ -235,11 +235,7 @@ class EBUTT3Document(SubtitleDocument):
         # Extract results
 
         # Begin times
-        computed_begin = result['semantic_dataset']['timing_computed_begin']
-        if computed_begin is not None:
-            self._computed_begin_time = max(availability_time, computed_begin)
-        else:
-            self._computed_begin_time = availability_time
+        self._computed_begin_time = result['semantic_dataset']['timing_computed_begin']
 
         # End times
         self._computed_end_time = result['semantic_dataset']['timing_computed_end']
@@ -256,6 +252,10 @@ class EBUTT3Document(SubtitleDocument):
 
     def set_dur(self, dur):
         self._ebutt3_content.body.dur = dur
+
+    @property
+    def binding(self):
+        return self._ebutt3_content
 
     def get_xml(self):
         return self._ebutt3_content.toxml()

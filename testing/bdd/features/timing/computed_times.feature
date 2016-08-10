@@ -1,6 +1,9 @@
 @timing @resolution @document
 Feature: Computed times computation
 
+  # This tests mostly operates on document computed begin and end times. It does not deal with active duration of
+  # child elements.
+
   Examples:
   | xml_file           | sequence_identifier | sequence_number |
   | time_semantics.xml | testSequence1       | 1               |

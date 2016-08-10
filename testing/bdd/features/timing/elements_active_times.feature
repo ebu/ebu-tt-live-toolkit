@@ -1,3 +1,4 @@
+@timing @resolution @element
 Feature: Computed element active begin and end times
   # Assuming that parent end = min(explicit end, begin+dur) where dur may exist, i.e. for body element.
 
@@ -7,7 +8,7 @@ Feature: Computed element active begin and end times
   | xml_file           | sequence_identifier | sequence_number | time_base |
   | time_semantics.xml | testSeq             | 1               | media     |
 
-  @skip
+
   Scenario: Parent with one child element
     Given an xml file <xml_file>
     When it has sequenceIdentifier <sequence_identifier>
@@ -26,6 +27,7 @@ Feature: Computed element active begin and end times
     Examples:
     | body_begin | body_end | div_begin | div_end  | body_active_begin | body_active_end | div_active_begin | div_active_end |
     |            |          |           |          | 00:00:00          | undefined       | 00:00:00         | undefined      |
+    @skip
     | 00:01:00   |          |           |          | 00:01:00          | undefined       | 00:01:00         | undefined      |
     |            | 00:01:30 |           |          | 00:00:00          | 00:01:30        | 00:00:00         | 00:01:30       |
     | 00:01:00   | 00:01:30 |           |          | 00:01:00          | 00:01:30        | 00:01:00         | 00:01:30       |

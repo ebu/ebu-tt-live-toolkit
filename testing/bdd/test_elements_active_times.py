@@ -77,42 +77,45 @@ def when_doc_generated(test_context, template_dict, template_file):
     test_context['document'] = document
 
 
-# I don't know through which interface I will get the active times yet so it is
-# then functions are not complete.
 @then('body active begin time is <body_active_begin>')
 def then_body_active_begin(test_context, body_active_begin):
+    computed_begin = test_context['document'].binding.body.computed_begin_time
     if body_active_begin == "undefined":
-        pass
+        assert computed_begin is None
     else:
         body_active_begin_timedelta = FullClockTimingType(body_active_begin).timedelta
-        pass
+        assert body_active_begin_timedelta == computed_begin
 
 
 @then('body active end time is <body_active_end>')
 def then_body_active_end(test_context, body_active_end):
+    computed_end = test_context['document'].binding.body.computed_end_time
     if body_active_end == "undefined":
-        pass
+        assert computed_end is None
     else:
         body_active_end_timedelta = FullClockTimingType(body_active_end).timedelta
-        pass
+        assert body_active_end_timedelta == computed_end
 
 
 @then('div active begin time is <div_active_begin>')
 def then_div_active_begin(test_context, div_active_begin):
+    computed_begin = test_context['document'].binding.body.orderedContent()[0].value.computed_begin_time
+
     if div_active_begin == "undefined":
-        pass
+        assert computed_begin is None
     else:
         div_active_begin_timedelta = FullClockTimingType(div_active_begin).timedelta
-        pass
+        assert div_active_begin_timedelta == computed_begin
 
 
 @then('div active end time is <div_active_end>')
 def then_div_active_end(test_context, div_active_end):
+    computed_end = test_context['document'].binding.body.orderedContent()[0].value.computed_end_time
     if div_active_end == "undefined":
-        pass
+        assert computed_end is None
     else:
         div_active_end_timedelta = FullClockTimingType(div_active_end).timedelta
-        pass
+        assert div_active_end_timedelta == computed_end
 
 
 @then('p active begin time is <p_active_begin>')

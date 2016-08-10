@@ -169,6 +169,17 @@ class TimeBaseValidationMixin(object):
     attributes as well as a generic semantic validation for timing attributes in the document's timeBase.
     """
 
+    _computed_begin_time = None
+    _computed_end_time = None
+
+    @property
+    def computed_begin_time(self):
+        return self._computed_begin_time
+
+    @property
+    def computed_end_time(self):
+        return self._computed_end_time
+
     def _pre_timing_set_attribute(self, attr_en, attr_use):
         # Pass in the timing_attribute_name to the context to help the timing type constructor refuse creation
         context = get_xml_parsing_context()
@@ -229,6 +240,10 @@ class TimeBaseValidationMixin(object):
 
             dataset['timing_computed_end'] = proposed_end
 
+        # Store the element's activation begin times
+        self._computed_begin_time = dataset.get('timing_syncbase', None)
+
+
     def _semantic_postprocess_timing(self, dataset, element_content):
         begin_timedelta = None
         end_timedelta = None
@@ -241,7 +256,6 @@ class TimeBaseValidationMixin(object):
             # We pushed on the stack it is time to pop it
             begin_timedelta = dataset['timing_begin_stack'].pop()
             dataset['timing_syncbase'] -= begin_timedelta
-
 
 
     # The mixin approach is used since there are multiple timed elements types.
