@@ -1,7 +1,8 @@
+@validation 
 Feature: ttp:referenceClockIdentifier constraints testing
   Scenario: Valid use of referenceClockIdentifier
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has clock mode <clock_mode>
     And it has reference clock identifier <ref_clock_id>
     Then document is valid
@@ -20,7 +21,7 @@ Feature: ttp:referenceClockIdentifier constraints testing
   @skip
   Scenario: Invalid use of referenceClockIdentifier
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has clock mode <clock_mode>
     And it has reference clock identifier <ref_clock_id>
     Then document is invalid
