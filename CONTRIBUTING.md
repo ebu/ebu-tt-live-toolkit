@@ -50,12 +50,15 @@ Structure of the testing directory
     │ ├─features - feature files for BDD
     │ │ ├─validation - features that tie in with the XML validation functionality
     │ │ │ └─*.feature - BDD feature files
+    │ │ ├─timing - features that tie in with computed/resolved/activation times computation.
     │ │ └─...
     │ ├─templates - Jinja2 template files for mostly XML documents
     │ │ ├─*.xml - XML file templates
     │ │ └...
     │ └*.py - Python files with the BDD handlers
     └─*.py - Other python based tests unrelated to BDD
+
+For BDD tests we use (pytest-bdd)[https://pypi.python.org/pypi/pytest-bdd]. Beware that some BDD steps are defined in the `testing/bdd/conftest.py` file because they are used by multiple feature files.
 
 
 ## Configuration files
