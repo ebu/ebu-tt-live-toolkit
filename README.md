@@ -59,10 +59,10 @@ Windows users
 =============
 
 Windows is not the best friend of Makefiles. So there is a make.bat file for those who would like to develop using 
-Windows. Assuming python 2.7 and virtualenv is installed and are on the PATH.
+Windows. Assuming python 2.7 and virtualenv is installed and are on the PATH. To build the project you will also need node.js. Please read the instructions for your system [here](https://nodejs.org/en/download/package-manager/). Then run :
 
     make
-    
+
 This will make sure a virtual environment is created and activated and installs all the tools into it.
 
 After that the following command should work:
@@ -100,9 +100,10 @@ The simple consumer connects to the producer or later on in the pipeline, assumi
     ebu-simple-consumer
 
 The user input consumer script is intended to receive data from the user input producer. The user input producer is a user interface that allows users to create documents
-and to send them live (see the documentation for details).
+and to send them live (see the documentation for details). To run it, just run `ebu-user-input-consumer` and open the file `ebu_tt_live/ui/user_input_producer/user_input_producer.html` file.
 
     ebu-user-input-consumer
+
 
 Documentation
 =============
