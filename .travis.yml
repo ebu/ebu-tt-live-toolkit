@@ -26,8 +26,8 @@ script:
 after_success:
   - coveralls
   - pip intall graphviz
-  - GRAPHVIZ_DOT=/usr/local/bin/graphviz/dot
-  - export GRAPHVIZ_DOT
+  - graphviz_dot=/usr/local/bin/dot
+  - export graphviz_dot
   - python setup.py build_sphinx
   - if [ $TRAVIS_BRANCH == "master" ]; then ghp-import -n -p -m "Update gh-pages." docs/build/html; fi
 
