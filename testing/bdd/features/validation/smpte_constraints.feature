@@ -1,7 +1,8 @@
+@validation @smpte
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
     Given an xml file <xml_file>
-    And it has frameRate <frame_rate>
+    When it has frameRate <frame_rate>
     And it has timeBase <time_base>
     And it has frameRateMultiplier <frame_rate_multiplier>
     And it has dropMode <drop_mode>
@@ -29,7 +30,7 @@ Feature: SMPTE-related attribute constraints
   # These tests are not all passing because of the missing semantic validation described in #52
   Scenario: Invalid SMPTE head attributes
     Given an xml file <xml_file>
-    And it has frameRate <frame_rate>
+    When it has frameRate <frame_rate>
     And it has timeBase <time_base>
     And it has frameRateMultiplier <frame_rate_multiplier>
     And it has dropMode <drop_mode>
