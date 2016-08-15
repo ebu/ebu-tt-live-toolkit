@@ -7,7 +7,7 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_f18bb5b3c3d4_key -iv $encrypted_f18bb5b3c3d4_iv -in publish-key.enc -out ~/.ssh/publish-key -d
   - chmod u=rw,og= ~/.ssh/publish-key
   - echo "Host github.com" >> ~/.ssh/config
-  - echo "  IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
+  - echo "    IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
   - git --version
   - git remote set-url origin git@github.com:ebu/ebu-tt-live-toolkit.git
   - git fetch origin -f gh-pages:gh-pages
@@ -17,6 +17,7 @@ install:
   - make
   - python setup.py develop
   - pip install coveralls
+  - pip install ghp-import
 
 script:
   - pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -r -u ebutt_live.xsd
