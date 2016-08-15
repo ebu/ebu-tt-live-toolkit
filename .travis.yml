@@ -25,7 +25,7 @@ script:
 
 after_success:
   - coveralls
-  - pip intall graphviz
+  - pip install graphviz
   - GRAPHVIZ_DOT=/usr/bin/dot
   - export GRAPHVIZ_DOT
   - python setup.py build_sphinx
