@@ -32,7 +32,9 @@ and assumes the environment variables that the activation script sets):
 
     source ./env/bin/activate
 
-After having created the python virtual environment and having activated it the package
+To build the project you will also need node.js. Please read the instructions for your system [here](https://nodejs.org/en/download/package-manager/).
+
+After having created the python virtual environment, having activated it and having installed node.js the package
 can be built by typing make if you have GNU build tooling on your system.
 
     make
@@ -45,6 +47,9 @@ Alternatively:
 
     pyxbgen -r --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -u ebutt_live.xsd
 
+    npm install nunjucks
+    node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
+
 After this you are supposed to be able to launch the command line tools this python package
 provides i.e.:
 
@@ -54,10 +59,10 @@ Windows users
 =============
 
 Windows is not the best friend of Makefiles. So there is a make.bat file for those who would like to develop using 
-Windows. Assuming python 2.7 and virtualenv is installed and are on the PATH.
+Windows. Assuming python 2.7 and virtualenv is installed and are on the PATH. To build the project you will also need node.js. Please read the instructions for your system [here](https://nodejs.org/en/download/package-manager/). Then run :
 
     make
-    
+
 This will make sure a virtual environment is created and activated and installs all the tools into it.
 
 After that the following command should work:
@@ -93,6 +98,12 @@ EBU-TT-Live documents in a timed manner. In the repository root there is a *test
 The simple consumer connects to the producer or later on in the pipeline, assuming there are more components inserted.
 
     ebu-simple-consumer
+
+The user input consumer script is intended to receive data from the user input producer. The user input producer is a user interface that allows users to create documents
+and to send them live (see the documentation for details). To run it, just run `ebu-user-input-consumer` and open the file `ebu_tt_live/ui/user_input_producer/user_input_producer.html` file.
+
+    ebu-user-input-consumer
+
 
 Documentation
 =============
