@@ -464,7 +464,7 @@
                   template_data["marker_mode"] = all_sequences[sequence_identifier]["marker_mode"];
                   template_data["drop_mode"] = all_sequences[sequence_identifier]["drop_mode"];
                }
-               template_data["body_content"] = $("#subtitle-content-textarea").val().replace(/\n/g, "<tt:br/>");
+               template_data["body_content"] = $("#subtitle-content-textarea").val().replace(/\r?\n|\r/g, "<tt:br/>");
                template_data["body_begin"] = $("#body-begin-input").val();
                template_data["body_end"] = $("#body-end-input").val();
                template_data["dur"] = $("#dur-input").val();

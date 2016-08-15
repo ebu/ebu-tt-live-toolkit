@@ -39,9 +39,7 @@
   {% endif %}
   >
     <tt:div>
-      <tt:p xml:id="ID002">
-        {{body_content}}
-      </tt:p>
+      <tt:p xml:id="ID002">{{body_content}}</tt:p>
     </tt:div>
   </tt:body>
 </tt:tt>
