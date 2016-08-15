@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.bindings &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>ebu_tt_live.bindings</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.bindings</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">.raw</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">raw</span>
+
+<span class="c1"># Let&#39;s import customizations</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttdt</span> <span class="k">as</span> <span class="n">ebuttdt</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">ebuttm</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttp</span> <span class="k">as</span> <span class="n">ebuttp</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebutts</span> <span class="k">as</span> <span class="n">ebutts</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ttm</span> <span class="k">as</span> <span class="n">ttm</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ttp</span> <span class="k">as</span> <span class="n">ttp</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_tts</span> <span class="k">as</span> <span class="n">tts</span>
+<span class="kn">from</span> <span class="nn">.pyxb_utils</span> <span class="k">import</span> <span class="n">xml_parsing_context</span><span class="p">,</span> <span class="n">get_xml_parsing_context</span>
+<span class="kn">from</span> <span class="nn">.validation</span> <span class="k">import</span> <span class="n">SemanticDocumentMixin</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">TimeBaseValidationMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">SemanticValidationError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES</span><span class="p">,</span> <span class="n">ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES</span>
+
+<span class="kn">from</span> <span class="nn">pyxb.utils.domutils</span> <span class="k">import</span> <span class="n">BindingDOMSupport</span>
+
+<span class="n">namespace_prefix_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;tt&#39;</span><span class="p">:</span> <span class="n">raw</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ebuttdt&#39;</span><span class="p">:</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ttp&#39;</span><span class="p">:</span> <span class="n">ttp</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;tts&#39;</span><span class="p">:</span> <span class="n">tts</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ttm&#39;</span><span class="p">:</span> <span class="n">ttm</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ebuttm&#39;</span><span class="p">:</span> <span class="n">ebuttm</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ebutts&#39;</span><span class="p">:</span> <span class="n">ebutts</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ebuttp&#39;</span><span class="p">:</span> <span class="n">ebuttp</span><span class="o">.</span><span class="n">Namespace</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="CreateFromDocument"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.CreateFromDocument">[docs]</a><span class="k">def</span> <span class="nf">CreateFromDocument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resetting the parsing context on start</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">xml_parsing_context</span><span class="p">():</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="CreateFromDOM"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.CreateFromDOM">[docs]</a><span class="k">def</span> <span class="nf">CreateFromDOM</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Resetting the parsing context on start</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">xml_parsing_context</span><span class="p">():</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">CreateFromDOM</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="tt_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.tt_type">[docs]</a><span class="k">class</span> <span class="nc">tt_type</span><span class="p">(</span><span class="n">SemanticDocumentMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">tt_type</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__post_time_base_set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_use</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">get_xml_parsing_context</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This means we are in XML parsing mode</span>
+            <span class="n">context</span><span class="p">[</span><span class="s1">&#39;timeBase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span>
+
+    <span class="n">_attr_en_post</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">ttp</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;timeBase&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">__post_time_base_set_attribute</span>
+    <span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__check_bds</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">bds</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bds</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">bds</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BindingDOMSupport</span><span class="p">(</span>
+                <span class="n">namespace_prefix_map</span><span class="o">=</span><span class="n">namespace_prefix_map</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="tt_type.toDOM"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.tt_type.toDOM">[docs]</a>    <span class="k">def</span> <span class="nf">toDOM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">element_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">tt_type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">toDOM</span><span class="p">(</span>
+            <span class="n">bds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__check_bds</span><span class="p">(</span><span class="n">bds</span><span class="p">),</span>
+            <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+            <span class="n">element_name</span><span class="o">=</span><span class="n">element_name</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="tt_type.toxml"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.tt_type.toxml">[docs]</a>    <span class="k">def</span> <span class="nf">toxml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">element_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">dom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toDOM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__check_bds</span><span class="p">(</span><span class="n">bds</span><span class="p">),</span> <span class="n">element_name</span><span class="o">=</span><span class="n">element_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">root_only</span><span class="p">:</span>
+            <span class="n">dom</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">documentElement</span>
+        <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span>
+            <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span>
+            <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;  &#39;</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__semantic_test_smpte_attrs_present</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">smpte_attrs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;frameRate&#39;</span><span class="p">,</span>
+            <span class="c1"># &#39;frameRateMultiplier&#39;,</span>
+            <span class="s1">&#39;dropMode&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;markerMode&#39;</span>
+        <span class="p">]</span>
+        <span class="n">missing_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_attributes_missing</span><span class="p">(</span><span class="n">smpte_attrs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">missing_attrs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                <span class="n">ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">elem_name</span><span class="o">=</span><span class="s1">&#39;tt:tt&#39;</span><span class="p">,</span>
+                    <span class="n">attr_names</span><span class="o">=</span><span class="n">missing_attrs</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__semantic_test_smpte_attrs_absent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">smpte_attrs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;dropMode&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;markerMode&#39;</span>
+        <span class="p">]</span>
+        <span class="n">extra_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_attributes_present</span><span class="p">(</span><span class="n">smpte_attrs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra_attrs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                <span class="n">ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">elem_name</span><span class="o">=</span><span class="s1">&#39;tt:tt&#39;</span><span class="p">,</span>
+                    <span class="n">attr_names</span><span class="o">=</span><span class="n">extra_attrs</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__semantic_test_smpte_attr_combinations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: SMPTE validation(low priority) #52</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># The tt element adds itself to the semantic dataset to help classes lower down the line to locate contraining</span>
+        <span class="c1"># attributes.</span>
+        <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_smpte_attrs_present</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_smpte_attrs_absent</span><span class="p">()</span></div>
+
+<span class="n">raw</span><span class="o">.</span><span class="n">tt_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">tt_type</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="p_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.p_type">[docs]</a><span class="k">class</span> <span class="nc">p_type</span><span class="p">(</span><span class="n">TimeBaseValidationMixin</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">p_type</span><span class="p">):</span>
+
+    <span class="n">_attr_en_pre</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span></div>
+
+<span class="n">raw</span><span class="o">.</span><span class="n">p_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">p_type</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="span_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.span_type">[docs]</a><span class="k">class</span> <span class="nc">span_type</span><span class="p">(</span><span class="n">TimeBaseValidationMixin</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">span_type</span><span class="p">):</span>
+
+    <span class="n">_attr_en_pre</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span></div>
+
+<span class="n">raw</span><span class="o">.</span><span class="n">span_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">span_type</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="div_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.div_type">[docs]</a><span class="k">class</span> <span class="nc">div_type</span><span class="p">(</span><span class="n">TimeBaseValidationMixin</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">div_type</span><span class="p">):</span>
+
+    <span class="n">_attr_en_pre</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span></div>
+
+<span class="n">raw</span><span class="o">.</span><span class="n">div_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">div_type</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="body_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.body_type">[docs]</a><span class="k">class</span> <span class="nc">body_type</span><span class="p">(</span><span class="n">TimeBaseValidationMixin</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">body_type</span><span class="p">):</span>
+
+    <span class="n">_attr_en_pre</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;dur&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">pyxb</span><span class="o">.</span><span class="n">namespace</span><span class="o">.</span><span class="n">ExpandedName</span><span class="p">(</span><span class="n">Namespace</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">():</span> <span class="n">TimeBaseValidationMixin</span><span class="o">.</span><span class="n">_pre_timing_set_attribute</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span></div>
+
+<span class="n">raw</span><span class="o">.</span><span class="n">body_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">body_type</span><span class="p">)</span>
+
+
+<span class="c1"># Namespace.setPrefix(&#39;tt&#39;)</span>
+<span class="c1"># _Namespace_ttm.setPrefix(&#39;ttm&#39;)</span>
+<span class="c1"># _Namespace_ttp.setPrefix(&#39;ttp&#39;)</span>
+<span class="c1"># _Namespace_tts.setPrefix(&#39;tts&#39;)</span>
+<span class="c1"># _Namespace_ebuttm.setPrefix(&#39;ebuttm&#39;)</span>
+<span class="c1"># _Namespace_ebuttp.setPrefix(&#39;ebuttp&#39;)</span>
+<span class="c1"># _Namespace_ebutts.setPrefix(&#39;ebutts&#39;)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

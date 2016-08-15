@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>carriage Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="next" title="clocks Package" href="ebu_tt_live.clocks.html"/>
+        <link rel="prev" title="raw Package" href="ebu_tt_live.bindings.raw.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">carriage Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.filesystem"><code class="docutils literal"><span class="pre">filesystem</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.twisted"><code class="docutils literal"><span class="pre">twisted</span></code> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
+      
+    <li>carriage Package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/ebu_tt_live.carriage.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="carriage-package">
+<h1>carriage Package<a class="headerlink" href="#carriage-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ebu_tt_live.carriage.filesystem">
+<span id="filesystem-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">filesystem</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.filesystem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemConsumerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ConsumerCarriageImpl</span></code></p>
+<p>This class is responsible for setting the document object from the xml and set its availability time.
+The document is then sent to the node.</p>
+<dl class="method">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.on_new_data">
+<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.on_new_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemProducerImpl</code><span class="sig-paren">(</span><em>dirpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ProducerCarriageImpl</span></code></p>
+<p>This class implements a carriage mechanism to output produced documents
+to the file system. Its constructor takes a mandatory argument : the path to
+the desired output folder. If the folder does not exist it will be created.
+Each document handled by this carriage implementation is written in an xml file
+in the output folder.
+Along with the xml files, a manifest_sequenceIdentifier.txt file is also written in the output folder.
+Each time an xml file is written, a line using the following format is added to the manifest :</p>
+<p><cite>availability_time,path_to_xml_file</cite></p>
+<p>The manifest file gives the availability time for each document along with the path to the
+corresponding document.
+The timeline used for the availability times is the same as the one used in the documents,
+indeed the carriage implementation uses the same clock (or time reference) as the node that
+produces the documents.
+The writing order and thus the reading order is from top to bottom. Please note that depending on the
+timebase used by the producer node time may loop (going to the next day). It can loop with
+<cite>ttp:timeBase=&#8221;clock&#8221;</cite> or <cite>ttp:timeBase=&#8221;smpte&#8221;</cite>, but not with <cite>ttp:timeBase=&#8221;media&#8221;</cite>.
+If the output folder already exists and it contains a manifest_sequenceIdentifier.txt file for the same
+document sequence, the last line of the existing manifest file is parsed to get the last used sequence number
+and the current sequence is set to start from the next sequence number.</p>
+<dl class="method">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document">
+<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemReader">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemReader</code><span class="sig-paren">(</span><em>manifest_path</em>, <em>custom_consumer</em>, <em>do_tail</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemReader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemReader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class is responsible for reading the manifest file and sending the corresponding
+availability times and xml file&#8217;s content to its _custom_consumer. Important note : the
+manifest file and the xml documents have to be in the same folder (it is the default behavior
+of the producer).</p>
+<dl class="method">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemReader.resume_reading">
+<code class="descname">resume_reading</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemReader.resume_reading"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemReader.resume_reading" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.carriage.filesystem.timedelta_to_str_manifest">
+<code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">timedelta_to_str_manifest</code><span class="sig-paren">(</span><em>timed</em>, <em>time_base</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#timedelta_to_str_manifest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.timedelta_to_str_manifest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.carriage.filesystem.timestr_manifest_to_timedelta">
+<code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">timestr_manifest_to_timedelta</code><span class="sig-paren">(</span><em>timestr</em>, <em>time_base</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#timestr_manifest_to_timedelta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.timestr_manifest_to_timedelta" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.carriage.twisted">
+<span id="twisted-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">twisted</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.twisted" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.carriage.twisted.TwistedConsumerImpl">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.twisted.</code><code class="descname">TwistedConsumerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedConsumerImpl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ConsumerCarriageImpl</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.carriage.twisted.TwistedConsumerImpl.on_new_data">
+<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedConsumerImpl.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedConsumerImpl.on_new_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.twisted.</code><code class="descname">TwistedProducerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ProducerCarriageImpl</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl.emit_document">
+<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl.emit_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl.register_twisted_producer">
+<code class="descname">register_twisted_producer</code><span class="sig-paren">(</span><em>producer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl.register_twisted_producer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl.register_twisted_producer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.clocks.html" class="btn btn-neutral float-right" title="clocks Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ebu_tt_live.bindings.raw.html" class="btn btn-neutral" title="raw Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

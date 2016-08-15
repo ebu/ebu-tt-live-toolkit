@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.scripts.common &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>ebu_tt_live.scripts.common</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.scripts.common</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">configobj</span> <span class="k">import</span> <span class="n">ConfigObj</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="k">import</span> <span class="n">PunktSentenceTokenizer</span><span class="p">,</span> <span class="n">BlanklineTokenizer</span><span class="p">,</span> <span class="n">WhitespaceTokenizer</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">twisted.python</span> <span class="k">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">twisted_log</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">log_format</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">%(levelname)s</span><span class="s1">] (</span><span class="si">%(asctime)s</span><span class="s1">) in </span><span class="si">%(name)s</span><span class="s1">[</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
+<span class="n">yaml_file</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^.*(\.yml|\.yaml)(\w)?$&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_loggers"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.create_loggers">[docs]</a><span class="k">def</span> <span class="nf">create_loggers</span><span class="p">():</span>
+    <span class="c1"># Pipe Twisted&#39;s loggers into python logging package</span>
+    <span class="n">log_observer</span> <span class="o">=</span> <span class="n">twisted_log</span><span class="o">.</span><span class="n">PythonLoggingObserver</span><span class="p">()</span>
+    <span class="n">log_observer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="c1"># Python logging setup</span>
+    <span class="c1"># TODO: Make this configurable (https://github.com/bbc/ebu-tt-live-toolkit/issues/15)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">log_format</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="parse_config"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.parse_config">[docs]</a><span class="k">def</span> <span class="nf">parse_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">module_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">ipdb</span><span class="p">;</span> <span class="n">ipdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">yaml_file</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;YAML config mode&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="tokenize_english_document"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.tokenize_english_document">[docs]</a><span class="k">def</span> <span class="nf">tokenize_english_document</span><span class="p">(</span><span class="n">input_text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a crude tokenizer for input conversations in English.</span>
+<span class="sd">    :param input_text:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">end_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">block_tokenizer</span> <span class="o">=</span> <span class="n">BlanklineTokenizer</span><span class="p">()</span>
+    <span class="n">sentence_tokenizer</span> <span class="o">=</span> <span class="n">PunktSentenceTokenizer</span><span class="p">()</span>
+    <span class="n">word_tokenizer</span> <span class="o">=</span> <span class="n">WhitespaceTokenizer</span><span class="p">()</span>
+    <span class="c1"># using the 38 characters in one line rule from ITV subtitle guidelines</span>
+    <span class="n">characters_per_line</span> <span class="o">=</span> <span class="mi">38</span>
+    <span class="n">lines_per_subtitle</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="c1"># We have one speaker</span>
+        <span class="n">sentences</span> <span class="o">=</span> <span class="n">sentence_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="c1"># We have the sentences</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
+            <span class="n">words</span> <span class="o">=</span> <span class="n">word_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+            <span class="n">reverse_words</span> <span class="o">=</span> <span class="n">words</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">line_full</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">while</span> <span class="n">reverse_words</span><span class="p">:</span>
+                <span class="n">word</span> <span class="o">=</span> <span class="n">reverse_words</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">longer_line</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">current_line</span><span class="p">,</span> <span class="n">word</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">longer_line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">characters_per_line</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_line</span><span class="p">):</span>
+                    <span class="c1"># The longer line is overreaching boundaries</span>
+                    <span class="n">reverse_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">characters_per_line</span><span class="p">:</span>
+                    <span class="c1"># Very long words</span>
+                    <span class="n">current_line</span> <span class="o">=</span> <span class="n">longer_line</span>
+                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current_line</span> <span class="o">=</span> <span class="n">longer_line</span>
+
+                <span class="k">if</span> <span class="n">line_full</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
+                    <span class="n">current_line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">lines_per_subtitle</span><span class="p">:</span>
+                    <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">current_line</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">end_list</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

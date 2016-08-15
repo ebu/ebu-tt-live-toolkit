@@ -1,0 +1,253 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Validation framework &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Document and sequence validation" href="validation.html"/>
+        <link rel="next" title="User input producer" href="user_input_producer.html"/>
+        <link rel="prev" title="Document and sequence validation" href="validation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="validation.html">Document and sequence validation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Validation framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#semantic-parser-patch">Semantic parser patch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
+      
+          <li><a href="validation.html">Document and sequence validation</a> &raquo;</li>
+      
+    <li>Validation framework</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/validation_framework.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="validation-framework">
+<h1>Validation framework<a class="headerlink" href="#validation-framework" title="Permalink to this headline">¶</a></h1>
+<p>The validation framework consists of 2 kinds of validation: syntactic and semantic. The PyXB library does
+a pretty good job validating the syntax but it does not provide any tooling to process any semantics that could not
+be described in XSD 1.0 (PyXB does not understand XSD 1.1 and xpath assertions).</p>
+<dl class="docutils">
+<dt>Example:</dt>
+<dd>if tt:tt has timeBase=clock smpteTimingType must not be present anywhere in the document.</dd>
+</dl>
+<p>Elements/types are independent and according to the principles of OOP they do not know much about one another.
+In order to provide semantic validation there is need for a semantic validation context.
+A common object that shared information can be collected to and each type/element receives it as a parameter in its
+semantic validation hooks if the element needs to take part in the semantic validation process.</p>
+<p>For an element to be part of the semantic validation flow it needs to inherit the
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.SemanticValidationMixin</span></code></a> mixin, which contains the boilerplate
+that enables semantic validation and the hook functions, that the developer can override and write custom
+functionality that effectively does the semantic validation of the type.</p>
+</div>
+<div class="section" id="semantic-parser-patch">
+<h1>Semantic parser patch<a class="headerlink" href="#semantic-parser-patch" title="Permalink to this headline">¶</a></h1>
+<p>PyXB uses the same bindings and same object model for 2 very different purposes. On one hand it allows the user
+to programmatically create syntactically valid XML documents, on the other hand it can pick up an XML document and
+parse it.  When the document is parsed PyXB does most of the heavy lifting and the user does not have much access
+to the logic of the parser. The problem with this parser is the fact that it does not hold on to semantic context so
+it follows the XSD and instantiates the elements/attributes using the values from the parsed xml. The problem occurs
+when 2 types are just vaguely similar and they belong in the same union in the structure so the parser based on the
+information it has in context cannot make a decision which one to instantiate. This causes however an issue with
+the timingType union, which has fullClockTimingType and limitedClockTimingType. In the first 99 hours the 2 type
+overlaps in values so PyXB will instantiate the first one it can and continues on to the next attribute. This conflicts
+with the semantic validation, which expects particularly one timing type in that case and it may receive the wrong one.</p>
+<p>Hence the SemanticValidationMixin also has an overloaded _setAttribute function, which applies 2 hooks for the types
+in which custom code can enforce the right behaviour. The complexity and layered architecture of the parser limits the
+capability to pass around a context object the same way the semantic validation can so in the
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.xml_parsing_context" title="ebu_tt_live.bindings.pyxb_utils.xml_parsing_context"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.xml_parsing_context</span></code></a> context manager there is a threadLocal object that
+keeps a similar dictionary to the one used at the semantic validation. The difference is that the
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.CreateFromDocument" title="ebu_tt_live.bindings.CreateFromDocument"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.CreateFromDocument()</span></code></a> function resets the context by using the context manager
+class and instead of the context being passed around as a parameter among functions the binding classes call the
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context" title="ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context()</span></code></a> function to gain access to the parsing context object.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="user_input_producer.html" class="btn btn-neutral float-right" title="User input producer" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="validation.html" class="btn btn-neutral" title="Document and sequence validation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

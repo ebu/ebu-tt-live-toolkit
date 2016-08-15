@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.clocks.base &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>ebu_tt_live.clocks.base</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.clocks.base</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+
+
+<div class="viewcode-block" id="Clock"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock">[docs]</a><span class="k">class</span> <span class="nc">Clock</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents our timing source that we use to get time related</span>
+<span class="sd">    information when document processing happens. Most of the utility</span>
+<span class="sd">    functions are meant to stay here and the subclasses should implement get_time only.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_clock_mode</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_time_base</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="c1"># Implemented to be used with the manifest file, allows us to save a fix</span>
+    <span class="c1"># time that we can read back later.</span>
+    <span class="n">_fixed_time</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_use_fixed_time</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Clock.get_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.get_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :return: datetime.timedelta object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_fixed_time</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_real_clock_time</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Clock.get_real_clock_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.get_real_clock_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_real_clock_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Implemented in descendant classes</span>
+<span class="sd">        :return: datetime.timedelta object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">clock_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clock_mode</span>
+
+    <span class="nd">@clock_mode</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">clock_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clock_mode</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_base</span>
+
+<div class="viewcode-block" id="Clock.set_fixed_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.set_fixed_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_fixed_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Registers a time in the Clock object. If fixed-time mode is active, e.g. `set_fixed_time_mode(true)`</span>
+<span class="sd">        was called on self, then every call to `get_time()` will return the registered time. The parameter</span>
+<span class="sd">        `value` must contain the time as a datetime.timedelta. If it is not a datetime.timedelta, a `TypeError`</span>
+<span class="sd">        exception will be raised.</span>
+<span class="sd">        :param value: the time to register as the fixed time of the Clock. Must of type datetime.timedelta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_time</span> <span class="o">=</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Clock.set_fixed_time_mode"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.set_fixed_time_mode">[docs]</a>    <span class="k">def</span> <span class="nf">set_fixed_time_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Used to activate or deactivate the fixed-time mode. If `value` is True the clock will be set in</span>
+<span class="sd">        fixed-time mode, while this mode is active any call to `get_time()` will return the time registered</span>
+<span class="sd">        with `set_fixed_time` as the fixed time of clock. If `value` is False, the fixed-time mode is</span>
+<span class="sd">        deactivated and the real time of the clock is returned when `get_time()` is called. If `value` is not of</span>
+<span class="sd">        type `bool` a TypeError exception will be raised.</span>
+<span class="sd">        :param value: a bool. True to activate fixed-time mode, False to deactivate fixed-time mode.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_fixed_time</span> <span class="o">=</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Clock.is_fixed_time_mode"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.is_fixed_time_mode">[docs]</a>    <span class="k">def</span> <span class="nf">is_fixed_time_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the current status of the fixed-time mode.</span>
+<span class="sd">        :return: True if fixed-time mode is currently active, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_fixed_time</span></div>
+
+<div class="viewcode-block" id="Clock.start"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="Clock.stop"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.base.Clock.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

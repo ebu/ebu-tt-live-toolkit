@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>scripts Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="next" title="twisted Package" href="ebu_tt_live.twisted.html"/>
+        <link rel="prev" title="node Package" href="ebu_tt_live.node.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">scripts Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.common"><code class="docutils literal"><span class="pre">common</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_producer"><code class="docutils literal"><span class="pre">ebu_simple_producer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ebu-user-input-consumer-module"><code class="docutils literal"><span class="pre">ebu_user_input_consumer</span></code> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
+      
+    <li>scripts Package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/ebu_tt_live.scripts.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="scripts-package">
+<h1>scripts Package<a class="headerlink" href="#scripts-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ebu_tt_live.scripts.common">
+<span id="common-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">common</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.common" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ebu_tt_live.scripts.common.create_loggers">
+<code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">create_loggers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#create_loggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.create_loggers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.scripts.common.parse_config">
+<code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">parse_config</code><span class="sig-paren">(</span><em>config</em>, <em>module_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#parse_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.parse_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.scripts.common.tokenize_english_document">
+<code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">tokenize_english_document</code><span class="sig-paren">(</span><em>input_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#tokenize_english_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.tokenize_english_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a crude tokenizer for input conversations in English.
+:param input_text:
+:return:</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.scripts.ebu_dummy_encoder">
+<span id="ebu-dummy-encoder-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ebu_tt_live.scripts.ebu_dummy_encoder.main">
+<code class="descclassname">ebu_tt_live.scripts.ebu_dummy_encoder.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_dummy_encoder.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_dummy_encoder.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.scripts.ebu_interactive_shell">
+<span id="ebu-interactive-shell-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_interactive_shell" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ebu_tt_live.scripts.ebu_interactive_shell.main">
+<code class="descclassname">ebu_tt_live.scripts.ebu_interactive_shell.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_interactive_shell.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_interactive_shell.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.scripts.ebu_simple_consumer">
+<span id="ebu-simple-consumer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_simple_consumer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ebu_tt_live.scripts.ebu_simple_consumer.main">
+<code class="descclassname">ebu_tt_live.scripts.ebu_simple_consumer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_simple_consumer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_simple_consumer.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.scripts.ebu_simple_producer">
+<span id="ebu-simple-producer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_simple_producer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_simple_producer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="ebu_tt_live.scripts.ebu_simple_producer.main">
+<code class="descclassname">ebu_tt_live.scripts.ebu_simple_producer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_simple_producer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_simple_producer.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="ebu-user-input-consumer-module">
+<h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_user_input_consumer</span></code> Module<a class="headerlink" href="#ebu-user-input-consumer-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ebu_tt_live.scripts.ebu_user_input_consumer"></span><dl class="function">
+<dt id="ebu_tt_live.scripts.ebu_user_input_consumer.main">
+<code class="descclassname">ebu_tt_live.scripts.ebu_user_input_consumer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_user_input_consumer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_user_input_consumer.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.twisted.html" class="btn btn-neutral float-right" title="twisted Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ebu_tt_live.node.html" class="btn btn-neutral" title="node Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

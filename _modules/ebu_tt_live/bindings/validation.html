@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.bindings.validation &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+        <link rel="up" title="ebu_tt_live.bindings" href="../bindings.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../bindings.html">ebu_tt_live.bindings</a> &raquo;</li>
+      
+    <li>ebu_tt_live.bindings.validation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.bindings.validation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains all the pyxb helpers needed for enabling a concise semantic validation approach.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pyxb</span> <span class="k">import</span> <span class="n">ValidationConfig</span><span class="p">,</span> <span class="n">GlobalValidationConfig</span>
+<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="k">import</span> <span class="n">_TypeBinding_mixin</span><span class="p">,</span> <span class="n">simpleTypeDefinition</span><span class="p">,</span> <span class="n">complexTypeDefinition</span><span class="p">,</span> <span class="n">NonElementContent</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">SemanticValidationError</span>
+<span class="kn">from</span> <span class="nn">.pyxb_utils</span> <span class="k">import</span> <span class="n">get_xml_parsing_context</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SemanticValidationMixin"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin">[docs]</a><span class="k">class</span> <span class="nc">SemanticValidationMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This mixin contains the necessary boilerplate to enable semantic validation as well as enabling _setAttribute hooks</span>
+<span class="sd">    to help populate the context object with useful data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># This dictionary exists to override attribute setters. Used in contextual parsing</span>
+    <span class="n">_attr_en_pre</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_attr_en_post</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="SemanticValidationMixin._setAttribute"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin._setAttribute">[docs]</a>    <span class="k">def</span> <span class="nf">_setAttribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_en</span><span class="p">,</span> <span class="n">value_lex</span><span class="p">):</span>
+        <span class="n">uri_tuple</span> <span class="o">=</span> <span class="n">attr_en</span><span class="o">.</span><span class="n">uriTuple</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">uri_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_pre</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_pre</span><span class="p">[</span><span class="n">uri_tuple</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_en</span><span class="p">,</span> <span class="n">value_lex</span><span class="p">)</span>
+        <span class="n">au</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_setAttribute</span><span class="p">(</span><span class="n">attr_en</span><span class="p">,</span> <span class="n">value_lex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">uri_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_post</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_post</span><span class="p">[</span><span class="n">uri_tuple</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">au</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">au</span></div>
+
+<div class="viewcode-block" id="SemanticValidationMixin._semantic_before_traversal"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin._semantic_before_traversal">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Semantic validation preprocess hook.</span>
+<span class="sd">        :param dataset: semantic context object</span>
+<span class="sd">        :param element_content: the element itself</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SemanticValidationMixin._semantic_after_traversal"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin._semantic_after_traversal">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_after_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Semantic validation postprocess hook.</span>
+<span class="sd">        :param dataset: semantic context object</span>
+<span class="sd">        :param element_content: the element itself</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SemanticValidationMixin._semantic_attributes_missing"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin._semantic_attributes_missing">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_attributes_missing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Making sure that attributes specified in attr_names have no value defined on the binding.</span>
+<span class="sd">        :param attr_names: The attributes that were defined on the element.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attr_names</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="SemanticValidationMixin._semantic_attributes_present"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin._semantic_attributes_present">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_attributes_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Making sure that attributes specified in attr_names have a value defined on the binding</span>
+<span class="sd">        :param attr_names: The missing attributes that were not defined.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attr_names</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
+
+
+
+<div class="viewcode-block" id="SemanticDocumentMixin"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticDocumentMixin">[docs]</a><span class="k">class</span> <span class="nc">SemanticDocumentMixin</span><span class="p">(</span><span class="n">SemanticValidationMixin</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SemanticDocumentMixin._semantic_before_validation"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticDocumentMixin._semantic_before_validation">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_before_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="SemanticDocumentMixin._semantic_after_validation"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticDocumentMixin._semantic_after_validation">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_after_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        After PyXB successfully validated the syntax this hook runs where the user may execute custom code.</span>
+
+<span class="sd">        At this point the validation of syntax has passed and the semantic validation can now begin.</span>
+<span class="sd">        A new traversal of the structure is needed to get the appropriate context down to individual parts of the nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Let&#39;s initiate DFS</span>
+
+        <span class="c1"># Create new semantic context object</span>
+        <span class="n">semantic_dataset</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Collections of visited elements</span>
+        <span class="n">pre_visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">post_visited</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">to_visit</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Call preprocess hooks for tt element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_before_traversal</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">semantic_dataset</span><span class="p">)</span>
+
+        <span class="n">to_visit</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_validatedChildren</span><span class="p">()))</span>
+
+        <span class="k">while</span> <span class="n">to_visit</span><span class="p">:</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">to_visit</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">post_visited</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">NonElementContent</span><span class="p">):</span>
+                <span class="c1"># This means we visited the current element already.</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">pre_visited</span><span class="p">:</span>
+                <span class="c1"># This means we visited the current element&#39;s preprocessing and now postprocessing is in order</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;post visit step: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                <span class="c1"># Call postprocess hooks of current element</span>
+                <span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_semantic_after_traversal</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">semantic_dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+                <span class="n">post_visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># This means the current element has not been processed yet. Preprocessing is in order.</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;pre visit step: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">):</span>  <span class="c1"># WARNING: Refactoring naming changes</span>
+                    <span class="c1"># Call preprocess hooks of current element</span>
+                    <span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_semantic_before_traversal</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">semantic_dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">content</span><span class="p">)</span>
+                    <span class="n">pre_visited</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+                    <span class="n">to_visit</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;_validatedChildren&#39;</span><span class="p">):</span>
+                    <span class="n">ordered_children</span> <span class="o">=</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">_validatedChildren</span><span class="p">())</span>
+                    <span class="n">to_visit</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">ordered_children</span><span class="p">)</span>
+
+        <span class="c1"># Call postprocess hooks for tt element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_after_traversal</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">semantic_dataset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SemanticDocumentMixin._validateBinding_vx"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticDocumentMixin._validateBinding_vx">[docs]</a>    <span class="k">def</span> <span class="nf">_validateBinding_vx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        At this point we can hook into PyXB&#39;s validation flow and call our hooks:</span>
+<span class="sd">        _semantic_before_validation() and _semantic_after_validation()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Step1: Before</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_before_validation</span><span class="p">()</span>
+
+        <span class="c1"># Step2: DFS</span>
+        <span class="c1"># This line is hacky as f*** and non-standard way of getting the desired behaviour but python and MRO are not</span>
+        <span class="c1"># always man&#39;s best friend...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__bases__</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_validateBinding_vx</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Step3: Process current object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_after_validation</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="TimeBaseValidationMixin"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimeBaseValidationMixin">[docs]</a><span class="k">class</span> <span class="nc">TimeBaseValidationMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This mixin is meant to be applied to timed elements (body, div, p, span) and provides parser hooks for timing</span>
+<span class="sd">    attributes as well as a generic semantic validation for timing attributes in the document&#39;s timeBase.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="TimeBaseValidationMixin._pre_timing_set_attribute"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimeBaseValidationMixin._pre_timing_set_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_timing_set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_en</span><span class="p">,</span> <span class="n">attr_use</span><span class="p">):</span>
+        <span class="c1"># Pass in the timing_attribute_name to the context to help the timing type constructor refuse creation</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">get_xml_parsing_context</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This means we are in XML parsing mode</span>
+            <span class="n">context</span><span class="p">[</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr_en</span><span class="o">.</span><span class="n">localName</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TimeBaseValidationMixin._post_timing_set_attribute"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimeBaseValidationMixin._post_timing_set_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">_post_timing_set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_use</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">get_xml_parsing_context</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Clean up after successful creation</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+    <span class="c1"># The mixin approach is used since the inspected elements are all attributes of the element so they do not</span>
+    <span class="c1"># take part in the traversal directly.</span>
+<div class="viewcode-block" id="TimeBaseValidationMixin._semantic_timebase_validation"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimeBaseValidationMixin._semantic_timebase_validation">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_timebase_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
+        <span class="n">time_base</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">timeBase</span>
+        <span class="c1"># Check typing of timing arguments against the timebase</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span> <span class="s1">&#39;compatible_timebases&#39;</span><span class="p">):</span>
+            <span class="n">timebases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="o">.</span><span class="n">compatible_timebases</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">time_base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">timebases</span><span class="p">[</span><span class="s1">&#39;begin&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                    <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">attr_type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">),</span>
+                        <span class="n">attr_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                        <span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;begin&#39;</span><span class="p">,</span>
+                        <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;dur&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dur</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="p">,</span> <span class="s1">&#39;compatible_timebases&#39;</span><span class="p">):</span>
+            <span class="n">timebases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="o">.</span><span class="n">compatible_timebases</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">time_base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">timebases</span><span class="p">[</span><span class="s1">&#39;dur&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                    <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">attr_type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="p">),</span>
+                        <span class="n">attr_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="p">,</span>
+                        <span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;dur&#39;</span><span class="p">,</span>
+                        <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="s1">&#39;compatible_timebases&#39;</span><span class="p">):</span>
+            <span class="n">timebases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">compatible_timebases</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">time_base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">timebases</span><span class="p">[</span><span class="s1">&#39;end&#39;</span><span class="p">]:</span>
+                <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                    <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">attr_type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">),</span>
+                        <span class="n">attr_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                        <span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;end&#39;</span><span class="p">,</span>
+                        <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span>
+                    <span class="p">)</span>
+                <span class="p">)</span></div></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

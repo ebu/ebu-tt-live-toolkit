@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>clocks Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="next" title="configspec Package" href="ebu_tt_live.configspec.html"/>
+        <link rel="prev" title="carriage Package" href="ebu_tt_live.carriage.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">clocks Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.clocks.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.clocks.local"><code class="docutils literal"><span class="pre">local</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.clocks.media"><code class="docutils literal"><span class="pre">media</span></code> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
+      
+    <li>clocks Package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/ebu_tt_live.clocks.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="clocks-package">
+<h1>clocks Package<a class="headerlink" href="#clocks-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ebu_tt_live.clocks.base">
+<span id="base-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">base</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.clocks.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.clocks.base.Clock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.clocks.base.</code><code class="descname">Clock</code><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents our timing source that we use to get time related
+information when document processing happens. Most of the utility
+functions are meant to stay here and the subclasses should implement get_time only.</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.clocks.base.Clock.clock_mode">
+<code class="descname">clock_mode</code><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.clock_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.get_real_clock_time">
+<code class="descname">get_real_clock_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.get_real_clock_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.get_real_clock_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implemented in descendant classes
+:return: datetime.timedelta object</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.get_time">
+<code class="descname">get_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.get_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.get_time" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">datetime.timedelta object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.is_fixed_time_mode">
+<code class="descname">is_fixed_time_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.is_fixed_time_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.is_fixed_time_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current status of the fixed-time mode.
+:return: True if fixed-time mode is currently active, False otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.set_fixed_time">
+<code class="descname">set_fixed_time</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.set_fixed_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.set_fixed_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a time in the Clock object. If fixed-time mode is active, e.g. <cite>set_fixed_time_mode(true)</cite>
+was called on self, then every call to <cite>get_time()</cite> will return the registered time. The parameter
+<cite>value</cite> must contain the time as a datetime.timedelta. If it is not a datetime.timedelta, a <cite>TypeError</cite>
+exception will be raised.
+:param value: the time to register as the fixed time of the Clock. Must of type datetime.timedelta</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.set_fixed_time_mode">
+<code class="descname">set_fixed_time_mode</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.set_fixed_time_mode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.set_fixed_time_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to activate or deactivate the fixed-time mode. If <cite>value</cite> is True the clock will be set in
+fixed-time mode, while this mode is active any call to <cite>get_time()</cite> will return the time registered
+with <cite>set_fixed_time</cite> as the fixed time of clock. If <cite>value</cite> is False, the fixed-time mode is
+deactivated and the real time of the clock is returned when <cite>get_time()</cite> is called. If <cite>value</cite> is not of
+type <cite>bool</cite> a TypeError exception will be raised.
+:param value: a bool. True to activate fixed-time mode, False to deactivate fixed-time mode.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.base.Clock.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/base.html#Clock.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.clocks.base.Clock.time_base">
+<code class="descname">time_base</code><a class="headerlink" href="#ebu_tt_live.clocks.base.Clock.time_base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.clocks.local">
+<span id="local-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">local</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.clocks.local" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.clocks.local.LocalMachineClock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.clocks.local.</code><code class="descname">LocalMachineClock</code><a class="reference internal" href="_modules/ebu_tt_live/clocks/local.html#LocalMachineClock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.local.LocalMachineClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.clocks.base.Clock" title="ebu_tt_live.clocks.base.Clock"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.clocks.base.Clock</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.clocks.local.LocalMachineClock.get_real_clock_time">
+<code class="descname">get_real_clock_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/local.html#LocalMachineClock.get_real_clock_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.local.LocalMachineClock.get_real_clock_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.clocks.media">
+<span id="media-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">media</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.clocks.media" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.clocks.media.MediaClock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.clocks.media.</code><code class="descname">MediaClock</code><a class="reference internal" href="_modules/ebu_tt_live/clocks/media.html#MediaClock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.media.MediaClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.clocks.base.Clock" title="ebu_tt_live.clocks.base.Clock"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.clocks.base.Clock</span></code></a></p>
+<p>MediaClock is a reference clock that simulates the mediastream&#8217;s time by interpolating the local machine time
+from the last adjusted reference time.</p>
+<dl class="method">
+<dt id="ebu_tt_live.clocks.media.MediaClock.adjust_time">
+<code class="descname">adjust_time</code><span class="sig-paren">(</span><em>current_time</em>, <em>local_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/media.html#MediaClock.adjust_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.media.MediaClock.adjust_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>By default the current local time is used as reference point but optionally can be adjusted to a given time
+:param current_time:
+:param local_time:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.media.MediaClock.get_machine_time">
+<code class="descname">get_machine_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/media.html#MediaClock.get_machine_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.media.MediaClock.get_machine_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.clocks.media.MediaClock.get_real_clock_time">
+<code class="descname">get_real_clock_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/clocks/media.html#MediaClock.get_real_clock_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.media.MediaClock.get_real_clock_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.clocks.media.ReferenceTime">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.clocks.media.</code><code class="descname">ReferenceTime</code><span class="sig-paren">(</span><em>local</em>, <em>remote</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.clocks.media.ReferenceTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.clocks.media.ReferenceTime.local">
+<code class="descname">local</code><a class="headerlink" href="#ebu_tt_live.clocks.media.ReferenceTime.local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.clocks.media.ReferenceTime.remote">
+<code class="descname">remote</code><a class="headerlink" href="#ebu_tt_live.clocks.media.ReferenceTime.remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.clocks.media.SMPTEClock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.clocks.media.</code><code class="descname">SMPTEClock</code><a class="reference internal" href="_modules/ebu_tt_live/clocks/media.html#SMPTEClock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.clocks.media.SMPTEClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.clocks.media.MediaClock" title="ebu_tt_live.clocks.media.MediaClock"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.clocks.media.MediaClock</span></code></a></p>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.configspec.html" class="btn btn-neutral float-right" title="configspec Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ebu_tt_live.carriage.html" class="btn btn-neutral" title="carriage Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

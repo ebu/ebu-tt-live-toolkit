@@ -1,0 +1,476 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>twisted Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="prev" title="scripts Package" href="ebu_tt_live.scripts.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">twisted Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">twisted</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.twisted.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.twisted.node"><code class="docutils literal"><span class="pre">node</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.twisted.websocket"><code class="docutils literal"><span class="pre">websocket</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
+      
+    <li>twisted Package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/ebu_tt_live.twisted.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="twisted-package">
+<h1>twisted Package<a class="headerlink" href="#twisted-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><code class="xref py py-mod docutils literal"><span class="pre">twisted</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ebu_tt_live.twisted"></span></div>
+<div class="section" id="module-ebu_tt_live.twisted.base">
+<span id="base-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">base</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.twisted.base" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ebu_tt_live.twisted.node">
+<span id="node-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">node</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.twisted.node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.twisted.node.TwistedConsumer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.node.</code><code class="descname">TwistedConsumer</code><span class="sig-paren">(</span><em>custom_consumer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedConsumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.node.TwistedConsumer.registerProducer">
+<code class="descname">registerProducer</code><span class="sig-paren">(</span><em>producer</em>, <em>streaming</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedConsumer.registerProducer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedConsumer.registerProducer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.node.TwistedConsumer.unregisterProducer">
+<code class="descname">unregisterProducer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedConsumer.unregisterProducer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedConsumer.unregisterProducer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.node.TwistedConsumer.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedConsumer.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedConsumer.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.twisted.node.TwistedPullProducer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.node.</code><code class="descname">TwistedPullProducer</code><span class="sig-paren">(</span><em>consumer</em>, <em>custom_producer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedPullProducer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedPullProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.node.TwistedPullProducer.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>channel</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedPullProducer.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedPullProducer.emit_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.node.TwistedPullProducer.resumeProducing">
+<code class="descname">resumeProducing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedPullProducer.resumeProducing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedPullProducer.resumeProducing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.node.TwistedPullProducer.stopProducing">
+<code class="descname">stopProducing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/node.html#TwistedPullProducer.stopProducing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.node.TwistedPullProducer.stopProducing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.twisted.websocket">
+<span id="websocket-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">websocket</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.twisted.websocket" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.websocket.</code><code class="descname">BroadcastClientFactory</code><span class="sig-paren">(</span><em>url</em>, <em>consumer</em>, <em>channels=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastClientFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">autobahn.twisted.websocket.WebSocketClientFactory</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory.channels">
+<code class="descname">channels</code><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory.channels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory.connect">
+<code class="descname">connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastClientFactory.connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory.connect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory.dataReceived">
+<code class="descname">dataReceived</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastClientFactory.dataReceived"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory.dataReceived" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory.pauseProducing">
+<code class="descname">pauseProducing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastClientFactory.pauseProducing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory.pauseProducing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory.resumeProducing">
+<code class="descname">resumeProducing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastClientFactory.resumeProducing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory.resumeProducing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastClientFactory.stopProducing">
+<code class="descname">stopProducing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastClientFactory.stopProducing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastClientFactory.stopProducing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.websocket.</code><code class="descname">BroadcastServerFactory</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">autobahn.twisted.websocket.WebSocketServerFactory</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.broadcast">
+<code class="descname">broadcast</code><span class="sig-paren">(</span><em>channel</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.broadcast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.broadcast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.listen">
+<code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.listen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.listen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.pull">
+<code class="descname">pull</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.pull" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.registerProducer">
+<code class="descname">registerProducer</code><span class="sig-paren">(</span><em>producer</em>, <em>streaming</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.registerProducer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.registerProducer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.stopFactory">
+<code class="descname">stopFactory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.stopFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.stopFactory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregister" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregisterProducer">
+<code class="descname">unregisterProducer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.unregisterProducer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregisterProducer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.BroadcastServerFactory.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>channel</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#BroadcastServerFactory.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.BroadcastServerFactory.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.twisted.websocket.ClientNodeProtocol">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.websocket.</code><code class="descname">ClientNodeProtocol</code><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#ClientNodeProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.ClientNodeProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">autobahn.twisted.websocket.WebSocketClientProtocol</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.ClientNodeProtocol.onMessage">
+<code class="descname">onMessage</code><span class="sig-paren">(</span><em>payload</em>, <em>isBinary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#ClientNodeProtocol.onMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.ClientNodeProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.ClientNodeProtocol.onOpen">
+<code class="descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#ClientNodeProtocol.onOpen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.ClientNodeProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.ClientNodeProtocol.subscribeChannel">
+<code class="descname">subscribeChannel</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#ClientNodeProtocol.subscribeChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.ClientNodeProtocol.subscribeChannel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.ClientNodeProtocol.unsubscribeChannel">
+<code class="descname">unsubscribeChannel</code><span class="sig-paren">(</span><em>channel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#ClientNodeProtocol.unsubscribeChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.ClientNodeProtocol.unsubscribeChannel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.twisted.websocket.StreamingServerProtocol">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.websocket.</code><code class="descname">StreamingServerProtocol</code><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#StreamingServerProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.StreamingServerProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">autobahn.twisted.websocket.WebSocketServerProtocol</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.StreamingServerProtocol.connectionLost">
+<code class="descname">connectionLost</code><span class="sig-paren">(</span><em>reason</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#StreamingServerProtocol.connectionLost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.StreamingServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.StreamingServerProtocol.onMessage">
+<code class="descname">onMessage</code><span class="sig-paren">(</span><em>payload</em>, <em>isBinary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#StreamingServerProtocol.onMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.StreamingServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.StreamingServerProtocol.onOpen">
+<code class="descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#StreamingServerProtocol.onOpen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.StreamingServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.StreamingServerProtocol.sendMessageOnChannel">
+<code class="descname">sendMessageOnChannel</code><span class="sig-paren">(</span><em>channel</em>, <em>payload</em>, <em>isBinary=False</em>, <em>fragmentSize=None</em>, <em>sync=False</em>, <em>doNotCompress=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#StreamingServerProtocol.sendMessageOnChannel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.StreamingServerProtocol.sendMessageOnChannel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerFactory">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.websocket.</code><code class="descname">UserInputServerFactory</code><span class="sig-paren">(</span><em>url</em>, <em>consumer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">autobahn.twisted.websocket.WebSocketServerFactory</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerFactory.listen">
+<code class="descname">listen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerFactory.listen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerFactory.listen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerFactory.register">
+<code class="descname">register</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerFactory.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerFactory.register" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerFactory.resumeProducing">
+<code class="descname">resumeProducing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerFactory.resumeProducing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerFactory.resumeProducing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerFactory.unregister">
+<code class="descname">unregister</code><span class="sig-paren">(</span><em>client</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerFactory.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerFactory.unregister" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerFactory.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerFactory.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerFactory.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerProtocol">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.twisted.websocket.</code><code class="descname">UserInputServerProtocol</code><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerProtocol"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">autobahn.twisted.websocket.WebSocketServerProtocol</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerProtocol.connectionLost">
+<code class="descname">connectionLost</code><span class="sig-paren">(</span><em>reason</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerProtocol.connectionLost"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerProtocol.connectionLost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerProtocol.onMessage">
+<code class="descname">onMessage</code><span class="sig-paren">(</span><em>payload</em>, <em>isBinary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerProtocol.onMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerProtocol.onMessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerProtocol.onOpen">
+<code class="descname">onOpen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerProtocol.onOpen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerProtocol.onOpen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.twisted.websocket.UserInputServerProtocol.sendMessage">
+<code class="descname">sendMessage</code><span class="sig-paren">(</span><em>payload</em>, <em>isBinary=False</em>, <em>fragmentSize=None</em>, <em>sync=False</em>, <em>doNotCompress=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/twisted/websocket.html#UserInputServerProtocol.sendMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.twisted.websocket.UserInputServerProtocol.sendMessage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="ebu_tt_live.scripts.html" class="btn btn-neutral" title="scripts Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

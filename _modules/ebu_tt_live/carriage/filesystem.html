@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.carriage.filesystem &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>ebu_tt_live.carriage.filesystem</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.carriage.filesystem</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">ProducerCarriageImpl</span><span class="p">,</span> <span class="n">ConsumerCarriageImpl</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">CreateFromDocument</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span><span class="p">,</span> <span class="n">XMLParsingFailed</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_DECODING_XML_FAILED</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="timedelta_to_str_manifest"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.timedelta_to_str_manifest">[docs]</a><span class="k">def</span> <span class="nf">timedelta_to_str_manifest</span><span class="p">(</span><span class="n">timed</span><span class="p">,</span> <span class="n">time_base</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span> <span class="ow">or</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+        <span class="n">hours</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
+        <span class="n">hours</span> <span class="o">+=</span> <span class="n">timed</span><span class="o">.</span><span class="n">days</span> <span class="o">*</span> <span class="mi">24</span>
+        <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="n">milliseconds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">microseconds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="timestr_manifest_to_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.timestr_manifest_to_timedelta">[docs]</a><span class="k">def</span> <span class="nf">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">timestr</span><span class="p">,</span> <span class="n">time_base</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span> <span class="ow">or</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+        <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">timestr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hours</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">),</span> <span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span> <span class="n">milliseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">milliseconds</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="FilesystemProducerImpl"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl">[docs]</a><span class="k">class</span> <span class="nc">FilesystemProducerImpl</span><span class="p">(</span><span class="n">ProducerCarriageImpl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class implements a carriage mechanism to output produced documents</span>
+<span class="sd">    to the file system. Its constructor takes a mandatory argument : the path to</span>
+<span class="sd">    the desired output folder. If the folder does not exist it will be created.</span>
+<span class="sd">    Each document handled by this carriage implementation is written in an xml file</span>
+<span class="sd">    in the output folder.</span>
+<span class="sd">    Along with the xml files, a manifest_sequenceIdentifier.txt file is also written in the output folder.</span>
+<span class="sd">    Each time an xml file is written, a line using the following format is added to the manifest :</span>
+
+<span class="sd">    `availability_time,path_to_xml_file`</span>
+
+<span class="sd">    The manifest file gives the availability time for each document along with the path to the</span>
+<span class="sd">    corresponding document.</span>
+<span class="sd">    The timeline used for the availability times is the same as the one used in the documents,</span>
+<span class="sd">    indeed the carriage implementation uses the same clock (or time reference) as the node that</span>
+<span class="sd">    produces the documents.</span>
+<span class="sd">    The writing order and thus the reading order is from top to bottom. Please note that depending on the</span>
+<span class="sd">    timebase used by the producer node time may loop (going to the next day). It can loop with</span>
+<span class="sd">    `ttp:timeBase=&quot;clock&quot;` or `ttp:timeBase=&quot;smpte&quot;`, but not with `ttp:timeBase=&quot;media&quot;`.</span>
+<span class="sd">    If the output folder already exists and it contains a manifest_sequenceIdentifier.txt file for the same</span>
+<span class="sd">    document sequence, the last line of the existing manifest file is parsed to get the last used sequence number</span>
+<span class="sd">    and the current sequence is set to start from the next sequence number.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_manifest_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_dirpath</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_manifest_file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_manifest_content</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_manifest_time_format</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span> <span class="o">=</span> <span class="n">dirpath</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_content</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="FilesystemProducerImpl.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">manifest_filename</span> <span class="o">=</span> <span class="s2">&quot;manifest_&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">document_sequence</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">manifest_filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">last_line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="c1"># Line has format: time,filename</span>
+                <span class="c1"># Where filename has the format:</span>
+                <span class="c1"># sequenceIdentifier_sequenceNumber.xml</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">last_filename</span> <span class="o">=</span> <span class="n">last_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">last_sequence_number</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">last_filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">document_sequence</span><span class="o">.</span><span class="n">last_sequence_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">last_sequence_number</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">EndOfData</span><span class="p">:</span>
+                <span class="k">break</span></div>
+
+<div class="viewcode-block" id="FilesystemProducerImpl.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="c1"># Handle there the switch and checks to handle the string format to use</span>
+        <span class="c1"># for times in the manifest file depending on your time base.</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">)</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span>
+        <span class="c1"># To be able to format the output we need a datetime.time object and</span>
+        <span class="c1"># not a datetime.timedelta. The next line serves as a converter (adding</span>
+        <span class="c1"># a time with a timedelta gives a time)</span>
+        <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="n">time_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">time_base</span>
+        <span class="n">new_manifest_line</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timedelta_to_str_manifest</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">time_base</span><span class="p">),</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_content</span> <span class="o">+=</span> <span class="n">new_manifest_line</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_manifest_line</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="FilesystemConsumerImpl"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">[docs]</a><span class="k">class</span> <span class="nc">FilesystemConsumerImpl</span><span class="p">(</span><span class="n">ConsumerCarriageImpl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is responsible for setting the document object from the xml and set its availability time.</span>
+<span class="sd">    The document is then sent to the node.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="FilesystemConsumerImpl.on_new_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.on_new_data">[docs]</a>    <span class="k">def</span> <span class="nf">on_new_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">document</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">document</span> <span class="o">=</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">CreateFromDocument</span><span class="p">(</span><span class="n">xml_content</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">ERR_DECODING_XML_FAILED</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">XMLParsingFailed</span><span class="p">(</span><span class="n">ERR_DECODING_XML_FAILED</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">document</span><span class="p">:</span>
+            <span class="n">availability_time</span> <span class="o">=</span> <span class="n">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">time_base</span><span class="p">)</span>
+            <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="o">=</span> <span class="n">availability_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="FilesystemReader"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemReader">[docs]</a><span class="k">class</span> <span class="nc">FilesystemReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is responsible for reading the manifest file and sending the corresponding</span>
+<span class="sd">    availability times and xml file&#39;s content to its _custom_consumer. Important note : the</span>
+<span class="sd">    manifest file and the xml documents have to be in the same folder (it is the default behavior</span>
+<span class="sd">    of the producer).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_dirpath</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_manifest_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_custom_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_manifest_time_format</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_do_tail</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest_path</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">,</span> <span class="n">do_tail</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">manifest_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="o">=</span> <span class="n">manifest_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span> <span class="o">=</span> <span class="n">custom_consumer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_tail</span> <span class="o">=</span> <span class="n">do_tail</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">manifest_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">manifest</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_lines_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">readlines</span><span class="p">())</span>
+
+<div class="viewcode-block" id="FilesystemReader.resume_reading"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemReader.resume_reading">[docs]</a>    <span class="k">def</span> <span class="nf">resume_reading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">manifest_file</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">manifest_line</span> <span class="o">=</span> <span class="n">manifest_file</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">manifest_line</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tail</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+                            <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_file_name</span> <span class="o">=</span> <span class="n">manifest_line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                    <span class="n">xml_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">xml_file_name</span><span class="p">)</span>
+                    <span class="n">xml_content</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">xml_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
+                        <span class="n">xml_content</span> <span class="o">=</span> <span class="n">xml_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
