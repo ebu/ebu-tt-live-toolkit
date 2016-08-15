@@ -27,9 +27,9 @@ Feature: Computed element active begin and end times
     Examples:
     | body_begin | body_end | div_begin | div_end  | body_active_begin | body_active_end | div_active_begin | div_active_end |
     |            |          |           |          | 00:00:00          | undefined       | 00:00:00         | undefined      |
-    @skip
     | 00:01:00   |          |           |          | 00:01:00          | undefined       | 00:01:00         | undefined      |
     |            | 00:01:30 |           |          | 00:00:00          | 00:01:30        | 00:00:00         | 00:01:30       |
+    @skip
     | 00:01:00   | 00:01:30 |           |          | 00:01:00          | 00:01:30        | 00:01:00         | 00:01:30       |
     |            |          | 00:01:08  |          | 00:00:00          | undefined       | 00:01:08         | undefined      |
     | 00:01:00   |          | 00:00:08  |          | 00:01:00          | undefined       | 00:01:08         | undefined      |

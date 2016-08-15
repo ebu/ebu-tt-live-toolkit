@@ -126,10 +126,9 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # attributes.
         dataset['timing_begin_stack'] = []
         dataset['timing_end_stack'] = []
-        dataset['timing_syncbase'] = dataset['availability_time']
+        dataset['timing_syncbase'] = timedelta()
         dataset['timing_accum_end'] = timedelta()
-        dataset['timing_computed_begin'] = None
-        dataset['timing_computed_end'] = None
+        dataset['end_limit'] = None
         dataset['tt_element'] = self
         if self.timeBase == 'smpte':
             self.__semantic_test_smpte_attrs_present()

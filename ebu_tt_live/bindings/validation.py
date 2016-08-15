@@ -197,27 +197,10 @@ class TimeBaseValidationMixin(object):
         begin_timedelta = None
         dur_timedelta = None
         end_timedelta = None
+        proposed_end = None
 
         if hasattr(self, 'end') and self.end is not None:
             end_timedelta = self.end.timedelta
-
-            proposed_end = dataset['timing_syncbase'] + end_timedelta
-
-            if not dataset['timing_end_stack']:
-                # We are at an outermost timing container
-                old_computed_end = None
-            else:
-                old_computed_end = dataset['timing_computed_end']
-
-            if dataset['timing_computed_end'] is not None:
-                new_computed_end = old_computed_end is not None and min(old_computed_end, proposed_end) or max(proposed_end, dataset['timing_computed_end'])
-            else:
-                new_computed_end = proposed_end
-
-            dataset['timing_computed_end'] = new_computed_end
-
-            # Let's push it onto the stack
-            dataset['timing_end_stack'].append(end_timedelta)
 
         if hasattr(self, 'begin') and self.begin is not None:
             begin_timedelta = self.begin.timedelta
@@ -232,13 +215,24 @@ class TimeBaseValidationMixin(object):
             dataset['timing_syncbase'] += begin_timedelta
 
         if hasattr(self, 'dur') and self.dur is not None:
+            # Using the knowledge here that dur is only allowed on the body element we turn it into an end
             dur_timedelta = self.dur.timedelta
-            if end_timedelta:
-                proposed_end = min(dur_timedelta + dataset['timing_syncbase'], end_timedelta)
-            else:
-                proposed_end = dur_timedelta + dataset['timing_syncbase']
 
-            dataset['timing_computed_end'] = proposed_end
+        if begin_timedelta is not None and dur_timedelta is not None and end_timedelta is not None:
+            # This is a special (stupid) edge case..:
+            # Question is how availability time comes into play here...
+            proposed_end = min(dur_timedelta + begin_timedelta, end_timedelta)
+        elif begin_timedelta is not None and dur_timedelta is not None:
+            proposed_end = dur_timedelta + begin_timedelta
+        elif dur_timedelta is not None and end_timedelta is not None:
+            proposed_end = min(dataset['availability_time'] + dur_timedelta, end_timedelta)
+        elif end_timedelta is not None:
+            # New end
+            proposed_end = end_timedelta
+
+        if proposed_end is not None:
+            dataset['timing_end_stack'].append(proposed_end)
+            dataset['end_limit'] = dataset['timing_syncbase'] + proposed_end
 
         # Store the element's activation begin times
         self._computed_begin_time = dataset.get('timing_syncbase', None)
