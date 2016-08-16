@@ -235,10 +235,10 @@ class EBUTT3Document(SubtitleDocument):
         # Extract results
 
         # Begin times
-        self._computed_begin_time = self._ebutt3_content.computed_begin_time
+        self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
 
         # End times
-        self._computed_end_time = self._ebutt3_content.computed_end_time
+        self._computed_end_time = self._ebutt3_content.body.computed_end_time
 
     def add_div(self, div):
         body = self._ebutt3_content.body

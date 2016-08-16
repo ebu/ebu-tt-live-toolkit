@@ -8,6 +8,7 @@ from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTI
     DOC_SYNTACTIC_VALIDATION_SUCCESSFUL
 from ebu_tt_live.errors import SemanticValidationError
 from .pyxb_utils import get_xml_parsing_context
+from datetime import timedelta
 import logging
 
 log = logging.getLogger(__name__)
@@ -207,8 +208,8 @@ class TimeBaseValidationMixin(object):
 
             if not dataset['timing_begin_stack']:
                 # This means we are at a outermost timing container
-                if dataset['timing_computed_begin'] is None or dataset['timing_computed_begin'] > begin_timedelta:
-                    dataset['timing_computed_begin'] = begin_timedelta
+                if dataset['timing_document_computed_begin'] is None or dataset['timing_document_computed_begin'] > begin_timedelta:
+                    dataset['timing_document_computed_begin'] = begin_timedelta
 
             # Let's push it onto the stack
             dataset['timing_begin_stack'].append(begin_timedelta)
@@ -218,6 +219,7 @@ class TimeBaseValidationMixin(object):
             # Using the knowledge here that dur is only allowed on the body element we turn it into an end
             dur_timedelta = self.dur.timedelta
 
+        # This is all for the body element. Maybe we should specialize this class for the body
         if begin_timedelta is not None and dur_timedelta is not None and end_timedelta is not None:
             # This is a special (stupid) edge case..:
             # Question is how availability time comes into play here...
@@ -227,22 +229,30 @@ class TimeBaseValidationMixin(object):
         elif dur_timedelta is not None and end_timedelta is not None:
             proposed_end = min(dataset['availability_time'] + dur_timedelta, end_timedelta)
         elif end_timedelta is not None:
+            if dataset['timing_end_stack']:
+                # If there was already an end time in some parent element
+                proposed_end = min(dataset['timing_syncbase'] + end_timedelta, dataset['timing_end_stack'][-1])
             # New end
-            proposed_end = end_timedelta
+            proposed_end = dataset['timing_syncbase'] + end_timedelta
 
         if proposed_end is not None:
             dataset['timing_end_stack'].append(proposed_end)
-            dataset['end_limit'] = dataset['timing_syncbase'] + proposed_end
+            dataset['timing_end_limit'] = max(dataset.get('timing_end_limt', timedelta()), proposed_end)
+            self._computed_end_time = proposed_end
 
         # Store the element's activation begin times
         self._computed_begin_time = dataset.get('timing_syncbase', None)
+        if self._computed_begin_time is not None:
+            if dataset['timing_begin_limit'] is not None and dataset['timing_begin_limit'] < self._computed_begin_time or dataset['timing_begin_limit'] is None:
+                # This means that timing begin limit needs updating
+                dataset['timing_begin_limit'] = self._computed_begin_time
 
 
     def _semantic_postprocess_timing(self, dataset, element_content):
         begin_timedelta = None
         end_timedelta = None
 
-        if hasattr(self, 'end') and self.end is not None:
+        if hasattr(self, 'end') and self.end is not None or hasattr(self, 'dur') and self.dur is not None:
             # We pushed on the stack it is time to pop it
             dataset['timing_end_stack'].pop()
 
