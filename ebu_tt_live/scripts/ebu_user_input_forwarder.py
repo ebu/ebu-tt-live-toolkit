@@ -36,6 +36,7 @@ def main():
         reference_clock=reference_clock
     )
 
+    # This factory listens for incoming documents from the user input producer.
     user_input_server_factory = UserInputServerFactory(
         url='ws://127.0.0.1:9001',
         consumer=TwistedConsumer(
@@ -43,13 +44,11 @@ def main():
         )
     )
     user_input_server_factory.protocol = UserInputServerProtocol
-
     user_input_server_factory.listen()
 
+    # This factory listens for any consumer to forward documents to.
     broadcast_factory = BroadcastServerFactory("ws://127.0.0.1:9000")
-
     broadcast_factory.protocol = StreamingServerProtocol
-
     broadcast_factory.listen()
 
     TwistedPullProducer(
