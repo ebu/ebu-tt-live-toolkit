@@ -8,6 +8,8 @@ before_install:
   - chmod u=rw,og= ~/.ssh/publish-key
   - echo "Host github.com" >> ~/.ssh/config
   - echo "    IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
+  - sudo apt-get -qq update
+  - sudo apt-get install graphviz
   - git --version
   - git remote set-url origin git@github.com:ebu/ebu-tt-live-toolkit.git
   - git fetch origin -f gh-pages:gh-pages
