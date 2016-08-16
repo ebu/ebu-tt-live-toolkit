@@ -193,7 +193,6 @@
 
     <span class="n">_manifest_path</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_dirpath</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_manifest_file</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_manifest_content</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_manifest_time_format</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -223,6 +222,9 @@
                 <span class="k">break</span></div>
 
 <div class="viewcode-block" id="FilesystemProducerImpl.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">manifest_filename</span> <span class="o">=</span> <span class="s2">&quot;manifest_&quot;</span> <span class="o">+</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">manifest_filename</span><span class="p">)</span>
         <span class="c1"># Handle there the switch and checks to handle the string format to use</span>
         <span class="c1"># for times in the manifest file depending on your time base.</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">)</span>
