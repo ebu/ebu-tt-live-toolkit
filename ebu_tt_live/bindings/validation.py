@@ -206,41 +206,45 @@ class TimeBaseValidationMixin(object):
         if hasattr(self, 'begin') and self.begin is not None:
             begin_timedelta = self.begin.timedelta
 
-            if not dataset['timing_begin_stack']:
-                # This means we are at a outermost timing container
-                if dataset['timing_document_computed_begin'] is None or dataset['timing_document_computed_begin'] > begin_timedelta:
-                    dataset['timing_document_computed_begin'] = begin_timedelta
-
-            # Let's push it onto the stack
-            dataset['timing_begin_stack'].append(begin_timedelta)
-            dataset['timing_syncbase'] += begin_timedelta
-
         if hasattr(self, 'dur') and self.dur is not None:
             # Using the knowledge here that dur is only allowed on the body element we turn it into an end
             dur_timedelta = self.dur.timedelta
+
+        # from ebu_tt_live.bindings import body_type
+        # if isinstance(self, body_type):
+        #     import pytest
+        #     pytest.set_trace()
 
         # This is all for the body element. Maybe we should specialize this class for the body
         if begin_timedelta is not None and dur_timedelta is not None and end_timedelta is not None:
             # This is a special (stupid) edge case..:
             # Question is how availability time comes into play here...
             proposed_end = min(dur_timedelta + begin_timedelta, end_timedelta)
-        elif begin_timedelta is not None and dur_timedelta is not None:
+        elif begin_timedelta is not None and dur_timedelta is not None and end_timedelta is None:
             proposed_end = dur_timedelta + begin_timedelta
-        elif dur_timedelta is not None and end_timedelta is not None:
+        elif dur_timedelta is not None and end_timedelta is not None and begin_timedelta is None:
             proposed_end = min(dataset['availability_time'] + dur_timedelta, end_timedelta)
         elif end_timedelta is not None:
             if dataset['timing_end_stack']:
-                # If there was already an end time in some parent element
+                # If there was already an end time in some parent element.
                 proposed_end = min(dataset['timing_syncbase'] + end_timedelta, dataset['timing_end_stack'][-1])
             # New end
-            proposed_end = dataset['timing_syncbase'] + end_timedelta
+            else:
+                proposed_end = dataset['timing_syncbase'] + end_timedelta
 
         if proposed_end is not None:
             dataset['timing_end_stack'].append(proposed_end)
             dataset['timing_end_limit'] = max(dataset.get('timing_end_limt', timedelta()), proposed_end)
             self._computed_end_time = proposed_end
+        elif dataset['timing_end_stack']:
+            # If this element has no end time it inherits the last end time specified on the current branch
+            self._computed_end_time = dataset['timing_end_stack'][-1]
 
         # Store the element's activation begin times
+        if begin_timedelta is not None:
+            # Let's push it onto the stack
+            dataset['timing_begin_stack'].append(begin_timedelta)
+            dataset['timing_syncbase'] += begin_timedelta
         self._computed_begin_time = dataset.get('timing_syncbase', None)
         if self._computed_begin_time is not None:
             if dataset['timing_begin_limit'] is not None and dataset['timing_begin_limit'] < self._computed_begin_time or dataset['timing_begin_limit'] is None:

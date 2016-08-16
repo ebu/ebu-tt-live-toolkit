@@ -29,7 +29,6 @@ Feature: Computed element active begin and end times
     |            |          |           |          | 00:00:00          | undefined       | 00:00:00         | undefined      |
     | 00:01:00   |          |           |          | 00:01:00          | undefined       | 00:01:00         | undefined      |
     |            | 00:01:30 |           |          | 00:00:00          | 00:01:30        | 00:00:00         | 00:01:30       |
-    @skip
     | 00:01:00   | 00:01:30 |           |          | 00:01:00          | 00:01:30        | 00:01:00         | 00:01:30       |
     |            |          | 00:01:08  |          | 00:00:00          | undefined       | 00:01:08         | undefined      |
     | 00:01:00   |          | 00:00:08  |          | 00:01:00          | undefined       | 00:01:08         | undefined      |
