@@ -33,3 +33,7 @@ class DocumentDiscardedError(Exception):
 
 class SequenceOverridden(Exception):
     pass
+
+
+class LogicError(Exception):
+    pass

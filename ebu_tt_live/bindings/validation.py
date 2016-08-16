@@ -6,7 +6,7 @@ from pyxb import ValidationConfig, GlobalValidationConfig
 from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
     DOC_SYNTACTIC_VALIDATION_SUCCESSFUL
-from ebu_tt_live.errors import SemanticValidationError
+from ebu_tt_live.errors import SemanticValidationError, LogicError
 from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
 import logging
@@ -236,13 +236,11 @@ class TimeBaseValidationMixin(object):
             dataset['timing_end_stack'].append(proposed_end)
             dataset['timing_end_limit'] = max(dataset.get('timing_end_limt', timedelta()), proposed_end)
             self._computed_end_time = proposed_end
-        elif dataset['timing_end_stack']:
-            # If this element has no end time it inherits the last end time specified on the current branch
-            self._computed_end_time = dataset['timing_end_stack'][-1]
 
         # Store the element's activation begin times
         if begin_timedelta is not None:
-            # Let's push it onto the stack
+            # Let's push it onto the stack. These assignments must happen last otherwise the syncbase will be wrong
+            # in calculations happening after syncbase adjustment.
             dataset['timing_begin_stack'].append(begin_timedelta)
             dataset['timing_syncbase'] += begin_timedelta
         self._computed_begin_time = dataset.get('timing_syncbase', None)
@@ -258,13 +256,46 @@ class TimeBaseValidationMixin(object):
 
         if hasattr(self, 'end') and self.end is not None or hasattr(self, 'dur') and self.dur is not None:
             # We pushed on the stack it is time to pop it
-            dataset['timing_end_stack'].pop()
+            end_timedelta = dataset['timing_end_stack'].pop()
 
         if hasattr(self, 'begin') and self.begin is not None:
             # We pushed on the stack it is time to pop it
             begin_timedelta = dataset['timing_begin_stack'].pop()
             dataset['timing_syncbase'] -= begin_timedelta
 
+        # If the forward running part of the traversal could not assign an end time we can use the backwards route
+        # which is in a way similar to dynamic programming because we take the children computed times and take the
+        # maximum value from them. SPECIAL case: a single leaf element with an undefined end time renders the entire
+        # branch undefined
+
+        if end_timedelta is not None and self.computed_end_time is None \
+                or end_timedelta is None and self.computed_end_time is not None:
+            # This is just a simple sanity check. It should never be triggered.
+            # Should the calculation be changed this filters out an obvious source of error.
+            raise LogicError()
+
+        if self.computed_end_time is None:
+            # This requires calculation based on the timings in its children.
+
+            # All timing containers are complexTypes so we can call orderedContent safely
+            children = filter(lambda item: isinstance(item, TimeBaseValidationMixin), [x.value for x in self.orderedContent()])
+            # Order of statements is important
+            if not children:
+                # This means we are in a timing container leaf. Try to assign it the last specified ancestor
+                if not dataset['timing_end_stack']:
+                    # Here we go an endless document. Pointless but for clarity's sake assign it explicitly to None.
+                    self._computed_end_time = None
+                else:
+                    self._computed_end_time = dataset['timing_end_stack'][-1]
+            else:
+
+                children_computed_end_times = [item.computed_end_time for item in children]
+
+                if None in children_computed_end_times:
+                    # The endless document case propagates up
+                    self._computed_end_time = None
+                else:
+                    self._computed_end_time = max(children_computed_end_times)
 
     # The mixin approach is used since there are multiple timed elements types.
     # The inspected elements are all attributes of the element so they do not
