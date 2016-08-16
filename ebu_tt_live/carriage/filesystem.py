@@ -63,7 +63,6 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
 
     _manifest_path = None
     _dirpath = None
-    _manifest_file = None
     _manifest_content = None
     _manifest_time_format = None
 
@@ -93,6 +92,9 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
                 break
 
     def emit_document(self, document):
+        if self._manifest_path is None:
+            manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
+            self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
         filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
