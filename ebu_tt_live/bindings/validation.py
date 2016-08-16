@@ -210,11 +210,6 @@ class TimeBaseValidationMixin(object):
             # Using the knowledge here that dur is only allowed on the body element we turn it into an end
             dur_timedelta = self.dur.timedelta
 
-        # from ebu_tt_live.bindings import body_type
-        # if isinstance(self, body_type):
-        #     import pytest
-        #     pytest.set_trace()
-
         # This is all for the body element. Maybe we should specialize this class for the body
         if begin_timedelta is not None and dur_timedelta is not None and end_timedelta is not None:
             # This is a special (stupid) edge case..:
@@ -281,20 +276,21 @@ class TimeBaseValidationMixin(object):
             children = filter(lambda item: isinstance(item, TimeBaseValidationMixin), [x.value for x in self.orderedContent()])
             # Order of statements is important
             if not children:
-                # This means we are in a timing container leaf. Try to assign it the last specified ancestor
+                # This means we are in a timing container leaf.
                 if not dataset['timing_end_stack']:
                     # Here we go an endless document. Pointless but for clarity's sake assign it explicitly to None.
                     self._computed_end_time = None
                 else:
+                    # Try to assign it the last specified ancestor
                     self._computed_end_time = dataset['timing_end_stack'][-1]
             else:
-
                 children_computed_end_times = [item.computed_end_time for item in children]
 
                 if None in children_computed_end_times:
                     # The endless document case propagates up
                     self._computed_end_time = None
                 else:
+                    # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
 
     # The mixin approach is used since there are multiple timed elements types.

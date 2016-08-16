@@ -120,53 +120,59 @@ def then_div_active_end(test_context, div_active_end):
 
 @then('p active begin time is <p_active_begin>')
 def then_p_active_begin(test_context, p_active_begin):
+    computed_begin = test_context['document'].binding.body.orderedContent()[0].value.orderedContent()[0].value.computed_begin_time
     if p_active_begin == "undefined":
-        pass
+        assert computed_begin is None
     else:
         p_active_begin_timedelta = FullClockTimingType(p_active_begin).timedelta
-        pass
+        assert p_active_begin_timedelta == computed_begin
 
 
 @then('p active end time is <p_active_end>')
 def then_p_active_end(test_context, p_active_end):
+    computed_end = test_context['document'].binding.body.orderedContent()[0].value.orderedContent()[0].value.computed_end_time
     if p_active_end == "undefined":
-        pass
+        assert computed_end is None
     else:
         p_active_end_timedelta = FullClockTimingType(p_active_end).timedelta
-        pass
+        assert p_active_end_timedelta == computed_end
 
 
 @then('span1 active begin time is <span1_active_begin>')
 def then_span1_active_begin(test_context, span1_active_begin):
+    computed_begin = test_context['document'].binding.body.orderedContent()[0].value.orderedContent()[0].value.orderedContent()[1].value.computed_begin_time
     if span1_active_begin == "undefined":
-        pass
+        assert computed_begin is None
     else:
         span1_active_begin_timedelta = FullClockTimingType(span1_active_begin).timedelta
-        pass
+        assert span1_active_begin_timedelta == computed_begin
 
 
 @then('span1 active end time is <span1_active_end>')
 def then_span1_active_end(test_context, span1_active_end):
+    computed_end = test_context['document'].binding.body.orderedContent()[0].value.orderedContent()[0].value.orderedContent()[1].value.computed_end_time
     if span1_active_end == "undefined":
-        pass
+        assert computed_end is None
     else:
         span1_active_end_timedelta = FullClockTimingType(span1_active_end).timedelta
-        pass
+        assert span1_active_end_timedelta == computed_end
 
 
 @then('span2 active begin time is <span2_active_begin>')
 def then_span2_active_begin(test_context, span2_active_begin):
+    computed_begin = test_context['document'].binding.body.orderedContent()[0].value.orderedContent()[0].value.orderedContent()[3].value.computed_begin_time
     if span2_active_begin == "undefined":
-        pass
+        assert computed_begin is None
     else:
         span2_active_begin_timedelta = FullClockTimingType(span2_active_begin).timedelta
-        pass
+        assert span2_active_begin_timedelta == computed_begin
 
 
 @then('span2 active end time is <span2_active_end>')
 def then_span2_active_end(test_context, span2_active_end):
+    computed_end = test_context['document'].binding.body.orderedContent()[0].value.orderedContent()[0].value.orderedContent()[3].value.computed_end_time
     if span2_active_end == "undefined":
-        pass
+        assert computed_end is None
     else:
         span2_active_end_timedelta = FullClockTimingType(span2_active_end).timedelta
-        pass
+        assert span2_active_end_timedelta == computed_end
