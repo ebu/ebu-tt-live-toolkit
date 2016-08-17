@@ -1,7 +1,7 @@
 from .base import CombinedCarriageImpl
 
 
-class ForwarderCarriage(CombinedCarriageImpl):
+class ForwarderCarriageImpl(CombinedCarriageImpl):
 
     _consumer_carriage = None
     _producer_carriage = None

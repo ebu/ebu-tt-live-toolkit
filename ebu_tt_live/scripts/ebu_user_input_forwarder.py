@@ -5,7 +5,7 @@ from .common import create_loggers
 from ebu_tt_live.node.distributing import DistributingNode
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, UserInputServerProtocol, UserInputServerFactory, BroadcastServerFactory, TwistedPullProducer, StreamingServerProtocol
-from ebu_tt_live.carriage.forwarder_carriage import ForwarderCarriage
+from ebu_tt_live.carriage.forwarder_carriage import ForwarderCarriageImpl
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedProducerImpl
 from twisted.internet import reactor
@@ -22,6 +22,7 @@ parser.add_argument('--folder-export', dest='folder_export',
                     type=str
                     )
 
+
 def main():
     args = parser.parse_args()
     create_loggers()
@@ -36,7 +37,7 @@ def main():
         sub_prod_impl = FilesystemProducerImpl(args.folder_export)
     else:
         sub_prod_impl = TwistedProducerImpl()
-    carriage_impl = ForwarderCarriage(sub_consumer_impl, sub_prod_impl)
+    carriage_impl = ForwarderCarriageImpl(sub_consumer_impl, sub_prod_impl)
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
