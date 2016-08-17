@@ -47,6 +47,8 @@
   {% endif %}
 {% endif %}
     >
+
+{% if div_begin or div_end or p_begin or p_end or span_begin or span_end or span2_begin or span2_end or span3_begin or span3_end %}
     <tt:div
 {% if div_begin %}
   {% if div_begin == "*?Empty?*" %}
@@ -63,6 +65,8 @@
   {% endif%}
 {% endif %}
       >
+
+{% if p_begin or p_end or span_begin or span_end or span2_begin or span2_end or span3_begin or span3_end %}
       <tt:p 
 {% if p_begin %}
   {% if p_begin == "*?Empty?*" %}
@@ -79,7 +83,9 @@
   {% endif%}
 {% endif %}
         xml:id="ID005">
-            <tt:span
+
+{% if span_begin or span_end %}
+        <tt:span
 {% if span_begin %}
   {% if span_begin == "*?Empty?*" %}
                 tt:begin=""
@@ -97,6 +103,9 @@
               >
               Some example text...
             </tt:span>
+{% endif %}
+
+{% if span2_begin or span2_end %}
             <tt:span
 {% if span2_begin %}
   {% if span2_begin == "*?Empty?*" %}
@@ -115,6 +124,9 @@
               >
               Some example text 2...
             </tt:span>
+{% endif %}
+
+{% if span3_begin or span3_end %}
             <tt:span
 {% if span3_begin %}
   {% if span3_begin == "*?Empty?*" %}
@@ -133,7 +145,10 @@
               >
               Some example text 2...
             </tt:span>
+{% endif %}
       </tt:p>
+{% endif %}
     </tt:div>
+{% endif %}
   </tt:body>
 </tt:tt>
