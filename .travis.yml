@@ -29,7 +29,7 @@ after_success:
   - coveralls
   - python setup.py build_sphinx
   - test $TRAVIS_BRANCH = "master" \
-    && ghp-import -n -p -m "Update gh-pages." docs/build/html
+    && ghp-import -n -p -m "Update gh-pages." docs/build/html \
 
 notifications:
   slack:
