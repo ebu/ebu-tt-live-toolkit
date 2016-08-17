@@ -241,7 +241,13 @@ class TimeBaseValidationMixin(object):
             # in calculations happening after syncbase adjustment.
             dataset['timing_begin_stack'].append(begin_timedelta)
             dataset['timing_syncbase'] += begin_timedelta
-        self._computed_begin_time = dataset.get('timing_syncbase', None)
+
+        # If we have a non-zero availability time we need to factor it in BUT the syncbase stays
+        if dataset['availability_time']:
+            self._computed_begin_time = max(dataset['timing_syncbase'], dataset['availability_time'])
+        else:
+            self._computed_begin_time = dataset['timing_syncbase']
+
         if self._computed_begin_time is not None:
             if dataset['timing_begin_limit'] is not None and dataset['timing_begin_limit'] < self._computed_begin_time or dataset['timing_begin_limit'] is None:
                 # This means that timing begin limit needs updating

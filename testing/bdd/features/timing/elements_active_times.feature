@@ -155,4 +155,7 @@ Feature: Computed element active begin and end times
     Examples:
     | body_begin | body_dur | body_end | div_begin | div_end  | availability_time | body_active_begin | body_active_end | div_active_begin | div_active_end |
     |            |          |          |           |          |                   | 00:00:00          | undefined       | 00:00:00         | undefined      |
+    |            |          |          |           |          | 00:00:05          | 00:00:05          | undefined       | 00:00:05         | undefined      |
     |            | 00:01:00 |          |           |          |                   | 00:00:00          | 00:01:00        | 00:00:00         | 00:01:00       |
+    |            | 00:01:00 |          |           |          | 00:00:05          | 00:00:05          | 00:01:05        | 00:00:05         | 00:01:05       |
+    |            | 00:01:00 | 00:00:50 |           |          |                   | 00:00:00          | 00:00:50        | 00:00:00         | 00:00:50       |
