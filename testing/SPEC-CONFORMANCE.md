@@ -75,3 +75,37 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.| |
 |R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.| |
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).| |
+| | **Tech3350 v1.1**| | |
+|R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff||
+|R70|3|If `ttp:timeBase="media"`` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: <ul><li>hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted.</li><li>non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)</li></ul>||
+|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`||
+|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `discontinuous`.||
+|R73|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.||   
+|R73|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified||
+|R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
+|R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified. ||
+|R76|3|If the `pixel` unit is used, `tts:extent` SHALL be specified on `tt:tt`||
+|R77|3|`xml:lang` SHALL be specified on `tt:tt`||
+|R78|3.1.1.1.8|If `ebuttm:documentTargetActiveFormatDescriptor` is specified then `ebuttm:documentTargetAspectRatio` SHALL be specified with one of the values `4:3` or `16:9`||
+|R79|3.1.1.1.8|If specified, `ebuttm:documentTargetActiveFormatDescriptor` SHALL have one of the AFD codes specified in SMPTE ST 2016-1:2009||
+|R80|3.1.1.1.9|If specified, `ebuttm:documentIntendedTargetBarData` SHALL be specified in accordance with SMPTE ST2016-1:2009 Table 3||
+|R81|3.1.1.1.9|If specified, `ebuttm:documentIntendedTargetBarData` SHALL have the attribute `position` specified.||
+|R82|3.1.1.1.9|If the `position` attribute has the value `topBottom` then the `ebuttm:documentIntendedTargetBarData` element SHALL also contain the `lineNumberEndOfTopBar` and `lineNumberStartOfBottomBar` attributes.||
+|R83|3.1.1.1.9|If the `position` attribute has the value `leftRight` then the `ebuttm:documentIntendedTargetBarData` element SHALL also contain the `pixelNumberEndOfLeftBar` and `pixelNumberStartOfRightBar` attributes.||
+|R84|3.1.3.2|`tt:styling` SHALL contain one or more `tt:style` elements||
+|R85|3.1.4.2|A style attribute that is defined for `tt:region` SHALL NOT appear in `tt:style` and vice versa. The only exception from this rule is the `tts:padding`, which may appear in both `tt:style` and `tt:region`.||
+|R86|3.1.3.2|`tt:div`, `tt:p` and `tt:span` elements SHALL only use references to style definitions.||
+|R87|3.1.3.2|The default value of `tts:fontSize` SHALL be `1c` (but `1c 2c` for v1.0)||
+|R88|3.1.3.2|The default value of `tts:textAlign` SHALL be `start`||
+|R89|3.1.4.2|`tt:layout` SHALL contain one or more `tt:region` elements||
+|R90|3.1.4.2|The attributes `tt:origin` and `tt:extent` SHALL be specified on `tt:layout`||
+|R91|3.1.4.2|If a region exceeds the the boundary of the active video, the display of the region SHALL be clipped.||
+|R92|3.1.4.2|The initial value of `tts:displayAlign` SHALL be `before`||
+|R93|4.2|Colour values SHALL be constrained to a named colour string, a RGB colour triple, RGBA colour tuple, a hex notated RGB colour triple or a hex notated RGBA colour tuple.||
+|R94|4.3|`extent` values SHALL be constrained to non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels).||
+|R95|4.5|`tts:fontSize` values SHALL be constrained to non-negative numbers appended by “%”, c” or “px”.||
+|R96|4.6|`ttp:frameRateMultiplier` values SHALL be constrained to two positive integers delimited by space||
+|R97|4.8|`tts:linePadding` values SHALL be constrained to one non-negative decimal appended by "c" (cell)||
+|R98|4.9|`tts:lineHeight` values SHALL be constrained to the string `normal` or a non-negative number appended by percentage “%”, c” (for cells) or “px” (for pixels).||
+|R99|4.10|`origin` values SHALL be constrained to two non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels) delimited by a space.||
+|R100|4.11|`tts:padding` values SHALL be constrained to one, two, three or four non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels), delimited by a space.||
