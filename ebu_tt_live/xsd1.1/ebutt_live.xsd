@@ -222,7 +222,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		</xs:annotation>
 		<xs:sequence>
 		    <xs:element name="metadata" type="ebuttm:divMetadata_type" minOccurs="0"/>
-			<xs:choice maxOccurs="unbounded">
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
 				<xs:element name="div" type="tt:div_type"/>
 				<xs:element name="p" type="tt:p_type"/>
 			</xs:choice>
