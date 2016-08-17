@@ -5,8 +5,8 @@ Feature: Computed element active begin and end times
 
   # Given a parent element with one child element, the computed active parent and child begin and active parent end times are valid:
   Examples:
-  | xml_file           | sequence_identifier | sequence_number | time_base |
-  | time_semantics.xml | testSeq             | 1               | media     |
+  | xml_file                           | sequence_identifier | sequence_number | time_base |
+  | elements_active_time_semantics.xml | testSeq             | 1               | media     |
 
 
   Scenario: Parent with one child element

@@ -1,0 +1,139 @@
+<?xml version="1.0" ?>
+<tt:tt
+  ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
+        ebuttp:sequenceNumber="{{sequence_number}}"
+        ttp:timeBase="{{ time_base }}"
+{% if time_base == 'smpte' %}
+        ttp:frameRate="25"
+{% endif %}
+{% if time_base == 'clock' %}
+        ttp:clockMode='local'
+{% endif %}
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+  <tt:body 
+{% if body_begin %}
+  {% if body_begin == "*?Empty?*" %}
+      tt:begin=""
+  {% else %}
+      tt:begin="{{ body_begin }}"
+  {% endif %}
+{% endif %}
+{% if body_end %}
+  {% if body_end == "*?Empty?*" %}
+      tt:end=""
+  {% else %}
+      tt:end="{{ body_end }}"
+  {% endif%}
+{% endif %}
+{% if body_dur %}
+  {% if body_dur == "*?Empty?*" %}
+      tt:dur=""
+  {% else %}
+      tt:dur="{{ body_dur }}"
+  {% endif %}
+{% endif %}
+    >
+    <tt:div
+{% if div_begin %}
+  {% if div_begin == "*?Empty?*" %}
+        tt:begin=""
+  {% else %}
+        tt:begin="{{ div_begin }}"
+  {% endif %}
+{% endif %}
+{% if div_end %}
+  {% if div_end == "*?Empty?*" %}
+        tt:end=""
+  {% else %}
+        tt:end="{{ div_end }}"
+  {% endif%}
+{% endif %}
+      >
+      <tt:p 
+{% if p_begin %}
+  {% if p_begin == "*?Empty?*" %}
+        tt:begin=""
+  {% else %}
+        tt:begin="{{ p_begin }}"
+  {% endif %}
+{% endif %}
+{% if p_end %}
+  {% if p_end == "*?Empty?*" %}
+        tt:end=""
+  {% else %}
+        tt:end="{{ p_end }}"
+  {% endif%}
+{% endif %}
+        xml:id="ID005">
+            <tt:span
+{% if span_begin %}
+  {% if span_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
+                tt:begin="{{ span_begin }}"
+  {% endif %}
+{% endif %}
+{% if span_end %}
+  {% if span_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
+                tt:end="{{ span_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text...
+            </tt:span>
+            <tt:span
+{% if span2_begin %}
+  {% if span2_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
+                tt:begin="{{ span2_begin }}"
+  {% endif %}
+{% endif %}
+{% if span2_end %}
+  {% if span2_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
+                tt:end="{{ span2_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text 2...
+            </tt:span>
+            <tt:span
+{% if span3_begin %}
+  {% if span3_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
+                tt:begin="{{ span3_begin }}"
+  {% endif %}
+{% endif %}
+{% if span3_end %}
+  {% if span3_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
+                tt:end="{{ span3_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text 2...
+            </tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
