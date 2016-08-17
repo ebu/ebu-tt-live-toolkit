@@ -217,6 +217,9 @@ class TimeBaseValidationMixin(object):
             proposed_end = min(dur_timedelta + begin_timedelta, end_timedelta)
         elif begin_timedelta is not None and dur_timedelta is not None and end_timedelta is None:
             proposed_end = dur_timedelta + begin_timedelta
+        elif dur_timedelta is not None and end_timedelta is None and begin_timedelta is None:
+            # In this case the document end at availability time + dur
+            proposed_end = dataset['availability_time'] + dur_timedelta
         elif dur_timedelta is not None and end_timedelta is not None and begin_timedelta is None:
             proposed_end = min(dataset['availability_time'] + dur_timedelta, end_timedelta)
         elif end_timedelta is not None:
