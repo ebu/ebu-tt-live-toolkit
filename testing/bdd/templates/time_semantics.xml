@@ -80,18 +80,18 @@
 {% endif %}
         xml:id="ID005">
             <tt:span
-{% if span_begin %}
-  {% if span_begin == "*?Empty?*" %}
+{% if span1_begin %}
+  {% if span1_begin == "*?Empty?*" %}
                 tt:begin=""
   {% else %}
-                tt:begin="{{ span_begin }}"
+                tt:begin="{{ span1_begin }}"
   {% endif %}
 {% endif %}
-{% if span_end %}
-  {% if span_end == "*?Empty?*" %}
+{% if span1_end %}
+  {% if span1_end == "*?Empty?*" %}
                 tt:end=""
   {% else %}
-                tt:end="{{ span_end }}"
+                tt:end="{{ span1_end }}"
   {% endif%}
 {% endif %}
               >
