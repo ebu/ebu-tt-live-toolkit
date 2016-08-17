@@ -55,7 +55,7 @@
       <span id="new-sequence-notification-span"></span>
       <br><br>
       <label for="websocket-url-input">Websocket server URL: </label>
-      <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9000" required>
+      <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
       <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
       <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
@@ -432,7 +432,7 @@
                      notifyError($("#asynchronous-send-status-span"), "Empty, non-number, negative and 0 values are not allowed", false);
                      return;
                   }
-                  interval_send = setInterval(renderSendDocument, interval*1000);
+                  interval_send = setInterval(asyncSubmit, interval*1000);
                   notifySuccess($("#asynchronous-send-status-span"), "Running...", false);
                }
             });
@@ -518,9 +518,20 @@
                   var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
                   setTimeout(renderSendDocument, timeout, rendered_document);
                   notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
+                  sequence_numbers[sequence_identifier] += 1;
                } else {
                   renderSendDocument();
+                  sequence_numbers[sequence_identifier] += 1;
                }
+               localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
+            }
+
+            function asyncSubmit() {
+               var template_data = createTemplateDict();
+               var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+               renderSendDocument(rendered_document);
+               sequence_numbers[sequence_identifier] += 1;
+               localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
             }
 
             function renderSendDocument(doc=null) {
@@ -537,8 +548,6 @@
                } else {
                   notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
                }
-               sequence_numbers[sequence_identifier] += 1;
-               localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
             }
 
             $("#submit-subtitle-button").click(function(){
