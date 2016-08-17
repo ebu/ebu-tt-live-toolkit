@@ -130,3 +130,28 @@ Feature: Computed element active begin and end times
     | 00:01:00 |          |             |  00:00:20 | 00:00:15    | 00:00:35  | 00:01:00       | 00:01:35     | 00:01:00           | 00:01:20         | 00:01:15           | 00:01:35         |
     |          | 00:01:30 |             |  00:01:20 | 00:01:15    | 00:01:35  | 00:00:00       | 00:01:30     | 00:00:00           | 00:01:20         | 00:01:15           | 00:01:30         |
     | 00:01:00 | 00:01:30 |             |  00:00:20 | 00:00:15    | 00:00:35  | 00:01:00       | 00:01:30     | 00:01:00           | 00:01:20         | 00:01:15           | 00:01:30         |
+
+
+  # These cases involve body duration and availability time cases, in which the logic significantly changes
+
+  Scenario: Body timing parameters affecting document
+    Given an xml file <xml_file>
+    When it has sequenceIdentifier <sequence_identifier>
+    And it has sequenceNumber <sequence_number>
+    And it has timeBase <time_base>
+    And it has body begin time <body_begin>
+    And it has body duration <body_dur>
+    And it has body end time <body_end>
+    And it has div begin time <div_begin>
+    And it has div end time <div_end>
+    And the document is generated
+    And it is available at <availability_time>
+    Then body active begin time is <body_active_begin>
+    And body active end time is <body_active_end>
+    And div active begin time is <div_active_begin>
+    And div active end time is <div_active_end>
+
+    Examples:
+    | body_begin | body_dur | body_end | div_begin | div_end  | availability_time | body_active_begin | body_active_end | div_active_begin | div_active_end |
+    |            |          |          |           |          |                   | 00:00:00          | undefined       | 00:00:00         | undefined      |
+

@@ -25,6 +25,11 @@ def when_body_begin(body_begin, template_dict):
     template_dict['body_begin'] = body_begin
 
 
+@when('it has body duration <body_dur>')
+def when_body_begin(body_dur, template_dict):
+    template_dict['body_dur'] = body_dur
+
+
 @when('it has body end time <body_end>')
 def when_body_end(body_end, template_dict):
     template_dict['body_end'] = body_end
@@ -75,6 +80,12 @@ def when_doc_generated(test_context, template_dict, template_file):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
     test_context['document'] = document
+
+
+@when('it is available at <availability_time>')
+def when_doc_available(test_context, availability_time):
+    if availability_time:
+        test_context['document'].availability_time = FullClockTimingType(availability_time).timedelta
 
 
 @then('body active begin time is <body_active_begin>')
