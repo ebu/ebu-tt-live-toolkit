@@ -29,9 +29,6 @@ after_success:
   - coveralls
   - python setup.py build_sphinx
   - if [ $TRAVIS_BRANCH == "master" ]; then ghp-import -n -p -m "Update gh-pages." docs/build/html; fi
-  - if [ $TRAVIS_BRANCH = "master" ]; then ghp-import -n -p -m "Update gh-pages." docs/build/html; fi  
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then ghp-import -n -p -m "Update gh-pages." docs/build/html; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then ghp-import -n -p -m "Update gh-pages." docs/build/html; fi
  
 notifications:
   slack:
