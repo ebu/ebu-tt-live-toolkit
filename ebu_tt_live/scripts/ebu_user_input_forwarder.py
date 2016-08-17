@@ -43,7 +43,7 @@ def main():
     reference_clock.clock_mode = 'local'
 
     dist_node = DistributingNode(
-        node_id='simple-consumer',
+        node_id='distributing-node',
         carriage_impl=carriage_impl,
         reference_clock=reference_clock
     )

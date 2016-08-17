@@ -27,4 +27,3 @@ class TestForwarderCarriageImpl(TestCase):
         data = MagicMock()
         forwarder_impl.on_new_data(data)
         self.consumer_impl.on_new_data.assert_called_with(data)
-
