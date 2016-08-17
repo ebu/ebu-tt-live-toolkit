@@ -98,7 +98,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R87|3.1.3.2|The default value of `tts:fontSize` SHALL be `1c` (but `1c 2c` for v1.0)||
 |R88|3.1.3.2|The default value of `tts:textAlign` SHALL be `start`||
 |R89|3.1.4.2|`tt:layout` SHALL contain one or more `tt:region` elements||
-|R90|3.1.4.2|The attributes `tt:origin` and `tt:extent` SHALL be specified on `tt:layout`||
+|R90|3.1.4.2|The attributes `tts:origin` and `tts:extent` SHALL be specified on `tt:region`||
 |R91|3.1.4.2|If a region exceeds the the boundary of the active video, the display of the region SHALL be clipped.||
 |R92|3.1.4.2|The initial value of `tts:displayAlign` SHALL be `before`||
 |R93|4.2|Colour values SHALL be constrained to a named colour string, a RGB colour triple, RGBA colour tuple, a hex notated RGB colour triple or a hex notated RGBA colour tuple.||
