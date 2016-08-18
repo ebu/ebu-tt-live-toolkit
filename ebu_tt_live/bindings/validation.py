@@ -225,11 +225,11 @@ class TimingValidationMixin(object):
             self._pre_assign_end(proposed_end)
 
     def _pre_assign_begin(self, proposed_begin):
-        # Store the element's activation begin times
-
-        # Let's push it onto the stack.
-        self._semantic_dataset['timing_begin_stack'].append(proposed_begin)
-        self._semantic_dataset['timing_syncbase'] += proposed_begin
+        if proposed_begin is not None:
+            # Store the element's activation begin times
+            # Let's push it onto the stack.
+            self._semantic_dataset['timing_begin_stack'].append(proposed_begin)
+            self._semantic_dataset['timing_syncbase'] += proposed_begin
 
         # If we have a non-zero availability time we need to factor it in BUT the syncbase stays
         if self._semantic_dataset['availability_time']:
@@ -239,16 +239,15 @@ class TimingValidationMixin(object):
             self._computed_begin_time = self._semantic_dataset['timing_syncbase']
 
     def _pre_calculate_begin(self):
-        if self._begin_timedelta is not None:
-            self._pre_assign_begin(self._begin_timedelta)
+        self._pre_assign_begin(self._begin_timedelta)
 
-            if self._computed_begin_time is not None:
-                # This will help us find the earliest descendant element of body
-                if self._semantic_dataset['timing_begin_limit'] is not None \
-                        and self._semantic_dataset['timing_begin_limit'] > self._computed_begin_time \
-                        or self._semantic_dataset['timing_begin_limit'] is None:
-                    # This means that timing begin limit needs updating
-                    self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
+        if self._computed_begin_time is not None:
+            # This will help us find the earliest descendant element of body
+            if self._semantic_dataset['timing_begin_limit'] is not None \
+                    and self._semantic_dataset['timing_begin_limit'] > self._computed_begin_time \
+                    or self._semantic_dataset['timing_begin_limit'] is None:
+                # This means that timing begin limit needs updating
+                self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
 
     def _semantic_preprocess_timing(self, dataset, element_content):
 
@@ -386,8 +385,7 @@ class BodyTimingValidationMixin(TimingValidationMixin):
         self._pre_assign_end(proposed_end)
 
     def _pre_calculate_begin(self):
-        if self._begin_timedelta is not None:
-            self._pre_assign_begin(self._begin_timedelta)
+        self._pre_assign_begin(self._begin_timedelta)
 
     def _post_pop_end(self):
         end_timedelta = None
