@@ -58,6 +58,8 @@ Structure of the testing directory
     │ └*.py - Python files with the BDD handlers
     └─*.py - Other python based tests unrelated to BDD
 
+For BDD tests we use [pytest-bdd](https://pypi.python.org/pypi/pytest-bdd). Beware that some BDD steps are defined in the `testing/bdd/conftest.py` file because they are used by multiple feature files.
+
 
 ## Configuration files
 

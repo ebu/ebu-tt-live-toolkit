@@ -36,6 +36,7 @@ class SimpleConsumer(Node):
             computed_end_time=document.computed_end_time
         ))
         self._sequence.add_document(document)
+        log.info(document.get_xml())
 
     @property
     def reference_clock(self):

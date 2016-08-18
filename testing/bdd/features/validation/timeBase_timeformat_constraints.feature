@@ -1,10 +1,11 @@
-@timing
+# SPEC-CONFORMANCE : R70
+@validation @xsd @syntax @times
 Feature: ttp:timeBase-related attribute constraints
 
   # SPEC-CONFORMANCE: R46 R47 R49 R50 R52 R53
   Scenario: Valid times according to timeBase
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
@@ -27,7 +28,7 @@ Feature: ttp:timeBase-related attribute constraints
   # SPEC-CONFORMANCE: R46 R47 R49 R50 R52 R53
   Scenario: Invalid times according to timeBase
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
@@ -36,7 +37,7 @@ Feature: ttp:timeBase-related attribute constraints
     Examples:
     | xml_file                 | time_base | body_begin    | body_end      | body_dur      |
     | timeBase_timeformat.xml  | clock     | 15.58a        | 1.5d          |               |
-    | timeBase_timeformat.xml  | media     | 67.945q       | 125.0x        |               |
+    | timeBase_timeformat.xml  | media     | 67.945q       | -125.0x       |               |
     | timeBase_timeformat.xml  | media     |               |               | 99.9l         |
     | timeBase_timeformat.xml  | media     | 42:05:08:60.8 | 45:00:47.0    |               |
     | timeBase_timeformat.xml  | media     | 140:09:60.8.1 | 141:00:60.999 |               |
@@ -49,7 +50,7 @@ Feature: ttp:timeBase-related attribute constraints
   # SPEC-CONFORMANCE: R61 R62 R64 R65
   Scenario: Valid times according to timeBase in p
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has p begin time <p_begin>
     And it has p end time <p_end>
     Then document is valid
@@ -66,7 +67,7 @@ Feature: ttp:timeBase-related attribute constraints
   # SPEC-CONFORMANCE: R61 R62 R64 R65
   Scenario: Invalid times according to timeBase in p
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has p begin time <p_begin>
     And it has p end time <p_end>
     Then document is invalid
@@ -79,7 +80,7 @@ Feature: ttp:timeBase-related attribute constraints
 
   Scenario: Valid times according to timeBase in span
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has span begin time <span_begin>
     And it has span end time <span_end>
     Then document is valid
@@ -94,7 +95,7 @@ Feature: ttp:timeBase-related attribute constraints
 
   Scenario: Invalid times according to timeBase in span
     Given an xml file <xml_file>
-    And it has timeBase <time_base>
+    When it has timeBase <time_base>
     And it has span begin time <span_begin>
     And it has span end time <span_end>
     Then document is invalid

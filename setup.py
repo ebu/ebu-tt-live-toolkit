@@ -46,7 +46,9 @@ setup(
             'ebu-dummy-encoder = ebu_tt_live.scripts.ebu_dummy_encoder:main',
             'ebu-interactive-shell = ebu_tt_live.scripts.ebu_interactive_shell:main',
             'ebu-simple-consumer = ebu_tt_live.scripts.ebu_simple_consumer:main',
-            'ebu-simple-producer = ebu_tt_live.scripts.ebu_simple_producer:main'
+            'ebu-simple-producer = ebu_tt_live.scripts.ebu_simple_producer:main',
+            'ebu-user-input-consumer = ebu_tt_live.scripts.ebu_user_input_consumer:main',
+            'ebu-user-input-forwarder = ebu_tt_live.scripts.ebu_user_input_forwarder:main'
         ]
     },
     **extra

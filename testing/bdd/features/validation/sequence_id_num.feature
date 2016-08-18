@@ -1,10 +1,11 @@
+@validation @syntax @sequence @xsd
 Feature: Sequence ID and Sequence Number
   Both are mandatory parameters and the sequence number has to be a number (no letters)
 
   # SPEC-CONFORMANCE: R6 R7 R34 R35 R36
   Scenario: Invalid Sequence head attributes
     Given an xml file <xml_file>
-    And it has sequence identifier <seq_id>
+    When it has sequence identifier <seq_id>
     And it has sequence number <seq_n>
     Then document is invalid
 
@@ -19,7 +20,7 @@ Feature: Sequence ID and Sequence Number
   # SPEC-CONFORMANCE: R6 R7 R34 R35 R36
   Scenario: Valid Sequence head attributes
     Given an xml file <xml_file>
-    And it has sequence identifier <seq_id>
+    When it has sequence identifier <seq_id>
     And it has sequence number <seq_n>
     Then document is valid
 

@@ -1,11 +1,11 @@
-@timing
+@validation @xsd
 Feature: ttp:timeBase attribute is mandatory
   Every document shall declare ttp:timeBase
 
   # SPEC-CONFORMANCE: R32
   Scenario: Invalid ttp:timeBase
     Given an xml file <xml_file>
-    And it has ttp:timeBase attribute <time_base>
+    When it has ttp:timeBase attribute <time_base>
     Then document is invalid
 
     Examples:
@@ -19,7 +19,7 @@ Feature: ttp:timeBase attribute is mandatory
   # SPEC-CONFORMANCE: R32
   Scenario: Valid ttp:timeBase
     Given an xml file <xml_file>
-    And it has ttp:timeBase attribute <time_base>
+    When it has ttp:timeBase attribute <time_base>
     Then document is valid
 
     Examples:

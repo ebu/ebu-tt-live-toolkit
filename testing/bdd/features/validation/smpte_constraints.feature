@@ -1,8 +1,9 @@
-@timing
+# SPEC-CONFORMANCE.md : R71
+@validation @smpte
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
     Given an xml file <xml_file>
-    And it has frameRate <frame_rate>
+    When it has frameRate <frame_rate>
     And it has timeBase <time_base>
     And it has frameRateMultiplier <frame_rate_multiplier>
     And it has dropMode <drop_mode>
@@ -30,7 +31,7 @@ Feature: SMPTE-related attribute constraints
   # These tests are not all passing because of the missing semantic validation described in #52
   Scenario: Invalid SMPTE head attributes
     Given an xml file <xml_file>
-    And it has frameRate <frame_rate>
+    When it has frameRate <frame_rate>
     And it has timeBase <time_base>
     And it has frameRateMultiplier <frame_rate_multiplier>
     And it has dropMode <drop_mode>
@@ -43,13 +44,14 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  |            | smpte     |                       |           |               |
     | smpte.xml  | 30         | smpte     | 10001001              | dropPAL   | continuous    |
     | smpte.xml  | 25         | smpte     | 1 1                   |           | continuous    |
-    | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   |               |
+    | smpte.xml  | 25         | smpte     | 1 1                   | nonDrop   |               |
     | smpte.xml  |            | clock     |                       | nonDrop   |               |
     | smpte.xml  |            | clock     |                       |           |  continuous   |
     | smpte.xml  |            | clock     |                       |           | discontinuous |
     | smpte.xml  |            | media     |                       | nonDrop   |               |
     | smpte.xml  |            | media     |                       |           |  continuous   |
     | smpte.xml  |            | media     |                       |           | discontinuous |
+    | smpte.xml  |            | smpte     | 1 1                   | nonDrop   | continuous    |
     @skip
     # dropPAL and 1 1 doesn't work together
     | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | continuous    |
