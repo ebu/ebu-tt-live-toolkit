@@ -26,7 +26,7 @@ def when_body_begin(body_begin, template_dict):
 
 
 @when('it has body duration <body_dur>')
-def when_body_begin(body_dur, template_dict):
+def when_body_dur(body_dur, template_dict):
     template_dict['body_dur'] = body_dur
 
 
