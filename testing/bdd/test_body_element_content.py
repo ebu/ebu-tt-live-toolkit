@@ -1,4 +1,4 @@
-from pytest_bdd import given, scenarios
+from pytest_bdd import when, scenarios
 
 
 scenarios('features/validation/body_element_content.feature')
@@ -13,6 +13,6 @@ def handle_element(element):
         return '<tt:br/>'
 
 
-@given('its body has a <child_element>')
-def given_child_element(child_element, template_dict):
+@when('its body has a <child_element>')
+def when_child_element(child_element, template_dict):
     template_dict['body_content'] = handle_element(child_element)
