@@ -164,7 +164,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         return True
 
 
-class TimeBaseValidationMixin(object):
+class TimingValidationMixin(object):
     """
     This mixin is meant to be applied to timed elements (body, div, p, span) and provides parser hooks for timing
     attributes as well as a generic semantic validation for timing attributes in the document's timeBase.
@@ -194,82 +194,87 @@ class TimeBaseValidationMixin(object):
             # Clean up after successful creation
             context.pop('timing_attribute_name', None)
 
-    def _semantic_preprocess_timing(self, dataset, element_content):
-        from ebu_tt_live.bindings import body_type
-
-        begin_timedelta = None
-        dur_timedelta = None
-        end_timedelta = None
-        proposed_end = None
-
+    def _pre_init_variables(self, dataset, element_content):
+        self._begin_timedelta = self.begin and self.begin.timedelta or None
+        self._end_timedelta = self.end and self.end.timedelta or None
+        # We make sure end time is always none at the beginning because it can cause a LogicError with a stale value
         self._computed_end_time = None
+        self._semantic_dataset = dataset
 
-        if hasattr(self, 'end') and self.end is not None:
-            end_timedelta = self.end.timedelta
+    def _pre_assign_end(self, proposed_end):
+        self._semantic_dataset['timing_end_stack'].append(proposed_end)
+        self._semantic_dataset['timing_end_limit'] = max(self._semantic_dataset.get('timing_end_limt', timedelta()), proposed_end)
+        self._computed_end_time = proposed_end
 
-        if hasattr(self, 'begin') and self.begin is not None:
-            begin_timedelta = self.begin.timedelta
+    def _pre_calculate_end(self):
 
-        if hasattr(self, 'dur') and self.dur is not None:
-            # Using the knowledge here that dur is only allowed on the body element we turn it into an end
-            dur_timedelta = self.dur.timedelta
-
-        # This is all for the body element. Maybe we should specialize this class for the body
-        if begin_timedelta is not None and dur_timedelta is not None and end_timedelta is not None:
-            # This is a special (stupid) edge case..:
-            # Question is how availability time comes into play here...
-            proposed_end = min(dur_timedelta + begin_timedelta, end_timedelta)
-        elif begin_timedelta is not None and dur_timedelta is not None and end_timedelta is None:
-            proposed_end = dur_timedelta + begin_timedelta
-        elif dur_timedelta is not None and end_timedelta is None and begin_timedelta is None:
-            # In this case the document end at availability time + dur
-            proposed_end = dataset['availability_time'] + dur_timedelta
-        elif dur_timedelta is not None and end_timedelta is not None and begin_timedelta is None:
-            proposed_end = min(dataset['availability_time'] + dur_timedelta, end_timedelta)
-        elif end_timedelta is not None:
-            if dataset['timing_end_stack']:
+        if self._end_timedelta is not None:
+            if self._semantic_dataset['timing_end_stack']:
                 # If there was already an end time in some parent element.
-                proposed_end = min(dataset['timing_syncbase'] + end_timedelta, dataset['timing_end_stack'][-1])
+                proposed_end = min(self._semantic_dataset['timing_syncbase'] + self._end_timedelta, self._semantic_dataset['timing_end_stack'][-1])
             # New end
             else:
-                proposed_end = dataset['timing_syncbase'] + end_timedelta
+                proposed_end = self._semantic_dataset['timing_syncbase'] + self._end_timedelta
+            # If we have it assign it
+            self._pre_assign_end(proposed_end)
 
-        if proposed_end is not None:
-            dataset['timing_end_stack'].append(proposed_end)
-            dataset['timing_end_limit'] = max(dataset.get('timing_end_limt', timedelta()), proposed_end)
-            self._computed_end_time = proposed_end
-
+    def _pre_assign_begin(self, proposed_begin):
         # Store the element's activation begin times
-        if begin_timedelta is not None:
-            # Let's push it onto the stack. These assignments must happen last otherwise the syncbase will be wrong
-            # in calculations happening after syncbase adjustment.
-            dataset['timing_begin_stack'].append(begin_timedelta)
-            dataset['timing_syncbase'] += begin_timedelta
+
+        # Let's push it onto the stack.
+        self._semantic_dataset['timing_begin_stack'].append(proposed_begin)
+        self._semantic_dataset['timing_syncbase'] += proposed_begin
 
         # If we have a non-zero availability time we need to factor it in BUT the syncbase stays
-        if dataset['availability_time']:
-            self._computed_begin_time = max(dataset['timing_syncbase'], dataset['availability_time'])
+        if self._semantic_dataset['availability_time']:
+            self._computed_begin_time = max(self._semantic_dataset['timing_syncbase'],
+                                            self._semantic_dataset['availability_time'])
         else:
-            self._computed_begin_time = dataset['timing_syncbase']
+            self._computed_begin_time = self._semantic_dataset['timing_syncbase']
 
-        if begin_timedelta is not None and self._computed_begin_time is not None and not isinstance(self, body_type):
-            if dataset['timing_begin_limit'] is not None and dataset['timing_begin_limit'] > self._computed_begin_time or dataset['timing_begin_limit'] is None:
-                # This means that timing begin limit needs updating
-                dataset['timing_begin_limit'] = self._computed_begin_time
+    def _pre_calculate_begin(self):
+        if self._begin_timedelta is not None:
+            self._pre_assign_begin(self._begin_timedelta)
 
+            if self._computed_begin_time is not None:
+                # This will help us find the earliest descendant element of body
+                if self._semantic_dataset['timing_begin_limit'] is not None \
+                        and self._semantic_dataset['timing_begin_limit'] > self._computed_begin_time \
+                        or self._semantic_dataset['timing_begin_limit'] is None:
+                    # This means that timing begin limit needs updating
+                    self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
 
-    def _semantic_postprocess_timing(self, dataset, element_content):
-        begin_timedelta = None
+    def _semantic_preprocess_timing(self, dataset, element_content):
+
+        self._pre_init_variables(dataset, element_content)
+
+        self._pre_calculate_end()
+
+        # These assignments must happen last otherwise the syncbase will be wrong
+        # in calculations happening after syncbase adjustment.
+        self._pre_calculate_begin()
+
+    def _post_pop_begin(self):
+        if self._begin_timedelta is not None:
+            # We pushed on the stack it is time to pop it. It could probably be removed
+            # and replaced with self._begin_timedelta
+            begin_timedelta = self._semantic_dataset['timing_begin_stack'].pop()
+            self._semantic_dataset['timing_syncbase'] -= begin_timedelta
+
+    def _post_pop_end(self):
         end_timedelta = None
 
-        if hasattr(self, 'end') and self.end is not None or hasattr(self, 'dur') and self.dur is not None:
+        if self._end_timedelta is not None:
             # We pushed on the stack it is time to pop it
-            end_timedelta = dataset['timing_end_stack'].pop()
+            end_timedelta = self._semantic_dataset['timing_end_stack'].pop()
 
-        if hasattr(self, 'begin') and self.begin is not None:
-            # We pushed on the stack it is time to pop it
-            begin_timedelta = dataset['timing_begin_stack'].pop()
-            dataset['timing_syncbase'] -= begin_timedelta
+        return end_timedelta
+
+    def _semantic_postprocess_timing(self, dataset, element_content):
+
+        self._post_pop_begin()
+        # This end timedelta is an absolute calculated value on the timeline. Not relative.
+        end_timedelta = self._post_pop_end()
 
         # If the forward running part of the traversal could not assign an end time we can use the backwards route
         # which is in a way similar to dynamic programming because we take the children computed times and take the
@@ -286,16 +291,16 @@ class TimeBaseValidationMixin(object):
             # This requires calculation based on the timings in its children.
 
             # All timing containers are complexTypes so we can call orderedContent safely
-            children = filter(lambda item: isinstance(item, TimeBaseValidationMixin), [x.value for x in self.orderedContent()])
+            children = filter(lambda item: isinstance(item, TimingValidationMixin), [x.value for x in self.orderedContent()])
             # Order of statements is important
             if not children:
                 # This means we are in a timing container leaf.
-                if not dataset['timing_end_stack']:
+                if not self._semantic_dataset['timing_end_stack']:
                     # Here we go an endless document. Pointless but for clarity's sake assign it explicitly to None.
                     self._computed_end_time = None
                 else:
                     # Try to assign it the last specified ancestor
-                    self._computed_end_time = dataset['timing_end_stack'][-1]
+                    self._computed_end_time = self._semantic_dataset['timing_end_stack'][-1]
             else:
                 children_computed_end_times = [item.computed_end_time for item in children]
 
@@ -311,7 +316,7 @@ class TimeBaseValidationMixin(object):
     # take part in the traversal directly we process them in the timed element's context instead: body, div, p, span
     def _semantic_timebase_validation(self, dataset, element_content):
         time_base = dataset['tt_element'].timeBase
-        if hasattr(self, 'begin') and self.begin is not None:
+        if self.begin is not None:
             if hasattr(self.begin, 'compatible_timebases'):
                 # Check typing of begin attribute against the timebase
                 timebases = self.begin.compatible_timebases()
@@ -324,20 +329,7 @@ class TimeBaseValidationMixin(object):
                             time_base=time_base
                         )
                     )
-        if hasattr(self, 'dur') and self.dur is not None:
-            if hasattr(self.dur, 'compatible_timebases'):
-                # Check typing of dur attribute against the timebase
-                timebases = self.dur.compatible_timebases()
-                if time_base not in timebases['dur']:
-                    raise SemanticValidationError(
-                        ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                            attr_type=type(self.dur),
-                            attr_value=self.dur,
-                            attr_name='dur',
-                            time_base=time_base
-                        )
-                    )
-        if hasattr(self, 'end') and self.end is not None:
+        if self.end is not None:
             if hasattr(self.end, 'compatible_timebases'):
                 # Check typing of end attribute against the timebase
                 timebases = self.end.compatible_timebases()
@@ -347,6 +339,70 @@ class TimeBaseValidationMixin(object):
                             attr_type=type(self.end),
                             attr_value=self.end,
                             attr_name='end',
+                            time_base=time_base
+                        )
+                    )
+
+
+class BodyTimingValidationMixin(TimingValidationMixin):
+    """
+    The body element seems to be exception from too many rules and makes one common validator pretty difficult
+    to manage. This subclass is meant to call all the extensions/limitations for the body element that does not apply
+    to timed containers in general in the EBU-TT-Live spec.
+    """
+
+    def _pre_init_variables(self, dataset, element_content):
+        super(BodyTimingValidationMixin, self)._pre_init_variables(dataset, element_content)
+        self._dur_timedelta = self.dur and self.dur.timedelta or None
+
+    def _pre_calculate_end(self):
+        # This is all for the body element because of the dur attribute
+        if self._begin_timedelta is not None and self._dur_timedelta is not None and self._end_timedelta is not None:
+            # This is a special (stupid) edge case..:
+            proposed_end = min(self._dur_timedelta + self._begin_timedelta, self._end_timedelta)
+        elif self._begin_timedelta is not None and self._dur_timedelta is not None and self._end_timedelta is None:
+            proposed_end = self._dur_timedelta + self._begin_timedelta
+        elif self._dur_timedelta is not None and self._end_timedelta is None and self._begin_timedelta is None:
+            # In this case the document end at availability time + dur
+            proposed_end = self._semantic_dataset['availability_time'] + self._dur_timedelta
+        elif self._dur_timedelta is not None and self._end_timedelta is not None and self._begin_timedelta is None:
+            proposed_end = min(self._semantic_dataset['availability_time'] + self._dur_timedelta, self._end_timedelta)
+        else:
+            # Fallback case if there is no duration specified the same as the other containers
+            super(BodyTimingValidationMixin, self)._pre_calculate_end()
+            # WARNING this assigns it so we are done
+            return
+        # If one of our special ifs worked let's assign the value here.
+        self._pre_assign_end(proposed_end)
+
+    def _pre_calculate_begin(self):
+        if self._begin_timedelta is not None:
+            self._pre_assign_begin(self._begin_timedelta)
+
+    def _post_pop_end(self):
+        end_timedelta = None
+
+        if self._end_timedelta is not None or self._dur_timedelta is not None:
+            # We pushed on the stack it is time to pop it
+            end_timedelta = self._semantic_dataset['timing_end_stack'].pop()
+
+        return end_timedelta
+
+    def _semantic_timebase_validation(self, dataset, element_content):
+
+        super(BodyTimingValidationMixin, self)._semantic_timebase_validation(dataset, element_content)
+        time_base = dataset['tt_element'].timeBase
+
+        if self.dur is not None:
+            if hasattr(self.dur, 'compatible_timebases'):
+                # Check typing of dur attribute against the timebase
+                timebases = self.dur.compatible_timebases()
+                if time_base not in timebases['dur']:
+                    raise SemanticValidationError(
+                        ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                            attr_type=type(self.dur),
+                            attr_value=self.dur,
+                            attr_name='dur',
                             time_base=time_base
                         )
                     )

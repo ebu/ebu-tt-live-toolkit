@@ -1,7 +1,7 @@
 import logging
 from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata, TimeBaseValidationMixin
+from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED

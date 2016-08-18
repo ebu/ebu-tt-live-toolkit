@@ -11,7 +11,7 @@ from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
-from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimeBaseValidationMixin
+from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, BodyTimingValidationMixin
 from ebu_tt_live.errors import SemanticValidationError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
 
@@ -139,11 +139,11 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
 raw.tt_type._SetSupersedingClass(tt_type)
 
 
-class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
+class p_type(TimingValidationMixin, SemanticValidationMixin, raw.p_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -156,11 +156,11 @@ class p_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.p_type):
 raw.p_type._SetSupersedingClass(p_type)
 
 
-class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type):
+class span_type(TimingValidationMixin, SemanticValidationMixin, raw.span_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -173,11 +173,11 @@ class span_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.span_type)
 raw.span_type._SetSupersedingClass(span_type)
 
 
-class div_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.div_type):
+class div_type(TimingValidationMixin, SemanticValidationMixin, raw.div_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -190,12 +190,12 @@ class div_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.div_type):
 raw.div_type._SetSupersedingClass(div_type)
 
 
-class body_type(TimeBaseValidationMixin, SemanticValidationMixin, raw.body_type):
+class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'dur')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimeBaseValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'dur')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
