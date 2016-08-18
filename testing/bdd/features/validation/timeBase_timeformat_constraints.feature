@@ -1,3 +1,4 @@
+# SPEC-CONFORMANCE : R70
 @validation @xsd @syntax @times
 Feature: ttp:timeBase-related attribute constraints
 
@@ -36,7 +37,7 @@ Feature: ttp:timeBase-related attribute constraints
     Examples:
     | xml_file                 | time_base | body_begin    | body_end      | body_dur      |
     | timeBase_timeformat.xml  | clock     | 15.58a        | 1.5d          |               |
-    | timeBase_timeformat.xml  | media     | 67.945q       | 125.0x        |               |
+    | timeBase_timeformat.xml  | media     | 67.945q       | -125.0x       |               |
     | timeBase_timeformat.xml  | media     |               |               | 99.9l         |
     | timeBase_timeformat.xml  | media     | 42:05:08:60.8 | 45:00:47.0    |               |
     | timeBase_timeformat.xml  | media     | 140:09:60.8.1 | 141:00:60.999 |               |
