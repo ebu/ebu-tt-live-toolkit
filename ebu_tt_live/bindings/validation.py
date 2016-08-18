@@ -198,8 +198,14 @@ class TimingValidationMixin(object):
         self._begin_timedelta = self.begin and self.begin.timedelta or None
         self._end_timedelta = self.end and self.end.timedelta or None
         # We make sure end time is always none at the beginning because it can cause a LogicError with a stale value
+        self._computed_begin_time = None
         self._computed_end_time = None
         self._semantic_dataset = dataset
+
+    def _post_cleanup_variables(self):
+        del self._semantic_dataset
+        del self._begin_timedelta
+        del self._end_timedelta
 
     def _pre_assign_end(self, proposed_end):
         self._semantic_dataset['timing_end_stack'].append(proposed_end)
@@ -354,6 +360,10 @@ class BodyTimingValidationMixin(TimingValidationMixin):
     def _pre_init_variables(self, dataset, element_content):
         super(BodyTimingValidationMixin, self)._pre_init_variables(dataset, element_content)
         self._dur_timedelta = self.dur and self.dur.timedelta or None
+
+    def _post_cleanup_variables(self):
+        del self._dur_timedelta
+        super(BodyTimingValidationMixin, self)._post_cleanup_variables()
 
     def _pre_calculate_end(self):
         # This is all for the body element because of the dur attribute
