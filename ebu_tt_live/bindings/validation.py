@@ -195,6 +195,8 @@ class TimeBaseValidationMixin(object):
             context.pop('timing_attribute_name', None)
 
     def _semantic_preprocess_timing(self, dataset, element_content):
+        from ebu_tt_live.bindings import body_type
+
         begin_timedelta = None
         dur_timedelta = None
         end_timedelta = None
@@ -250,8 +252,8 @@ class TimeBaseValidationMixin(object):
         else:
             self._computed_begin_time = dataset['timing_syncbase']
 
-        if self._computed_begin_time is not None:
-            if dataset['timing_begin_limit'] is not None and dataset['timing_begin_limit'] < self._computed_begin_time or dataset['timing_begin_limit'] is None:
+        if begin_timedelta is not None and self._computed_begin_time is not None and not isinstance(self, body_type):
+            if dataset['timing_begin_limit'] is not None and dataset['timing_begin_limit'] > self._computed_begin_time or dataset['timing_begin_limit'] is None:
                 # This means that timing begin limit needs updating
                 dataset['timing_begin_limit'] = self._computed_begin_time
 
