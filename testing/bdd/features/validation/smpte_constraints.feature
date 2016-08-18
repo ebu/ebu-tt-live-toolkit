@@ -1,3 +1,4 @@
+# SPEC-CONFORMANCE.md : R71
 @validation @smpte
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
@@ -43,13 +44,14 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  |            | smpte     |                       |           |               |
     | smpte.xml  | 30         | smpte     | 10001001              | dropPAL   | continuous    |
     | smpte.xml  | 25         | smpte     | 1 1                   |           | continuous    |
-    | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   |               |
+    | smpte.xml  | 25         | smpte     | 1 1                   | nonDrop   |               |
     | smpte.xml  |            | clock     |                       | nonDrop   |               |
     | smpte.xml  |            | clock     |                       |           |  continuous   |
     | smpte.xml  |            | clock     |                       |           | discontinuous |
     | smpte.xml  |            | media     |                       | nonDrop   |               |
     | smpte.xml  |            | media     |                       |           |  continuous   |
     | smpte.xml  |            | media     |                       |           | discontinuous |
+    | smpte.xml  |            | smpte     | 1 1                   | nonDrop   | continuous    |
     @skip
     # dropPAL and 1 1 doesn't work together
     | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | continuous    |
