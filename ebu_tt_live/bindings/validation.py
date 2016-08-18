@@ -200,6 +200,8 @@ class TimeBaseValidationMixin(object):
         end_timedelta = None
         proposed_end = None
 
+        self._computed_end_time = None
+
         if hasattr(self, 'end') and self.end is not None:
             end_timedelta = self.end.timedelta
 
