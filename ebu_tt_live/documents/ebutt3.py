@@ -1,7 +1,7 @@
 import logging
 from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata
+from ebu_tt_live.bindings import _ebuttm as metadata, TimeBaseValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED
@@ -235,7 +235,40 @@ class EBUTT3Document(SubtitleDocument):
         # Extract results
 
         # Begin times
+        bfs_queue = []
+        # Default value for the computed begin time of the document is the active begin time of the body
+        # This only changes if the body does not declare a begin time.
         self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
+        body_begin = self._ebutt3_content.body.begin
+        # If the body defines no begin time, the document's resolved begin time
+        # is the earliest begin time of body's children elements (and this
+        # applies recursively)
+        if body_begin is None:
+            children = self._ebutt3_content.body.orderedContent()
+            for child in children:
+                bfs_queue.append(child.value)
+            min_child_begin = None
+            # BFS over the tree of elements, starting at body
+            while bfs_queue:
+                current_child = bfs_queue.pop(0)
+                if isinstance(current_child, TimeBaseValidationMixin):
+                    # if current child declares a begin time
+                    if current_child.begin is not None:
+                        # if it is the first child we see to declare a begin
+                        # time. We take it as our current earlier computed
+                        # begin time. Otherwise we compare with the one we
+                        # have.
+                        if min_child_begin is None:
+                            min_child_begin = current_child.computed_begin_time
+                        else:
+                            if current_child.computed_begin_time < min_child_begin:
+                                min_child_begin = current_child.computed_begin_time
+                    current_child_children = current_child.orderedContent()
+                    for child in current_child_children:
+                        bfs_queue.append(child.value)
+            if min_child_begin is not None:
+                self._computed_begin_time = min_child_begin
+
 
         # End times
         self._computed_end_time = self._ebutt3_content.body.computed_end_time
