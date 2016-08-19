@@ -155,7 +155,7 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml | smpte     | 11.11        |              |  
     | timeBase_timeformat.xml | smpte     | 11:11:11:111 |              |  
 
-
+  # SPEC-CONFORMANCE: R101 R102 R103 R104 R105 R106
   Scenario: Valid times according to timeBase in span
     Given an xml file <xml_file>
     When it has timeBase <time_base>
