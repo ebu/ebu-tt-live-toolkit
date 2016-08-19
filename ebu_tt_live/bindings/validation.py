@@ -250,6 +250,15 @@ class TimingValidationMixin(object):
                 self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
 
     def _semantic_preprocess_timing(self, dataset, element_content):
+        """
+        As the validator traverses in a Depth First Search this is the hook function to call on the way DOWN.
+        Steps to take:
+         - Initialize temporary variables
+         - Calculate end timing if element defines an end time
+         - Calculate begin time and syncbase for children
+        :param dataset: Semantic dataset from semantic validation framework
+        :param element_content: PyXB's binding placeholder for this binding instance
+        """
 
         self._pre_init_variables(dataset, element_content)
 
@@ -276,6 +285,15 @@ class TimingValidationMixin(object):
         return end_timedelta
 
     def _semantic_postprocess_timing(self, dataset, element_content):
+        """
+        As the validator traverses in a Depth First Search this is the hook function to call on the way UP
+        Steps to take:
+         - Fill in end times if element doesn't define end time
+         - Try using information from its children
+         - if no children are found look at parents end time constraints.
+        :param dataset: Semantic dataset from semantic validation framework
+        :param element_content: PyXB's binding placeholder for this binding instance
+        """
 
         self._post_pop_begin()
         # This end timedelta is an absolute calculated value on the timeline. Not relative.
@@ -366,16 +384,17 @@ class BodyTimingValidationMixin(TimingValidationMixin):
 
     def _pre_calculate_end(self):
         # This is all for the body element because of the dur attribute
-        if self._begin_timedelta is not None and self._dur_timedelta is not None and self._end_timedelta is not None:
-            # This is a special (stupid) edge case..:
-            proposed_end = min(self._dur_timedelta + self._begin_timedelta, self._end_timedelta)
-        elif self._begin_timedelta is not None and self._dur_timedelta is not None and self._end_timedelta is None:
-            proposed_end = self._dur_timedelta + self._begin_timedelta
-        elif self._dur_timedelta is not None and self._end_timedelta is None and self._begin_timedelta is None:
-            # In this case the document end at availability time + dur
-            proposed_end = self._semantic_dataset['availability_time'] + self._dur_timedelta
-        elif self._dur_timedelta is not None and self._end_timedelta is not None and self._begin_timedelta is None:
-            proposed_end = min(self._semantic_dataset['availability_time'] + self._dur_timedelta, self._end_timedelta)
+        if self._dur_timedelta is not None:
+            if self._begin_timedelta is not None and self._end_timedelta is not None:
+                # This is a special (stupid) edge case..:
+                proposed_end = min(self._dur_timedelta + self._begin_timedelta, self._end_timedelta)
+            elif self._begin_timedelta is not None and self._end_timedelta is None:
+                proposed_end = self._dur_timedelta + self._begin_timedelta
+            elif self._begin_timedelta is None and self._end_timedelta is None:
+                # In this case the document end at availability time + dur
+                proposed_end = self._semantic_dataset['availability_time'] + self._dur_timedelta
+            elif self._begin_timedelta is None and self._end_timedelta is not None:
+                proposed_end = min(self._semantic_dataset['availability_time'] + self._dur_timedelta, self._end_timedelta)
         else:
             # Fallback case if there is no duration specified the same as the other containers
             super(BodyTimingValidationMixin, self)._pre_calculate_end()
