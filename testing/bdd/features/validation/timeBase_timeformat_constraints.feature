@@ -78,8 +78,8 @@ Feature: ttp:timeBase-related attribute constraints
   Scenario: Invalid times according to timeBase in div
     Given an xml file <xml_file>
     When it has timeBase <time_base>
-    And it has body begin time <div_begin>
-    And it has body end time <div_end>
+    And it has div begin time <div_begin>
+    And it has div end time <div_end>
     Then document is invalid
 
     Examples:
