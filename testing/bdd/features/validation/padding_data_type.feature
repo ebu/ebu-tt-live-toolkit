@@ -4,8 +4,6 @@ Feature: Padding Element and Datatype testing
 
   ## Assumes that we can pass <tag> to the examples so that we test that the attribute is only applied to the elements that support it.
   ## If we can't, this restriction will be built into the template.
-  ## TODO: template (see note above)
-  ## TODO: py test
   Scenario: Valid padding on element
     Given an xml file <xml_file>
     When <tag> has a padding attribute
