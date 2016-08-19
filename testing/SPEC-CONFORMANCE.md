@@ -51,25 +51,25 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R42|3.2.2.2.1| `ebuttm:trace` `action` attribute Cardinality 1..1 | |
 |R43|3.2.2.2.1| `ebuttm:trace` `generatedBy` attribute Cardinality 1..1 | |
 |R44|3.2.2.3| A document that contains a `tt:body` element with no content shall be treated as being active as defined by the semantics described in § 2.3.1, and shall cause no content to be presented while it is active.| |
-|R45|3.2.2.3|`body` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
+|R45|3.2.2.3|`body` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on body`|
 |R46|3.2.2.3|`body` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
 |R47|3.2.2.3|`body` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
-|R48|3.2.2.3|`body` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
+|R48|3.2.2.3|`body` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on body` |
 |R49|3.2.2.3|`body` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
 |R50|3.2.2.3|`body` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
-|R51|3.2.2.3|`body` `dur` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. (NB this will be permitted when `markerMode="continuous"`, a change yet to be implemented in the spec)| |
+|R51|3.2.2.3|`body` `dur` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. (NB this will be permitted when `markerMode="continuous"`, a change yet to be implemented in the spec)| `bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on body`|
 |R52|3.2.2.3|`body` `dur` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
 |R53|3.2.2.3|`body` `dur` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
-|R54|3.2.2.4|`div` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
+|R54|3.2.2.4|`div` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on div` |
 |R55|3.2.2.4|`div` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | |
 |R56|3.2.2.4|`div` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | |
-|R57|3.2.2.4|`div` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
+|R57|3.2.2.4|`div` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | `bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on div` |
 |R58|3.2.2.4|`div` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | |
 |R59|3.2.2.4|`div` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | |
-|R60|3.2.2.5|`p` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
+|R60|3.2.2.5|`p` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | `bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on p` |
 |R61|3.2.2.5|`p` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R62|3.2.2.5|`p` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
-|R63|3.2.2.5|`p` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | |
+|R63|3.2.2.5|`p` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | `bdd/features/validation/timeBase\_timeformat\_smpte.feature` `(In)valid SMPTE timings on p` |
 |R64|3.2.2.5|`p` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R65|3.2.2.5|`p` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.| |
