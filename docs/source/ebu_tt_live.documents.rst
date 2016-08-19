@@ -22,6 +22,7 @@ documents Package
 
 .. automodule:: ebu_tt_live.documents.ebutt3
     :members:
+    :private-members:
     :undoc-members:
     :show-inheritance:
 

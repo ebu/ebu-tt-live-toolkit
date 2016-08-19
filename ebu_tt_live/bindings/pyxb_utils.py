@@ -22,7 +22,7 @@ def get_xml_parsing_context():
     :return: dict that is te parsing context for the currently running parser
     :return: None if not in parsing mode
     """
-    log.info('Accessing xml_parsing_context: {}'.format(__xml_parsing_context))
+    log.debug('Accessing xml_parsing_context: {}'.format(__xml_parsing_context))
     if __xml_parsing_context.parsing is False:
         # We are not in parsing mode
         return None
@@ -30,7 +30,7 @@ def get_xml_parsing_context():
 
 
 def reset_xml_parsing_context(parsing=False):
-    log.info('Resetting xml_parsing_context: {}'.format(__xml_parsing_context))
+    log.debug('Resetting xml_parsing_context: {}'.format(__xml_parsing_context))
     __xml_parsing_context.context = {}
     __xml_parsing_context.parsing = parsing
 

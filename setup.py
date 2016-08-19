@@ -33,7 +33,8 @@ setup(
         "pyyaml",
         "twisted",
         "autobahn",
-        "nltk"
+        "nltk",
+        "sortedcontainers"
     ],
     license="BSD3",
     packages=packages,

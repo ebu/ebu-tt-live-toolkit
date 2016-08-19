@@ -2,6 +2,7 @@
 from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type
+from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.strings import END_OF_DATA
 
@@ -54,7 +55,7 @@ class SimpleProducer(Node):
             except StopIteration:
                 raise EndOfData(END_OF_DATA)
         else:
-            lines = [activation_time]
+            lines = [LimitedClockTimingType(activation_time)]
 
         document = self._document_sequence.new_document()
 
@@ -64,8 +65,8 @@ class SimpleProducer(Node):
             )
         )
 
-        document.set_dur(timedelta(seconds=1))
-        document.set_begin(activation_time)
+        document.set_dur(LimitedClockTimingType(timedelta(seconds=1)))
+        document.set_begin(LimitedClockTimingType(activation_time))
 
         document.validate()
 

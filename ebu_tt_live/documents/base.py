@@ -33,6 +33,28 @@ class DocumentSequence(object):
         """
         raise NotImplementedError()
 
+    def add_document(self, document):
+        """
+        Add the document to the sequence on the consumer side of things. This will put the document on the timeline
+        and validate the sequence in terms of timing resolution.
+        :param document:
+        :raises IncompatibleSequenceError meaning that the document cannot be part of this sequence for
+        it does not match the semantics of the sequence.
+        """
+        raise NotImplementedError()
+
+    def get_document(self, seq_id):
+        """
+        Retrieve document by sequence number
+        :param seq_id:
+        :return: a document
+        :raises: KeyError meaning the document is not in the sequence
+        """
+        raise NotImplementedError()
+
+    def __getitem__(self, item):
+        return self.get_document(seq_id=item)
+
     def fork(self, *args, **kwargs):
         """
         Create a new stream with modified arguments.
