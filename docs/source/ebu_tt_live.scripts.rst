@@ -43,7 +43,7 @@ scripts Package
 
 
 :mod:`ebu_user_input_consumer` Module
----------------------------------
+-------------------------------------
 
 .. automodule:: ebu_tt_live.scripts.ebu_user_input_consumer
     :members:
