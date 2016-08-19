@@ -5,19 +5,65 @@
       <meta charset="utf-8">
       <meta name="description" content="Documentation for the EBU-TT-Live-Toolkit project.">
 
-      <title>EBU-TT Live Toolkit</title>
+      <title>EBU-TT Live Interoperability Toolkit</title>
 
       <!-- <link rel="stylesheet" href="css/styles.css?v=1.0"> -->
+<style type="text/css">
+   body {
+      font-family: "Helvetica Neue", Helvetica;
+      margin-left: 50px;
+      margin-right: 30px;
+   }
+
+header {
+   margin-top: 50px;
+}
+   h1 {
+      font-size: 28px;
+      font-weight: bold;
+      line-height: 28px;
+      margin-bottom: 20px;
+      margin-top: 45px;
+      color: rgb(79, 79, 79);
+   }
+
+    h2, h3 {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 24px;
+      margin-top: 45px;
+      color: rgb(79, 79, 79);
+   }
+   p {
+      font-size: 16px;
+      line-height: 20.8px;
+   }
+   a {
+      color: rgb(17, 34, 102);
+      font-weight: bold;
+      text-decoration: none;
+   }
+</style>
    </head>
 
    <body>
-      <h1>EBU-TT Live Toolkit</h1>
-      <h3>Project</h3>
-      <p> You can find details about the project on its <a href="https://github.com/ebu/ebu-tt-live-toolkit/">github page</a>.</p>
+   <header>
+         <a href="https://tech.ebu.ch/home"><img src="img/ebu-logo.png" alt="EBU logo"></a>
+   </header>
+      <h1 class="title">EBU-TT Live Interoperability Toolkit</h3>
+      <h2>Goals</h2>
+      <p>1. Validate the <a href="https://tech.ebu.ch/publications/tech3370">EBU-TT Part 3 Live</a> specification.</p>
+      <p>2. Provide a set of resources to help anyone making equipment or software using EBU-TT Part 3.</p>
+      <h2>What is it?</h2>
+      <p>The interoperability toolkit is a set of components, mostly written in Python (to be easy-ish to read) that can create EBU-TT Live documents (and sequences), transfer them from one Node to another using Carriage Mechanisms (currently WebSocket and the file system), validate them, and allow them to be viewed.</p>
+      <p>If you are writing code to produce live subtitles in EBU-TT Live, you should try plugging it into the <i>consumer</i> to validate the sequences you make. If you are writing code to consume live subtitles, you should try using the <i>producer</i> to generate test data.</p>
+      <h2>The Project</h2>
+      <p>This is an open source project hosted by <a href="https://tech.ebu.ch/home">EBU</a> on GitHub, using Travis-CI for continuous integration and coveralls for code test coverage. The license is BSD3.</p>
+      <p>This is an activity of the EBU <a href="https://tech.ebu.ch/groups/pdfxp">Subtitles in XML</a> group.</p>
+      <p>You can find details about the project, including details of how to contribute, on its <a href="https://github.com/ebu/ebu-tt-live-toolkit/">github page</a>.</p>
       <h3>Documentation</h3>
-      <p>The documentation is available <a href="http://ebu.github.io/ebu-tt-live-toolkit/html/index.html">here</a></p>.
+      <p>The code documentation is available <a href="html/index.html">here</a>.</p>
       <footer>
-         <img src="img/ebu-logo.png" alt="EBU logo">
       </footer>
    </body>
 </html>
