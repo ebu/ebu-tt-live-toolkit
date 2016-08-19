@@ -70,28 +70,3 @@ Feature: Padding Element and Datatype testing
     | padding_data_type.xml |        |        |        |        |
     | padding_data_type.xml | ' '    |        |        |        |
     | padding_data_type.xml |        |        |        |        |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
