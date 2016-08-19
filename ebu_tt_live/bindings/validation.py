@@ -253,9 +253,9 @@ class TimingValidationMixin(object):
         """
         As the validator traverses in a Depth First Search this is the hook function to call on the way DOWN.
         Steps to take:
-         - Initialize temporary variables
-         - Calculate end timing if element defines an end time
-         - Calculate begin time and syncbase for children
+          - Initialize temporary variables
+          - Calculate end timing if element defines an end time
+          - Calculate begin time and syncbase for children
         :param dataset: Semantic dataset from semantic validation framework
         :param element_content: PyXB's binding placeholder for this binding instance
         """
@@ -288,9 +288,9 @@ class TimingValidationMixin(object):
         """
         As the validator traverses in a Depth First Search this is the hook function to call on the way UP
         Steps to take:
-         - Fill in end times if element doesn't define end time
-         - Try using information from its children
-         - if no children are found look at parents end time constraints.
+          - Fill in end times if element doesn't define end time
+          - Try using information from its children
+          - if no children are found look at parents end time constraints.
         :param dataset: Semantic dataset from semantic validation framework
         :param element_content: PyXB's binding placeholder for this binding instance
         """
