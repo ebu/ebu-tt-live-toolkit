@@ -23,6 +23,16 @@ def when_body_dur(body_dur, template_dict):
     template_dict['body_dur'] = body_dur
 
 
+@when('it has div begin time <div_begin>')
+def when_div_begin(div_begin, template_dict):
+    template_dict['div_begin'] = div_begin
+
+
+@when('it has div end time <div_end>')
+def when_div_end(div_end, template_dict):
+    template_dict['div_end'] = div_end
+
+
 @when('it has p begin time <p_begin>')
 def when_p_begin(p_begin, template_dict):
     template_dict['p_begin'] = p_begin
