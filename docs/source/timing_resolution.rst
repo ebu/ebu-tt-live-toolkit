@@ -22,4 +22,7 @@ calculated either as the algorithm cascades down or on its way up in case inform
 Sequence Timings
 ----------------
 
-TODO
+The sequence timings are handled by the :py:class:`ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence` class.
+The document is insterted after having been validated into the sequence. The sequence looks at the computed begin and
+end times and detects collisions. If there are any the collisions are resolved by the logic starting in
+:py:function:`ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard`
