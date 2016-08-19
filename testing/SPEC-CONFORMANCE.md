@@ -108,12 +108,10 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R97|4.8|`tts:linePadding` values SHALL be constrained to one non-negative decimal appended by "c" (cell)||
 |R98|4.9|`tts:lineHeight` values SHALL be constrained to the string `normal` or a non-negative number appended by percentage “%”, c” (for cells) or “px” (for pixels).||
 |R99|4.10|`origin` values SHALL be constrained to two non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels) delimited by a space.||
-|R100|4.11|`tts:padding` values SHALL be constrained to one, two, three or four decimal numbers (`xs:decimal`) appended by percentage “%”, c” (for cells) or “px” (for pixels), delimited by a space.||
+|R100|4.11|`tts:padding` values SHALL be constrained to one, two, three or four decimal numbers (`xs:decimal`) appended by percentage “%”, c” (for cells) or “px” (for pixels), delimited by a space.|`bdd/features/validation/padding\_data\_type.feature` Padding Element and Datatype testing|
 |R101|3.2.2.3.3|`span` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R102|3.2.2.3.3|`span` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R103|3.2.2.3.3|`span` `begin` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R104|3.2.2.3.3|`span` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
-
-
