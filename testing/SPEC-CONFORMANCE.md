@@ -77,9 +77,9 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).| |
 | | **Tech3350 v1.1**| | |
 |R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff||
-|R70|3|If `ttp:timeBase="media"`` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: <ul><li>hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted.</li><li>non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)</li></ul>||
-|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`||
-|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `discontinuous`.||
+|R70|3|If `ttp:timeBase="media"`` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: <ul><li>hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted.</li><li>non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)</li></ul>|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
+|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`|`bdd/features/validation/smpte\_constraints.feature`|
+|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.||
 |R73|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.||   
 |R73|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified||
 |R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
@@ -108,4 +108,4 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R97|4.8|`tts:linePadding` values SHALL be constrained to one non-negative decimal appended by "c" (cell)||
 |R98|4.9|`tts:lineHeight` values SHALL be constrained to the string `normal` or a non-negative number appended by percentage “%”, c” (for cells) or “px” (for pixels).||
 |R99|4.10|`origin` values SHALL be constrained to two non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels) delimited by a space.||
-|R100|4.11|`tts:padding` values SHALL be constrained to one, two, three or four non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels), delimited by a space.|`bdd/features/validation/padding_data_type.feature` Padding Element and Datatype testing|
+|R100|4.11|`tts:padding` values SHALL be constrained to one, two, three or four non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels), delimited by a space.|`bdd/features/validation/padding\_data\_type.feature` Padding Element and Datatype testing|
