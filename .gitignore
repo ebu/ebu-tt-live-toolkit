@@ -113,3 +113,9 @@ node_modules/
 
 # Precompiled js file
 ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
+
+# We need to not ignore index.html file for docs
+!docs/build/
+docs/build/*
+!docs/build/index.html
+!docs/build/img
