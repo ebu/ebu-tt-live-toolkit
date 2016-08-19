@@ -1,4 +1,4 @@
-@validation @parse_times
+@times @validation @parse_times
 Feature: Regex parsing TimecountTimingType values
   # Regex for other time types are inderectly checked by 
 

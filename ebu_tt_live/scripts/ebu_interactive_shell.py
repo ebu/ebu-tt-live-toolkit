@@ -2,7 +2,7 @@
 import logging
 from argparse import ArgumentParser
 from common import create_loggers
-from ebu_tt_live import bindings
+from ebu_tt_live.documents import EBUTT3Document
 
 
 log = logging.getLogger('ebu_interactive_shell')
@@ -18,7 +18,7 @@ def main():
 
     if args.input_file:
         with open(args.input_file, 'r') as ifile:
-            document = bindings.CreateFromDocument(ifile.read())
+            document = EBUTT3Document.create_from_xml(ifile.read())
 
     import ipdb
     ipdb.set_trace()

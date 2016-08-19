@@ -5,3 +5,4 @@ Overview of the EBU-TT live toolkit.
     nodes_and_carriage_mechanisms
     validation
     user_input_producer
+    timing_resolution
