@@ -132,7 +132,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
 <span class="kn">from</span> <span class="nn">common</span> <span class="k">import</span> <span class="n">create_loggers</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">bindings</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
 
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;ebu_interactive_shell&#39;</span><span class="p">)</span>
@@ -148,7 +148,7 @@
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input_file</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">ifile</span><span class="p">:</span>
-            <span class="n">document</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span><span class="n">ifile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">document</span> <span class="o">=</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_xml</span><span class="p">(</span><span class="n">ifile</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 
     <span class="kn">import</span> <span class="nn">ipdb</span>
     <span class="n">ipdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span></div>

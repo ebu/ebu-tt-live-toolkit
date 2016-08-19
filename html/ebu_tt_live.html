@@ -32,7 +32,7 @@
   
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="next" title="bindings Package" href="ebu_tt_live.bindings.html"/>
-        <link rel="prev" title="User input producer" href="user_input_producer.html"/> 
+        <link rel="prev" title="Timing resolution and consumer logic" href="timing_resolution.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -152,6 +152,17 @@ what the different components and classes are responsible for.</p>
 <div class="section" id="module-ebu_tt_live.errors">
 <span id="errors-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">errors</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.errors" title="Permalink to this headline">¶</a></h2>
 <dl class="exception">
+<dt id="ebu_tt_live.errors.DocumentDiscardedError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">DocumentDiscardedError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#DocumentDiscardedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.DocumentDiscardedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.errors.DocumentDiscardedError.offending_document">
+<code class="descname">offending_document</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.errors.DocumentDiscardedError.offending_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.DocumentNotLoadedError">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">DocumentNotLoadedError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#DocumentNotLoadedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.DocumentNotLoadedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -164,8 +175,26 @@ what the different components and classes are responsible for.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="ebu_tt_live.errors.IncompatibleSequenceError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">IncompatibleSequenceError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#IncompatibleSequenceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.IncompatibleSequenceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ebu_tt_live.errors.LogicError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">LogicError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#LogicError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.LogicError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.SemanticValidationError">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">SemanticValidationError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#SemanticValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.SemanticValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ebu_tt_live.errors.SequenceOverridden">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">SequenceOverridden</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#SequenceOverridden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.SequenceOverridden" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 </dd></dl>
 
@@ -299,7 +328,7 @@ NOTE: This is a slightly modified version of the one suggested by the following 
         <a href="ebu_tt_live.bindings.html" class="btn btn-neutral float-right" title="bindings Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="user_input_producer.html" class="btn btn-neutral" title="User input producer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="timing_resolution.html" class="btn btn-neutral" title="Timing resolution and consumer logic" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

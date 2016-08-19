@@ -132,6 +132,7 @@
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">div_type</span><span class="p">,</span> <span class="n">br_type</span><span class="p">,</span> <span class="n">p_type</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="k">import</span> <span class="n">LimitedClockTimingType</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">END_OF_DATA</span>
 
@@ -184,7 +185,7 @@
             <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">EndOfData</span><span class="p">(</span><span class="n">END_OF_DATA</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">activation_time</span><span class="p">]</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">activation_time</span><span class="p">)]</span>
 
         <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span><span class="o">.</span><span class="n">new_document</span><span class="p">()</span>
 
@@ -194,8 +195,8 @@
             <span class="p">)</span>
         <span class="p">)</span>
 
-        <span class="n">document</span><span class="o">.</span><span class="n">set_dur</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">document</span><span class="o">.</span><span class="n">set_begin</span><span class="p">(</span><span class="n">activation_time</span><span class="p">)</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">set_dur</span><span class="p">(</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">set_begin</span><span class="p">(</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">activation_time</span><span class="p">))</span>
 
         <span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 

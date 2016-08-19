@@ -130,24 +130,43 @@
   <h1>Source code for ebu_tt_live.node.consumer</h1><div class="highlight"><pre>
 <span></span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3DocumentSequence</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">DOC_RECEIVED</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">document_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;document_logger&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="SimpleConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.SimpleConsumer">[docs]</a><span class="k">class</span> <span class="nc">SimpleConsumer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
 
     <span class="n">_reference_clock</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_sequence</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SimpleConsumer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="n">reference_clock</span>
 
 <div class="viewcode-block" id="SimpleConsumer.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.SimpleConsumer.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Create sequence from document</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating document sequence from first document </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">document</span>
+            <span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="o">=</span> <span class="n">EBUTT3DocumentSequence</span><span class="o">.</span><span class="n">create_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">reference_clock</span>
+            <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_RECEIVED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">computed_begin_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
+            <span class="n">computed_end_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_end_time</span>
+        <span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div>
 
     <span class="nd">@property</span>

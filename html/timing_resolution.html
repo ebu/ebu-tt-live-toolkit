@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Timing resolution and consumer logic &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
+        <link rel="next" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="prev" title="User input producer" href="user_input_producer.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Timing resolution and consumer logic</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#document-timings">Document Timings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sequence-timings">Sequence Timings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
+      
+    <li>Timing resolution and consumer logic</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/timing_resolution.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="timing-resolution-and-consumer-logic">
+<h1>Timing resolution and consumer logic<a class="headerlink" href="#timing-resolution-and-consumer-logic" title="Permalink to this headline">¶</a></h1>
+<p>EBU-TT part 3 deals with sequences of documents and uses those combined to create a single timeline/sequence where
+document contents(ISD) begin and end events are kept. Resolving this takes resolving the document timings first.
+After each document&#8217;s internal timing relationships have been worked out the document is getting inserted into the
+timeline where possible collisions are detected and resolved with the possible discarding of documents in the process.</p>
+<div class="section" id="document-timings">
+<h2>Document Timings<a class="headerlink" href="#document-timings" title="Permalink to this headline">¶</a></h2>
+<p>The document timing resolution logic is built using the validation framework and mostly is in
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimingValidationMixin" title="ebu_tt_live.bindings.validation.TimingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.TimingValidationMixin</span></code></a></p>
+<p>The approach is that the element timing semantics require parent and children derived information to calculate
+begin and end events on an absolute timeline. For this we hook into the Depth First Search the validation framework
+uses to process element validation. It is very important to notice that the begin and end times are possible to be
+calculated either as the algorithm cascades down or on its way up in case information derived from children is required.</p>
+<img src="_images/graphviz-22cb90ac22be93cb0c71f7e751ac94cd60ee96c4.png" alt="digraph shells {
+    size=&quot;7,8&quot;;
+    node [fontsize=24, shape = plaintext];
+    &quot;Document level&quot; -&gt; L1 -&gt; L2 -&gt; L3;
+
+    node [fontsize=20, shape = ellipse];
+    { rank = same; &quot;Document level&quot; tt; }
+    { rank = same; L1 body; }
+    { rank = same; L2 p1 p2; }
+    { rank = same; L3 span1 span2 span3; }
+
+    /* 'visible' edges */
+    tt -&gt; body;
+    body -&gt; {p1 p2};
+    p1 -&gt; {span1 span2};
+    p2 -&gt; span3;
+
+    /* ’invisible’ edges to adjust node placement */
+    edge [style=invis];
+    L3 -&gt; span1;
+}" />
+</div>
+<div class="section" id="sequence-timings">
+<h2>Sequence Timings<a class="headerlink" href="#sequence-timings" title="Permalink to this headline">¶</a></h2>
+<p>The sequence timings are handled by the <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence</span></code></a> class.
+The document is insterted after having been validated into the sequence. The sequence looks at the computed begin and
+end times and detects collisions. If there are any the collisions are resolved by the logic starting in
+<a href="#id1"><span class="problematic" id="id2">:py:function:`ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard`</span></a></p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.html" class="btn btn-neutral float-right" title="Source code reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="user_input_producer.html" class="btn btn-neutral" title="User input producer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

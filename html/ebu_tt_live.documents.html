@@ -187,12 +187,31 @@ The document stream should maintain the consistency across critical document att
 all sorts of counters and static information. It plays a key role in the validation of an outgoing stream of
 subtitle documents.</p>
 <dl class="method">
+<dt id="ebu_tt_live.documents.base.DocumentSequence.add_document">
+<code class="descname">add_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/base.html#DocumentSequence.add_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.base.DocumentSequence.add_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the document to the sequence on the consumer side of things. This will put the document on the timeline
+and validate the sequence in terms of timing resolution.
+:param document:
+:raises IncompatibleSequenceError meaning that the document cannot be part of this sequence for
+it does not match the semantics of the sequence.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="ebu_tt_live.documents.base.DocumentSequence.fork">
 <code class="descname">fork</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/base.html#DocumentSequence.fork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.base.DocumentSequence.fork" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new stream with modified arguments.
 :param args:
 :param kwargs: parameter override to constructor
 :return: a new documentstream instance</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.base.DocumentSequence.get_document">
+<code class="descname">get_document</code><span class="sig-paren">(</span><em>seq_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/base.html#DocumentSequence.get_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.base.DocumentSequence.get_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve document by sequence number
+:param seq_id:
+:return: a document
+:raises: KeyError meaning the document is not in the sequence</p>
 </dd></dl>
 
 <dl class="method">
@@ -245,6 +264,53 @@ subtitle documents.</p>
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3Document</code><span class="sig-paren">(</span><em>time_base</em>, <em>sequence_number</em>, <em>sequence_identifier</em>, <em>lang</em>, <em>clock_mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.base.SubtitleDocument" title="ebu_tt_live.documents.base.SubtitleDocument"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.SubtitleDocument</span></code></a></p>
+<p>This class wraps the binding object representation of the XML and provides the features the applications in the
+specification require. e.g:availability time.</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._availability_time">
+<code class="descname">_availability_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._availability_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._cmp_checks">
+<code class="descname">_cmp_checks</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document._cmp_checks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._cmp_checks" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._cmp_key">
+<code class="descname">_cmp_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document._cmp_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._cmp_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._computed_begin_time">
+<code class="descname">_computed_begin_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._computed_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._computed_end_time">
+<code class="descname">_computed_end_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._computed_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._ebutt3_content">
+<code class="descname">_ebutt3_content</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._ebutt3_content" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._resolved_begin_time">
+<code class="descname">_resolved_begin_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._resolved_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._resolved_end_time">
+<code class="descname">_resolved_end_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._resolved_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document._sequence">
+<code class="descname">_sequence</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document._sequence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.add_div">
 <code class="descname">add_div</code><span class="sig-paren">(</span><em>div</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.add_div"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.add_div" title="Permalink to this definition">¶</a></dt>
@@ -253,6 +319,26 @@ subtitle documents.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.availability_time">
 <code class="descname">availability_time</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.availability_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.binding">
+<code class="descname">binding</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.binding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.clock_mode">
+<code class="descname">clock_mode</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.clock_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.computed_begin_time">
+<code class="descname">computed_begin_time</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.computed_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.computed_end_time">
+<code class="descname">computed_end_time</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.computed_end_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
@@ -266,8 +352,41 @@ subtitle documents.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.discard_document">
+<code class="descname">discard_document</code><span class="sig-paren">(</span><em>resolved_end_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.discard_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.discard_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function discards the document by setting a resolved end time
+before the document begins.
+:param resolved_end_time:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.discarded">
+<code class="descname">discarded</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.discarded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.get_xml">
 <code class="descname">get_xml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.get_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_xml" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.lang">
+<code class="descname">lang</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.lang" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.resolved_begin_time">
+<code class="descname">resolved_begin_time</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.resolved_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.resolved_end_time">
+<code class="descname">resolved_end_time</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.resolved_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.sequence">
+<code class="descname">sequence</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.sequence" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -295,6 +414,11 @@ subtitle documents.</p>
 <code class="descname">set_end</code><span class="sig-paren">(</span><em>end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.set_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.set_end" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.time_base">
+<code class="descname">time_base</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.time_base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.validate" title="Permalink to this definition">¶</a></dt>
@@ -306,6 +430,114 @@ subtitle documents.</p>
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3DocumentSequence</code><span class="sig-paren">(</span><em>sequence_identifier</em>, <em>reference_clock</em>, <em>lang</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.base.CloningDocumentSequence" title="ebu_tt_live.documents.base.CloningDocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.CloningDocumentSequence</span></code></a></p>
+<p>EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.
+The sequence object can be used in 2 different modes:</p>
+<blockquote>
+<div><ul class="simple">
+<li>It can be used to produce a sequence(i.e.: new_document method)</li>
+<li>as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
+(i.e.: add_document method.</li>
+</ul>
+</div></blockquote>
+<p>The sequence is responsible to keep the documents ordered and filter those documents out, which were eventually
+overwritten. It ensures that at any given time exactly 0 or 1 document is active (R14).</p>
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._check_document_compatibility">
+<code class="descname">_check_document_compatibility</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._check_document_compatibility"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._check_document_compatibility" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._clock_mode">
+<code class="descname">_clock_mode</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._clock_mode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._documents">
+<code class="descname">_documents</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._documents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._find_resolved_begin_event">
+<code class="descname">_find_resolved_begin_event</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._find_resolved_begin_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._find_resolved_begin_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._find_resolved_end_event">
+<code class="descname">_find_resolved_end_event</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._find_resolved_end_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._find_resolved_end_event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_document">
+<code class="descname">_insert_document</code><span class="sig-paren">(</span><em>document</em>, <em>ends=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._insert_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>In the end this function adds the document to the sequence registers.
+:param document:
+:param ends:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard">
+<code class="descname">_insert_or_discard</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._insert_or_discard"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function does the heavy lifting of timing resolution. It inspects the close vicinity in which the
+new document is coming by looking at the timeline in both directions.</p>
+<dl class="docutils">
+<dt>Based on that information it can detect 3 different cases:</dt>
+<dd><ul class="first last simple">
+<li>out of order delivery of documents in which case it inserts and trims the document,</li>
+<li>sequence override scenario in which case an exception is raised.</li>
+<li>Document discard scenario in which case the document is already overwritten in the sequence so
+it will not get inserted.</li>
+</ul>
+</dd>
+</dl>
+<p>:raises ValueError, SequenceOverridden, DocumentDiscardedError</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._lang">
+<code class="descname">_lang</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._lang" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._last_sequence_number">
+<code class="descname">_last_sequence_number</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._last_sequence_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._override_sequence">
+<code class="descname">_override_sequence</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._override_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._override_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function clears the timeline and the associated documents after the document in the parameter.
+This happens when a document with a higher sequence number is added preceding some other documents with lower
+sequence numbers.
+:param document:
+:return:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._reference_clock">
+<code class="descname">_reference_clock</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._reference_clock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._sequence_identifier">
+<code class="descname">_sequence_identifier</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._sequence_identifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._time_base">
+<code class="descname">_time_base</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._time_base" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._timeline">
+<code class="descname">_timeline</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._timeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document">
+<code class="descname">add_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.add_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">
 <em class="property">classmethod </em><code class="descname">create_from_document</code><span class="sig-paren">(</span><em>document</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.create_from_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document" title="Permalink to this definition">¶</a></dt>
@@ -314,6 +546,11 @@ subtitle documents.</p>
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.fork">
 <code class="descname">fork</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.fork"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.fork" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.get_document">
+<code class="descname">get_document</code><span class="sig-paren">(</span><em>seq_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.get_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.get_document" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -331,11 +568,63 @@ subtitle documents.</p>
 <code class="descname">reference_clock</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.reference_clock" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.resolved_begin_time">
+<code class="descname">resolved_begin_time</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.resolved_begin_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.resolved_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.resolved_end_time">
+<code class="descname">resolved_end_time</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.resolved_end_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.resolved_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.sequence_identifier">
 <code class="descname">sequence_identifier</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.sequence_identifier" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEvent</code><span class="sig-paren">(</span><em>document</em>, <em>when</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class wraps a document and an associated resolved timing event into an object that can be placed
+on the timeline.</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent._document">
+<code class="descname">_document</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent._document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent._when">
+<code class="descname">_when</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent._when" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent.document">
+<code class="descname">document</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent.document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent.when">
+<code class="descname">when</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent.when" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEventBegin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEventBegin</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEventBegin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEventBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="ebu_tt_live.documents.ebutt3.TimingEvent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimingEvent</span></code></a></p>
+<p>Document resolved begin time</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.documents.ebutt3.TimingEventEnd">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEventEnd</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEventEnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEventEnd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="ebu_tt_live.documents.ebutt3.TimingEvent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimingEvent</span></code></a></p>
+<p>Document resolved end time.</p>
 </dd></dl>
 
 </div>

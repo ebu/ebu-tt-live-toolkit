@@ -163,6 +163,28 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="DocumentSequence.add_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.DocumentSequence.add_document">[docs]</a>    <span class="k">def</span> <span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add the document to the sequence on the consumer side of things. This will put the document on the timeline</span>
+<span class="sd">        and validate the sequence in terms of timing resolution.</span>
+<span class="sd">        :param document:</span>
+<span class="sd">        :raises IncompatibleSequenceError meaning that the document cannot be part of this sequence for</span>
+<span class="sd">        it does not match the semantics of the sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DocumentSequence.get_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.DocumentSequence.get_document">[docs]</a>    <span class="k">def</span> <span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve document by sequence number</span>
+<span class="sd">        :param seq_id:</span>
+<span class="sd">        :return: a document</span>
+<span class="sd">        :raises: KeyError meaning the document is not in the sequence</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">seq_id</span><span class="o">=</span><span class="n">item</span><span class="p">)</span>
+
 <div class="viewcode-block" id="DocumentSequence.fork"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.DocumentSequence.fork">[docs]</a>    <span class="k">def</span> <span class="nf">fork</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a new stream with modified arguments.</span>

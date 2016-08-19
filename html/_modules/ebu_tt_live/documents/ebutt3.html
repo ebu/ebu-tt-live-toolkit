@@ -128,21 +128,98 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.documents.ebutt3</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">SubtitleDocument</span><span class="p">,</span> <span class="n">TimeBase</span><span class="p">,</span> <span class="n">CloningDocumentSequence</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">SubtitleDocument</span><span class="p">,</span> <span class="n">TimeBase</span><span class="p">,</span> <span class="n">CloningDocumentSequence</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">bindings</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">TimingValidationMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span><span class="p">,</span> \
+    <span class="n">ERR_DOCUMENT_NOT_COMPATIBLE</span><span class="p">,</span> <span class="n">ERR_DOCUMENT_NOT_PART_OF_SEQUENCE</span><span class="p">,</span> \
+    <span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">,</span> <span class="n">DOC_DISCARDED</span><span class="p">,</span> <span class="n">DOC_TRIMMED</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">IncompatibleSequenceError</span><span class="p">,</span> <span class="n">DocumentDiscardedError</span><span class="p">,</span> \
+    <span class="n">SequenceOverridden</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.clocks</span> <span class="k">import</span> <span class="n">get_clock_from_document</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">pyxb</span> <span class="k">import</span> <span class="n">BIND</span>
+<span class="kn">from</span> <span class="nn">sortedcontainers</span> <span class="k">import</span> <span class="n">sortedset</span>
+<span class="kn">from</span> <span class="nn">sortedcontainers</span> <span class="k">import</span> <span class="n">sortedlist</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">document_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;document_logger&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TimingEvent"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.TimingEvent">[docs]</a><span class="k">class</span> <span class="nc">TimingEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class wraps a document and an associated resolved timing event into an object that can be placed</span>
+<span class="sd">    on the timeline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_document</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_when</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">when</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="o">=</span> <span class="n">document</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">when</span> <span class="o">=</span> <span class="n">when</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">when</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_when</span>
+
+    <span class="nd">@when</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">when</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
+            <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_when</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">document</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span></div>
+
+
+<span class="c1"># R16</span>
+<div class="viewcode-block" id="TimingEventBegin"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.TimingEventBegin">[docs]</a><span class="k">class</span> <span class="nc">TimingEventBegin</span><span class="p">(</span><span class="n">TimingEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Document resolved begin time</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimingEventBegin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">document</span><span class="o">=</span><span class="n">document</span><span class="p">,</span>
+            <span class="n">when</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_begin_time</span>
+        <span class="p">)</span></div>
+
+<span class="c1"># R17</span>
+<div class="viewcode-block" id="TimingEventEnd"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.TimingEventEnd">[docs]</a><span class="k">class</span> <span class="nc">TimingEventEnd</span><span class="p">(</span><span class="n">TimingEvent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Document resolved end time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimingEventEnd</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">document</span><span class="o">=</span><span class="n">document</span><span class="p">,</span>
+            <span class="n">when</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_end_time</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EBUTT3Document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3Document</span><span class="p">(</span><span class="n">SubtitleDocument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class wraps the binding object representation of the XML and provides the features the applications in the</span>
+<span class="sd">    specification require. e.g:availability time.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># The XML binding holding the content of the document</span>
     <span class="n">_ebutt3_content</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="c1"># The availability time can be set by the carriage implementation for</span>
     <span class="c1"># example</span>
     <span class="n">_availability_time</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_computed_end_time</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># These are used when the sequence discarded the documents.</span>
+    <span class="n">_resolved_begin_time</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_resolved_end_time</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># The sequence the document belongs to</span>
+    <span class="n">_sequence</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_base</span><span class="p">,</span> <span class="n">sequence_number</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">clock_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">clock_mode</span> <span class="ow">and</span> <span class="n">time_base</span> <span class="ow">is</span> <span class="n">TimeBase</span><span class="o">.</span><span class="n">CLOCK</span><span class="p">:</span>
@@ -178,12 +255,12 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">instance</span></div>
 
-    <span class="k">def</span> <span class="nf">_cmp_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_number</span>
+<div class="viewcode-block" id="EBUTT3Document._cmp_key"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document._cmp_key">[docs]</a>    <span class="k">def</span> <span class="nf">_cmp_key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_number</span></div>
 
-    <span class="k">def</span> <span class="nf">_cmp_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3Document._cmp_checks"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document._cmp_checks">[docs]</a>    <span class="k">def</span> <span class="nf">_cmp_checks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -192,6 +269,26 @@
     <span class="nd">@sequence_identifier</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">sequenceIdentifier</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lang</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">lang</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">clock_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">clockMode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_NOT_PART_OF_SEQUENCE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span>
+
+    <span class="nd">@sequence</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sequence_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -211,9 +308,78 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">TypeError</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_availability_time</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">computed_begin_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">computed_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">resolved_begin_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_begin_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_begin_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">resolved_begin_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EBUTT3Document.discard_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.discard_document">[docs]</a>    <span class="k">def</span> <span class="nf">discard_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resolved_end_time</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function discards the document by setting a resolved end time</span>
+<span class="sd">        before the document begins.</span>
+<span class="sd">        :param resolved_end_time:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">resolved_end_time</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_DISCARDED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">sequence_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_end_time</span> <span class="o">=</span> <span class="n">resolved_end_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_begin_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">resolved_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolved_end_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">resolved_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">time_base</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">timeBase</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">discarded</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolved_begin_time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolved_end_time</span>
 
 <div class="viewcode-block" id="EBUTT3Document.validate"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">validateBinding</span><span class="p">()</span></div>
+        <span class="c1"># This is assuming availability from the beginning of our time coordinate system.</span>
+        <span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">availability_time</span> <span class="ow">or</span> <span class="n">timedelta</span><span class="p">()</span>
+        <span class="c1"># Run validation</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">validateBinding</span><span class="p">(</span>
+            <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span>
+        <span class="p">)</span>
+        <span class="c1"># Extract results</span>
+
+        <span class="c1"># Begin times</span>
+
+        <span class="c1"># Default value for the computed begin time of the document is the active begin time of the body</span>
+        <span class="c1"># This only changes if the body does not declare a begin time.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">computed_begin_time</span>
+        <span class="n">body_begin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">begin</span>
+        <span class="c1"># This is the earliest computed begin time of any child within body</span>
+        <span class="n">begin_limit</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;semantic_dataset&#39;</span><span class="p">][</span><span class="s1">&#39;timing_begin_limit&#39;</span><span class="p">]</span>
+        <span class="c1"># If the body defines no begin time, the document&#39;s computed begin time</span>
+        <span class="c1"># is the earliest computed begin time of body&#39;s children elements (and this</span>
+        <span class="c1"># applies recursively) How lucky it is that we collected this info during validation :)</span>
+        <span class="k">if</span> <span class="n">body_begin</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">begin_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="n">begin_limit</span>
+
+        <span class="c1"># End times</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">computed_end_time</span></div>
 
 <div class="viewcode-block" id="EBUTT3Document.add_div"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.add_div">[docs]</a>    <span class="k">def</span> <span class="nf">add_div</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">div</span><span class="p">):</span>
         <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span>
@@ -228,22 +394,45 @@
 <div class="viewcode-block" id="EBUTT3Document.set_dur"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.set_dur">[docs]</a>    <span class="k">def</span> <span class="nf">set_dur</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dur</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">dur</span> <span class="o">=</span> <span class="n">dur</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">binding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span>
+
 <div class="viewcode-block" id="EBUTT3Document.get_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_xml">[docs]</a>    <span class="k">def</span> <span class="nf">get_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3DocumentSequence</span><span class="p">(</span><span class="n">CloningDocumentSequence</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.</span>
+<span class="sd">    The sequence object can be used in 2 different modes:</span>
+<span class="sd">     - It can be used to produce a sequence(i.e.: new_document method)</span>
+<span class="sd">     - as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.</span>
+<span class="sd">       (i.e.: add_document method.</span>
+
+<span class="sd">    The sequence is responsible to keep the documents ordered and filter those documents out, which were eventually</span>
+<span class="sd">    overwritten. It ensures that at any given time exactly 0 or 1 document is active (R14).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_reference_clock</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_time_base</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_clock_mode</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_lang</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_documents</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_timeline</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">,</span> <span class="n">lang</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="n">sequence_identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="n">reference_clock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lang</span> <span class="o">=</span> <span class="n">lang</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># The documents are kept in a sorted set that is sorted by the documents&#39;s sequence number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span> <span class="o">=</span> <span class="n">sortedset</span><span class="o">.</span><span class="n">SortedSet</span><span class="p">()</span>
+        <span class="c1"># The timing events that mark the beginning and end of a document are kept on a timeline,</span>
+        <span class="c1"># which iw a sorted list. IMPORTANT: Not sorted set as there are overlapping begins and ends.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span> <span class="o">=</span> <span class="n">sortedlist</span><span class="o">.</span><span class="n">SortedListWithKey</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">when</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">reference_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -263,8 +452,20 @@
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="EBUTT3DocumentSequence.create_from_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_document</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># TODO</span>
-        <span class="k">pass</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">EBUTT3Document</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">),</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reference_clock&#39;</span><span class="p">,</span> <span class="n">get_clock_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">)),</span>
+            <span class="n">lang</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">lang</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence._check_document_compatibility"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._check_document_compatibility">[docs]</a>    <span class="k">def</span> <span class="nf">_check_document_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">!=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">IncompatibleSequenceError</span><span class="p">(</span>
+                <span class="n">ERR_DOCUMENT_NOT_COMPATIBLE</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence.new_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.new_document">[docs]</a>    <span class="k">def</span> <span class="nf">new_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -275,6 +476,191 @@
             <span class="n">sequence_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span><span class="p">,</span>
             <span class="n">lang</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lang</span>
         <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence._insert_or_discard"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard">[docs]</a>    <span class="k">def</span> <span class="nf">_insert_or_discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function does the heavy lifting of timing resolution. It inspects the close vicinity in which the</span>
+<span class="sd">        new document is coming by looking at the timeline in both directions.</span>
+
+<span class="sd">        Based on that information it can detect 3 different cases:</span>
+<span class="sd">          - out of order delivery of documents in which case it inserts and trims the document,</span>
+<span class="sd">          - sequence override scenario in which case an exception is raised.</span>
+<span class="sd">          - Document discard scenario in which case the document is already overwritten in the sequence so</span>
+<span class="sd">            it will not get inserted.</span>
+
+<span class="sd">        :raises ValueError, SequenceOverridden, DocumentDiscardedError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Our document&#39;s begin and end times. Initially they correspond with the computed document begin- and end times.</span>
+        <span class="n">this_begins</span> <span class="o">=</span> <span class="n">TimingEventBegin</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="n">this_ends</span> <span class="o">=</span> <span class="n">TimingEventEnd</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="c1"># The one this document might trim</span>
+        <span class="n">begins_before</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># The one this document definitely trims</span>
+        <span class="n">ends_after</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># The one that will trim this document. One with a higher seq number</span>
+        <span class="n">trims_this</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">_end_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span>
+            <span class="n">maximum</span><span class="o">=</span><span class="n">this_begins</span><span class="p">,</span>
+            <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">):</span>
+            <span class="c1"># This loop goes backwards and checks for trimmed documents</span>
+
+            <span class="c1"># If any found event is higher sequence number we quit</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span> <span class="o">&gt;</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">:</span>
+                <span class="c1"># Oops we got discarded.... :(</span>
+                <span class="n">discarderror</span> <span class="o">=</span> <span class="n">DocumentDiscardedError</span><span class="p">()</span>
+                <span class="n">discarderror</span><span class="o">.</span><span class="n">offending_document</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span>
+                <span class="k">raise</span> <span class="n">discarderror</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventBegin</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">_end_found</span> <span class="ow">or</span> <span class="n">_end_found</span><span class="o">.</span><span class="n">document</span> <span class="o">!=</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span><span class="p">:</span>
+                    <span class="c1"># This will be trimmed</span>
+                    <span class="n">begins_before</span> <span class="o">=</span> <span class="n">item</span>
+                <span class="c1"># Once a begin event is found we quit</span>
+                <span class="k">break</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventEnd</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">_end_found</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">)</span>
+                <span class="n">_end_found</span> <span class="o">=</span> <span class="n">item</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="n">this_begins</span><span class="p">):</span>
+            <span class="c1"># This loop goes forward looking at offending events</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventEnd</span><span class="p">):</span>
+                <span class="n">ends_after</span> <span class="o">=</span> <span class="n">item</span>
+                <span class="k">if</span> <span class="n">ends_after</span><span class="o">.</span><span class="n">document</span> <span class="o">!=</span> <span class="n">begins_before</span><span class="o">.</span><span class="n">document</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventBegin</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span> <span class="o">&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SequenceOverridden</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span> <span class="o">&gt;</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">:</span>
+                    <span class="c1">#This means our document may get trimmed into shape</span>
+                    <span class="k">if</span> <span class="n">this_ends</span><span class="o">.</span><span class="n">when</span> <span class="o">&gt;</span> <span class="n">item</span><span class="o">.</span><span class="n">when</span><span class="p">:</span>
+                        <span class="n">trims_this</span> <span class="o">=</span> <span class="n">item</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">trims_this</span><span class="p">:</span>
+            <span class="c1"># Trim this one. This happens with out of order delivery.</span>
+            <span class="n">this_ends</span><span class="o">.</span><span class="n">when</span> <span class="o">=</span> <span class="n">trims_this</span><span class="o">.</span><span class="n">when</span>
+            <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_TRIMMED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
+                <span class="n">resolved_begin_time</span><span class="o">=</span><span class="n">this_begins</span><span class="o">.</span><span class="n">when</span><span class="p">,</span>
+                <span class="n">resolved_end_time</span><span class="o">=</span><span class="n">this_ends</span><span class="o">.</span><span class="n">when</span>
+            <span class="p">))</span>
+        <span class="k">if</span> <span class="n">begins_before</span><span class="p">:</span>
+            <span class="c1"># Move up previous document&#39;s end R17</span>
+            <span class="k">if</span> <span class="n">ends_after</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">ends_after</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ends_after</span> <span class="o">=</span> <span class="n">TimingEventEnd</span><span class="p">(</span><span class="n">begins_before</span><span class="o">.</span><span class="n">document</span><span class="p">)</span>
+            <span class="n">ends_after</span><span class="o">.</span><span class="n">when</span> <span class="o">=</span> <span class="n">this_begins</span><span class="o">.</span><span class="n">when</span>
+            <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_TRIMMED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">begins_before</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">sequence_number</span><span class="o">=</span><span class="n">begins_before</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
+                <span class="n">resolved_begin_time</span><span class="o">=</span><span class="n">begins_before</span><span class="o">.</span><span class="n">when</span><span class="p">,</span>
+                <span class="n">resolved_end_time</span><span class="o">=</span><span class="n">ends_after</span><span class="o">.</span><span class="n">when</span>
+            <span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ends_after</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_insert_document</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">ends</span><span class="o">=</span><span class="n">this_ends</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence._insert_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_document">[docs]</a>    <span class="k">def</span> <span class="nf">_insert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">ends</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In the end this function adds the document to the sequence registers.</span>
+<span class="sd">        :param document:</span>
+<span class="sd">        :param ends:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimingEventBegin</span><span class="p">(</span><span class="n">document</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">ends</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ends</span><span class="o">.</span><span class="n">when</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ends</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">computed_end</span> <span class="o">=</span> <span class="n">TimingEventEnd</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">computed_end</span><span class="o">.</span><span class="n">when</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">computed_end</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence._override_sequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._override_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">_override_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function clears the timeline and the associated documents after the document in the parameter.</span>
+<span class="sd">        This happens when a document with a higher sequence number is added preceding some other documents with lower</span>
+<span class="sd">        sequence numbers.</span>
+<span class="sd">        :param document:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">discarded_timing_events</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">sequence_number</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
+        <span class="n">resolved_begin</span> <span class="o">=</span> <span class="n">TimingEventBegin</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="n">resolved_begin</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span> <span class="o">&lt;</span> <span class="n">sequence_number</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventEnd</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">discarded_timing_events</span><span class="p">:</span>
+                    <span class="c1"># We found the end event of a document whose begin event was not encountered. Meaning that instead</span>
+                    <span class="c1"># of discarding it we are supposed to trim it. R17</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">discarded_timing_events</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">document</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">events</span> <span class="ow">in</span> <span class="n">discarded_timing_events</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">discard_document</span><span class="p">(</span><span class="n">resolved_end_time</span><span class="o">=</span><span class="n">resolved_begin</span><span class="o">.</span><span class="n">when</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.add_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document">[docs]</a>    <span class="k">def</span> <span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_check_document_compatibility</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="c1"># Let&#39;s create space for the document</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_insert_or_discard</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">SequenceOverridden</span><span class="p">:</span>
+            <span class="c1"># First we fix the timeline</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_override_sequence</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+            <span class="c1"># And retry the insertion operation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_insert_or_discard</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DocumentDiscardedError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">document</span><span class="o">.</span><span class="n">discard_document</span><span class="p">(</span><span class="n">resolved_end_time</span><span class="o">=</span><span class="n">exc</span><span class="o">.</span><span class="n">offending_document</span><span class="o">.</span><span class="n">resolved_begin_time</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.get_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.get_document">[docs]</a>    <span class="k">def</span> <span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="p">[</span><span class="n">seq_id</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence._find_resolved_begin_event"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._find_resolved_begin_event">[docs]</a>    <span class="k">def</span> <span class="nf">_find_resolved_begin_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="c1"># TODO: Fix this too hungry</span>
+        <span class="k">if</span> <span class="n">document</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="n">TimingEventBegin</span><span class="p">(</span><span class="n">document</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span> <span class="o">==</span> <span class="n">document</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventBegin</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">item</span>
+        <span class="c1"># This means the document is not part of this sequence</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.resolved_begin_time"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.resolved_begin_time">[docs]</a>    <span class="k">def</span> <span class="nf">resolved_begin_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_resolved_begin_event</span><span class="p">(</span><span class="n">document</span><span class="p">)</span><span class="o">.</span><span class="n">when</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence._find_resolved_end_event"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._find_resolved_end_event">[docs]</a>    <span class="k">def</span> <span class="nf">_find_resolved_end_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="c1"># TODO: Fix this too hungry</span>
+        <span class="k">if</span> <span class="n">document</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timeline</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="n">TimingEventBegin</span><span class="p">(</span><span class="n">document</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">document</span> <span class="o">==</span> <span class="n">document</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventEnd</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">item</span>
+        <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">computed_end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># This means we have consistency issues in the timeline</span>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">)</span>
+        <span class="c1"># This means this document has no computed end time nor it is trimmed</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.resolved_end_time"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.resolved_end_time">[docs]</a>    <span class="k">def</span> <span class="nf">resolved_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_resolved_end_event</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">when</span> <span class="ow">or</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence.fork"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.fork">[docs]</a>    <span class="k">def</span> <span class="nf">fork</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span></div></div>

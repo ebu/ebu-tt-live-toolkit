@@ -134,6 +134,7 @@
 <span class="kn">from</span> <span class="nn">raw._ebuttdt</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">raw</span> <span class="k">import</span> <span class="n">_ebuttdt</span> <span class="k">as</span> <span class="n">ebuttdt_raw</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="n">Decimal</span>
 <span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">pyxb.exceptions_</span> <span class="k">import</span> <span class="n">SimpleTypeValueError</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">TimeFormatOverflowError</span>
@@ -167,6 +168,13 @@
     <span class="p">}</span>
 
     <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_int_or_none</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">compatible_timebases</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cls</span><span class="o">.</span><span class="n">_compatible_timebases</span>
 
@@ -194,7 +202,7 @@
             <span class="n">time_base</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;timeBase&#39;</span><span class="p">]</span>
             <span class="n">timing_att_name</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">time_base</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">_compatible_timebases</span><span class="p">[</span><span class="n">timing_att_name</span><span class="p">]:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">attr_name</span><span class="o">=</span><span class="n">timing_att_name</span><span class="p">,</span>
                     <span class="n">attr_type</span><span class="o">=</span><span class="n">cls</span><span class="p">,</span>
                     <span class="n">attr_value</span><span class="o">=</span><span class="n">args</span><span class="p">,</span>
@@ -240,7 +248,7 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">numerator</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
-        <span class="n">numerator</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span>
+        <span class="n">numerator</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">numerator</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">numerator</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span>
@@ -315,7 +323,10 @@
 <span class="sd">        :param instance:</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+        <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">_int_or_none</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span></div>
 
     <span class="nd">@classmethod</span>
@@ -363,7 +374,10 @@
 <span class="sd">        :param instance:</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+        <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cls</span><span class="o">.</span><span class="n">_int_or_none</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+            <span class="n">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span></div>
 
     <span class="nd">@classmethod</span>
@@ -403,17 +417,25 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extending the string type with conversions to and from timedelta</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_compatible_timebases</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;begin&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;smpte&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;dur&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;smpte&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;smpte&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="SMPTETimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.as_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+        <span class="c1"># TODO: implement SMPTE</span>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">()</span></div>
 
     <span class="nd">@classmethod</span>
 <div class="viewcode-block" id="SMPTETimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.from_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="c1"># TODO: implement SMPTE</span>
+        <span class="k">return</span> <span class="n">SMPTETimingType</span><span class="p">(</span><span class="s1">&#39;00:00:00:00&#39;</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># TODO: SMPTE frameRate and frameRateMultiplier value from tt element.</span>
-<span class="c1"># ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)</span>
+<span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">smpteTimingType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">SMPTETimingType</span><span class="p">)</span>
 </pre></div>
 
            </div>
