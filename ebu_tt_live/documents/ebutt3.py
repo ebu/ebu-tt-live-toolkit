@@ -1,18 +1,19 @@
 import logging
-from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
-from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
+from datetime import timedelta
+
+from ebu_tt_live.bindings import ebutt_live as bindings
+from ebu_tt_live.bindings.ebutt_live import _ebuttm as metadata
+from ebu_tt_live.clocks import get_clock_from_document
+from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
+    SequenceOverridden
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED
-from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
-    SequenceOverridden
-from ebu_tt_live.clocks import get_clock_from_document
-from datetime import timedelta
 from pyxb import BIND
-from sortedcontainers import sortedset
 from sortedcontainers import sortedlist
+from sortedcontainers import sortedset
 
+from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')

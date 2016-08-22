@@ -1,5 +1,5 @@
+from ebu_tt_live.bindings.ebutt_live import ebuttdt
 from ebu_tt_live.documents import EBUTT3Document
-from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType
 from pytest_bdd import scenarios, then, when, parsers
 
 scenarios('features/timing/resolved_times.feature')
@@ -7,9 +7,9 @@ scenarios('features/timing/resolved_times.feature')
 
 def timestr_to_timedelta(time_str, time_base):
     if time_base == 'clock':
-        return LimitedClockTimingType(time_str).timedelta
+        return ebuttdt.LimitedClockTimingType(time_str).timedelta
     elif time_base == 'media':
-        return FullClockTimingType(time_str).timedelta
+        return ebuttdt.FullClockTimingType(time_str).timedelta
     elif time_base == 'smpte':
         raise NotImplementedError('SMPTE needs implementation')
 

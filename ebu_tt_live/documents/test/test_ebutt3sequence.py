@@ -1,15 +1,16 @@
+from datetime import timedelta
 from unittest import TestCase
-from datetime import timedelta, datetime
-from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+
+from ebu_tt_live.bindings.ebutt_live import ebuttdt
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.documents import EBUTT3DocumentSequence
 
 
 class TestEBUTT3Sequence(TestCase):
 
     def _get_timing_type(self, value):
         if self.reference_clock.time_base == 'clock':
-            return LimitedClockTimingType(value)
+            return ebuttdt.LimitedClockTimingType(value)
 
     def _create_document(self, begin, end):
         doc = self.sequence.new_document()

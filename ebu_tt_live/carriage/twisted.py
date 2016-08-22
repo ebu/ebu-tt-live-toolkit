@@ -1,11 +1,11 @@
-
-from .base import ProducerCarriageImpl, ConsumerCarriageImpl
-from ebu_tt_live.bindings import CreateFromDocument
-from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
-from ebu_tt_live.errors import XMLParsingFailed
-from ebu_tt_live.documents import EBUTT3Document
 import logging
 
+from ebu_tt_live.bindings.ebutt_live import CreateFromDocument
+from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.errors import XMLParsingFailed
+from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+
+from .base import ProducerCarriageImpl, ConsumerCarriageImpl
 
 log = logging.getLogger(__name__)
 

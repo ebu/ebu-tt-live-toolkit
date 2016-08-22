@@ -103,7 +103,8 @@ gen
 # Project specific files
 
 # Generated bindings should not appear in the repo
-ebu_tt_live/bindings/raw
+ebu_tt_live/bindings/ebutt_live/raw
+ebu_tt_live/bindings/ebutt_d/raw
 
 # Test export files from file system carriage
 test_export/
