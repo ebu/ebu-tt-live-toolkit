@@ -1,13 +1,12 @@
-from pytest_bdd import when, given, then
-from jinja2 import Environment, FileSystemLoader
-from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+import os
+
+import pytest
+from ebu_tt_live.bindings.ebutt_live import ebuttdt
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.media import MediaClock
-from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType
-from datetime import timedelta
-import pytest
-import os
-import unittest
+from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+from jinja2 import Environment, FileSystemLoader
+from pytest_bdd import given, then
 
 
 @given('an xml file <xml_file>')
@@ -55,9 +54,9 @@ def gen_document(template_file, template_dict):
 
 def timestr_to_timedelta(time_str, time_base):
     if time_base == 'clock':
-        return LimitedClockTimingType(time_str).timedelta
+        return ebuttdt.FullClockTimingType(time_str).timedelta
     elif time_base == 'media':
-        return FullClockTimingType(time_str).timedelta
+        return ebuttdt.FullClockTimingType(time_str).timedelta
     elif time_base == 'smpte':
         raise NotImplementedError('SMPTE needs implementation')
 

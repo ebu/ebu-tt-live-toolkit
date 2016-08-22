@@ -45,7 +45,8 @@ Alternatively:
     pip install -r requirements.txt
     python setup.py develop
 
-    pyxbgen -r --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -u ebutt_live.xsd
+    pyxbgen --binding-root=./ebu_tt_live/bindings/ebutt_live -m __init__ --schema-root=./ebu_tt_live/xsd/ebutt_live -r -u ebutt_live.xsd
+    pyxbgen --binding-root=./ebu_tt_live/bindings/ebutt_d -m __init__ --schema-root=./ebu_tt_live/xsd/ebutt_d -r -u ebutt_d.xsd
 
     npm install nunjucks
     node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
@@ -72,13 +73,20 @@ After that the following command should work:
 The Schema definitions XSD
 ==========================
 
-The schema definitions are to be found embedded in the Python library in the xsd1.1 subfolder.
-The root schemadocument is called *ebutt_live.xsd*.
+The schema definitions are to be found embedded in the Python library in the xsd subfolder.
+
+##### The EBU TT Live XSD 
+
+The XSD resides in xsd/ebutt_live folder. The root schemadocument is called [ebutt_live.xsd](xsd/ebutt_live/ebutt_live.xsd).
+
+##### The EBU TT D XSD
+
+The XSD resides in xsd/ebutt_d folder. The root schemadocument is called [ebutt_d.xsd](xsd/ebutt_d/ebutt_d.xsd)
 
 The Python library
 ==================
 
-The library uses XSD schemas from the xsd1.1 subdirectory.
+The library uses XSD schemas from the xsd subdirectory.
 The bindings will keep the validation sane and PyXB makes sure that updates are working as
 expected. Should the schema be modified a regeneration can be run and the bindings will respect
 the changes.

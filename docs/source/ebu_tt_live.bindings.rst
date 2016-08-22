@@ -1,91 +1,18 @@
 bindings Package
 ================
 
-:mod:`bindings` Package
------------------------
+This package contains 2 sets of bindings, which are directly generated from XML
+(these are the [ebutt_live,ebutt_d]/raw/*.py also ignored in the gitignore) and every generated file has a pair
+outside the raw folder where the extensions are meant to go.
 
-.. automodule:: ebu_tt_live.bindings
-    :members:
-    :undoc-members:
-    :show-inheritance:
+Most of this toolkit is built around the EBU TT Live specification and therefore whenever bindings are referred to it
+mostly means those in ebutt_live.
 
-:mod:`_ebuttdt` Module
-----------------------
-
-.. automodule:: ebu_tt_live.bindings._ebuttdt
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_ebuttm` Module
----------------------
-
-.. automodule:: ebu_tt_live.bindings._ebuttm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_ebuttp` Module
----------------------
-
-.. automodule:: ebu_tt_live.bindings._ebuttp
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_ebutts` Module
----------------------
-
-.. automodule:: ebu_tt_live.bindings._ebutts
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_ttm` Module
-------------------
-
-.. automodule:: ebu_tt_live.bindings._ttm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_ttp` Module
-------------------
-
-.. automodule:: ebu_tt_live.bindings._ttp
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_tts` Module
-------------------
-
-.. automodule:: ebu_tt_live.bindings._tts
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`validation` Module
-------------------------
-
-.. automodule:: ebu_tt_live.bindings.validation
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`pyxb_utils` Module
-------------------------
-
-.. automodule:: ebu_tt_live.bindings.pyxb_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
+The EBU TT D bindings are present to make te EBU TT Live -> EBU TT D conversion easier and more reliable.
 
 Subpackages
 -----------
 
 .. toctree::
-
-    ebu_tt_live.bindings.raw
-
+    ebu_tt_live.bindings.ebutt_live
+    ebu_tt_live.bindings.ebutt_d

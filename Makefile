@@ -2,7 +2,8 @@
 
 init:
 	pip install --upgrade -r requirements.txt
-	pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd1.1/ -r -u ebutt_live.xsd
+	pyxbgen --binding-root=./ebu_tt_live/bindings/ebutt_live -m __init__ --schema-root=./ebu_tt_live/xsd/ebutt_live -r -u ebutt_live.xsd
+	pyxbgen --binding-root=./ebu_tt_live/bindings/ebutt_d -m __init__ --schema-root=./ebu_tt_live/xsd/ebutt_d -r -u ebutt_d.xsd
 ifeq ("$(wildcard node_modules)","")
 	npm install nunjucks
 else 

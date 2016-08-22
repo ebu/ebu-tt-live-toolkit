@@ -1,5 +1,5 @@
+from ebu_tt_live.bindings.ebutt_live import ebuttdt
 from ebu_tt_live.documents import EBUTT3Document
-from ebu_tt_live.bindings._ebuttdt import FullClockTimingType
 from pytest_bdd import scenarios, when, then
 
 scenarios('features/timing/elements_active_times.feature')
@@ -85,7 +85,7 @@ def when_doc_generated(test_context, template_dict, template_file):
 @when('it is available at <availability_time>')
 def when_doc_available(test_context, availability_time):
     if availability_time:
-        test_context['document'].availability_time = FullClockTimingType(availability_time).timedelta
+        test_context['document'].availability_time = ebuttdt.FullClockTimingType(availability_time).timedelta
 
 
 @then('body active begin time is <body_active_begin>')
@@ -94,7 +94,7 @@ def then_body_active_begin(test_context, body_active_begin):
     if body_active_begin == "undefined":
         assert computed_begin is None
     else:
-        body_active_begin_timedelta = FullClockTimingType(body_active_begin).timedelta
+        body_active_begin_timedelta = ebuttdt.FullClockTimingType(body_active_begin).timedelta
         assert body_active_begin_timedelta == computed_begin
 
 
@@ -104,7 +104,7 @@ def then_body_active_end(test_context, body_active_end):
     if body_active_end == "undefined":
         assert computed_end is None
     else:
-        body_active_end_timedelta = FullClockTimingType(body_active_end).timedelta
+        body_active_end_timedelta = ebuttdt.FullClockTimingType(body_active_end).timedelta
         assert body_active_end_timedelta == computed_end
 
 
@@ -115,7 +115,7 @@ def then_div_active_begin(test_context, div_active_begin):
     if div_active_begin == "undefined":
         assert computed_begin is None
     else:
-        div_active_begin_timedelta = FullClockTimingType(div_active_begin).timedelta
+        div_active_begin_timedelta = ebuttdt.FullClockTimingType(div_active_begin).timedelta
         assert div_active_begin_timedelta == computed_begin
 
 
@@ -125,7 +125,7 @@ def then_div_active_end(test_context, div_active_end):
     if div_active_end == "undefined":
         assert computed_end is None
     else:
-        div_active_end_timedelta = FullClockTimingType(div_active_end).timedelta
+        div_active_end_timedelta = ebuttdt.FullClockTimingType(div_active_end).timedelta
         assert div_active_end_timedelta == computed_end
 
 
@@ -135,7 +135,7 @@ def then_p_active_begin(test_context, p_active_begin):
     if p_active_begin == "undefined":
         assert computed_begin is None
     else:
-        p_active_begin_timedelta = FullClockTimingType(p_active_begin).timedelta
+        p_active_begin_timedelta = ebuttdt.FullClockTimingType(p_active_begin).timedelta
         assert p_active_begin_timedelta == computed_begin
 
 
@@ -145,7 +145,7 @@ def then_p_active_end(test_context, p_active_end):
     if p_active_end == "undefined":
         assert computed_end is None
     else:
-        p_active_end_timedelta = FullClockTimingType(p_active_end).timedelta
+        p_active_end_timedelta = ebuttdt.FullClockTimingType(p_active_end).timedelta
         assert p_active_end_timedelta == computed_end
 
 
@@ -155,7 +155,7 @@ def then_span1_active_begin(test_context, span1_active_begin):
     if span1_active_begin == "undefined":
         assert computed_begin is None
     else:
-        span1_active_begin_timedelta = FullClockTimingType(span1_active_begin).timedelta
+        span1_active_begin_timedelta = ebuttdt.FullClockTimingType(span1_active_begin).timedelta
         assert span1_active_begin_timedelta == computed_begin
 
 
@@ -165,7 +165,7 @@ def then_span1_active_end(test_context, span1_active_end):
     if span1_active_end == "undefined":
         assert computed_end is None
     else:
-        span1_active_end_timedelta = FullClockTimingType(span1_active_end).timedelta
+        span1_active_end_timedelta = ebuttdt.FullClockTimingType(span1_active_end).timedelta
         assert span1_active_end_timedelta == computed_end
 
 
@@ -175,7 +175,7 @@ def then_span2_active_begin(test_context, span2_active_begin):
     if span2_active_begin == "undefined":
         assert computed_begin is None
     else:
-        span2_active_begin_timedelta = FullClockTimingType(span2_active_begin).timedelta
+        span2_active_begin_timedelta = ebuttdt.FullClockTimingType(span2_active_begin).timedelta
         assert span2_active_begin_timedelta == computed_begin
 
 
@@ -185,5 +185,5 @@ def then_span2_active_end(test_context, span2_active_end):
     if span2_active_end == "undefined":
         assert computed_end is None
     else:
-        span2_active_end_timedelta = FullClockTimingType(span2_active_end).timedelta
+        span2_active_end_timedelta = ebuttdt.FullClockTimingType(span2_active_end).timedelta
         assert span2_active_end_timedelta == computed_end

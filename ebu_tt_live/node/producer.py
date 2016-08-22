@@ -1,10 +1,11 @@
-
-from .base import Node
 from datetime import timedelta
-from ebu_tt_live.bindings import div_type, br_type, p_type
-from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+
+from ebu_tt_live.bindings.ebutt_live._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.bindings.ebutt_live import div_type, br_type, p_type
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.strings import END_OF_DATA
+
+from .base import Node
 
 
 class SimpleProducer(Node):

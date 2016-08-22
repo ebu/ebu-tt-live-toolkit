@@ -14,7 +14,7 @@ A common object that shared information can be collected to and each type/elemen
 semantic validation hooks if the element needs to take part in the semantic validation process.
 
 For an element to be part of the semantic validation flow it needs to inherit the
-:py:class:`ebu_tt_live.bindings.validation.SemanticValidationMixin` mixin, which contains the boilerplate
+:py:class:`ebu_tt_live.bindings.ebutt_live.validation.SemanticValidationMixin` mixin, which contains the boilerplate
 that enables semantic validation and the hook functions, that the developer can override and write custom
 functionality that effectively does the semantic validation of the type.
 
@@ -36,8 +36,8 @@ with the semantic validation, which expects particularly one timing type in that
 Hence the SemanticValidationMixin also has an overloaded _setAttribute function, which applies 2 hooks for the types
 in which custom code can enforce the right behaviour. The complexity and layered architecture of the parser limits the
 capability to pass around a context object the same way the semantic validation can so in the
-:py:class:`ebu_tt_live.bindings.pyxb_utils.xml_parsing_context` context manager there is a threadLocal object that
+:py:class:`ebu_tt_live.bindings.ebutt_live.pyxb_utils.xml_parsing_context` context manager there is a threadLocal object that
 keeps a similar dictionary to the one used at the semantic validation. The difference is that the
-:py:func:`ebu_tt_live.bindings.CreateFromDocument` function resets the context by using the context manager
+:py:func:`ebu_tt_live.bindings.ebutt_live.CreateFromDocument` function resets the context by using the context manager
 class and instead of the context being passed around as a parameter among functions the binding classes call the
-:py:func:`ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context` function to gain access to the parsing context object.
+:py:func:`ebu_tt_live.bindings.ebutt_live.pyxb_utils.get_xml_parsing_context` function to gain access to the parsing context object.

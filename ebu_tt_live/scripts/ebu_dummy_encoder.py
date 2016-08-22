@@ -1,10 +1,13 @@
 import logging
-from .common import create_loggers
-from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata
-from ebu_tt_live.bindings import _ebuttdt as datatypes
-from pyxb import BIND
 from datetime import timedelta
+
+from ebu_tt_live.bindings import ebutt_live as bindings
+from ebu_tt_live.bindings.ebutt_live import _ebuttdt as datatypes
+from ebu_tt_live.bindings.ebutt_live import _ebuttm as metadata
+from ebu_tt_live.documents.ebutt3 import EBUTT3Document
+from pyxb import BIND
+
+from .common import create_loggers
 
 log = logging.getLogger('ebu_dummy_encoder')
 
@@ -50,10 +53,11 @@ def main():
         )
     )
 
-    tt.validateBinding()
+    document = EBUTT3Document.create_from_raw_binding(tt)
+    document.validate()
 
     print(
-        tt.toxml()
+        document.get_xml()
     )
 
     log.info('XML output printed')
