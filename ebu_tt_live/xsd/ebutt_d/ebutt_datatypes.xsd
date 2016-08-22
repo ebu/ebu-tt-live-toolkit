@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ebuttdt="urn:ebu:tt:datatypes" targetNamespace="urn:ebu:tt:datatypes">
 	<xs:simpleType name="cellResolutionType">
 		<xs:restriction base="xs:token">
-			<xs:pattern value="[1-9][0-9]*\s[1-9][0-9]*"/>
+			<xs:pattern value="[0]*[1-9][0-9]*\s[0]*[1-9][0-9]*"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="framerateMultiplierType">

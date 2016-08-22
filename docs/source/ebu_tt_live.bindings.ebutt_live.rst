@@ -1,5 +1,5 @@
 EBU TT Live bindings Package
-================
+============================
 
 :mod:`ebutt_live` Package
 -----------------------

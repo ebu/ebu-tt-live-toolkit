@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tt="http://www.w3.org/ns/ttml"
 	xmlns:ebuttdt="urn:ebu:tt:datatypes" xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
 	xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
 	xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebutts="urn:ebu:tt:style"
-	targetNamespace="http://www.w3.org/ns/ttml">
+	targetNamespace="http://www.w3.org/ns/ttml"
+	elementFormDefault="qualified"
+	attributeFormDefault="qualified"
+	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#styling" schemaLocation="styling.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#parameter" schemaLocation="parameter.xsd"/>
@@ -11,31 +14,6 @@
 	<xs:import namespace="urn:ebu:tt:style" schemaLocation="ebutt_styling.xsd"/>
 	<xs:import namespace="urn:ebu:tt:datatypes" schemaLocation="ebutt_datatypes.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#metadata" schemaLocation="metadata.xsd"/>
-	<xs:element name="tt">
-		<xs:annotation>
-			<xs:documentation>Root element of an EBU-TT-D XML document.</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="tt:head"/>
-				<xs:element ref="tt:body" minOccurs="0"/>
-			</xs:sequence>
-			<xs:attribute ref="xml:space">
-				<xs:annotation>
-					<xs:documentation>Indicates the author’s intention of white space handling
-						within the content of the EBU-TT-D document.</xs:documentation>
-				</xs:annotation>
-			</xs:attribute>
-			<xs:attribute ref="ttp:timeBase" use="required"/>
-			<xs:attribute ref="ttp:cellResolution"/>
-			<xs:attribute ref="xml:lang" use="required">
-				<xs:annotation>
-					<xs:documentation>The language for which the EBU-TT-D document is prepared. (STL
-						mapping: Language Code (LC))</xs:documentation>
-				</xs:annotation>
-			</xs:attribute>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="head">
 		<xs:annotation>
 			<xs:documentation>Contains metadata as well as layout and styling information that are
@@ -329,4 +307,28 @@
 			<xs:attribute ref="ttm:role"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:complexType name="tt_type2">
+		<xs:annotation>
+			<xs:documentation>Root element of an EBU-TT-D XML document.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="tt:head"/>
+			<xs:element ref="tt:body" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="xml:space">
+			<xs:annotation>
+				<xs:documentation>Indicates the author’s intention of white space handling
+					within the content of the EBU-TT-D document.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ttp:timeBase" use="required"/>
+		<xs:attribute ref="ttp:cellResolution"/>
+		<xs:attribute ref="xml:lang" use="required">
+			<xs:annotation>
+				<xs:documentation>The language for which the EBU-TT-D document is prepared. (STL
+					mapping: Language Code (LC))</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="tt" type="tt:tt_type2"/>
 </xs:schema>

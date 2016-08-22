@@ -1,5 +1,5 @@
 EBU TT D bindings Package
-================
+=========================
 
 :mod:`bindings.ebutt_d` Package
 -----------------------

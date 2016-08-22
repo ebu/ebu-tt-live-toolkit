@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
 
-from ebu_tt_live.bindings.ebutt_live import _ebuttm as ebuttm
 from ebu_tt_live.errors import SemanticValidationError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
 from pyxb.utils.domutils import BindingDOMSupport
 
+from ebu_tt_live.bindings.ebutt_live import _ebuttm as ebuttm
 from ebu_tt_live.bindings.ebutt_live import _ebuttdt as ebuttdt
 from ebu_tt_live.bindings.ebutt_live import _ebuttp as ebuttp
 from ebu_tt_live.bindings.ebutt_live import _ebutts as ebutts
@@ -13,6 +13,7 @@ from ebu_tt_live.bindings.ebutt_live import _ttm as ttm
 from ebu_tt_live.bindings.ebutt_live import _ttp as ttp
 from ebu_tt_live.bindings.ebutt_live import _tts as tts
 from ebu_tt_live.bindings.ebutt_live import raw
+
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
 from .raw import *
 from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, BodyTimingValidationMixin
