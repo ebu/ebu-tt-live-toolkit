@@ -1,0 +1,21 @@
+digraph shells {
+    size="7,8";
+    node [fontsize=24, shape = plaintext];
+    "Document level" -> L1 -> L2 -> L3;
+
+    node [fontsize=20, shape = ellipse];
+    { rank = same; "Document level" tt; }
+    { rank = same; L1 body; }
+    { rank = same; L2 p1 p2; }
+    { rank = same; L3 span1 span2 span3; }
+
+    /* 'visible' edges */
+    tt -> body;
+    body -> {p1 p2};
+    p1 -> {span1 span2};
+    p2 -> span3;
+
+    /* ’invisible’ edges to adjust node placement */
+    edge [style=invis];
+    L3 -> span1;
+}

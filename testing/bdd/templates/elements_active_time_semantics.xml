@@ -1,13 +1,10 @@
 <?xml version="1.0" ?>
 <tt:tt
-        ebuttp:sequenceIdentifier="testSequence001"
-        ebuttp:sequenceNumber="1"
+  ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
+        ebuttp:sequenceNumber="{{sequence_number}}"
         ttp:timeBase="{{ time_base }}"
 {% if time_base == 'smpte' %}
         ttp:frameRate="25"
-        ttp:dropMode="nonDrop"
-        ttp:markerMode="continuous"
-        ttp:frameRateMultiplier="1 1"
 {% endif %}
 {% if time_base == 'clock' %}
         ttp:clockMode='local'
@@ -53,55 +50,71 @@
     <tt:div
 {% if div_begin %}
   {% if div_begin == "*?Empty?*" %}
-            tt:begin=""
+        tt:begin=""
   {% else %}
-            tt:begin="{{ div_begin }}"
+        tt:begin="{{ div_begin }}"
   {% endif %}
 {% endif %}
 {% if div_end %}
   {% if div_end == "*?Empty?*" %}
-            tt:end=""
+        tt:end=""
   {% else %}
-            tt:end="{{ div_end }}"
-  {% endif %}
+        tt:end="{{ div_end }}"
+  {% endif%}
 {% endif %}
       >
-      <tt:p
+      <tt:p 
 {% if p_begin %}
   {% if p_begin == "*?Empty?*" %}
-            tt:begin=""
+        tt:begin=""
   {% else %}
-            tt:begin="{{ p_begin }}"
+        tt:begin="{{ p_begin }}"
   {% endif %}
 {% endif %}
 {% if p_end %}
   {% if p_end == "*?Empty?*" %}
-            tt:end=""
+        tt:end=""
   {% else %}
-            tt:end="{{ p_end }}"
-  {% endif %}
+        tt:end="{{ p_end }}"
+  {% endif%}
 {% endif %}
-            xml:id="ID005">
+        xml:id="ID005">
             <tt:span
-{% if span_begin %}
-  {% if span_begin == "*?Empty?*" %}
+{% if span1_begin %}
+  {% if span1_begin == "*?Empty?*" %}
                 tt:begin=""
   {% else %}
-                tt:begin="{{ span_begin }}"
+                tt:begin="{{ span1_begin }}"
   {% endif %}
 {% endif %}
-{% if span_end %}
-  {% if span_end == "*?Empty?*" %}
+{% if span1_end %}
+  {% if span1_end == "*?Empty?*" %}
                 tt:end=""
   {% else %}
-                tt:end="{{ span_end }}"
-  {% endif %}
+                tt:end="{{ span1_end }}"
+  {% endif%}
 {% endif %}
-            >
+              >
               Some example text...
             </tt:span>
-        <tt:br/>
-        <tt:span>And another line</tt:span>
+            <tt:span
+{% if span2_begin %}
+  {% if span2_begin == "*?Empty?*" %}
+                tt:begin=""
+  {% else %}
+                tt:begin="{{ span2_begin }}"
+  {% endif %}
+{% endif %}
+{% if span2_end %}
+  {% if span2_end == "*?Empty?*" %}
+                tt:end=""
+  {% else %}
+                tt:end="{{ span2_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text 2...
+            </tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
