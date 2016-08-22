@@ -2,9 +2,9 @@ EBU TT Live bindings Package
 ============================
 
 :mod:`ebutt_live` Package
------------------------
+-------------------------
 
-.. automodule:: ebu_tt_live.ebutt_live
+.. automodule:: ebu_tt_live.bindings.ebutt_live
     :members:
     :undoc-members:
     :show-inheritance:
@@ -80,4 +80,4 @@ EBU TT Live bindings Package
 .. automodule:: ebu_tt_live.bindings.ebutt_live.pyxb_utils
     :members:
     :undoc-members:
-    :show-inheritance:ebu_tt_live.bindings.ebutt_live.ebutt_live.rst
+    :show-inheritance:
