@@ -1,10 +1,10 @@
-raw Package
-===========
+EBU TT D bindings Package
+================
 
-:mod:`raw` Package
-------------------
+:mod:`bindings.ebutt_d` Package
+-----------------------
 
-.. automodule:: ebu_tt_live.bindings.raw
+.. automodule:: ebu_tt_live.bindings.ebutt_d
     :members:
     :undoc-members:
     :show-inheritance:
@@ -12,7 +12,7 @@ raw Package
 :mod:`_ebuttdt` Module
 ----------------------
 
-.. automodule:: ebu_tt_live.bindings.raw._ebuttdt
+.. automodule:: ebu_tt_live.bindings.ebutt_d._ebuttdt
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,15 +20,7 @@ raw Package
 :mod:`_ebuttm` Module
 ---------------------
 
-.. automodule:: ebu_tt_live.bindings.raw._ebuttm
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`_ebuttp` Module
----------------------
-
-.. automodule:: ebu_tt_live.bindings.raw._ebuttp
+.. automodule:: ebu_tt_live.bindings.ebutt_d._ebuttm
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,7 +28,7 @@ raw Package
 :mod:`_ebutts` Module
 ---------------------
 
-.. automodule:: ebu_tt_live.bindings.raw._ebutts
+.. automodule:: ebu_tt_live.bindings.ebutt_d._ebutts
     :members:
     :undoc-members:
     :show-inheritance:
@@ -44,7 +36,7 @@ raw Package
 :mod:`_ttm` Module
 ------------------
 
-.. automodule:: ebu_tt_live.bindings.raw._ttm
+.. automodule:: ebu_tt_live.bindings.ebutt_d._ttm
     :members:
     :undoc-members:
     :show-inheritance:
@@ -52,7 +44,7 @@ raw Package
 :mod:`_ttp` Module
 ------------------
 
-.. automodule:: ebu_tt_live.bindings.raw._ttp
+.. automodule:: ebu_tt_live.bindings.ebutt_d._ttp
     :members:
     :undoc-members:
     :show-inheritance:
@@ -60,8 +52,7 @@ raw Package
 :mod:`_tts` Module
 ------------------
 
-.. automodule:: ebu_tt_live.bindings.raw._tts
+.. automodule:: ebu_tt_live.bindings.ebutt_d._tts
     :members:
     :undoc-members:
     :show-inheritance:
-
