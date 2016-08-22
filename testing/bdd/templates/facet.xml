@@ -1,0 +1,105 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="testSequence001" ebuttp:sequenceNumber="1" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+  </tt:head>
+  <tt:body>
+{% if body_facet_term %}
+    <tt:metadata>
+      <ebuttm:facet
+  {% if body_facet_link %}
+    {% if body_facet_link == "*?Empty?*" %}
+        tt:link=""
+    {% else %}
+        tt:link="{{body_facet_link}}"
+    {% endif %}
+  {% endif %}
+  {% if body_facet_expresses %}
+    {% if body_facet_expresses == "*?Empty?*" %}
+        tt:expresses=""
+    {% else %}
+        tt:expresses="{{body_facet_expresses}}"
+    {% endif %}
+  {% endif %}
+        >
+          {{body_facet_term}}
+      </ebuttm:facet>
+    </tt:metadata>
+{% endif %}
+    <tt:div>
+{% if div_facet_term %}
+      <tt:metadata>
+        <ebuttm:facet
+  {% if div_facet_link %}
+    {% if div_facet_link == "*?Empty?*" %}
+        tt:link=""
+    {% else %}
+        tt:link="{{div_facet_link}}"
+    {% endif %}
+  {% endif %}
+  {% if div_facet_expresses %}
+    {% if div_facet_expresses == "*?Empty?*" %}
+        tt:expresses=""
+    {% else %}
+        tt:expresses="{{div_facet_expresses}}"
+    {% endif %}
+  {% endif %}
+          >
+            {{div_facet_term}}
+        </ebuttm:facet>
+      </tt:metadata>
+{% endif %}
+      <tt:p xml:id="ID005">
+{% if p_facet_term %}
+        <tt:metadata>
+          <ebuttm:facet
+  {% if p_facet_link %}
+    {% if p_facet_link == "*?Empty?*" %}
+            tt:link=""
+    {% else %}
+            tt:link="{{p_facet_link}}"
+    {% endif %}
+  {% endif %}
+  {% if p_facet_expresses %}
+    {% if p_facet_expresses == "*?Empty?*" %}
+            tt:expresses=""
+    {% else %}
+            tt:expresses="{{p_facet_expresses}}"
+    {% endif %}
+  {% endif %}
+            >
+              {{p_facet_term}}
+            </ebuttm:facet>
+          </tt:metadata>
+{% endif %}
+          <tt:span>
+{% if span_facet_term %}
+            <tt:metadata>
+              <ebuttm:facet
+  {% if span_facet_link %}
+    {% if span_facet_link == "*?Empty?*" %}
+                  tt:link=""
+    {% else %}
+                  tt:link="{{span_facet_link}}"
+    {% endif %}
+  {% endif %}
+  {% if span_facet_expresses %}
+    {% if span_facet_expresses == "*?Empty?*" %}
+                  tt:expresses=""
+    {% else %}
+                  tt:expresses="{{span_facet_expresses}}"
+    {% endif %}
+  {% endif %}
+                >
+              {{span_facet_term}}
+            </ebuttm:facet>
+          </tt:metadata>
+{% endif %}
+            Some example text...
+          </tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

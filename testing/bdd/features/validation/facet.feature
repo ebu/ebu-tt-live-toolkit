@@ -16,7 +16,7 @@ Feature: Facet
 
     Examples:
     | xml_file  | parent1 | link1            | term1   | parent2 | link2            | term2   |  
-    | facet.xml | element | http://link1.com | string1 | element | http://link1.com | string1 |  
+    | facet.xml | body    | http://link1.com | string1 | body    | http://link1.com | string1 |  
 
  
   Scenario: Valid term identifier
@@ -37,6 +37,7 @@ Feature: Facet
 
 
   # SPEC-CONFORMANCE: R27 R28 R29 R30 
+  @skip
   Scenario: Valid Facet Summary
     Given an xml file <xml_file>
     When it has element facet1 with attribute <expresses1> 
@@ -55,7 +56,8 @@ Feature: Facet
     | facet.xml |            |            |            | unspecified |  
     | facet.xml | unknown    | unknown    | unknown    | unspecified |  
 
-Scenario: Invalid Facet Summary
+  @skip
+  Scenario: Invalid Facet Summary
     Given an xml file <xml_file>
     When it has element facet1 with attribute <expresses1> 
     And it has element facet2 with attribute <expresses2>
