@@ -78,9 +78,9 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | | **Tech3350 v1.1**| | |
 |R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff||
 |R70|3|If `ttp:timeBase="media"` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: (1) hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted. (2) Non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
-|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`|`bdd/features/validation/smpte\_constraints.feature`|
-|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.|`bdd/features/validation/timebase_related_elements.feature` `(In)valid MarkerMode`|
-|R73a|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.|`bdd/features/validation/timebase_related_elements.feature` `(In)valid dropMode`|   
+|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
+|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
+|R73a|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|   
 |R73b|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified||
 |R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
 |R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified. ||
