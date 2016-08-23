@@ -17,7 +17,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R8|2.2 |Every distinct document with the same sequence identifier shall have a different sequence number.| |
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.| |
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
-|R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. (Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)| |
+|R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. (Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
 |R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s)| |
 |R13|2.2 |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.| |
 |R14|2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.| |
