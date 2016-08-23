@@ -2,6 +2,7 @@
 from raw._ebuttdt import *
 from raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
+from decimal import Decimal
 import re, logging
 from pyxb.exceptions_ import SimpleTypeValueError
 from ebu_tt_live.errors import TimeFormatOverflowError
@@ -35,6 +36,13 @@ class _TimedeltaBindingMixin(object):
     }
 
     @classmethod
+    def _int_or_none(cls, value):
+        try:
+            return int(value)
+        except TypeError:
+            return 0
+
+    @classmethod
     def compatible_timebases(cls):
         return cls._compatible_timebases
 
@@ -62,7 +70,7 @@ class _TimedeltaBindingMixin(object):
             time_base = context['timeBase']
             timing_att_name = context['timing_attribute_name']
             if time_base not in cls._compatible_timebases[timing_att_name]:
-                log.info(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                log.debug(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
                     attr_name=timing_att_name,
                     attr_type=cls,
                     attr_value=args,
@@ -108,7 +116,7 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
         :return:
         """
         numerator, unit = cls._groups_regex.match(instance).groups()
-        numerator = int(numerator)
+        numerator = float(numerator)
         if unit == 's':
             return timedelta(seconds=numerator)
         elif unit == 'm':
@@ -183,7 +191,10 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(lambda x: int(x), cls._groups_regex.match(instance).groups())
+        hours, minutes, seconds, milliseconds = map(
+            lambda x: cls._int_or_none(x),
+            cls._groups_regex.match(instance).groups()
+        )
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
@@ -231,7 +242,10 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(lambda x: int(x), cls._groups_regex.match(instance).groups())
+        hours, minutes, seconds, milliseconds = map(
+            lambda x: cls._int_or_none(x),
+            cls._groups_regex.match(instance).groups()
+        )
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
@@ -271,14 +285,22 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
     """
     Extending the string type with conversions to and from timedelta
     """
+    _compatible_timebases = {
+        'begin': ['smpte'],
+        'dur': ['smpte'],
+        'end': ['smpte']
+    }
+
     @classmethod
     def as_timedelta(cls, instance):
-        pass
+        # TODO: implement SMPTE
+        return timedelta()
 
     @classmethod
     def from_timedelta(cls, instance):
-        pass
+        # TODO: implement SMPTE
+        return SMPTETimingType('00:00:00:00')
 
 
 # TODO: SMPTE frameRate and frameRateMultiplier value from tt element.
-# ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
+ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)

@@ -21,3 +21,19 @@ class SemanticValidationError(Exception):
 
 class EndOfData(Exception):
     pass
+
+
+class IncompatibleSequenceError(Exception):
+    pass
+
+
+class DocumentDiscardedError(Exception):
+    offending_document = None
+
+
+class SequenceOverridden(Exception):
+    pass
+
+
+class LogicError(Exception):
+    pass
