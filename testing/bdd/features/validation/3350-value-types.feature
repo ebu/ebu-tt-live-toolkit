@@ -153,7 +153,7 @@ Feature: Value types from 3350
     | 3350_value_types.xml | -1c        |  
 
   # SPEC-CONFORMANCE: R99
-  Scenario: Valid line height values
+  Scenario: Valid origin values
     Given an xml file <xml_file>
     When it has origin attribute with value <origin> 
     Then document is valid
@@ -164,7 +164,7 @@ Feature: Value types from 3350
     | 3350_value_types.xml | 1c 1c   |  
     | 3350_value_types.xml | 1px 1px |  
 
-  Scenario: Invalid line height values
+  Scenario: Invalid origin values
     Given an xml file <xml_file>
     When it has origin attribute with value <origin> 
     Then document is invalid
