@@ -81,7 +81,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
 |R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
 |R73a|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|   
-|R73b|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified||
+|R73b|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified|`bdd/features/validation/timeBase_clock_clockMode_mandatory.feature` `(In)valid clock ttp:clockMode`|
 |R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
 |R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified. ||
 |R76|3|If the `pixel` unit is used, `tts:extent` SHALL be specified on `tt:tt`||
