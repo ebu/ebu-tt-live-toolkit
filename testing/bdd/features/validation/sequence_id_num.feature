@@ -36,6 +36,7 @@ Feature: Sequence ID and Sequence Number
     | testSeq1 | 999999999 |
 
 
+  # SPEC-CONFORMANCE: R8 R37
   Scenario: Invalid sequence number for documents in the same sequence
     Given a test sequence
     And an xml file <xml_file>
@@ -51,6 +52,7 @@ Feature: Sequence ID and Sequence Number
     | 30          | 30          |
 
 
+  # SPEC-CONFORMANCE: R8 R37
   Scenario: Valid sequence number for documents in the same sequence
     Given a test sequence
     And an xml file <xml_file>
