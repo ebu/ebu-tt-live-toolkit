@@ -4,9 +4,10 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
-    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, \
+    ERR_SEQUENCE_NUMBER_ALREADY_USED
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
-    SequenceOverridden
+    SequenceOverridden, SequenceNumberAlreadyUsedError
 from ebu_tt_live.clocks import get_clock_from_document
 from datetime import timedelta
 from pyxb import BIND
@@ -377,6 +378,12 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         ):
             # This loop goes backwards and checks for trimmed documents
 
+            # We cannot have two documents with the same sequence number
+            if item.document.sequence_number == document.sequence_number:
+                raise SequenceNumberAlreadyUsedError(
+                    ERR_SEQUENCE_NUMBER_ALREADY_USED
+                )
+
             # If any found event is higher sequence number we quit
             if item.document.sequence_number > document.sequence_number:
                 # Oops we got discarded.... :(
@@ -397,6 +404,13 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
 
         for item in self._timeline.irange(this_begins):
             # This loop goes forward looking at offending events
+
+            # We cannot have two documents with the same sequence number
+            if item.document.sequence_number == document.sequence_number:
+                raise SequenceNumberAlreadyUsedError(
+                    ERR_SEQUENCE_NUMBER_ALREADY_USED
+                )
+
             if isinstance(item, TimingEventEnd):
                 ends_after = item
                 if ends_after.document != begins_before.document:

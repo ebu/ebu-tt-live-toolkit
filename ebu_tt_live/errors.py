@@ -27,6 +27,10 @@ class IncompatibleSequenceError(Exception):
     pass
 
 
+class SequenceNumberAlreadyUsedError(Exception):
+    pass
+
+
 class DocumentDiscardedError(Exception):
     offending_document = None
 
