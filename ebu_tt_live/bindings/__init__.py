@@ -135,7 +135,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         clock_attrs = [
             'clockMode'
         ]
-        extra_attrs = self._semantic_attributes_present(extra_attrs)
+        extra_attrs = self._semantic_attributes_present(clock_attrs)
         if extra_attrs:
             raise SemanticValidationError(
                 ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES.format(
