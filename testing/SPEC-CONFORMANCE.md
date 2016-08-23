@@ -101,11 +101,11 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R90|3.1.4.2|The attributes `tts:origin` and `tts:extent` SHALL be specified on `tt:region`||
 |R91|3.1.4.2|If a region exceeds the the boundary of the active video, the display of the region SHALL be clipped.||
 |R92|3.1.4.2|The initial value of `tts:displayAlign` SHALL be `before`||
-|R93|4.2|Colour values SHALL be constrained to a named colour string, a RGB colour triple, RGBA colour tuple, a hex notated RGB colour triple or a hex notated RGBA colour tuple.||
-|R94|4.3|`extent` values SHALL be constrained to non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels).||
-|R95|4.5|`tts:fontSize` values SHALL be constrained to non-negative numbers appended by “%”, c” or “px”.||
-|R96|4.6|`ttp:frameRateMultiplier` values SHALL be constrained to two positive integers delimited by space||
-|R97|4.8|`tts:linePadding` values SHALL be constrained to one non-negative decimal appended by "c" (cell)||
-|R98|4.9|`tts:lineHeight` values SHALL be constrained to the string `normal` or a non-negative number appended by percentage “%”, c” (for cells) or “px” (for pixels).||
-|R99|4.10|`origin` values SHALL be constrained to two non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels) delimited by a space.||
+|R93|4.2|Colour values SHALL be constrained to a named colour string, a RGB colour triple, RGBA colour tuple, a hex notated RGB colour triple or a hex notated RGBA colour tuple.|`bdd/features/validation/3350-value-types.feature` `(In)valid colour values`|
+|R94|4.3|`extent` values SHALL be constrained to non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels).|`bdd/features/validation/3350-value-types.feature` `(In)valid extent values`|
+|R95|4.5|`tts:fontSize` values SHALL be constrained to non-negative numbers appended by “%”, c” or “px”.|`bdd/features/validation/3350-value-types.feature` `(In)valid font size values`|
+|R96|4.6|`ttp:frameRateMultiplier` values SHALL be constrained to two positive integers delimited by space|`bdd/features/validation/3350-value-types.feature` `(In)valid frame rate multiplier values`|
+|R97|4.8|`tts:linePadding` values SHALL be constrained to one non-negative decimal appended by "c" (cell)|`bdd/features/validation/3350-value-types.feature` `(In)valid line padding values`|
+|R98|4.9|`tts:lineHeight` values SHALL be constrained to the string `normal` or a non-negative number appended by percentage “%”, c” (for cells) or “px” (for pixels).|`bdd/features/validation/3350-value-types.feature` `(In)valid line height values`|
+|R99|4.10|`origin` values SHALL be constrained to two non-negative numbers appended by percentage “%”, c” (for cells) or “px” (for pixels) delimited by a space.|`bdd/features/validation/3350-value-types.feature` `(In)valid origin values`|
 |R100|4.11|`tts:padding` values SHALL be constrained to one, two, three or four decimal numbers (`xs:decimal`) appended by percentage “%”, c” (for cells) or “px” (for pixels), delimited by a space.||
