@@ -49,6 +49,9 @@ def CreateFromDOM(*args, **kwargs):
         result = raw.CreateFromDOM(*args, **kwargs)
     return result
 
+# EBU TT Live classes
+# ===================
+
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
 
@@ -207,11 +210,5 @@ class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_typ
 
 raw.body_type._SetSupersedingClass(body_type)
 
-
-# Namespace.setPrefix('tt')
-# _Namespace_ttm.setPrefix('ttm')
-# _Namespace_ttp.setPrefix('ttp')
-# _Namespace_tts.setPrefix('tts')
-# _Namespace_ebuttm.setPrefix('ebuttm')
-# _Namespace_ebuttp.setPrefix('ebuttp')
-# _Namespace_ebutts.setPrefix('ebutts')
+# EBU TT D classes
+# ================
