@@ -484,8 +484,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
-				<xs:attribute name="action" type="xs:string"/>
-				<xs:attribute name="generatedBy" type="xs:anyURI"/>
+				<xs:attribute name="action" type="xs:string" use="required"/>
+				<xs:attribute name="generatedBy" type="xs:anyURI" use="required"/>
 				<xs:attribute name="sourceId" type="xs:anyURI" use="optional"/>
 			</xs:extension>
 		</xs:simpleContent>
