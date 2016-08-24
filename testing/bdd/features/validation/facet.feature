@@ -3,7 +3,7 @@ Feature: Facet
   Rules on use of ebuttm:facet and ebuttm:documentFacet
 
 
-  # SPEC-CONFORMANCE: R26
+  # SPEC-CONFORMANCE: R26 R66
   # skipped because the semantic validation does not check facets yet
   @skip
   Scenario: Invalid term identifier
