@@ -3,7 +3,7 @@ Feature: Facet
   Rules on use of ebuttm:facet and ebuttm:documentFacet
 
 
-  # SPEC-CONFORMANCE: R26 R66
+  # SPEC-CONFORMANCE: R26 R66 R67
   # skipped because the semantic validation does not check facets yet
   @skip
   Scenario: Invalid term identifier
@@ -19,6 +19,7 @@ Feature: Facet
     Examples:
     | xml_file  | parent1 | link1            | term1   | parent2 | link2            | term2   |
     | facet.xml | body    | http://link1.com | string1 | body    | http://link1.com | string1 |
+    | facet.xml | body    | http://link1.com | string1 | body    | http://link2.com | string1 |
 
 
   Scenario: Valid term identifier
@@ -34,7 +35,7 @@ Feature: Facet
     Examples:
     | xml_file  | parent1  | link1            | term1   | parent2  | link2            | term2   |
     | facet.xml | body     | http://link1.com | string1 | div      | http://link1.com | string1 |
-    | facet.xml | p        | http://link1.com | string1 | p        | http://link2.com | string1 |
+    | facet.xml | p        | http://link1.com | string1 | p        | http://link2.com | string2 |
     | facet.xml | span     | http://link1.com | string1 | span     | http://link1.com | string2 |
 
 

@@ -73,7 +73,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R64|3.2.2.5|`p` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R65|3.2.2.5|`p` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
-|R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.| |
+|R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).| |
 | | **Tech3350 v1.1**| | |
 |R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff||
