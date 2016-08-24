@@ -18,6 +18,13 @@
               generatedBy="{{generated_by}}"
   {% endif %}
 {% endif %}
+{% if source_id %}
+  {% if source_id == "*?Empty?*" %}
+              sourceId=""
+  {% else %}
+              sourceId="{{source_id}}"
+  {% endif %}
+{% endif %}
           />
       </ebuttm:documentMetadata>
     </tt:metadata>
