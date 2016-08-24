@@ -46,9 +46,15 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
+{% if time_base == 'smpte' %}
   <tt:body tt:begin="00:00:05:01" tt:end="00:00:12:12">
     <tt:div>
       <tt:p tt:begin="00:00:01:20" tt:end="00:00:04:12" xml:id="ID005">
+{% else %}
+  <tt:body tt:begin="00:00:05.01" tt:end="00:00:12.12">
+    <tt:div>
+      <tt:p tt:begin="00:00:01.20" tt:end="00:00:04.12" xml:id="ID005">
+{% endif %}
         <tt:span>Some example text...</tt:span>
         <tt:br/>
         <tt:span>And another line</tt:span>

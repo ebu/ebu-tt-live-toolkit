@@ -65,7 +65,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	<xs:simpleType name="paddingType">
 		<xs:restriction base="xs:token">
 			<xs:pattern
-				value="(\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))|([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"
+				value="([+-]?\d*(\.\d+)?(px|c|%))(\s([+-]?\d*(\.\d+)?(px|c|%)))?(\s([+-]?\d*(\.\d+)?(px|c|%)))?(\s([+-]?\d*(\.\d+)?(px|c|%)))?"
 			/>
 		</xs:restriction>
 	</xs:simpleType>
