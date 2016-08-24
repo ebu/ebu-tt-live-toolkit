@@ -38,10 +38,10 @@ Feature: Value types from 3350
     Then document is valid
 
     Examples:
-    | xml_file             | extent |
-    | 3350_value_types.xml | 1%     |
-    | 3350_value_types.xml | 1c     |
-    | 3350_value_types.xml | 1px    |
+    | xml_file             | extent  |
+    | 3350_value_types.xml | 1% 1%   |
+    | 3350_value_types.xml | 1c 1c   |
+    | 3350_value_types.xml | 1px 1px |
 
   Scenario: Invalid extent values
     Given an xml file <xml_file>
@@ -50,8 +50,8 @@ Feature: Value types from 3350
 
     Examples:
     | xml_file             | extent |
-    | 3350_value_types.xml | 1      |
-    | 3350_value_types.xml | -1c    |
+    | 3350_value_types.xml | 1 1    |
+    | 3350_value_types.xml | -1c 1c |
     | 3350_value_types.xml | 1px    |
 
   # SPEC-CONFORMANCE: R95
@@ -91,7 +91,7 @@ Feature: Value types from 3350
     | xml_file             | line_padding |
     | 3350_value_types.xml | 1c           |
     | 3350_value_types.xml | 0.5c         |
-    | 3350_value_types.xml | +.5c         |
+    | 3350_value_types.xml | .5c         |
 
   Scenario: Invalid line padding values
     Given an xml file <xml_file>
@@ -128,7 +128,6 @@ Feature: Value types from 3350
     | 3350_value_types.xml | hello       |
     | 3350_value_types.xml | 1em         |
     | 3350_value_types.xml | 1c 2c       |
-    | 3350_value_types.xml | -1c         |
 
   # SPEC-CONFORMANCE: R99
   Scenario: Valid origin values
@@ -149,7 +148,6 @@ Feature: Value types from 3350
 
     Examples:
     | xml_file             | origin   |
-    | 3350_value_types.xml | -10% 10% |
     | 3350_value_types.xml | 1em 1em  |
     | 3350_value_types.xml | 1px1px   |
     | 3350_value_types.xml | 1 1      |

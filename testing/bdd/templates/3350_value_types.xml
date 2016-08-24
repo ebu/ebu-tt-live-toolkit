@@ -7,7 +7,7 @@
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"
-        xmlns:ebutts="urn:ebu:tt:styling"
+        xmlns:ebutts="urn:ebu:tt:style"
         xmlns:tt="http://www.w3.org/ns/ttml"
         xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
         xmlns:tts="http://www.w3.org/ns/ttml#styling"
@@ -26,21 +26,21 @@
             tts:color="{{color}}"
   {% endif %}
 {% endif %}
-{% if fontSize %}
+{% if font_size %}
   {% if fontSize == "*?Empty?*" %}
             tts:fontSize=""
   {% else %}
             tts:fontSize="{{font_size}}"
   {% endif %}
 {% endif %}
-{% if linePadding %}
+{% if line_padding %}
   {% if linePadding == "*?Empty?*" %}
             ebutts:linePadding=""
   {% else %}
             ebutts:linePadding="{{line_padding}}"
   {% endif %}
 {% endif %}
-{% if lineHeight %}
+{% if line_height %}
   {% if lineHeight == "*?Empty?*" %}
             tts:lineHeight=""
   {% else %}
