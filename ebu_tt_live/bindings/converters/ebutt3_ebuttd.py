@@ -1,5 +1,7 @@
 from ebu_tt_live.bindings import tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
     p_type, d_p_type, span_type, d_span_type, br_type, d_br_type
+import copy
+from pyxb.binding.basis import NonElementContent, ElementContent
 
 
 class EBUTT3EBUTTDConverter(object):
@@ -45,7 +47,22 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_children(cls, children, dataset):
-        pass
+        """
+        Recursive step
+        :param children: as given by orderedContent
+        :param dataset:
+        :return:
+        """
+        output = []
+
+        for item in children:
+            if isinstance(item, NonElementContent):
+                output.append(copy.deepcopy(item.value))
+            elif isinstance(item, ElementContent):
+                output.append(cls.convert_element(item.value, dataset))
+            else:
+                raise Exception('Can this even happen!??!?!?!')
+        return output
 
     @classmethod
     def convert_element(cls, element, dataset):
