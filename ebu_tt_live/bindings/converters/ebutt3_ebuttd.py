@@ -46,14 +46,16 @@ class EBUTT3EBUTTDConverter(object):
             return cls.convert_br
 
     @classmethod
-    def convert_children(cls, children, dataset):
+    def convert_children(cls, element, dataset):
         """
         Recursive step
-        :param children: as given by orderedContent
+        :param element:
         :param dataset:
         :return:
         """
         output = []
+
+        children = element.orderedContent()
 
         for item in children:
             if isinstance(item, NonElementContent):
