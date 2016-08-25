@@ -12,7 +12,16 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_body(cls, body_in, dataset):
-        return d_body_type
+        new_elem = d_body_type(
+            cls.convert_children(body_in, dataset),
+            id=body_in.id,
+            region=body_in.region,
+            style=body_in.style,
+            agent=body_in.agent,
+            role=body_in.role,
+            lang=body_in.lang
+        )
+        return new_elem
 
     @classmethod
     def convert_div(cls, div_in, dataset):
