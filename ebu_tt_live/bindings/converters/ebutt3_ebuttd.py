@@ -1,5 +1,5 @@
 from ebu_tt_live.bindings import tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
-    p_type, d_p_type, span_type, d_span_type, br_type, d_br_type
+    p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type
 import copy
 from pyxb.binding.basis import NonElementContent, ElementContent
 
@@ -16,13 +16,23 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_div(cls, div_in, dataset):
-        return d_div_type
+        new_elem = d_div_type(
+            cls.convert_children(div_in, dataset),
+            metadata=copy.deepcopy(div_in.metadata),
+            id=div_in.id,
+            region=div_in.region,
+            style=div_in.style,
+            agent=div_in.agent,
+            begin=div_in.begin,
+            end=div_in.end
+        )
+        return new_elem
 
     @classmethod
     def convert_p(cls, p_in, dataset):
         new_elem = d_p_type(
             cls.convert_children(p_in, dataset),
-            metadata=p_in.metadata,
+            metadata=copy.deepcopy(p_in.metadata),
             space=p_in.space,
             begin=p_in.begin,
             end=p_in.end,
