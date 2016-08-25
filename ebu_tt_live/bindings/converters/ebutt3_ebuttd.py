@@ -28,7 +28,10 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_br(cls, br_in, dataset):
-        return d_br_type
+        return d_br_type(
+            br_in.value,
+            metadata=copy.deepcopy(br_in.metadata)
+        )
 
     @classmethod
     def map_type(cls, in_element):

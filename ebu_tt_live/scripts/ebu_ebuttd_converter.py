@@ -23,16 +23,8 @@ def main():
     create_loggers()
     log.info('This is a Simple Consumer example')
 
-    manifest_path = args.manifest_path
-    consumer_impl = None
-    fs_reader = None
 
-    if manifest_path:
-        do_tail = args.do_tail
-        consumer_impl = FilesystemConsumerImpl()
-        fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
-    else:
-        consumer_impl = TwistedConsumerImpl()
+    consumer_impl = TwistedConsumerImpl()
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
@@ -43,18 +35,15 @@ def main():
         reference_clock=reference_clock
     )
 
-    if manifest_path:
-        fs_reader.resume_reading()
-    else:
-        factory = BroadcastClientFactory(
-            url='ws://localhost:9000',
-            channels=['TestSequence1'],
-            consumer=TwistedConsumer(
-                custom_consumer=consumer_impl
-            )
+    factory = BroadcastClientFactory(
+        url='ws://localhost:9000',
+        channels=['TestSequence1'],
+        consumer=TwistedConsumer(
+            custom_consumer=consumer_impl
         )
-        factory.protocol = ClientNodeProtocol
+    )
+    factory.protocol = ClientNodeProtocol
 
-        factory.connect()
+    factory.connect()
 
-        reactor.run()
+    reactor.run()
