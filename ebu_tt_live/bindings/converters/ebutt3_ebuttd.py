@@ -20,7 +20,20 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_p(cls, p_in, dataset):
-        return d_p_type
+        new_elem = d_p_type(
+            cls.convert_children(p_in, dataset),
+            metadata=p_in.metadata,
+            space=p_in.space,
+            begin=p_in.begin,
+            end=p_in.end,
+            lang=p_in.lang,
+            id=p_in.id,
+            region=p_in.region,
+            style=p_in.style,
+            agent=p_in.agent,
+            role=p_in.role
+        )
+        return new_elem
 
     @classmethod
     def convert_span(cls, span_in, dataset):
