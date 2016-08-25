@@ -27,7 +27,6 @@ class EBUTT3EBUTTDConverter(object):
     def convert_div(cls, div_in, dataset):
         new_elem = d_div_type(
             cls.convert_children(div_in, dataset),
-            metadata=copy.deepcopy(div_in.metadata),
             id=div_in.id,
             region=div_in.region,
             style=div_in.style,
@@ -41,7 +40,6 @@ class EBUTT3EBUTTDConverter(object):
     def convert_p(cls, p_in, dataset):
         new_elem = d_p_type(
             cls.convert_children(p_in, dataset),
-            metadata=copy.deepcopy(p_in.metadata),
             space=p_in.space,
             begin=p_in.begin,
             end=p_in.end,
@@ -71,10 +69,7 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_br(cls, br_in, dataset):
-        return d_br_type(
-            br_in.value,
-            metadata=copy.deepcopy(br_in.metadata)
-        )
+        return d_br_type()
 
     @classmethod
     def map_type(cls, in_element):
@@ -90,6 +85,12 @@ class EBUTT3EBUTTDConverter(object):
             return cls.convert_span
         elif isinstance(in_element, br_type):
             return cls.convert_br
+        else:
+            return cls.convert_unknown
+
+    @classmethod
+    def convert_unknown(cls, element, dataset):
+        return None
 
     @classmethod
     def convert_children(cls, element, dataset):
@@ -107,7 +108,9 @@ class EBUTT3EBUTTDConverter(object):
             if isinstance(item, NonElementContent):
                 output.append(copy.deepcopy(item.value))
             elif isinstance(item, ElementContent):
-                output.append(cls.convert_element(item.value, dataset))
+                conv_elem = cls.convert_element(item.value, dataset)
+                if conv_elem is not None:
+                    output.append(conv_elem)
             else:
                 raise Exception('Can this even happen!??!?!?!')
         return output
