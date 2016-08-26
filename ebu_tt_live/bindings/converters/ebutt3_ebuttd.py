@@ -8,38 +8,38 @@ class EBUTT3EBUTTDConverter(object):
 
     @classmethod
     def convert_tt(cls, tt_in, dataset):
-        return d_tt_type
+        new_elem = d_tt_type(
+            *cls.convert_children(tt_in, dataset),
+            timeBase=tt_in.timeBase,
+            lang=tt_in.lang,
+            space=tt_in.space
+        )
+        return new_elem
 
     @classmethod
     def convert_body(cls, body_in, dataset):
         new_elem = d_body_type(
-            cls.convert_children(body_in, dataset),
-            id=body_in.id,
-            region=body_in.region,
-            style=body_in.style,
+            *cls.convert_children(body_in, dataset),
             agent=body_in.agent,
-            role=body_in.role,
-            lang=body_in.lang
+            role=body_in.role
         )
         return new_elem
 
     @classmethod
     def convert_div(cls, div_in, dataset):
         new_elem = d_div_type(
-            cls.convert_children(div_in, dataset),
+            *cls.convert_children(div_in, dataset),
             id=div_in.id,
             region=div_in.region,
             style=div_in.style,
-            agent=div_in.agent,
-            begin=div_in.begin,
-            end=div_in.end
+            agent=div_in.agent
         )
         return new_elem
 
     @classmethod
     def convert_p(cls, p_in, dataset):
         new_elem = d_p_type(
-            cls.convert_children(p_in, dataset),
+            *cls.convert_children(p_in, dataset),
             space=p_in.space,
             begin=p_in.begin,
             end=p_in.end,
@@ -55,7 +55,7 @@ class EBUTT3EBUTTDConverter(object):
     @classmethod
     def convert_span(cls, span_in, dataset):
         new_elem = d_span_type(
-            cls.convert_children(span_in, dataset),
+            *cls.convert_children(span_in, dataset),
             space=span_in.space,
             begin=span_in.begin,
             end=span_in.end,
