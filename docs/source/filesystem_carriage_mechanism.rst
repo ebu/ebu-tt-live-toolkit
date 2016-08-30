@@ -1,9 +1,9 @@
 Filesystem Carriage Mechanism
 =============================
 
-The filesystem carriage mechanism allows to write produced documents to the filesystem and to consume documents from the filesystem. Along with the documents, it writes a manifest file named according to the format `manifest_<sequence identifier>.txt`. Documents are named following the format `<sequence identifier>_<sequence number>.xml`. 
+The filesystem carriage mechanism writes produced documents to the filesystem and consumes documents from the filesystem. Along with the documents, it writes a manifest file named according to the format `manifest_<sequence identifier>.txt`. Documents are named following the format `<sequence identifier>_<sequence number>.xml`. 
 
-Each time a document is written to the file system, a line using the following format is added to the manifest :
+Each time a document is written to the file system, a line using the following format is appended to the manifest file:
 
 `availability_time,path_to_xml_file`
 
