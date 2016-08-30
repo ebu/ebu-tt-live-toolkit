@@ -9,5 +9,5 @@ Feature: Passive nodes shall not modify documents in any way
     Then the emitted document is identical to the received one
 
     Examples:
-    | xml_file            |
+    | xml_file              |
     | complete_document.xml |
