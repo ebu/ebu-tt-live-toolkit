@@ -8,6 +8,8 @@ from pytest_bdd import given, when, then, scenarios
 scenarios('features/nodes/passive_nodes_shall_not_modify_document.feature')
 
 
+# Hand crafted carriage specifically for tests. It just stores the last
+# document it emitted
 class TestCarriage(ProducerCarriageImpl):
 
     _last_emitted_document = None
