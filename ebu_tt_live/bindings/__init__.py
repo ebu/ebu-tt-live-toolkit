@@ -225,9 +225,21 @@ class style_type(SizingValidationMixin, SemanticValidationMixin, raw.style):
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
+        self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
 
 
 raw.style._SetSupersedingClass(style_type)
+
+
+class region_type(SizingValidationMixin, SemanticValidationMixin, raw.region):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_check_sizing_type(self.origin, dataset=dataset)
+        self._semantic_check_sizing_type(self.extent, dataset=dataset)
+
+
+raw.region._SetSupersedingClass(region_type)
+
 
 # EBU TT D classes
 # ================

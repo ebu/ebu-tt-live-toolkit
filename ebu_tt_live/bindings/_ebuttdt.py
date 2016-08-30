@@ -315,3 +315,36 @@ class PixelFontSizeType(SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
 
 
 ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
+
+
+class PixelOriginType(SizingValidationMixin, ebuttdt_raw.pixelOriginType):
+
+    def _semantic_validate_sizing_context(self, dataset):
+        extent = dataset['tt_element'].extent
+        if extent is None:
+            raise ExtentMissingError(self)
+
+
+ebuttdt_raw.pixelOriginType._SetSupersedingClass(PixelOriginType)
+
+
+class PixelExtentType(SizingValidationMixin, ebuttdt_raw.pixelExtentType):
+
+    def _semantic_validate_sizing_context(self, dataset):
+        extent = dataset['tt_element'].extent
+        if extent is None:
+            raise ExtentMissingError(self)
+
+
+ebuttdt_raw.pixelExtentType._SetSupersedingClass(PixelExtentType)
+
+
+class PixelLengthType(SizingValidationMixin, ebuttdt_raw.pixelLengthType):
+
+    def _semantic_validate_sizing_context(self, dataset):
+        extent = dataset['tt_element'].extent
+        if extent is None:
+            raise ExtentMissingError(self)
+
+
+ebuttdt_raw.pixelLengthType._SetSupersedingClass(PixelLengthType)
