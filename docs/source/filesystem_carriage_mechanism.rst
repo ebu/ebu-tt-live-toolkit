@@ -11,4 +11,6 @@ For example:
 
 `09:20:31.279,TestSequence1_474.xml`
 
+The format is `hh:mm:ss.fff,path` where `fff` represents milliseconds digits.
+
 The manifest file gives the availability time for each document along with the path to the corresponding document. The timeline used for the availability times is the same as the one used in the documents, indeed the carriage implementation uses the same clock (or time reference) as the node that produces the documents. The writing order and thus the reading order is from top to bottom.
