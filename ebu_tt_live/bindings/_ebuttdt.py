@@ -5,10 +5,10 @@ from datetime import timedelta
 from decimal import Decimal
 import re, logging
 from pyxb.exceptions_ import SimpleTypeValueError
-from ebu_tt_live.errors import TimeFormatOverflowError
+from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
 from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE
 from .pyxb_utils import get_xml_parsing_context
-from .validation import SemanticValidationMixin
+from .validation import SemanticValidationMixin, SizingValidationMixin
 
 
 log = logging.getLogger(__name__)
@@ -304,3 +304,14 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
 
 # TODO: SMPTE frameRate and frameRateMultiplier value from tt element.
 ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
+
+
+class PixelFontSizeType(SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
+
+    def _semantic_validate_sizing_context(self, dataset):
+        extent = dataset['tt_element'].extent
+        if extent is None:
+            raise ExtentMissingError(self)
+
+
+ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)

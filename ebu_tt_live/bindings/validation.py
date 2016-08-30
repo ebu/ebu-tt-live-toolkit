@@ -338,8 +338,8 @@ class TimingValidationMixin(object):
                     # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
 
-    # The mixin approach is used since there are multiple timed elements types.
-    # The inspected elements are all attributes of the element so they do not
+    # The mixin approach is used since there are multiple timed element types.
+    # The inspected values are all attributes of the element so they do not
     # take part in the traversal directly we process them in the timed element's context instead: body, div, p, span
     def _semantic_timebase_validation(self, dataset, element_content):
         time_base = dataset['tt_element'].timeBase
@@ -437,3 +437,27 @@ class BodyTimingValidationMixin(TimingValidationMixin):
                             time_base=time_base
                         )
                     )
+
+
+class SizingValidationMixin(object):
+    """
+    This is meant to validate that the sizing types correspond to the tt element and head region definitions.
+    It is meant to be used by the containing element and its attributes as well so the class interoperates with itself.
+    """
+
+    def _semantic_check_sizing_type(self, value, dataset):
+        """
+        The sizing attribute is checked by the element for a value and attribute validation is ran as required.
+        :param value: The sizing value to be checked
+        :param dataset: The semantic dataset
+        """
+        if value is not None and isinstance(value, SizingValidationMixin):
+            value._semantic_validate_sizing_context(dataset=dataset)
+
+    def _semantic_validate_sizing_context(self, dataset):
+        """
+        The attribute can check if it is valid in the context provided by dataset
+        :param dataset: The semantic dataset
+        :raises SimpleTypeValueError
+        """
+        raise NotImplementedError()

@@ -11,10 +11,11 @@ from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
-from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, BodyTimingValidationMixin
+from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, \
+    BodyTimingValidationMixin, SizingValidationMixin
 from ebu_tt_live.errors import SemanticValidationError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
-
+from pyxb.exceptions_ import SimpleTypeValueError, ComplexTypeValidationError
 from pyxb.utils.domutils import BindingDOMSupport
 from datetime import timedelta
 
@@ -124,6 +125,15 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # TODO: SMPTE validation(low priority) #52
         pass
 
+    def _semantic_before_validation(self):
+        """
+        Here before anything semantic happens I check some SYNTACTIC errors.
+        :raises ComplexTypeValidationError, SimpleTypeValueError
+        """
+        # The following edge case is ruined by the XSD associating the same extent type to this extent element.
+        if self.extent is not None and not isinstance(self.extent, ebuttdt.pixelExtentType):
+            raise SimpleTypeValueError(type(self.extent), self.extent)
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
         # attributes.
@@ -209,6 +219,15 @@ class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_typ
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
 
 raw.body_type._SetSupersedingClass(body_type)
+
+
+class style_type(SizingValidationMixin, SemanticValidationMixin, raw.style):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
+
+
+raw.style._SetSupersedingClass(style_type)
 
 # EBU TT D classes
 # ================
