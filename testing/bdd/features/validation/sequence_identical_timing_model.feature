@@ -38,6 +38,9 @@ Feature: Every document in a sequence shall have an identical timing model as de
     | media      |             |             |                        |            |              | clock      | local       |             |                        |            |              |
     | clock      | local       |             |                        |            |              | smpte      |             | 25          | 1 1                    | nonDrop    | continuous   |
     | media      |             |             |                        |            |              | smpte      |             | 25          | 1 1                    | nonDrop    | continuous   |
+    | smpte      | smpte       | 20          | 1 1                    | nonDrop    | continuous   | smpte      |             | 25          | 1 1                    | nonDrop    | continuous   |
+    | smpte      | smpte       | 30          | 1000 1001              | dropPal    | continuous   | smpte      |             | 30          | 1 1                    | nonDrop    | continuous   |
+    | smpte      | smpte       | 30          | 1000 1001              | dropPal    | continuous   | smpte      |             | 30          | 1000 1001              | dropNTSC   | continuous   |
 
 
   # SPEC-CONFORMANCE: R11
