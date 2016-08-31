@@ -247,6 +247,33 @@
                 <span class="p">)</span>
             <span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">__semantic_test_time_base_clock_attrs_present</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">clock_attrs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;clockMode&#39;</span>
+        <span class="p">]</span>
+        <span class="n">missing_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_attributes_missing</span><span class="p">(</span><span class="n">clock_attrs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">missing_attrs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                <span class="n">ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">elem_name</span><span class="o">=</span><span class="s1">&#39;tt:tt&#39;</span><span class="p">,</span>
+                    <span class="n">attr_names</span><span class="o">=</span><span class="n">missing_attrs</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">__semantic_test_time_base_clock_attrs_absent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">clock_attrs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;clockMode&#39;</span>
+        <span class="p">]</span>
+        <span class="n">extra_attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_attributes_present</span><span class="p">(</span><span class="n">clock_attrs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">extra_attrs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span>
+                <span class="n">ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">elem_name</span><span class="o">=</span><span class="s1">&#39;tt:tt&#39;</span><span class="p">,</span>
+                    <span class="n">attr_names</span><span class="o">=</span><span class="n">extra_attrs</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">__semantic_test_smpte_attr_combinations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO: SMPTE validation(low priority) #52</span>
         <span class="k">pass</span>
@@ -263,7 +290,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_smpte_attrs_present</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_smpte_attrs_absent</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_smpte_attrs_absent</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_time_base_clock_attrs_present</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__semantic_test_time_base_clock_attrs_absent</span><span class="p">()</span></div>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">tt_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">tt_type</span><span class="p">)</span>
