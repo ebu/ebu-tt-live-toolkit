@@ -27,7 +27,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	<xs:simpleType name="fontSizeType">
 		<xs:restriction base="xs:token">
 			<xs:pattern
-				value="([+-]?\d*\.?\d+(px|c|%))(\s([+-]?\d*\.?\d+(px|c|%)))?"
+				value="([+]?\d*\.?\d+(px|c|%))(\s([+]?\d*\.?\d+(px|c|%)))?"
 			/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -44,12 +44,17 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="lineHeightType">
-		<xs:union memberTypes="ebuttdt:lengthType">
+		<xs:union>
 			<xs:simpleType>
 				<xs:restriction base="xs:token">
 					<xs:enumeration value="normal"/>
 				</xs:restriction>
 			</xs:simpleType>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="\d*\.?\d+(px|c|%)"/>
+			</xs:restriction>
+		</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
 	<xs:simpleType name="colorType">

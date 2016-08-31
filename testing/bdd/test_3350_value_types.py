@@ -9,7 +9,7 @@ def when_color(color, template_dict):
     template_dict['color'] = color
 
 
-@when('it has extent attribute with value <extent>')
+@when('it has region extent attribute with value <extent>')
 def when_extent(extent, template_dict):
     template_dict['extent'] = extent
 

@@ -34,7 +34,7 @@ Feature: Value types from 3350
   # SPEC-CONFORMANCE: R94
   Scenario: Valid extent values
     Given an xml file <xml_file>
-    When it has extent attribute with value <extent>
+    When it has region extent attribute with value <extent>
     Then document is valid
 
     Examples:
@@ -45,7 +45,7 @@ Feature: Value types from 3350
 
   Scenario: Invalid extent values
     Given an xml file <xml_file>
-    When it has extent attribute with value <extent>
+    When it has region extent attribute with value <extent>
     Then document is invalid
 
     Examples:
@@ -65,7 +65,7 @@ Feature: Value types from 3350
     | 3350_value_types.xml | 1%  2c    |
     | 3350_value_types.xml | 1.5px     |
     | 3350_value_types.xml | 1c 0c     |
-    | 3350_value_types.xml | -1%  2c   |
+    | 3350_value_types.xml | 1%  2c    |
     | 3350_value_types.xml | +1px      |
 
 
@@ -79,6 +79,7 @@ Feature: Value types from 3350
     | 3350_value_types.xml | 1% 1% 1%  |
     | 3350_value_types.xml | 1em       |
     | 3350_value_types.xml | 1c1c      |
+    | 3350_value_types.xml | -1% 1%     |
 
 
   # SPEC-CONFORMANCE: R97
@@ -128,6 +129,7 @@ Feature: Value types from 3350
     | 3350_value_types.xml | hello       |
     | 3350_value_types.xml | 1em         |
     | 3350_value_types.xml | 1c 2c       |
+    | 3350_value_types.xml | -1px        |
 
   # SPEC-CONFORMANCE: R99
   Scenario: Valid origin values
@@ -136,10 +138,12 @@ Feature: Value types from 3350
     Then document is valid
 
     Examples:
-    | xml_file             | origin  |
-    | 3350_value_types.xml | 10% 10% |
-    | 3350_value_types.xml | 1c 1c   |
-    | 3350_value_types.xml | 1px 1px |
+    | xml_file             | origin   |
+    | 3350_value_types.xml | 10% 10%  |
+    | 3350_value_types.xml | 1c 1c    |
+    | 3350_value_types.xml | 1px 1px  |
+    | 3350_value_types.xml | -1px 1px |
+    | 3350_value_types.xml | 1px -1px |
 
   Scenario: Invalid origin values
     Given an xml file <xml_file>
