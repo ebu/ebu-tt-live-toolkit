@@ -584,6 +584,18 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+	<xs:complexType name="bodyMetadata_type">
+		<xs:complexContent>
+		    <xs:extension base="ebuttm:metadataBase_type">
+				<xs:sequence>
+				    <xs:element name="authoringTechnique" type="authoringTechnique_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="transitionStyle" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	
 	<xs:complexType name="divMetadata_type">
 		<xs:complexContent>
@@ -604,6 +616,16 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				<xs:sequence>
 				    <xs:element name="authoringTechnique" type="authoringTechnique_type" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="transitionStyle" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="spanMetadata_type">
+		<xs:complexContent>
+		    <xs:extension base="ebuttm:metadataBase_type">
+				<xs:sequence>
 				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>

@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="testSequence001" ebuttp:sequenceNumber="1" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+{% if document_facets %}
+      <ebuttm:documentMetadata>
+          {{document_facets}}
+      </ebuttm:documentMetadata>
+{% else %}
+      <ebuttm:documentMetadata/>
+{% endif %}
+    </tt:metadata>
+  </tt:head>
+  <tt:body>
+{% if body_facets %}
+    <tt:metadata>
+      {{body_facets}}
+    </tt:metadata>
+{% endif %}
+    <tt:div>
+{% if div_facets %}
+      <tt:metadata>
+          {{div_facets}}
+      </tt:metadata>
+{% endif %}
+      <tt:p xml:id="ID005">
+{% if p_facets %}
+        <tt:metadata>
+            {{p_facets}}
+        </tt:metadata>
+{% endif %}
+          <tt:span>
+{% if span_facets %}
+            <tt:metadata>
+              {{span_facets}}
+            </tt:metadata>
+{% endif %}
+            Some example text...
+          </tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
