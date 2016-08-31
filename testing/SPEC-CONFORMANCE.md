@@ -37,7 +37,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R28|2.5.1|If all the content in a document has\_not a `facet` then the summary shall be `"all\_has_not"`.| |
 |R29|2.5.1|If there is a mix of has and has\_not and unknown or if some of the content does not have the `facet` then the summary shall be `"mixed"`.| |
 |R30|2.5.1|If none of the document's content has the `facet` or all of the document's content has the `facet` described as unknown then the summary shall be `"unspecified"`.| |
-|R31|2.6|If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.| |
+|R31|2.6|If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R32|3.2.2.1|`ttp:timeBase` Cardinality 1..1|`bdd/features/validation/timeBase_attribute_mandatory.feature` `(In)valid ttp:timeBase`|
 |R33|3.2.2.1|The `ttp:timeBase` element is as defined in [EBUTT1] with the addition that all time expressions of `dur` attributes shall denote a relative coordinate on the same timeline as the `begin` and `end` attributes.| |
 |R34|3.2.2.1|`ebuttp:sequenceIdentifier` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
@@ -48,8 +48,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R39|3.2.2.2|Order of metadata elements (if present) in `ebuttm:documentMetadata` is: `ebuttm:originalSourceServiceIdentifier`, `ebuttm:intendedDestinationServiceIdentifier`, `ebuttm:documentFacet`, `ebuttm:trace`. | |
 |R40|3.2.2.2|`ebuttm:documentFacet` : Each distinctly identified `facet` that is summarised shall have a separate `documentFacet` element.| |
 |R41|3.2.2.2|Documents shall NOT contain more than one `documentFacet` element referring to the same term, where the term is identified by the combination of the element contents and the value of the link attribute.| |
-|R42|3.2.2.2.1| `ebuttm:trace` `action` attribute Cardinality 1..1 | |
-|R43|3.2.2.2.1| `ebuttm:trace` `generatedBy` attribute Cardinality 1..1 | |
+|R42|3.2.2.2.1| `ebuttm:trace` `action` attribute Cardinality 1..1 |`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R43|3.2.2.2.1| `ebuttm:trace` `generatedBy` attribute Cardinality 1..1 |`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R44|3.2.2.3| A document that contains a `tt:body` element with no content shall be treated as being active as defined by the semantics described in § 2.3.1, and shall cause no content to be presented while it is active.| |
 |R45|3.2.2.3|`body` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in body` |
 |R46|3.2.2.3|`body` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
@@ -76,12 +76,12 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.| |
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).|`bdd/features/delayTimingType.feature` `(In)valid delayTimingType format`|
 | | **Tech3350 v1.1**| | |
-|R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff||
-|R70|3|If `ttp:timeBase="media"`` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: <ul><li>hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted.</li><li>non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)</li></ul>|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
-|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`|`bdd/features/validation/smpte\_constraints.feature`|
-|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.||
-|R73|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.||   
-|R73|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified||
+|R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
+|R70|3|If `ttp:timeBase="media"` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: (1) hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted. (2) Non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
+|R71|3|If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
+|R72|3|If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
+|R73a|3|If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|   
+|R73b|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified|`bdd/features/validation/timeBase_clock_clockMode_mandatory.feature` `(In)valid clock ttp:clockMode`|
 |R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
 |R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified. ||
 |R76|3|If the `pixel` unit is used, `tts:extent` SHALL be specified on `tt:tt`||
