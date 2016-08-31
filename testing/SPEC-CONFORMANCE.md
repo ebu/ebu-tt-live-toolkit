@@ -85,7 +85,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
 |R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified. ||
 |R76|3|If the `pixel` unit is used, `tts:extent` SHALL be specified on `tt:tt`||
-|R77|3|`xml:lang` SHALL be specified on `tt:tt`||
+|R77|3|`xml:lang` SHALL be specified on `tt:tt`|`bdd/features/validation/xml\_lang\_attribute.feature` `(In)valid xml:lang attribute`|
 |R78|3.1.1.1.8|If `ebuttm:documentTargetActiveFormatDescriptor` is specified then `ebuttm:documentTargetAspectRatio` SHALL be specified with one of the values `4:3` or `16:9`||
 |R79|3.1.1.1.8|If specified, `ebuttm:documentTargetActiveFormatDescriptor` SHALL have one of the AFD codes specified in SMPTE ST 2016-1:2009||
 |R80|3.1.1.1.9|If specified, `ebuttm:documentIntendedTargetBarData` SHALL be specified in accordance with SMPTE ST2016-1:2009 Table 3||
