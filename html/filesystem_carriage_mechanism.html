@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview of the EBU-TT live toolkit. &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>Filesystem Carriage Mechanism &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
   
 
   
@@ -31,8 +31,9 @@
 
   
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
-        <link rel="next" title="Nodes and Carriage Mechanisms" href="nodes_and_carriage_mechanisms.html"/>
-        <link rel="prev" title="Welcome to EBU-TT-Live Toolkit’s documentation!" href="index.html"/> 
+        <link rel="up" title="Nodes and Carriage Mechanisms" href="nodes_and_carriage_mechanisms.html"/>
+        <link rel="next" title="Document and sequence validation" href="validation.html"/>
+        <link rel="prev" title="Nodes and Carriage Mechanisms" href="nodes_and_carriage_mechanisms.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -82,8 +83,11 @@
             
             
                 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of the EBU-TT live toolkit.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Filesystem Carriage Mechanism</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
@@ -120,11 +124,15 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Overview of the EBU-TT live toolkit.</li>
+          <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
+      
+          <li><a href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a> &raquo;</li>
+      
+    <li>Filesystem Carriage Mechanism</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/overview.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/filesystem_carriage_mechanism.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -134,30 +142,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="overview-of-the-ebu-tt-live-toolkit">
-<h1>Overview of the EBU-TT live toolkit.<a class="headerlink" href="#overview-of-the-ebu-tt-live-toolkit" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="filesystem_carriage_mechanism.html">Filesystem Carriage Mechanism</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="validation.html">Document and sequence validation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="validation_framework.html">Validation framework</a></li>
-<li class="toctree-l2"><a class="reference internal" href="validation_framework.html#semantic-parser-patch">Semantic parser patch</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="user_input_producer.html">User input producer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html#demo">Demo</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="timing_resolution.html#document-timings">Document Timings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="timing_resolution.html#sequence-timings">Sequence Timings</a></li>
-</ul>
-</li>
-</ul>
-</div>
+  <div class="section" id="filesystem-carriage-mechanism">
+<h1>Filesystem Carriage Mechanism<a class="headerlink" href="#filesystem-carriage-mechanism" title="Permalink to this headline">¶</a></h1>
+<p>The filesystem carriage mechanism writes produced documents to the filesystem and consumes documents from the filesystem. Along with the documents, it writes a manifest file named according to the format <cite>manifest_&lt;sequence identifier&gt;.txt</cite>. Documents are named following the format <cite>&lt;sequence identifier&gt;_&lt;sequence number&gt;.xml</cite>.</p>
+<p>Each time a document is written to the file system, a line using the following format is appended to the manifest file:</p>
+<p><cite>availability_time,path_to_xml_file</cite></p>
+<p>For example:</p>
+<p><cite>09:20:31.279,TestSequence1_474.xml</cite></p>
+<p>The format is <cite>hh:mm:ss.fff,path</cite> where <cite>fff</cite> represents milliseconds digits.</p>
+<p>The manifest file gives the availability time for each document along with the path to the corresponding document. The timeline used for the availability times is the same as the one used in the documents, indeed the carriage implementation uses the same clock (or time reference) as the node that produces the documents. The writing order and thus the reading order is from top to bottom.</p>
 </div>
 
 
@@ -167,10 +160,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="nodes_and_carriage_mechanisms.html" class="btn btn-neutral float-right" title="Nodes and Carriage Mechanisms" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="validation.html" class="btn btn-neutral float-right" title="Document and sequence validation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="Welcome to EBU-TT-Live Toolkit’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="nodes_and_carriage_mechanisms.html" class="btn btn-neutral" title="Nodes and Carriage Mechanisms" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
