@@ -15,7 +15,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R6|2.2 |the sequence identifier shall be present within every document|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 | R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 | R8|2.2 |Every distinct document with the same sequence identifier shall have a different sequence number.| |
-| R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.| |
+| R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
 |R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. (Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)| |
 |R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s)| |
