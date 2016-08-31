@@ -1,4 +1,4 @@
-# SPEC-CONFORMANCE.md : R71 R72 R73a
+# SPEC-CONFORMANCE.md : R71 R72 R73a R96
 @validation @smpte
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
@@ -52,6 +52,8 @@ Feature: SMPTE-related attribute constraints
     | smpte.xml  |            | media     |                       |           |  continuous   |
     | smpte.xml  |            | media     |                       |           | discontinuous |
     | smpte.xml  |            | smpte     | 1 1                   | nonDrop   | continuous    |
+    | smpte.xml  | 25         | smpte     | 1.5 1                 | nonDrop   | continuous    |
+    | smpte.xml  | 25         | smpte     | -1 1                  | nonDrop   | continuous    |
     @skip
     # dropPAL and 1 1 doesn't work together
     | smpte.xml  | 25         | smpte     | 1 1                   | dropPAL   | continuous    |
