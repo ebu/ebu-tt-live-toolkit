@@ -190,7 +190,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-		    <xs:element name="metadata" type="ebuttm:anyMetadata_type" minOccurs="0"/>
+		    <xs:element name="metadata" type="ebuttm:bodyMetadata_type" minOccurs="0"/>
 			<xs:element name="div" type="tt:div_type" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute ref="ttm:agent" use="optional"/>
@@ -323,7 +323,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				annotation or metadata.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-		    <xs:element name="metadata" type="ebuttm:anyMetadata_type" minOccurs="0"/>
+		    <xs:element name="metadata" type="ebuttm:spanMetadata_type" minOccurs="0"/>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
 				<xs:element name="br" type="tt:br_type"/>
 				<xs:element name="span" type="tt:span_type"/>

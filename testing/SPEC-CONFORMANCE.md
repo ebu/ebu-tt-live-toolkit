@@ -32,11 +32,11 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R23|2.4|The Handover Manager node shall use a 'who claimed control most recently' algorithm for selecting the sequence, based on a control token parameter within each document.| |
 |R24|2.4.1|All documents within a sequence that contain the element `ebuttp:authorsGroupIdentifier` shall have the same `ebuttp:authorsGroupIdentifier`.| |
 |R25|2.4.1|when a document is received with a higher value `ebuttp:authorsGroupControlToken` than that most recently received in the currently selected sequence the Handover Manager shall switch to that document's sequence, i.e. it shall emit a document in its output sequence corresponding to the received document with the new control token without delay.| |
-|R26|2.5|it is an error to apply more than one `facet` with the same term identifier to the same content element, where the term identifier is the combination of the term name and the link attribute's value.| |
-|R27|2.5.1|If all the content in a document has a `facet` then the summary shall be `"all\_has"`.| |
-|R28|2.5.1|If all the content in a document has\_not a `facet` then the summary shall be `"all\_has_not"`.| |
-|R29|2.5.1|If there is a mix of has and has\_not and unknown or if some of the content does not have the `facet` then the summary shall be `"mixed"`.| |
-|R30|2.5.1|If none of the document's content has the `facet` or all of the document's content has the `facet` described as unknown then the summary shall be `"unspecified"`.| |
+|R26|2.5|it is an error to apply more than one `facet` with the same term identifier to the same content element, where the term identifier is the combination of the term name and the link attribute's value.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
+|R27|2.5.1|If all the content in a document has a `facet` then the summary shall be `"all\_has"`.| `bdd/features/validation/facet.feature` `(In)valid term identifier`|
+|R28|2.5.1|If all the content in a document has\_not a `facet` then the summary shall be `"all\_has_not"`.|`bdd/features/validation/facet.feature` `(In)valid facet summary` |
+|R29|2.5.1|If there is a mix of has and has\_not and unknown or if some of the content does not have the `facet` then the summary shall be `"mixed"`.|`bdd/features/validation/facet.feature` `(In)valid facet summary` |
+|R30|2.5.1|If none of the document's content has the `facet` or all of the document's content has the `facet` described as unknown then the summary shall be `"unspecified"`.| `bdd/features/validation/facet.feature` `(In)valid facet summary`|
 |R31|2.6|If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R32|3.2.2.1|`ttp:timeBase` Cardinality 1..1|`bdd/features/validation/timeBase_attribute_mandatory.feature` `(In)valid ttp:timeBase`|
 |R33|3.2.2.1|The `ttp:timeBase` element is as defined in [EBUTT1] with the addition that all time expressions of `dur` attributes shall denote a relative coordinate on the same timeline as the `begin` and `end` attributes.| |
@@ -72,8 +72,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R63|3.2.2.5|`p` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R64|3.2.2.5|`p` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
 |R65|3.2.2.5|`p` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in p`|
-|R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.| |
-|R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.| |
+|R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
+|R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).|`bdd/features/delayTimingType.feature` `(In)valid delayTimingType format`|
 | | **Tech3350 v1.1**| | |
 |R69|3|If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
