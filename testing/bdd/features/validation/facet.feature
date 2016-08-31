@@ -19,7 +19,6 @@ Feature: Facet
     Examples:
     | xml_file  | parent1 | link1            | term1   | parent2 | link2            | term2   |
     | facet.xml | body    | http://link1.com | string1 | body    | http://link1.com | string1 |
-    | facet.xml | body    | http://link1.com | string1 | body    | http://link2.com | string1 |
 
 
   Scenario: Valid term identifier
