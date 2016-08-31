@@ -29,4 +29,5 @@ Feature: clockMode attribute is mandatory when timeBase="clock"
     Examples:
     | time_base | clock_mode    |
     | clock     |               |
+    | clock     | *?Empty?*     |
     | clock     | other         |
