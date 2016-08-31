@@ -1,4 +1,4 @@
-# SPEC-CONFORMANCE.md : R71
+# SPEC-CONFORMANCE.md : R71 R72 R73a
 @validation @smpte
 Feature: SMPTE-related attribute constraints
   Scenario: Valid SMPTE head attributes
