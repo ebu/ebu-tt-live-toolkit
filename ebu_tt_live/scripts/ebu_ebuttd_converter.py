@@ -2,12 +2,11 @@ import logging
 from argparse import ArgumentParser
 from .common import create_loggers
 
-from ebu_tt_live.node import SimpleConsumer
+from ebu_tt_live.node import EBUTTDConverterConsumer
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
-from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
-from twisted.internet import reactor
+from twisted.internet import task, reactor
 
 
 log = logging.getLogger('ebu_simple_consumer')
@@ -16,6 +15,7 @@ log = logging.getLogger('ebu_simple_consumer')
 parser = ArgumentParser()
 
 parser.add_argument('-c', '--config', dest='config', metavar='CONFIG')
+parser.add_argument('-i', '--interval', dest='interval', metavar='INTERVAL', type=float, default=2.0)
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
-    simple_consumer = SimpleConsumer(
+    ebuttd_converter = EBUTTDConverterConsumer(
         node_id='simple-consumer',
         carriage_impl=consumer_impl,
         reference_clock=reference_clock
@@ -45,5 +45,8 @@ def main():
     factory.protocol = ClientNodeProtocol
 
     factory.connect()
+
+    segment_timer = task.LoopingCall(ebuttd_converter.convert_next_segment)
+    segment_timer.start(args.interval)
 
     reactor.run()

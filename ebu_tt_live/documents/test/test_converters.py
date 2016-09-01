@@ -33,6 +33,4 @@ class TestEBUTT3ToEBUTTDConverter(TestCase):
         document.add_div(div)
         document.validate()
 
-        converted_doc = ebutt3_to_ebuttd(document)
-
-        converted_doc.validate()
+        ebutt3_to_ebuttd(document)

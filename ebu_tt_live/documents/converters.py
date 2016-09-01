@@ -10,4 +10,6 @@ def ebutt3_to_ebuttd(ebutt3_in):
     :return:
     """
     ebuttd_bindings = EBUTT3EBUTTDConverter.convert_element(ebutt3_in.binding, dataset={})
-    return EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
+    ebuttd_document = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
+    ebuttd_document.validate()
+    return ebuttd_document

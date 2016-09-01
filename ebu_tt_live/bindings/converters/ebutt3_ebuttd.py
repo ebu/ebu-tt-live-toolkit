@@ -15,7 +15,8 @@ class EBUTT3EBUTTDConverter(object):
     @classmethod
     def convert_tt(cls, tt_in, dataset):
         new_elem = ttd(
-            *cls.convert_children(tt_in, dataset),
+            head=cls.convert_element(tt_in.head, dataset),
+            body=cls.convert_element(tt_in.body, dataset),
             timeBase=tt_in.timeBase,
             lang=tt_in.lang,
             space=tt_in.space
