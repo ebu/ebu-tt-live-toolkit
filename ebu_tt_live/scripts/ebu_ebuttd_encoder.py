@@ -2,7 +2,7 @@ import logging
 from argparse import ArgumentParser
 from .common import create_loggers
 
-from ebu_tt_live.node import EBUTTDConverterConsumer
+from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
@@ -29,7 +29,7 @@ def main():
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
-    ebuttd_converter = EBUTTDConverterConsumer(
+    ebuttd_converter = EBUTTDEncoder(
         node_id='simple-consumer',
         carriage_impl=consumer_impl,
         reference_clock=reference_clock
