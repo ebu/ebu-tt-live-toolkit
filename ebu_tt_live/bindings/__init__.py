@@ -186,8 +186,8 @@ raw.tt_type._SetSupersedingClass(tt_type)
 class p_type(TimingValidationMixin, SemanticValidationMixin, raw.p_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -203,8 +203,8 @@ raw.p_type._SetSupersedingClass(p_type)
 class span_type(TimingValidationMixin, SemanticValidationMixin, raw.span_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -220,8 +220,8 @@ raw.span_type._SetSupersedingClass(span_type)
 class div_type(TimingValidationMixin, SemanticValidationMixin, raw.div_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
@@ -237,9 +237,9 @@ raw.div_type._SetSupersedingClass(div_type)
 class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
 
     _attr_en_pre = {
-        (pyxb.namespace.ExpandedName(Namespace, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'dur')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
-        (pyxb.namespace.ExpandedName(Namespace, 'end')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute
+        (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'dur')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute
     }
 
     def _semantic_before_traversal(self, dataset, element_content=None):
