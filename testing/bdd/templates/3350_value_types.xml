@@ -5,6 +5,9 @@
         ttp:clockMode="local"
         ttp:timeBase="clock"
         xml:lang="en-GB"
+{% if default_root_extent %}
+        tts:extent="1px 1px"
+{% endif %}
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"
         xmlns:ebutts="urn:ebu:tt:style"

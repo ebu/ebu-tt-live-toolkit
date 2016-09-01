@@ -271,6 +271,9 @@ class EBUTT3Document(SubtitleDocument):
     def get_xml(self):
         return self._ebutt3_content.toxml()
 
+    def get_dom(self):
+        return self._ebutt3_content.toDOM()
+
 
 class EBUTT3DocumentSequence(CloningDocumentSequence):
     """
@@ -343,8 +346,13 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
                 )
         return True
 
-    def new_document(self, *args, **kwargs):
-        self._last_sequence_number += 1
+    def create_compatible_document(self, *args, **kwargs):
+        """
+        This utility function is used by the converter to extract segments and by the new_document function.
+        :param args:
+        :param kwargs:
+        :return:
+        """
         return EBUTT3Document(
             time_base=self._reference_clock.time_base,
             clock_mode=self._reference_clock.clock_mode,
@@ -352,6 +360,10 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             sequence_number=self._last_sequence_number,
             lang=self._lang
         )
+
+    def new_document(self, *args, **kwargs):
+        self._last_sequence_number += 1
+        return self.create_compatible_document()
 
     def _insert_or_discard(self, document):
         """
@@ -540,3 +552,21 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
 
     def fork(self, *args, **kwargs):
         pass
+
+    def extract_segment(self, begin=None, end=None):
+        """
+        Extract the subtitles from the sequence in the given timeframe. The return value is one
+        merged EBUTT3Document
+        :param begin:
+        :param end:
+        :return: EBUTT3Document
+        """
+        # TODO
+        document = self.create_compatible_document()
+        # Temporarily create a validating document
+        document.add_div(div=bindings.div_type(
+            bindings.p_type(
+                id='p.001'
+            )
+        ))
+        return document

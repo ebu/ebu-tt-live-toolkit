@@ -11,10 +11,11 @@ from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
-from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, BodyTimingValidationMixin
+from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, \
+    BodyTimingValidationMixin, SizingValidationMixin
 from ebu_tt_live.errors import SemanticValidationError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
-
+from pyxb.exceptions_ import SimpleTypeValueError, ComplexTypeValidationError
 from pyxb.utils.domutils import BindingDOMSupport
 from datetime import timedelta
 
@@ -48,6 +49,9 @@ def CreateFromDOM(*args, **kwargs):
     with xml_parsing_context():
         result = raw.CreateFromDOM(*args, **kwargs)
     return result
+
+# EBU TT Live classes
+# ===================
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
@@ -148,6 +152,15 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # TODO: SMPTE validation(low priority) #52
         pass
 
+    def _semantic_before_validation(self):
+        """
+        Here before anything semantic happens I check some SYNTACTIC errors.
+        :raises ComplexTypeValidationError, SimpleTypeValueError
+        """
+        # The following edge case is ruined by the XSD associating the same extent type to this extent element.
+        if self.extent is not None and not isinstance(self.extent, ebuttdt.pixelExtentType):
+            raise SimpleTypeValueError(type(self.extent), self.extent)
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
         # attributes.
@@ -239,10 +252,106 @@ class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_typ
 raw.body_type._SetSupersedingClass(body_type)
 
 
-# Namespace.setPrefix('tt')
-# _Namespace_ttm.setPrefix('ttm')
-# _Namespace_ttp.setPrefix('ttp')
-# _Namespace_tts.setPrefix('tts')
-# _Namespace_ebuttm.setPrefix('ebuttm')
-# _Namespace_ebuttp.setPrefix('ebuttp')
-# _Namespace_ebutts.setPrefix('ebutts')
+class style_type(SizingValidationMixin, SemanticValidationMixin, raw.style):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
+        self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
+
+
+raw.style._SetSupersedingClass(style_type)
+
+
+class region_type(SizingValidationMixin, SemanticValidationMixin, raw.region):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_check_sizing_type(self.origin, dataset=dataset)
+        self._semantic_check_sizing_type(self.extent, dataset=dataset)
+
+
+raw.region._SetSupersedingClass(region_type)
+
+
+# EBU TT D classes
+# ================
+
+class d_tt_type(raw.d_tt_type):
+
+    @classmethod
+    def __check_bds(cls, bds):
+        if bds:
+            return bds
+        else:
+            return BindingDOMSupport(
+                namespace_prefix_map=namespace_prefix_map
+            )
+
+    def toDOM(self, bds=None, parent=None, element_name=None):
+        xml_dom = super(d_tt_type, self).toDOM(
+            bds=self.__check_bds(bds),
+            parent=parent,
+            element_name=element_name
+        )
+        xml_dom.documentElement.tagName = 'tt'
+        return xml_dom
+
+    def toxml(self, encoding=None, bds=None, root_only=False, element_name=None):
+        dom = self.toDOM(self.__check_bds(bds), element_name=element_name)
+        if root_only:
+            dom = dom.documentElement
+        return dom.toprettyxml(
+            encoding=encoding,
+            indent='  '
+        )
+
+raw.d_tt_type._SetSupersedingClass(d_tt_type)
+
+
+class d_layout_type(raw.d_layout_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            d_region_type.create_default_value()
+        )
+        return instance
+
+raw.d_layout_type._SetSupersedingClass(d_layout_type)
+
+
+class d_region_type(raw.d_region_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            id='region.default',
+            origin='0% 0%',
+            extent='100% 100%'
+        )
+        return instance
+
+raw.d_region_type._SetSupersedingClass(d_region_type)
+
+
+class d_styling_type(raw.d_styling_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            d_style_type.create_default_value()
+        )
+        return instance
+
+raw.d_styling_type._SetSupersedingClass(d_styling_type)
+
+
+class d_style_type(raw.d_style_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            id='style.default'
+        )
+        return instance
+
+raw.d_style_type._SetSupersedingClass(d_style_type)

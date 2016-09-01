@@ -12,7 +12,7 @@ call env\Scripts\activate
 
 call pip install --upgrade -r requirements.txt
 
-python %HERE%\env\Scripts\pyxbgen --binding-root=ebu_tt_live/bindings -m __init__ -r -u file:///%HERE%/ebu_tt_live/xsd1.1/ebutt_live.xsd
+python %HERE%\env\Scripts\pyxbgen --binding-root=ebu_tt_live/bindings -m __init__ -r -u file:///%HERE%/ebu_tt_live/xsd/ebutt_all.xsd
 
 IF EXIST %HERE%\node_modules (
 call npm update nunjucks

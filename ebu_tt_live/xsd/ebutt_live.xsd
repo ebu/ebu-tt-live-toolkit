@@ -11,8 +11,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	xmlns:ebuttp="urn:ebu:tt:parameters"
 	targetNamespace="http://www.w3.org/ns/ttml"
 	elementFormDefault="qualified"
-	attributeFormDefault="qualified"
-	xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
+	attributeFormDefault="qualified">
 	<xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#styling" schemaLocation="styling.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#parameter" schemaLocation="parameter.xsd"/>
@@ -21,50 +20,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	<xs:import namespace="urn:ebu:tt:datatypes" schemaLocation="ebutt_datatypes.xsd"/>
 	<xs:import namespace="urn:ebu:tt:parameters" schemaLocation="ebutt_parameters.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#metadata" schemaLocation="metadata.xsd"/>
-	<xs:complexType name="tt_type">
-		<xs:annotation>
-			<xs:documentation>Root element of an EBU-TT XML document.</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="head" type="tt:head_type"/>
-			<xs:element name="body" type="tt:body_type" minOccurs="0"/>
-		</xs:sequence>
-		<xs:attribute ref="xml:space" use="optional">
-			<xs:annotation>
-				<xs:documentation>Indicates the author’s intention of white space handling within
-					the content of the EBU-TT document.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute ref="ttp:timeBase" use="required"/>
-		<xs:attribute ref="ttp:frameRate" use="optional"/>
-		<xs:attribute ref="ttp:frameRateMultiplier" use="optional"/>
-		<xs:attribute ref="ttp:markerMode" use="optional"/>
-		<xs:attribute ref="ttp:dropMode" use="optional"/>
-		<xs:attribute ref="ttp:clockMode" use="optional"/>
-		<xs:attribute ref="ttp:cellResolution" use="optional"/>
-		<xs:attribute ref="ebuttp:sequenceIdentifier" use="required"/>
-		<xs:attribute ref="ebuttp:sequenceNumber" use="required"/>
-		<xs:attribute ref="ebuttm:authoringDelay" use="optional"/>
-		<xs:attribute ref="ebuttp:authorsGroupIdentifier" use="optional"/>
-		<xs:attribute ref="ebuttp:authorsGroupControlToken" use="optional"/>
-		<xs:attribute ref="ebuttm:authorsGroupControlRequest" use="optional"/>
-		<xs:attribute ref="ebuttp:referenceClockIdentifier" use="optional"/>
-		<xs:attribute ref="tts:extent" use="optional">
-			<xs:annotation>
-				<xs:documentation>Defines the width and height of the active video the subtitles
-					were authored for. Only length expressions in pixels shall be
-					used.</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute ref="xml:lang" use="required">
-			<xs:annotation>
-				<xs:documentation>The language for which the EBU-TT document is prepared. (STL
-					mapping: Language Code (LC))</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		
-
-	</xs:complexType>
+	
 	<xs:complexType name="head_type">
 		<xs:annotation>
 			<xs:documentation>Contains metadata as well as layout and styling information that are
@@ -81,10 +37,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:element name="styling" type="tt:styling" minOccurs="0"/>
 			<xs:element name="layout" type="tt:layout" minOccurs="0"/>
 		</xs:sequence>
-
 	</xs:complexType>
-	
-	
 	<xs:complexType name="styling">
 		<xs:annotation>
 			<xs:documentation>Container for styling information.</xs:documentation>
@@ -215,7 +168,6 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-
 	<xs:complexType name="div_type">
 		<xs:annotation>
 			<xs:documentation>Logical container of textual content.</xs:documentation>
@@ -261,7 +213,6 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		</xs:attribute>
 
 	</xs:complexType>
-
 	<xs:complexType name="p_type" mixed="true">
 		<xs:annotation>
 			<xs:documentation>Logical paragraph.</xs:documentation>
@@ -377,9 +328,48 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		    <xs:element name="metadata" type="ebuttm:anyMetadata_type" minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 		<xs:attribute ref="ttm:role"/>
-
 	</xs:complexType>
-
-	<xs:element name="tt" type="tt:tt_type"/>
-
+	<xs:complexType name="tt_type">
+		<xs:annotation>
+			<xs:documentation>Root element of an EBU-TT XML document.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="head" type="tt:head_type"/>
+			<xs:element name="body" type="tt:body_type" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute ref="xml:space" use="optional">
+			<xs:annotation>
+				<xs:documentation>Indicates the author’s intention of white space handling within
+					the content of the EBU-TT document.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="ttp:timeBase" use="required"/>
+		<xs:attribute ref="ttp:frameRate" use="optional"/>
+		<xs:attribute ref="ttp:frameRateMultiplier" use="optional"/>
+		<xs:attribute ref="ttp:markerMode" use="optional"/>
+		<xs:attribute ref="ttp:dropMode" use="optional"/>
+		<xs:attribute ref="ttp:clockMode" use="optional"/>
+		<xs:attribute ref="ttp:cellResolution" use="optional"/>
+		<xs:attribute ref="ebuttp:sequenceIdentifier" use="required"/>
+		<xs:attribute ref="ebuttp:sequenceNumber" use="required"/>
+		<xs:attribute ref="ebuttm:authoringDelay" use="optional"/>
+		<xs:attribute ref="ebuttp:authorsGroupIdentifier" use="optional"/>
+		<xs:attribute ref="ebuttp:authorsGroupControlToken" use="optional"/>
+		<xs:attribute ref="ebuttm:authorsGroupControlRequest" use="optional"/>
+		<xs:attribute ref="ebuttp:referenceClockIdentifier" use="optional"/>
+		<xs:attribute ref="tts:extent" use="optional">
+			<xs:annotation>
+				<xs:documentation>Defines the width and height of the active video the subtitles
+					were authored for. Only length expressions in pixels shall be
+					used.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="xml:lang" use="required">
+			<xs:annotation>
+				<xs:documentation>The language for which the EBU-TT document is prepared. (STL
+					mapping: Language Code (LC))</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="tt" type="tt:tt_type"/> 
 </xs:schema>

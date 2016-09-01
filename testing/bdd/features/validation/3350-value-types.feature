@@ -62,10 +62,10 @@ Feature: Value types from 3350
 
     Examples:
     | xml_file             | font_size |
-    | 3350_value_types.xml | 1%  2c    |
+    | 3350_value_types.xml | 1%  2%    |
     | 3350_value_types.xml | 1.5px     |
     | 3350_value_types.xml | 1c 0c     |
-    | 3350_value_types.xml | 1%  2c    |
+    | 3350_value_types.xml | 1c  2c    |
     | 3350_value_types.xml | +1px      |
 
 
@@ -79,7 +79,8 @@ Feature: Value types from 3350
     | 3350_value_types.xml | 1% 1% 1%  |
     | 3350_value_types.xml | 1em       |
     | 3350_value_types.xml | 1c1c      |
-    | 3350_value_types.xml | -1% 1%     |
+    | 3350_value_types.xml | -1% 1%    |
+    | 3350_value_types.xml | 1%  2c    |
 
 
   # SPEC-CONFORMANCE: R97

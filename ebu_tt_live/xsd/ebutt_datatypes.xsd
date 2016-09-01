@@ -16,20 +16,54 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:pattern value="[0]*[1-9][0-9]*\s[0]*[1-9][0-9]*"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="extentType">
+	<xs:simpleType name="cellExtentType">
 		<xs:restriction base="xs:token">
-			<xs:pattern value="(\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"/>
+			<xs:pattern value="([+]?\d*\.?\d+(c))\s([+]?\d*\.?\d+(c))"/>
 		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="percentageExtentType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="([+]?\d*\.?\d+(%))\s([+]?\d*\.?\d+(%))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pixelExtentType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="([+]?\d*\.?\d+(px))\s([+]?\d*\.?\d+(px))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="extentType">
+		<xs:union
+			memberTypes="ebuttdt:cellExtentType ebuttdt:percentageExtentType ebuttdt:pixelExtentType"
+		/>
 	</xs:simpleType>
 	<xs:simpleType name="fontFamilyType">
 		<xs:restriction base="xs:string"/>
 	</xs:simpleType>
-	<xs:simpleType name="fontSizeType">
+	<xs:simpleType name="cellFontSizeType">
 		<xs:restriction base="xs:token">
 			<xs:pattern
-				value="([+]?\d*\.?\d+(px|c|%))(\s([+]?\d*\.?\d+(px|c|%)))?"
+				value="([+]?\d*\.?\d+(c))(\s([+]?\d*\.?\d+(c)))?"
 			/>
 		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="percentageFontSizeType">
+		<xs:restriction base="xs:token">
+			<xs:pattern
+				value="([+]?\d*\.?\d+(%))(\s([+]?\d*\.?\d+(%)))?"
+			/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pixelFontSizeType">
+		<xs:restriction base="xs:token">
+			<xs:pattern
+				value="([+]?\d*\.?\d+(px))(\s([+]?\d*\.?\d+(px)))?"
+			/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fontSizeType">
+		<xs:union
+			memberTypes="ebuttdt:cellFontSizeType ebuttdt:percentageFontSizeType ebuttdt:pixelFontSizeType"
+		/>
 	</xs:simpleType>
 	<xs:simpleType name="fontStyleType">
 		<xs:restriction base="xs:token">
@@ -62,10 +96,25 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			memberTypes="ebuttdt:rgbHexColorType ebuttdt:rgbaHexColorType ebuttdt:rgbColorType ebuttdt:rgbaColorType ebuttdt:namedColorType"
 		/>
 	</xs:simpleType>
-	<xs:simpleType name="originType">
+	<xs:simpleType name="cellOriginType">
 		<xs:restriction base="xs:token">
-			<xs:pattern value="([+-]?\d*\.?\d+(px|c|%))\s([+-]?\d*\.?\d+(px|c|%))"/>
+			<xs:pattern value="([+-]?\d*\.?\d+(c))\s([+-]?\d*\.?\d+(c))"/>
 		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="percentageOriginType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="([+-]?\d*\.?\d+(%))\s([+-]?\d*\.?\d+(%))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pixelOriginType">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="([+-]?\d*\.?\d+(px))\s([+-]?\d*\.?\d+(px))"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="originType">
+		<xs:union
+			memberTypes="ebuttdt:cellOriginType ebuttdt:pixelOriginType ebuttdt:percentageOriginType"
+		/>
 	</xs:simpleType>
 	<xs:simpleType name="paddingType">
 		<xs:restriction base="xs:token">
@@ -113,10 +162,25 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:pattern value="[0-9][0-9]+:[0-5][0-9]:([0-5][0-9]|60)(\.[0-9]+)?"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="lengthType">
+	<xs:simpleType name="cellLengthType">
 		<xs:restriction base="xs:string">
-			<xs:pattern value="[+-]?\d*\.?\d+(px|c|%)"/>
+			<xs:pattern value="[+-]?\d*\.?\d+(c)"/>
 		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="percentageLengthType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[+-]?\d*\.?\d+(%)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pixelLengthType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[+-]?\d*\.?\d+(px)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="lengthType">
+		<xs:union
+			memberTypes="ebuttdt:cellLengthType ebuttdt:percentageLengthType ebuttdt:pixelLengthType"
+		/>
 	</xs:simpleType>
 	<xs:simpleType name="rgbHexColorType">
 		<xs:restriction base="xs:string">
