@@ -31,9 +31,9 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body tt:begin="500ms" tt:dur="00:00:05">
+  <tt:body begin="500ms" dur="00:00:05">
     <tt:div>
-      <tt:p tt:begin="500ms" tt:end="3420ms" xml:id="ID005">
+      <tt:p begin="500ms" end="3420ms" xml:id="ID005">
         <tt:span>Some example text...</tt:span>
         <tt:br/>
         <tt:span>And another line</tt:span>
