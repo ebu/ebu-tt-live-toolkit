@@ -1,5 +1,5 @@
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
-from ebu_tt_live.clocks.media import MediaClock
+from ebu_tt_live.clocks.local import LocalMachineClock
 from pytest_bdd import given, when, then, scenarios
 import pytest
 
@@ -19,7 +19,7 @@ def when_sequence_number(seq_n, template_dict):
 
 @given('a test sequence')
 def sequence(template_dict):
-    ref_clock = MediaClock()
+    ref_clock = LocalMachineClock()
     sequence = EBUTT3DocumentSequence('testSeq', ref_clock, 'en-GB')
     template_dict['sequence_id'] = 'testSeq'
     return sequence
