@@ -1,7 +1,7 @@
 @validation @syntax @sequence @xsd
 Feature: Sequence ID and Sequence Number
   Both are mandatory parameters and the sequence number has to be a number (no letters).
-  Moreover two documents with the same sequence identifier shall have different sequence numbers.
+  Moreover two distinct documents with the same sequence identifier shall have different sequence numbers.
 
   Examples:
   | xml_file            |
@@ -42,7 +42,7 @@ Feature: Sequence ID and Sequence Number
     And an xml file <xml_file>
     When it has sequence number <doc1_seqnum>
     And doc1 is added to the sequence
-    And we create a new document
+    And we create a new different document
     And it has sequence number <doc2_seqnum>
     Then adding doc2 to the sequence results in an error
 
@@ -58,7 +58,7 @@ Feature: Sequence ID and Sequence Number
     And an xml file <xml_file>
     When it has sequence number <doc1_seqnum>
     And doc1 is added to the sequence
-    And we create a new document
+    And we create a new different document
     And it has sequence number <doc2_seqnum>
     Then adding doc2 to the sequence does not raise any error
 

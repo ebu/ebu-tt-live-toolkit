@@ -33,13 +33,15 @@ def when_doc1_has_seqnum(doc1_seqnum, template_dict):
 @when('doc1 is added to the sequence')
 def when_doc1_added_to_sequence(sequence, template_file, template_dict):
     xml_file = template_file.render(template_dict)
+    print xml_file
     document = EBUTT3Document.create_from_xml(xml_file)
     sequence.add_document(document)
 
 
-@when('we create a new document')
-def when_create_new_document(template_dict):
+@when('we create a new different document')
+def when_create_new_document(test_context, template_dict):
     template_dict['sequence_num'] = None
+    test_context['generate_different_document'] = True
 
 
 @when('it has sequence number <doc2_seqnum>')
@@ -48,15 +50,23 @@ def when_doc2_has_seqnum(doc2_seqnum, template_dict):
 
 
 @then('adding doc2 to the sequence results in an error')
-def then_adding_doc2_error(sequence, template_file, template_dict):
-    xml_file = template_file.render(template_dict)
+def then_adding_doc2_error(sequence, test_context, template_file, template_dict):
+    xml_file = ''
+    if test_context['generate_different_document']:
+        xml_file = template_file.render(template_dict).replace('Some example text...', 'Test')
+    else:
+        xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
     with pytest.raises(Exception):
         sequence.add_document(document)
 
 
 @then('adding doc2 to the sequence does not raise any error')
-def then_adding_doc2_success(sequence, template_file, template_dict):
+def then_adding_doc2_success(sequence, test_context, template_file, template_dict):
     xml_file = template_file.render(template_dict)
+    if test_context['generate_different_document']:
+        xml_file = template_file.render(template_dict).replace('Some example text...', 'Test')
+    else:
+        xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
     sequence.add_document(document)

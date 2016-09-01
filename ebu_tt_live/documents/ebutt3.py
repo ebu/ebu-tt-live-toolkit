@@ -397,7 +397,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             # This loop goes backwards and checks for trimmed documents
 
             # We cannot have two documents with the same sequence number
-            if item.document.sequence_number == document.sequence_number:
+            if item.document.sequence_number == document.sequence_number and not item.document.is_equal_dom(document):
                 raise SequenceNumberAlreadyUsedError(
                     ERR_SEQUENCE_NUMBER_ALREADY_USED
                 )
