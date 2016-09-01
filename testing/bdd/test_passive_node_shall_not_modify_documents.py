@@ -46,4 +46,4 @@ def when_processes_document(test_context, template_file):
 @then('the emitted document is identical to the received one')
 def then_emitted_document_identical(test_context):
     emitted_document = test_context['node']._carriage_impl.last_emitted_document
-    assert emitted_document.get_xml() == test_context['document'].get_xml()
+    assert emitted_document.is_equal_dom(test_context['document'])
