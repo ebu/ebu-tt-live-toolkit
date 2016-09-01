@@ -311,5 +311,12 @@
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="ttd" type="tt:d_tt_type"/>
+	<xs:element name="ttd" type="tt:d_tt_type">
+		<xs:annotation>
+			<xs:documentation>This element is deliberately misnamed (should be "tt") to disambiguate
+				relative to the EBU-TT Part 3 element of the same name, so that the bound classes
+				can be distinguished by the bindings generator. This XSD is not intended for
+				standalone use outside the EBU-TT Live Interoperability Toolkit's EBU-TT-D Encoder.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 </xs:schema>
