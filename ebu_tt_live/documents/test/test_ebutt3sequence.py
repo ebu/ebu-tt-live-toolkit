@@ -82,3 +82,8 @@ class TestEBUTT3Sequence(TestCase):
 
         # We expect document2 to erase document3
         # TODO: Finish these on this unittesting level
+
+    # SPEC-CONFORMANCE : R9
+    def test_increasing_sequence_number(self):
+        self.assertGreater(self.document2.sequence_number, self.document1.sequence_number)
+        self.assertGreater(self.document3.sequence_number, self.document2.sequence_number)

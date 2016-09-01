@@ -1,6 +1,7 @@
 
 from . import base
 from . import local
+from . import utc
 from . import media
 
 
@@ -8,6 +9,8 @@ def get_clock(time_base, **kwargs):
     if time_base == 'clock':
         if kwargs['clock_mode'] == 'local':
             return local.LocalMachineClock()
+        elif kwargs['clock_mode'] == 'utc':
+            return utc.UTCClock()
     elif time_base == 'media':
         # TODO: Here we need the reference clock identifier
         return media.MediaClock()
