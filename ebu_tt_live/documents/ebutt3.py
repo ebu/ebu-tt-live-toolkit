@@ -331,10 +331,16 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         )
 
     def _check_document_compatibility(self, document):
-        if self.sequence_identifier != document.sequence_identifier:
+        if self.sequence_identifier != document.sequence_identifier or \
+                self._reference_clock.time_base != document.time_base:
             raise IncompatibleSequenceError(
                 ERR_DOCUMENT_NOT_COMPATIBLE
             )
+        if self._reference_clock.time_base == 'clock':
+            if self._reference_clock.clock_mode != document.clock_mode:
+                raise IncompatibleSequenceError(
+                    ERR_DOCUMENT_NOT_COMPATIBLE
+                )
         return True
 
     def new_document(self, *args, **kwargs):
