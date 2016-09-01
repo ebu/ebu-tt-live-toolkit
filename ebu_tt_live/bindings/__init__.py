@@ -121,6 +121,33 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
                 )
             )
 
+    def __semantic_test_time_base_clock_attrs_present(self):
+        clock_attrs = [
+            'clockMode'
+        ]
+        missing_attrs = self._semantic_attributes_missing(clock_attrs)
+        if missing_attrs:
+            raise SemanticValidationError(
+                ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES.format(
+                    elem_name='tt:tt',
+                    attr_names=missing_attrs
+                )
+            )
+
+
+    def __semantic_test_time_base_clock_attrs_absent(self):
+        clock_attrs = [
+            'clockMode'
+        ]
+        extra_attrs = self._semantic_attributes_present(clock_attrs)
+        if extra_attrs:
+            raise SemanticValidationError(
+                ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES.format(
+                    elem_name='tt:tt',
+                    attr_names=extra_attrs
+                )
+            )
+
     def __semantic_test_smpte_attr_combinations(self):
         # TODO: SMPTE validation(low priority) #52
         pass
@@ -147,6 +174,10 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             self.__semantic_test_smpte_attrs_present()
         else:
             self.__semantic_test_smpte_attrs_absent()
+        if self.timeBase == 'clock':
+            self.__semantic_test_time_base_clock_attrs_present()
+        else:
+            self.__semantic_test_time_base_clock_attrs_absent()
 
 
 raw.tt_type._SetSupersedingClass(tt_type)
