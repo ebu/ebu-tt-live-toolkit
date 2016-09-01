@@ -48,7 +48,8 @@ setup(
             'ebu-simple-consumer = ebu_tt_live.scripts.ebu_simple_consumer:main',
             'ebu-simple-producer = ebu_tt_live.scripts.ebu_simple_producer:main',
             'ebu-user-input-consumer = ebu_tt_live.scripts.ebu_user_input_consumer:main',
-            'ebu-user-input-forwarder = ebu_tt_live.scripts.ebu_user_input_forwarder:main'
+            'ebu-user-input-forwarder = ebu_tt_live.scripts.ebu_user_input_forwarder:main',
+            'ebu-ebuttd-encoder = ebu_tt_live.scripts.ebu_ebuttd_encoder:main'
         ]
     },
     **extra

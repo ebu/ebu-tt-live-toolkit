@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ebuttp:sequenceIdentifier="testSequence"
+        ebuttp:sequenceNumber="1"
+        ttp:clockMode="local"
+        ttp:timeBase="clock"
+        xml:lang="en-GB"
+{% if default_root_extent %}
+        tts:extent="1px 1px"
+{% endif %}
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:ebutts="urn:ebu:tt:style"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style 
+            xml:id="ID001"
+{% if color %}
+  {% if color == "*?Empty?*" %}
+            tts:color=""
+  {% else %}
+            tts:color="{{color}}"
+  {% endif %}
+{% endif %}
+{% if font_size %}
+  {% if fontSize == "*?Empty?*" %}
+            tts:fontSize=""
+  {% else %}
+            tts:fontSize="{{font_size}}"
+  {% endif %}
+{% endif %}
+{% if line_padding %}
+  {% if linePadding == "*?Empty?*" %}
+            ebutts:linePadding=""
+  {% else %}
+            ebutts:linePadding="{{line_padding}}"
+  {% endif %}
+{% endif %}
+{% if line_height %}
+  {% if lineHeight == "*?Empty?*" %}
+            tts:lineHeight=""
+  {% else %}
+            tts:lineHeight="{{line_height}}"
+  {% endif %}
+{% endif %}
+        />
+    </tt:styling>
+    <tt:layout>
+      <tt:region 
+        xml:id="ID002"
+{% if origin %}
+  {% if origin == "*?Empty?*" %}
+            tts:origin=""
+  {% else %}
+            tts:origin="{{origin}}"
+  {% endif %}
+{% else %}
+            tts:origin="0% 0%"
+{% endif %}
+{% if extent %}
+  {% if extent == "*?Empty?*" %}
+            tts:extent=""
+  {% else %}
+            tts:extent="{{extent}}"
+  {% endif %}
+{% else %}
+            tts:extent="100% 100%"
+{% endif %}
+        >
+      </tt:region>
+    </tt:layout>
+  </tt:head>
+  <tt:body>
+    <tt:div>
+      <tt:p xml:id="ID010">
+        <tt:span>Some example text...</tt:span>
+        <tt:br/>
+        <tt:span>And another line</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

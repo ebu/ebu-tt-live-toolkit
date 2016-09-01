@@ -1,6 +1,6 @@
 
 from .base import Node
-from ebu_tt_live.documents import EBUTT3DocumentSequence
+from ebu_tt_live.documents import EBUTT3DocumentSequence, ebutt3_to_ebuttd
 from ebu_tt_live.strings import DOC_RECEIVED
 from datetime import timedelta
 import logging
@@ -37,7 +37,6 @@ class SimpleConsumer(Node):
             computed_end_time=document.computed_end_time
         ))
         self._sequence.add_document(document)
-        log.info(document.get_xml())
 
     @property
     def reference_clock(self):
@@ -46,3 +45,23 @@ class SimpleConsumer(Node):
     @reference_clock.setter
     def reference_clock(self, value):
         self._reference_clock = value
+
+
+class EBUTTDEncoder(SimpleConsumer):
+
+    def process_document(self, document):
+        super(EBUTTDEncoder, self).process_document(document)
+        # segmentation, conversion... here
+
+    def convert_to_ebuttd(self, begin=None, end=None):
+        if self._sequence is not None:
+            segment_doc = self._sequence.extract_segment(begin=begin, end=end)
+            return ebutt3_to_ebuttd(segment_doc)
+        return None
+
+    def convert_next_segment(self):
+        # Figure out begin and end
+        ebuttd_doc = self.convert_to_ebuttd(begin=None, end=None)
+        if ebuttd_doc is not None:
+            log.info(ebuttd_doc.get_xml())
+

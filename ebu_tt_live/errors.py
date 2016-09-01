@@ -1,4 +1,9 @@
 
+from pyxb.utils import six
+from pyxb.exceptions_ import ValidationError
+
+from .strings import ERR_DOCUMENT_EXTENT_MISSING
+
 class DocumentNotLoadedError(Exception):
     pass
 
@@ -41,3 +46,14 @@ class SequenceOverridden(Exception):
 
 class LogicError(Exception):
     pass
+
+
+class ExtentMissingError(Exception):
+
+    _attribute = None
+
+    def __init__(self, attribute):
+        self._attribute = attribute
+
+    def __str__(self):
+        return ERR_DOCUMENT_EXTENT_MISSING.format(type=type(self._attribute), value=self._attribute)

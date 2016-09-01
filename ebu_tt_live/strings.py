@@ -14,6 +14,7 @@ ERR_DOCUMENT_NOT_COMPATIBLE = gettext('Document is not compatible with the seque
 ERR_SEQUENCE_NUMBER_ALREADY_USED = gettext('The sequence number of the new document has already been used in the sequence.')
 ERR_DOCUMENT_NOT_PART_OF_SEQUENCE = gettext('Document is not part of any sequence')
 ERR_DOCUMENT_SEQUENCE_INCONSISTENCY = gettext('Timeline consistency problem.')
+ERR_DOCUMENT_EXTENT_MISSING = gettext('{type} cannot be instantiated from {value} because document extent is missing (from the tt element)')
 END_OF_DATA = gettext('End of available data reached')
 
 
