@@ -271,6 +271,9 @@ class EBUTT3Document(SubtitleDocument):
     def get_xml(self):
         return self._ebutt3_content.toxml()
 
+    def get_dom(self):
+        return self._ebutt3_content.toDOM()
+
 
 class EBUTT3DocumentSequence(CloningDocumentSequence):
     """

@@ -1,5 +1,6 @@
-from ebu_tt_live.bindings import tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
-    p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type
+from ebu_tt_live.bindings import tt, ttd, tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
+    p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type, d_head_type, d_style_type, \
+    d_styling_type, head_type, style_type, styling, layout, d_layout_type, region_type, d_region_type
 import copy
 from pyxb.binding.basis import NonElementContent, ElementContent
 
@@ -7,13 +8,67 @@ from pyxb.binding.basis import NonElementContent, ElementContent
 class EBUTT3EBUTTDConverter(object):
 
     @classmethod
+    def _children_contain(cls, container_elem, binding_type):
+        element_types = [type(item.value) for item in container_elem.orderedContent() if isinstance(item, ElementContent)]
+        return binding_type in element_types
+
+    @classmethod
     def convert_tt(cls, tt_in, dataset):
-        new_elem = d_tt_type(
+        new_elem = ttd(
             *cls.convert_children(tt_in, dataset),
             timeBase=tt_in.timeBase,
             lang=tt_in.lang,
             space=tt_in.space
         )
+        return new_elem
+
+    @classmethod
+    def convert_head(cls, head_in, dataset):
+        new_elem = d_head_type(
+            *cls.convert_children(head_in, dataset)
+        )
+        # We need default values here in case styling or layout is omitted from the source document.
+        if not cls._children_contain(new_elem, d_styling_type):
+            new_elem.append(d_styling_type.create_default_value())
+        if not cls._children_contain(new_elem, d_layout_type):
+            new_elem.append(d_layout_type.create_default_value())
+
+        return new_elem
+
+    @classmethod
+    def convert_layout(cls, layout_in, dataset):
+        new_elem = d_layout_type(
+            *cls.convert_children(layout_in, dataset)
+        )
+        # Fill in the gaps with default values
+        if not cls._children_contain(new_elem, d_region_type):
+            new_elem.append(d_region_type.create_default_value())
+        return new_elem
+
+    @classmethod
+    def convert_region(cls, region_in, dataset):
+        new_elem = d_region_type(
+            *cls.convert_children(region_in, dataset)
+        )
+        return new_elem
+
+    @classmethod
+    def convert_styling(cls, styling_in, dataset):
+        new_elem = d_styling_type(
+            *cls.convert_children(styling_in, dataset)
+        )
+        # Fill in the gaps here
+        if not cls._children_contain(new_elem, d_style_type):
+            new_elem.append(d_style_type.create_default_value())
+        return new_elem
+
+    @classmethod
+    def convert_style(cls, style_in, dataset):
+        new_elem = d_style_type(
+            *cls.convert_children(style_in, dataset)
+        )
+        # Fill in the gaps here
+        # TODO
         return new_elem
 
     @classmethod
@@ -85,6 +140,16 @@ class EBUTT3EBUTTDConverter(object):
             return cls.convert_span
         elif isinstance(in_element, br_type):
             return cls.convert_br
+        elif isinstance(in_element, head_type):
+            return cls.convert_head
+        elif isinstance(in_element, layout):
+            return cls.convert_layout
+        elif isinstance(in_element, region_type):
+            return cls.convert_region
+        elif isinstance(in_element, styling):
+            return cls.convert_styling
+        elif isinstance(in_element, style_type):
+            return cls.convert_style
         else:
             return cls.convert_unknown
 

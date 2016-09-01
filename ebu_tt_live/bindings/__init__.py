@@ -243,3 +243,84 @@ raw.region._SetSupersedingClass(region_type)
 
 # EBU TT D classes
 # ================
+
+class d_tt_type(raw.d_tt_type):
+
+    @classmethod
+    def __check_bds(cls, bds):
+        if bds:
+            return bds
+        else:
+            return BindingDOMSupport(
+                namespace_prefix_map=namespace_prefix_map
+            )
+
+    def toDOM(self, bds=None, parent=None, element_name=None):
+        xml_dom = super(d_tt_type, self).toDOM(
+            bds=self.__check_bds(bds),
+            parent=parent,
+            element_name=element_name
+        )
+        xml_dom.documentElement.tagName = 'tt'
+        return xml_dom
+
+    def toxml(self, encoding=None, bds=None, root_only=False, element_name=None):
+        dom = self.toDOM(self.__check_bds(bds), element_name=element_name)
+        if root_only:
+            dom = dom.documentElement
+        return dom.toprettyxml(
+            encoding=encoding,
+            indent='  '
+        )
+
+raw.d_tt_type._SetSupersedingClass(d_tt_type)
+
+
+class d_layout_type(raw.d_layout_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            d_region_type.create_default_value()
+        )
+        return instance
+
+raw.d_layout_type._SetSupersedingClass(d_layout_type)
+
+
+class d_region_type(raw.d_region_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            id='region.default',
+            origin='0% 0%',
+            extent='100% 100%'
+        )
+        return instance
+
+raw.d_region_type._SetSupersedingClass(d_region_type)
+
+
+class d_styling_type(raw.d_styling_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            d_style_type.create_default_value()
+        )
+        return instance
+
+raw.d_styling_type._SetSupersedingClass(d_styling_type)
+
+
+class d_style_type(raw.d_style_type):
+
+    @classmethod
+    def create_default_value(cls):
+        instance = cls(
+            id='style.default'
+        )
+        return instance
+
+raw.d_style_type._SetSupersedingClass(d_style_type)
