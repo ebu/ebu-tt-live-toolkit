@@ -22,6 +22,7 @@ Feature: Document metadata elements order
     | intendedDestinationServiceIdentifier | documentFacet                        | trace               |                     |
     | documentFacet                        | trace                                |                     |                     |
     | trace                                |                                      |                     |                     |
+    | documentIdentifier                   | trace                                |                     |                     |
 
 
   # SPEC-CONFORMANCE: R38 R39
@@ -39,3 +40,4 @@ Feature: Document metadata elements order
     | originalSourceServiceIdentifier      | intendedDestinationServiceIdentifier | trace                                | documentFacet                   |
     | originalSourceServiceIdentifier      | documentFacet                        | intendedDestinationServiceIdentifier | trace                           |
     | trace                                | intededDestinationServiceIdentifier  | documentFacet                        | originalSourceServiceIdentifier |
+    | originalSourceServiceIdentifier      | documentIdentifier                   |                                      |                                 |

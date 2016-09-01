@@ -13,6 +13,8 @@ def handle_document_metadata_element(element):
         return '<ebuttm:documentFacet summary="mixed">test</ebuttm:documentFacet>\n'
     elif element == 'trace':
         return '<ebuttm:trace action="creation" generatedBy="producer" />\n'
+    elif element == 'documentIdentifier':
+        return '<ebuttm:documentIdentifier>Doc ID</ebuttm:documentIdentifier>'
     else:
         return ''
 
