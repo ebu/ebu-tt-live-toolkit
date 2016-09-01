@@ -129,6 +129,11 @@
             
   <h1>Source code for ebu_tt_live.errors</h1><div class="highlight"><pre>
 <span></span>
+<span class="kn">from</span> <span class="nn">pyxb.utils</span> <span class="k">import</span> <span class="n">six</span>
+<span class="kn">from</span> <span class="nn">pyxb.exceptions_</span> <span class="k">import</span> <span class="n">ValidationError</span>
+
+<span class="kn">from</span> <span class="nn">.strings</span> <span class="k">import</span> <span class="n">ERR_DOCUMENT_EXTENT_MISSING</span>
+
 <div class="viewcode-block" id="DocumentNotLoadedError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.DocumentNotLoadedError">[docs]</a><span class="k">class</span> <span class="nc">DocumentNotLoadedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
@@ -167,6 +172,17 @@
 
 <div class="viewcode-block" id="LogicError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.LogicError">[docs]</a><span class="k">class</span> <span class="nc">LogicError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ExtentMissingError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.ExtentMissingError">[docs]</a><span class="k">class</span> <span class="nc">ExtentMissingError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+
+    <span class="n">_attribute</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_attribute</span> <span class="o">=</span> <span class="n">attribute</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ERR_DOCUMENT_EXTENT_MISSING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attribute</span><span class="p">),</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_attribute</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

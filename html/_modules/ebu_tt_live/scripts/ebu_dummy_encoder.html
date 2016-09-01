@@ -133,6 +133,7 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">bindings</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttdt</span> <span class="k">as</span> <span class="n">datatypes</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents.ebutt3</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
 <span class="kn">from</span> <span class="nn">pyxb</span> <span class="k">import</span> <span class="n">BIND</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 
@@ -154,8 +155,9 @@
                 <span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span><span class="p">()</span>
             <span class="p">),</span>
             <span class="n">bindings</span><span class="o">.</span><span class="n">styling</span><span class="p">(</span>
-                <span class="n">bindings</span><span class="o">.</span><span class="n">style</span><span class="p">(</span>
-                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID001&#39;</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">style_type</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID001&#39;</span><span class="p">,</span>
+                    <span class="n">fontSize</span><span class="o">=</span><span class="s1">&#39;12px&#39;</span>
                 <span class="p">)</span>
             <span class="p">),</span>
             <span class="n">bindings</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
@@ -180,10 +182,12 @@
         <span class="p">)</span>
     <span class="p">)</span>
 
-    <span class="n">tt</span><span class="o">.</span><span class="n">validateBinding</span><span class="p">()</span>
+    <span class="n">document</span> <span class="o">=</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">tt</span><span class="p">)</span>
+
+    <span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 
     <span class="nb">print</span><span class="p">(</span>
-        <span class="n">tt</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">()</span>
     <span class="p">)</span>
 
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;XML output printed&#39;</span><span class="p">)</span></div>

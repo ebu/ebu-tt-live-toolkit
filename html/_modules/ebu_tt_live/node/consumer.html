@@ -130,7 +130,7 @@
   <h1>Source code for ebu_tt_live.node.consumer</h1><div class="highlight"><pre>
 <span></span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3DocumentSequence</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3DocumentSequence</span><span class="p">,</span> <span class="n">ebutt3_to_ebuttd</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">DOC_RECEIVED</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -166,8 +166,7 @@
             <span class="n">computed_begin_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
             <span class="n">computed_end_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_end_time</span>
         <span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">reference_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -176,6 +175,26 @@
     <span class="nd">@reference_clock</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">reference_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="EBUTTDConverterConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDConverterConsumer">[docs]</a><span class="k">class</span> <span class="nc">EBUTTDConverterConsumer</span><span class="p">(</span><span class="n">SimpleConsumer</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EBUTTDConverterConsumer.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDConverterConsumer.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTTDConverterConsumer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span></div>
+        <span class="c1"># segmentation, conversion... here</span>
+
+<div class="viewcode-block" id="EBUTTDConverterConsumer.convert_to_ebuttd"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDConverterConsumer.convert_to_ebuttd">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_ebuttd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">segment_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">extract_segment</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ebutt3_to_ebuttd</span><span class="p">(</span><span class="n">segment_doc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="EBUTTDConverterConsumer.convert_next_segment"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDConverterConsumer.convert_next_segment">[docs]</a>    <span class="k">def</span> <span class="nf">convert_next_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Figure out begin and end</span>
+        <span class="n">ebuttd_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_ebuttd</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ebuttd_doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ebuttd_doc</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div></div>
+
 </pre></div>
 
            </div>

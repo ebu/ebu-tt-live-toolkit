@@ -365,6 +365,11 @@ before the document begins.
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.get_dom">
+<code class="descname">get_dom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.get_dom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_dom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.get_xml">
 <code class="descname">get_xml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.get_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_xml" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -538,10 +543,29 @@ sequence numbers.
 <code class="descname">add_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.add_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_compatible_document">
+<code class="descname">create_compatible_document</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.create_compatible_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_compatible_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>This utility function is used by the converter to extract segments and by the new_document function.
+:param args:
+:param kwargs:
+:return:</p>
+</dd></dl>
+
 <dl class="classmethod">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">
 <em class="property">classmethod </em><code class="descname">create_from_document</code><span class="sig-paren">(</span><em>document</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.create_from_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment">
+<code class="descname">extract_segment</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.extract_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the subtitles from the sequence in the given timeframe. The return value is one
+merged EBUTT3Document
+:param begin:
+:param end:
+:return: EBUTT3Document</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.fork">

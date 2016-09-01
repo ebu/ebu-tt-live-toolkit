@@ -399,7 +399,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span>
 
 <div class="viewcode-block" id="EBUTT3Document.get_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_xml">[docs]</a>    <span class="k">def</span> <span class="nf">get_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EBUTT3Document.get_dom"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_dom">[docs]</a>    <span class="k">def</span> <span class="nf">get_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">toDOM</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3DocumentSequence</span><span class="p">(</span><span class="n">CloningDocumentSequence</span><span class="p">):</span>
@@ -473,8 +476,13 @@
                 <span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="EBUTT3DocumentSequence.new_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.new_document">[docs]</a>    <span class="k">def</span> <span class="nf">new_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">+=</span> <span class="mi">1</span>
+<div class="viewcode-block" id="EBUTT3DocumentSequence.create_compatible_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_compatible_document">[docs]</a>    <span class="k">def</span> <span class="nf">create_compatible_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This utility function is used by the converter to extract segments and by the new_document function.</span>
+<span class="sd">        :param args:</span>
+<span class="sd">        :param kwargs:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">EBUTT3Document</span><span class="p">(</span>
             <span class="n">time_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">time_base</span><span class="p">,</span>
             <span class="n">clock_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">clock_mode</span><span class="p">,</span>
@@ -482,6 +490,10 @@
             <span class="n">sequence_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span><span class="p">,</span>
             <span class="n">lang</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lang</span>
         <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.new_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.new_document">[docs]</a>    <span class="k">def</span> <span class="nf">new_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_compatible_document</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence._insert_or_discard"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard">[docs]</a>    <span class="k">def</span> <span class="nf">_insert_or_discard</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -669,7 +681,25 @@
         <span class="k">return</span> <span class="n">item</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">when</span> <span class="ow">or</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence.fork"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.fork">[docs]</a>    <span class="k">def</span> <span class="nf">fork</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.extract_segment"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment">[docs]</a>    <span class="k">def</span> <span class="nf">extract_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract the subtitles from the sequence in the given timeframe. The return value is one</span>
+<span class="sd">        merged EBUTT3Document</span>
+<span class="sd">        :param begin:</span>
+<span class="sd">        :param end:</span>
+<span class="sd">        :return: EBUTT3Document</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO</span>
+        <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_compatible_document</span><span class="p">()</span>
+        <span class="c1"># Temporarily create a validating document</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">add_div</span><span class="p">(</span><span class="n">div</span><span class="o">=</span><span class="n">bindings</span><span class="o">.</span><span class="n">div_type</span><span class="p">(</span>
+            <span class="n">bindings</span><span class="o">.</span><span class="n">p_type</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;p.001&#39;</span>
+            <span class="p">)</span>
+        <span class="p">))</span>
+        <span class="k">return</span> <span class="n">document</span></div></div>
 </pre></div>
 
            </div>

@@ -470,8 +470,8 @@
                     <span class="c1"># Propagate the longest end time among the children</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">children_computed_end_times</span><span class="p">)</span></div>
 
-    <span class="c1"># The mixin approach is used since there are multiple timed elements types.</span>
-    <span class="c1"># The inspected elements are all attributes of the element so they do not</span>
+    <span class="c1"># The mixin approach is used since there are multiple timed element types.</span>
+    <span class="c1"># The inspected values are all attributes of the element so they do not</span>
     <span class="c1"># take part in the traversal directly we process them in the timed element&#39;s context instead: body, div, p, span</span>
 <div class="viewcode-block" id="TimingValidationMixin._semantic_timebase_validation"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimingValidationMixin._semantic_timebase_validation">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_timebase_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
         <span class="n">time_base</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">timeBase</span>
@@ -569,6 +569,30 @@
                             <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span>
                         <span class="p">)</span>
                     <span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SizingValidationMixin"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SizingValidationMixin">[docs]</a><span class="k">class</span> <span class="nc">SizingValidationMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is meant to validate that the sizing types correspond to the tt element and head region definitions.</span>
+<span class="sd">    It is meant to be used by the containing element and its attributes as well so the class interoperates with itself.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SizingValidationMixin._semantic_check_sizing_type"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SizingValidationMixin._semantic_check_sizing_type">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_check_sizing_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The sizing attribute is checked by the element for a value and attribute validation is ran as required.</span>
+<span class="sd">        :param value: The sizing value to be checked</span>
+<span class="sd">        :param dataset: The semantic dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SizingValidationMixin</span><span class="p">):</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">_semantic_validate_sizing_context</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SizingValidationMixin._semantic_validate_sizing_context"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SizingValidationMixin._semantic_validate_sizing_context">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_validate_sizing_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The attribute can check if it is valid in the context provided by dataset</span>
+<span class="sd">        :param dataset: The semantic dataset</span>
+<span class="sd">        :raises SimpleTypeValueError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>
