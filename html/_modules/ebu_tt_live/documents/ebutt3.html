@@ -461,10 +461,16 @@
         <span class="p">)</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence._check_document_compatibility"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._check_document_compatibility">[docs]</a>    <span class="k">def</span> <span class="nf">_check_document_compatibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">!=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">!=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="ow">or</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">time_base</span> <span class="o">!=</span> <span class="n">document</span><span class="o">.</span><span class="n">time_base</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">IncompatibleSequenceError</span><span class="p">(</span>
                 <span class="n">ERR_DOCUMENT_NOT_COMPATIBLE</span>
             <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">clock_mode</span> <span class="o">!=</span> <span class="n">document</span><span class="o">.</span><span class="n">clock_mode</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">IncompatibleSequenceError</span><span class="p">(</span>
+                    <span class="n">ERR_DOCUMENT_NOT_COMPATIBLE</span>
+                <span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence.new_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.new_document">[docs]</a>    <span class="k">def</span> <span class="nf">new_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
