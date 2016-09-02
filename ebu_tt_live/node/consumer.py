@@ -47,10 +47,10 @@ class SimpleConsumer(Node):
         self._reference_clock = value
 
 
-class EBUTTDConverterConsumer(SimpleConsumer):
+class EBUTTDEncoder(SimpleConsumer):
 
     def process_document(self, document):
-        super(EBUTTDConverterConsumer, self).process_document(document)
+        super(EBUTTDEncoder, self).process_document(document)
         # segmentation, conversion... here
 
     def convert_to_ebuttd(self, begin=None, end=None):
