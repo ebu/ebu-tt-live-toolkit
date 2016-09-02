@@ -196,6 +196,7 @@ class p_type(TimingValidationMixin, SemanticValidationMixin, raw.p_type):
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
 
 raw.p_type._SetSupersedingClass(p_type)
 
@@ -213,6 +214,7 @@ class span_type(TimingValidationMixin, SemanticValidationMixin, raw.span_type):
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
 
 raw.span_type._SetSupersedingClass(span_type)
 

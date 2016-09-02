@@ -370,6 +370,13 @@ class TimingValidationMixin(object):
                         )
                     )
 
+    def _semantic_manage_timeline(self, dataset, element_content):
+        # Get the document instance
+        doc = dataset['document']
+
+        # Register on timeline
+        doc.add_to_timeline(self)
+
 
 class BodyTimingValidationMixin(TimingValidationMixin):
     """

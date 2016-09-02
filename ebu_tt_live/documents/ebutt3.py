@@ -24,11 +24,11 @@ class TimingEvent(object):
     on the timeline.
     """
 
-    _document = None
+    _element = None
     _when = None
 
-    def __init__(self, document, when):
-        self._document = document
+    def __init__(self, element, when):
+        self._element = element
         self.when = when
 
     @property
@@ -42,32 +42,27 @@ class TimingEvent(object):
         self._when = value
 
     @property
-    def document(self):
-        return self._document
+    def element(self):
+        return self._element
 
 
 # R16
 class TimingEventBegin(TimingEvent):
     """
-    Document resolved begin time
+    Element/document resolved begin time
     """
 
-    def __init__(self, document):
-        super(TimingEventBegin, self).__init__(
-            document=document,
-            when=document.computed_begin_time
-        )
+    def __init__(self, element):
+        super(TimingEventBegin, self).__init__(element=element, when=element.computed_begin_time)
+
 
 # R17
 class TimingEventEnd(TimingEvent):
     """
-    Document resolved end time.
+    Element/document resolved end time.
     """
-    def __init__(self, document):
-        super(TimingEventEnd, self).__init__(
-            document=document,
-            when=document.computed_end_time
-        )
+    def __init__(self, element):
+        super(TimingEventEnd, self).__init__(element=element, when=element.computed_end_time)
 
 
 class EBUTT3Document(SubtitleDocument):
@@ -83,6 +78,8 @@ class EBUTT3Document(SubtitleDocument):
     _availability_time = None
     _computed_begin_time = None
     _computed_end_time = None
+    # Timeline for p and span elements that make conversion to EBU-TT-D easier.
+    _timeline = None
 
     # These are used when the sequence discarded the documents.
     _resolved_begin_time = None
@@ -107,6 +104,7 @@ class EBUTT3Document(SubtitleDocument):
             ),
             body=BIND()
         )
+
         self.validate()
 
     @classmethod
@@ -230,7 +228,8 @@ class EBUTT3Document(SubtitleDocument):
         availability_time = self.availability_time or timedelta()
         # Run validation
         result = self._ebutt3_content.validateBinding(
-            availability_time=availability_time
+            availability_time=availability_time,
+            document=self
         )
         # Extract results
 
@@ -273,6 +272,35 @@ class EBUTT3Document(SubtitleDocument):
 
     def get_dom(self):
         return self._ebutt3_content.toDOM()
+
+    @property
+    def timeline(self):
+        if self._timeline is None:
+            self._timeline = sortedlist.SortedListWithKey(key=lambda item: item.when)
+        return self._timeline
+
+    def add_to_timeline(self, element):
+        """
+        The element gets added to the timeline so it would be easier to look up.
+        :param element:
+        :return:
+        """
+        if element.computed_begin_time is not None:
+            self.timeline.add(TimingEventBegin(element=element))
+        if element.computed_end_time is not None:
+            self.timeline.add(TimingEventEnd(element=element))
+
+    def lookup_element_on_timeline(self, element):
+        return None
+
+    def lookup_range_on_timeline(self, begin=None, end=None):
+        """
+        Extract a segment of the timeline and
+        :param begin:
+        :param end:
+        :return: A list of elements in chronological order
+        """
+        return []
 
 
 class EBUTT3DocumentSequence(CloningDocumentSequence):
@@ -396,14 +424,14 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             # This loop goes backwards and checks for trimmed documents
 
             # If any found event is higher sequence number we quit
-            if item.document.sequence_number > document.sequence_number:
+            if item.element.sequence_number > document.sequence_number:
                 # Oops we got discarded.... :(
                 discarderror = DocumentDiscardedError()
-                discarderror.offending_document = item.document
+                discarderror.offending_document = item.element
                 raise discarderror
 
             if isinstance(item, TimingEventBegin):
-                if not _end_found or _end_found.document != item.document:
+                if not _end_found or _end_found.element != item.element:
                     # This will be trimmed
                     begins_before = item
                 # Once a begin event is found we quit
@@ -417,13 +445,13 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             # This loop goes forward looking at offending events
             if isinstance(item, TimingEventEnd):
                 ends_after = item
-                if ends_after.document != begins_before.document:
+                if ends_after.element != begins_before.element:
                     raise ValueError(ERR_DOCUMENT_SEQUENCE_INCONSISTENCY)
 
             elif isinstance(item, TimingEventBegin):
-                if document.sequence_number > item.document.sequence_number:
+                if document.sequence_number > item.element.sequence_number:
                     raise SequenceOverridden()
-                if item.document.sequence_number > document.sequence_number:
+                if item.element.sequence_number > document.sequence_number:
                     #This means our document may get trimmed into shape
                     if this_ends.when > item.when:
                         trims_this = item
@@ -443,11 +471,11 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
             if ends_after:
                 self._timeline.remove(ends_after)
             else:
-                ends_after = TimingEventEnd(begins_before.document)
+                ends_after = TimingEventEnd(begins_before.element)
             ends_after.when = this_begins.when
             document_logger.info(DOC_TRIMMED.format(
-                sequence_identifier=begins_before.document.sequence_identifier,
-                sequence_number=begins_before.document.sequence_number,
+                sequence_identifier=begins_before.element.sequence_identifier,
+                sequence_number=begins_before.element.sequence_number,
                 resolved_begin_time=begins_before.when,
                 resolved_end_time=ends_after.when
             ))
@@ -485,13 +513,13 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         resolved_begin = TimingEventBegin(document)
 
         for item in self._timeline.irange(resolved_begin):
-            if item.document.sequence_number < sequence_number:
-                if isinstance(item, TimingEventEnd) and item.document not in discarded_timing_events:
+            if item.element.sequence_number < sequence_number:
+                if isinstance(item, TimingEventEnd) and item.element not in discarded_timing_events:
                     # We found the end event of a document whose begin event was not encountered. Meaning that instead
                     # of discarding it we are supposed to trim it. R17
                     continue
                 else:
-                    discarded_timing_events.setdefault(item.document, []).append(item)
+                    discarded_timing_events.setdefault(item.element, []).append(item)
 
         for item, events in discarded_timing_events.items():
             item.discard_document(resolved_end_time=resolved_begin.when)
@@ -525,7 +553,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         if document not in self._documents:
             raise LookupError()
         for item in self._timeline.irange(TimingEventBegin(document)):
-            if item.document == document and isinstance(item, TimingEventBegin):
+            if item.element == document and isinstance(item, TimingEventBegin):
                 return item
         # This means the document is not part of this sequence
         raise KeyError()
@@ -538,7 +566,7 @@ class EBUTT3DocumentSequence(CloningDocumentSequence):
         if document not in self._documents:
             raise LookupError()
         for item in self._timeline.irange(TimingEventBegin(document)):
-            if item.document == document and isinstance(item, TimingEventEnd):
+            if item.element == document and isinstance(item, TimingEventEnd):
                 return item
         if document.computed_end_time is not None:
             # This means we have consistency issues in the timeline
