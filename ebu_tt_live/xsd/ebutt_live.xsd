@@ -167,6 +167,12 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="style" type="xs:IDREFS">
+			<xs:annotation>
+				<xs:documentation>ID(s) of one or more style element(s). The style information shall
+					be applied to the enclosed content of the tt:p element.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="div_type">
 		<xs:annotation>
