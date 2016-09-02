@@ -24,9 +24,9 @@
   <tt:body 
 {% if body_begin %}
   {% if body_begin == "*?Empty?*" %}
-      tt:begin=""
+      begin=""
   {% else %}
-      tt:begin="{{ body_begin }}"
+      begin="{{ body_begin }}"
   {% endif %}
 {% endif %}
     >

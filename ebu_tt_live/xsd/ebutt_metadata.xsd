@@ -7,7 +7,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:ebu:tt:metadata"
 	xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttdt="urn:ebu:tt:datatypes"
 	xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
-	targetNamespace="urn:ebu:tt:metadata" elementFormDefault="qualified">
+	targetNamespace="urn:ebu:tt:metadata" elementFormDefault="qualified"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
 	<xs:import namespace="urn:ebu:tt:datatypes" schemaLocation="ebutt_datatypes.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#metadata" schemaLocation="metadata.xsd"/>
 	<xs:complexType name="binaryData_type">
@@ -557,7 +558,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:documentation>Container for metadata information.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:any namespace="not http://www.w3.org/ns/ttml urn:ebu:tt" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -580,6 +581,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 					</xs:element>
 					<xs:element ref="ttm:agent" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="binaryData" type="binaryData_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" notNamespace="http://www.w3.org/ns/ttml urn:ebu:tt:metadata"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -592,6 +594,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				    <xs:element name="authoringTechnique" type="authoringTechnique_type" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="transitionStyle" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" notNamespace="http://www.w3.org/ns/ttml urn:ebu:tt:metadata"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -605,6 +608,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 					<xs:element name="binaryData" type="binaryData_type" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="transitionStyle" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" notNamespace="http://www.w3.org/ns/ttml urn:ebu:tt:metadata"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -617,6 +621,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				    <xs:element name="authoringTechnique" type="authoringTechnique_type" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="transitionStyle" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" notNamespace="http://www.w3.org/ns/ttml urn:ebu:tt:metadata"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -627,6 +632,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		    <xs:extension base="ebuttm:metadataBase_type">
 				<xs:sequence>
 				    <xs:element name="facet" type="facet_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" notNamespace="http://www.w3.org/ns/ttml urn:ebu:tt:metadata"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
@@ -637,6 +643,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		    <xs:extension base="ebuttm:metadataBase_type">
 				<xs:sequence>
 				    <xs:element name="font" type="font_type" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" notNamespace="http://www.w3.org/ns/ttml urn:ebu:tt:metadata"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

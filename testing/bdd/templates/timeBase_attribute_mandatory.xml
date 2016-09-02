@@ -34,13 +34,13 @@
     <tt:layout/>
   </tt:head>
 {% if time_base == "smpte" %}
-  <tt:body tt:begin="00:00:00:13">
+  <tt:body begin="00:00:00:13">
     <tt:div>
-      <tt:p tt:begin="00:00:00:10" tt:end="00:00:02:11" xml:id="ID005">
+      <tt:p begin="00:00:00:10" end="00:00:02:11" xml:id="ID005">
 {% else %}
-  <tt:body tt:begin="500ms" tt:dur="00:00:05">
+  <tt:body begin="500ms" dur="00:00:05">
     <tt:div>
-      <tt:p tt:begin="500ms" tt:end="3420ms" xml:id="ID005">
+      <tt:p begin="500ms" end="3420ms" xml:id="ID005">
 {% endif %}
         <tt:span>Some example text...</tt:span>
         <tt:br/>
