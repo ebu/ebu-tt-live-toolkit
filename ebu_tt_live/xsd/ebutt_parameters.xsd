@@ -7,7 +7,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
     xmlns:ttp="http://www.w3.org/ns/ttml#parameter" 
     elementFormDefault="qualified"
-    targetNamespace="urn:ebu:tt:parameters">
+    targetNamespace="urn:ebu:tt:parameters"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
     <xs:import namespace="http://www.w3.org/ns/ttml#parameter" schemaLocation="parameter.xsd"/>
     
     <xs:attribute name="sequenceIdentifier">

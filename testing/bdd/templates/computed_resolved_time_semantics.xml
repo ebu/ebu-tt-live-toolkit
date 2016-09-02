@@ -27,23 +27,23 @@
   <tt:body 
 {% if body_begin %}
   {% if body_begin == "*?Empty?*" %}
-      tt:begin=""
+      begin=""
   {% else %}
-      tt:begin="{{ body_begin }}"
+      begin="{{ body_begin }}"
   {% endif %}
 {% endif %}
 {% if body_end %}
   {% if body_end == "*?Empty?*" %}
-      tt:end=""
+      end=""
   {% else %}
-      tt:end="{{ body_end }}"
+      end="{{ body_end }}"
   {% endif%}
 {% endif %}
 {% if body_dur %}
   {% if body_dur == "*?Empty?*" %}
-      tt:dur=""
+      dur=""
   {% else %}
-      tt:dur="{{ body_dur }}"
+      dur="{{ body_dur }}"
   {% endif %}
 {% endif %}
     >
@@ -52,16 +52,16 @@
     <tt:div
 {% if div_begin %}
   {% if div_begin == "*?Empty?*" %}
-        tt:begin=""
+        begin=""
   {% else %}
-        tt:begin="{{ div_begin }}"
+        begin="{{ div_begin }}"
   {% endif %}
 {% endif %}
 {% if div_end %}
   {% if div_end == "*?Empty?*" %}
-        tt:end=""
+        end=""
   {% else %}
-        tt:end="{{ div_end }}"
+        end="{{ div_end }}"
   {% endif%}
 {% endif %}
       >
@@ -70,16 +70,16 @@
       <tt:p 
 {% if p_begin %}
   {% if p_begin == "*?Empty?*" %}
-        tt:begin=""
+        begin=""
   {% else %}
-        tt:begin="{{ p_begin }}"
+        begin="{{ p_begin }}"
   {% endif %}
 {% endif %}
 {% if p_end %}
   {% if p_end == "*?Empty?*" %}
-        tt:end=""
+        end=""
   {% else %}
-        tt:end="{{ p_end }}"
+        end="{{ p_end }}"
   {% endif%}
 {% endif %}
         xml:id="ID005">
@@ -88,16 +88,16 @@
         <tt:span
 {% if span_begin %}
   {% if span_begin == "*?Empty?*" %}
-                tt:begin=""
+                begin=""
   {% else %}
-                tt:begin="{{ span_begin }}"
+                begin="{{ span_begin }}"
   {% endif %}
 {% endif %}
 {% if span_end %}
   {% if span_end == "*?Empty?*" %}
-                tt:end=""
+                end=""
   {% else %}
-                tt:end="{{ span_end }}"
+                end="{{ span_end }}"
   {% endif%}
 {% endif %}
               >
@@ -109,16 +109,16 @@
             <tt:span
 {% if span2_begin %}
   {% if span2_begin == "*?Empty?*" %}
-                tt:begin=""
+                begin=""
   {% else %}
-                tt:begin="{{ span2_begin }}"
+                begin="{{ span2_begin }}"
   {% endif %}
 {% endif %}
 {% if span2_end %}
   {% if span2_end == "*?Empty?*" %}
-                tt:end=""
+                end=""
   {% else %}
-                tt:end="{{ span2_end }}"
+                end="{{ span2_end }}"
   {% endif%}
 {% endif %}
               >
@@ -130,16 +130,16 @@
             <tt:span
 {% if span3_begin %}
   {% if span3_begin == "*?Empty?*" %}
-                tt:begin=""
+                begin=""
   {% else %}
-                tt:begin="{{ span3_begin }}"
+                begin="{{ span3_begin }}"
   {% endif %}
 {% endif %}
 {% if span3_end %}
   {% if span3_end == "*?Empty?*" %}
-                tt:end=""
+                end=""
   {% else %}
-                tt:end="{{ span3_end }}"
+                end="{{ span3_end }}"
   {% endif%}
 {% endif %}
               >
