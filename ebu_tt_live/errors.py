@@ -85,3 +85,7 @@ class DiscardElement(Exception):
 
 class ConfigurationError(Exception):
     pass
+
+
+class UnknownHashError(Exception):
+    pass
