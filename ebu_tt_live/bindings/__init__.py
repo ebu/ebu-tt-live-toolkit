@@ -12,12 +12,14 @@ from . import _ttp as ttp
 from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
 from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, \
-    BodyTimingValidationMixin, SizingValidationMixin
+    BodyTimingValidationMixin, SizingValidationMixin, StyledElementMixin, RegionedElementMixin
 from ebu_tt_live.errors import SemanticValidationError
-from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES
+from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, \
+    ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES, ERR_SEMANTIC_STYLE_CIRCLE, ERR_SEMANTIC_STYLE_MISSING
 from pyxb.exceptions_ import SimpleTypeValueError, ComplexTypeValidationError
 from pyxb.utils.domutils import BindingDOMSupport
 from datetime import timedelta
+import threading
 
 namespace_prefix_map = {
     'tt': raw.Namespace,
@@ -183,7 +185,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
 raw.tt_type._SetSupersedingClass(tt_type)
 
 
-class p_type(TimingValidationMixin, SemanticValidationMixin, raw.p_type):
+class p_type(RegionedElementMixin, StyledElementMixin, TimingValidationMixin, SemanticValidationMixin, raw.p_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -193,15 +195,20 @@ class p_type(TimingValidationMixin, SemanticValidationMixin, raw.p_type):
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_set_region(dataset=dataset)
+        self._semantic_collect_applicable_styles(dataset=dataset)
+        self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
+        self._semantic_unset_region(dataset=dataset)
+        self._semantic_pop_styles(dataset=dataset)
 
 raw.p_type._SetSupersedingClass(p_type)
 
 
-class span_type(TimingValidationMixin, SemanticValidationMixin, raw.span_type):
+class span_type(StyledElementMixin, TimingValidationMixin, SemanticValidationMixin, raw.span_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -211,15 +218,18 @@ class span_type(TimingValidationMixin, SemanticValidationMixin, raw.span_type):
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_collect_applicable_styles(dataset=dataset)
+        self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
+        self._semantic_pop_styles(dataset=dataset)
 
 raw.span_type._SetSupersedingClass(span_type)
 
 
-class div_type(TimingValidationMixin, SemanticValidationMixin, raw.div_type):
+class div_type(RegionedElementMixin, StyledElementMixin, TimingValidationMixin, SemanticValidationMixin, raw.div_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -229,14 +239,19 @@ class div_type(TimingValidationMixin, SemanticValidationMixin, raw.div_type):
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_set_region(dataset=dataset)
+        self._semantic_collect_applicable_styles(dataset=dataset)
+        self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_unset_region(dataset=dataset)
 
 raw.div_type._SetSupersedingClass(div_type)
 
 
-class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
+class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
+    # TODO add styling when xsd is merged
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
@@ -247,28 +262,87 @@ class body_type(BodyTimingValidationMixin, SemanticValidationMixin, raw.body_typ
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        # self._semantic_collect_applicable_styles(dataset=dataset)
+        # self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        # self._semantic_pop_styles(dataset=dataset)
 
 raw.body_type._SetSupersedingClass(body_type)
 
 
 class style_type(SizingValidationMixin, SemanticValidationMixin, raw.style):
 
+    # This helps us detecting infinite loops.
+    _styling_lock = None
+    # ordered styles cached
+    _ordered_styles = None
+
+    def ordered_styles(self, dataset):
+        """
+        This function figures out the chain of styles.
+        WARNING: Do not call this before the semantic validation of tt/head/styling is finished. Otherwise your style
+        may not have been found yet!
+        :param dataset: Semantic dataset
+        :return: a list of styles applicable in order
+        """
+
+        if self._styling_lock.locked():
+            raise SemanticValidationError(ERR_SEMANTIC_STYLE_CIRCLE.format(
+                style=self.id
+            ))
+
+        with self._styling_lock:
+            if self._ordered_styles is not None:
+                return self._ordered_styles
+            ordered_styles = [self]
+            if self.style is not None:
+                for style_id in self.style:
+                    style = dataset['styles_by_id'].get(style_id, None)
+                    if style is None:
+                        raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(
+                            style=style_id
+                        ))
+                    cascading_styles = style.ordered_styles(dataset=dataset)
+                    for style in cascading_styles:
+                        if style in ordered_styles:
+                            continue
+                        ordered_styles.append(style)
+            self._ordered_styles = ordered_styles
+            return ordered_styles
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
         self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
+        # Init recursion loop detection lock
+        self._styling_lock = threading.Lock()
+        self._ordered_styles = None
+        # Add itself to the dataset
+        dataset['styles_by_id'][self.id] = self
 
 
 raw.style._SetSupersedingClass(style_type)
 
 
-class region_type(SizingValidationMixin, SemanticValidationMixin, raw.region):
+class styling(SemanticValidationMixin, raw.styling):
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        # Initialize styling register
+        dataset['styles_by_id'] = {}
+
+
+raw.styling._SetSupersedingClass(styling)
+
+
+class region_type(StyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
+        # Add itself to the dataset
+        dataset.setdefault('regions_by_id', {})[self.id] = self
+        self._semantic_collect_applicable_styles(dataset=dataset)
 
 
 raw.region._SetSupersedingClass(region_type)

@@ -18,6 +18,7 @@ def main():
         sequenceIdentifier='testSequence001',
         sequenceNumber='1',
         timeBase='clock',
+        extent='800px 600px',
         clockMode='local',
         lang='en-GB',
         head=bindings.head_type(
@@ -45,7 +46,8 @@ def main():
                     id='ID005',
                     begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
                     end=datatypes.LimitedClockTimingType(timedelta(seconds=3.42)),
-                )
+                ),
+                style=['ID001']
             ),
             begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
             dur=datatypes.LimitedClockTimingType(timedelta(seconds=5))

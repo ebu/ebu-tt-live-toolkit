@@ -3,12 +3,15 @@ This file contains all the pyxb helpers needed for enabling a concise semantic v
 """
 
 from pyxb import ValidationConfig, GlobalValidationConfig
-from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
+from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent, \
+    ElementContent
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
-    DOC_SYNTACTIC_VALIDATION_SUCCESSFUL
+    DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_REGION_MISSING, ERR_SEMANTIC_STYLE_MISSING, \
+    ERR_SEMANTIC_VALIDATION_EXPECTED
 from ebu_tt_live.errors import SemanticValidationError, LogicError
 from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
+from sortedcontainers import SortedSet
 import logging
 
 log = logging.getLogger(__name__)
@@ -122,7 +125,11 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
                 if hasattr(content.value, '_validatedChildren'):
                     ordered_children = reversed(content.value._validatedChildren())
-                    to_visit.extend(ordered_children)
+                    # Extending pyxb bindings with parent property
+                    for child in ordered_children:
+                        if isinstance(child, ElementContent):
+                            child.value.parent_binding = content.value
+                        to_visit.append(child)
 
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
@@ -468,3 +475,76 @@ class SizingValidationMixin(object):
         :raises SimpleTypeValueError
         """
         raise NotImplementedError()
+
+
+class StyledElementMixin(object):
+    """
+    This functionality applies to all styled boxes to help computing styling related information
+    """
+    _referenced_styles = None
+    _validated_styles = None
+
+    def _semantic_collect_applicable_styles(self, dataset):
+        dataset.setdefault('styles_stack', [])
+        referenced_styles = []
+        inherited_styles = []
+        region_styles = []
+        if self.style is not None:
+            # Styles cascade
+            for style_id in self.style:
+                style = dataset['styles_by_id'].get(style_id, None)
+
+                if style is None:
+                    raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(style=style))
+
+                for style_binding in style.ordered_styles(dataset=dataset):
+                    if style_binding not in referenced_styles:
+                        referenced_styles.append(style_binding)
+            # Push this validated set onto the stack for children to use
+
+        region = dataset.get('region', None)
+        if region is not None:
+            region_styles.extend(region.validated_styles)
+
+        for style_list in dataset['styles_stack']:
+            # Traverse all the styles encountered at our parent elements
+            for inh_style in style_list:
+                if inh_style not in referenced_styles and inh_style not in inherited_styles:
+                    inherited_styles.append(inh_style)
+
+        self._referenced_styles = referenced_styles
+        self._validated_styles = referenced_styles + inherited_styles + region_styles
+
+    def _semantic_push_styles(self, dataset):
+        dataset['styles_stack'].append(self._referenced_styles)
+
+    def _semantic_pop_styles(self, dataset):
+        dataset['styles_stack'].pop()
+
+    @property
+    def validated_styles(self):
+        if self._validated_styles is None:
+            raise SemanticValidationError(ERR_SEMANTIC_VALIDATION_EXPECTED)
+        return self._validated_styles
+
+
+class RegionedElementMixin(object):
+    """
+    Makes sure we always know where we are. Detects double region assignment which is a warning.
+    """
+
+    def _semantic_set_region(self, dataset):
+        if self.region is not None:
+
+            region = dataset.setdefault('regions_by_id', {}).get(self.region, None)
+
+            if region is None:
+                raise SemanticValidationError(ERR_SEMANTIC_REGION_MISSING.format(
+                    region=self.region
+                ))
+
+            dataset['region'] = self
+
+    def _semantic_unset_region(self, dataset):
+        if self.region is not None:
+            dataset['region'] = None
