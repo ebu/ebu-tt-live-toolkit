@@ -27,11 +27,27 @@ def main():
             ),
             bindings.styling(
                 bindings.style_type(
-                    id='ID001',
+                    id='style1',
+                    fontSize='12px'
+                ),
+                bindings.style_type(
+                    id='style2',
+                    fontSize='15px'
+                ),
+                bindings.style_type(
+                    id='style3',
+                    color='red',
                     fontSize='12px'
                 )
             ),
-            bindings.layout()
+            bindings.layout(
+                bindings.region_type(
+                    id='region1',
+                    origin='200px 450px',
+                    extent='300px 150px',
+                    style=['style3']
+                )
+            )
         ),
         body=BIND(
             bindings.div_type(
@@ -47,10 +63,12 @@ def main():
                     begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
                     end=datatypes.LimitedClockTimingType(timedelta(seconds=3.42)),
                 ),
-                style=['ID001']
+                style=['style1'],
+                region='region1'
             ),
             begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
-            dur=datatypes.LimitedClockTimingType(timedelta(seconds=5))
+            dur=datatypes.LimitedClockTimingType(timedelta(seconds=5)),
+            style=['style2']
         )
     )
 
@@ -63,3 +81,4 @@ def main():
     )
 
     log.info('XML output printed')
+    log.info('p applicable styles are as follows: {}'.format(document.binding.body.div[0].p[0].validated_styles))

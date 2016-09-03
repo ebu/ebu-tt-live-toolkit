@@ -172,6 +172,9 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         dataset['timing_end_limit'] = None
         dataset['timing_begin_limit'] = None
         dataset['tt_element'] = self
+        dataset['regions_by_id'] = {}
+        dataset['styles_by_id'] = {}
+        dataset['styles_stack'] = []
         if self.timeBase == 'smpte':
             self.__semantic_test_smpte_attrs_present()
         else:
@@ -251,7 +254,6 @@ raw.div_type._SetSupersedingClass(div_type)
 
 
 class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
-    # TODO add styling when xsd is merged
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
@@ -262,12 +264,12 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        # self._semantic_collect_applicable_styles(dataset=dataset)
-        # self._semantic_push_styles(dataset=dataset)
+        self._semantic_collect_applicable_styles(dataset=dataset)
+        self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
-        # self._semantic_pop_styles(dataset=dataset)
+        self._semantic_pop_styles(dataset=dataset)
 
 raw.body_type._SetSupersedingClass(body_type)
 
@@ -278,6 +280,12 @@ class style_type(SizingValidationMixin, SemanticValidationMixin, raw.style):
     _styling_lock = None
     # ordered styles cached
     _ordered_styles = None
+
+    def __repr__(self):
+        return u'<style ID: {id} at {addr}>'.format(
+            id=self.id,
+            addr=hex(id(self))
+        )
 
     def ordered_styles(self, dataset):
         """
@@ -328,8 +336,7 @@ raw.style._SetSupersedingClass(style_type)
 class styling(SemanticValidationMixin, raw.styling):
 
     def _semantic_before_traversal(self, dataset, element_content=None):
-        # Initialize styling register
-        dataset['styles_by_id'] = {}
+        pass
 
 
 raw.styling._SetSupersedingClass(styling)
@@ -341,7 +348,7 @@ class region_type(StyledElementMixin, SizingValidationMixin, SemanticValidationM
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
         # Add itself to the dataset
-        dataset.setdefault('regions_by_id', {})[self.id] = self
+        dataset['regions_by_id'][self.id] = self
         self._semantic_collect_applicable_styles(dataset=dataset)
 
 

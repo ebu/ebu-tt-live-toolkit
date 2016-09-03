@@ -485,7 +485,6 @@ class StyledElementMixin(object):
     _validated_styles = None
 
     def _semantic_collect_applicable_styles(self, dataset):
-        dataset.setdefault('styles_stack', [])
         referenced_styles = []
         inherited_styles = []
         region_styles = []
@@ -495,22 +494,25 @@ class StyledElementMixin(object):
                 style = dataset['styles_by_id'].get(style_id, None)
 
                 if style is None:
-                    raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(style=style))
+                    raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(style=style_id))
 
                 for style_binding in style.ordered_styles(dataset=dataset):
                     if style_binding not in referenced_styles:
                         referenced_styles.append(style_binding)
             # Push this validated set onto the stack for children to use
 
-        region = dataset.get('region', None)
-        if region is not None:
-            region_styles.extend(region.validated_styles)
-
         for style_list in dataset['styles_stack']:
             # Traverse all the styles encountered at our parent elements
             for inh_style in style_list:
                 if inh_style not in referenced_styles and inh_style not in inherited_styles:
                     inherited_styles.append(inh_style)
+
+        region = dataset.get('region', None)
+        if region is not None:
+            # At last apply any region styles we may found
+            for region_style in region.validated_styles:
+                if region_style not in referenced_styles and region_style not in inherited_styles:
+                    region_styles.append(region_style)
 
         self._referenced_styles = referenced_styles
         self._validated_styles = referenced_styles + inherited_styles + region_styles
@@ -536,14 +538,14 @@ class RegionedElementMixin(object):
     def _semantic_set_region(self, dataset):
         if self.region is not None:
 
-            region = dataset.setdefault('regions_by_id', {}).get(self.region, None)
+            region = dataset['regions_by_id'].get(self.region, None)
 
             if region is None:
                 raise SemanticValidationError(ERR_SEMANTIC_REGION_MISSING.format(
                     region=self.region
                 ))
 
-            dataset['region'] = self
+            dataset['region'] = region
 
     def _semantic_unset_region(self, dataset):
         if self.region is not None:
