@@ -290,6 +290,9 @@ class EBUTT3Document(SubtitleDocument):
         if element.computed_end_time is not None:
             self.timeline.add(TimingEventEnd(element=element))
 
+    def get_element_by_id(self, elem_id, elem_type=None):
+        return self.binding.get_element_by_id(elem_id=elem_id, elem_type=elem_type)
+
     def lookup_element_on_timeline(self, element):
         return None
 

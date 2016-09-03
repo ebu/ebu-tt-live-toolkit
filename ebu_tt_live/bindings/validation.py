@@ -7,7 +7,7 @@ from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complex
     ElementContent
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
     DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_REGION_MISSING, ERR_SEMANTIC_STYLE_MISSING, \
-    ERR_SEMANTIC_VALIDATION_EXPECTED
+    ERR_SEMANTIC_VALIDATION_EXPECTED, ERR_SEMANTIC_ID_UNIQUENESS
 from ebu_tt_live.errors import SemanticValidationError, LogicError
 from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
@@ -70,7 +70,6 @@ class SemanticValidationMixin(object):
         """
         result = [attr for attr in attr_names if getattr(self, attr) is not None]
         return result
-
 
 
 class SemanticDocumentMixin(SemanticValidationMixin):
@@ -484,21 +483,21 @@ class StyledElementMixin(object):
     _referenced_styles = None
     _validated_styles = None
 
-    def _semantic_collect_applicable_styles(self, dataset):
+    def _semantic_collect_applicable_styles(self, dataset, style_type):
         referenced_styles = []
         inherited_styles = []
         region_styles = []
         if self.style is not None:
             # Styles cascade
             for style_id in self.style:
-                style = dataset['styles_by_id'].get(style_id, None)
-
-                if style is None:
+                try:
+                    style = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
+                    for style_binding in style.ordered_styles(dataset=dataset):
+                        if style_binding not in referenced_styles:
+                            referenced_styles.append(style_binding)
+                except LookupError:
                     raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(style=style_id))
 
-                for style_binding in style.ordered_styles(dataset=dataset):
-                    if style_binding not in referenced_styles:
-                        referenced_styles.append(style_binding)
             # Push this validated set onto the stack for children to use
 
         for style_list in dataset['styles_stack']:
@@ -535,18 +534,33 @@ class RegionedElementMixin(object):
     Makes sure we always know where we are. Detects double region assignment which is a warning.
     """
 
-    def _semantic_set_region(self, dataset):
+    def _semantic_set_region(self, dataset, region_type):
         if self.region is not None:
-
-            region = dataset['regions_by_id'].get(self.region, None)
-
-            if region is None:
+            try:
+                region = dataset['tt_element'].get_element_by_id(self.region, region_type)
+                dataset['region'] = region
+            except LookupError:
                 raise SemanticValidationError(ERR_SEMANTIC_REGION_MISSING.format(
                     region=self.region
                 ))
 
-            dataset['region'] = region
-
     def _semantic_unset_region(self, dataset):
         if self.region is not None:
             dataset['region'] = None
+
+
+class IDMixin(object):
+    """
+    Making sure the IDs are collected and maintained appropriately
+    """
+
+    def _semantic_register_id(self, dataset):
+        ebid = dataset['elements_by_id']
+        if self.id is not None:
+            if self.id in ebid:
+                raise SemanticValidationError(
+                    ERR_SEMANTIC_ID_UNIQUENESS.format(
+                        id=self.id
+                    )
+                )
+            ebid[self.id] = self
