@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><tt:tt xmlns:bbctt="http://www.bbc.co.uk/ns/bbctt" xmlns:ebuttdt="urn:ebu:tt:datatypes" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:ebutts="urn:ebu:tt:style" xmlns:ericssontt="http://www.ericcson.co.uk/ns/ericcsontt" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttm="http://www.w3.org/ns/ttml#metadata" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ebuttp:authorsGroupControlToken="2" ebuttp:authorsGroupIdentifier="prerna_b" ebuttp:referenceClockIdentifier="bst" ebuttp:sequenceIdentifier="192.168.56.99 IBC EBUTT3" ebuttp:sequenceNumber="442" ttp:cellResolution="40 24" ttp:clockMode="local" ttp:frameRate="25" ttp:frameRateMultiplier="1 1" ttp:timeBase="clock" xml:lang="en-GB">
+	   
+	  <tt:head>
+		<tt:metadata>
+			<ebuttm:documentMetadata>
+				<ebuttm:documentEbuttVersion>v1.0</ebuttm:documentEbuttVersion>
+				<ebuttm:documentOriginatingSystem>Subito 3.12.IBC2016</ebuttm:documentOriginatingSystem>
+				<ebuttm:documentCopyright>BBC</ebuttm:documentCopyright>
+                <ebuttm:documentReadingSpeed>300</ebuttm:documentReadingSpeed>
+                <ebuttm:documentTargetAspectRatio>4:3</ebuttm:documentTargetAspectRatio>
+                <ebuttm:documentIntendedTargetFormat>WSTTeletextSubtitles</ebuttm:documentIntendedTargetFormat>
+                <ebuttm:documentOriginalProgrammeTitle>IBC Test Programme</ebuttm:documentOriginalProgrammeTitle>
+                <ebuttm:documentOriginalEpisodeTitle>IBC Test Programme</ebuttm:documentOriginalEpisodeTitle>
+                <ebuttm:documentCreationDate>2016-09-05</ebuttm:documentCreationDate>
+                <ebuttm:documentRevisionNumber>0</ebuttm:documentRevisionNumber>
+                <ebuttm:documentMaximumNumberOfDisplayableCharacterInAnyRow>37</ebuttm:documentMaximumNumberOfDisplayableCharacterInAnyRow>
+                <ebuttm:documentCountryOfOrigin>UK</ebuttm:documentCountryOfOrigin>
+                <ebuttm:documentPublisher>Ericsson and Redbee</ebuttm:documentPublisher>
+                <ebuttm:documentEditorsName>demouser</ebuttm:documentEditorsName>
+				<ebuttm:originalSourceServiceIdentifier/>
+                <ebuttm:intendedDestinationServiceIdentifier/>
+	
+			</ebuttm:documentMetadata>
+
+			<bbctt:metadata>
+				<bbctt:schemaVersion>v1.0</bbctt:schemaVersion>
+				<bbctt:timecodeType>timeOfDay</bbctt:timecodeType>
+				<bbctt:programmeId>BBC1#192.168.56.99_IBC_EBUTT3#442#20160905#13-08-18#EbuTT3#source</bbctt:programmeId>
+				<bbctt:otherId type="scheduleIdentifier">IBC Test Programme#2016-09-5T07:00:00Z#BBC1</bbctt:otherId>
+				<bbctt:recordedLiveService finish="2016-09-5T08:00:00Z" start="2016-09-5T07:00:00Z">BBC1</bbctt:recordedLiveService>
+			</bbctt:metadata>
+
+			<ericssontt:metadata>
+				<ericssontt:div type="metadataTag">
+					<ericssontt:systemInfo type="metadataTag">Subito VX	</ericssontt:systemInfo>
+					<ericssontt:event begin="" editor="" id="" macroName="" tagComment="l" tagText="" type="metadataTagEvent"/>
+				</ericssontt:div>
+			</ericssontt:metadata>
+		</tt:metadata>
+
+		<tt:styling>
+			<tt:style ebutts:linePadding="1c" tts:direction="ltr" tts:lineHeight="2c" tts:unicodeBidi="normal" xml:id="sDefaultSubtitleStyle"/>
+			<tt:style tts:fontSize="1c 2c" tts:fontStyle="normal" tts:fontWeight="normal" tts:textDecoration="none" xml:id="sDefaultSpanStyle"/>
+		<tt:style style="sDefaultSubtitleStyle" tts:textAlign="start" xml:id="S1"/>
+<tt:style style="sDefaultSpanStyle" tts:backgroundColor="black" tts:color="yellow" xml:id="S2"/>
+</tt:styling>
+		
+		<tt:layout>
+			
+		<tt:region tts:displayAlign="before" tts:extent="80% 7%" tts:origin="0c 20c" tts:writingMode="lrtb" xml:id="R1"/>
+</tt:layout>
+
+	</tt:head>
+
+	
+<tt:body dur="5s" ttm:role="caption">
+<tt:div>
+<tt:metadata>
+<ebuttm:facet expresses="has">Subtitle_Source_Facet is of type CUE</ebuttm:facet>
+</tt:metadata>
+<tt:p xml:id="p0" region="R1" style="S1">
+<tt:span begin="13:08:18.44" end="13:08:22.04" style="S2">document. And I can change it from</tt:span>
+<tt:br/>
+<tt:span begin="13:08:22.04" end="13:08:21.44" style="S2">top to</tt:span>
+</tt:p>
+</tt:div>
+</tt:body>
+</tt:tt>
