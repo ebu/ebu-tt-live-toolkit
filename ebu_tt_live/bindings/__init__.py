@@ -70,6 +70,30 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
     }
     _elements_by_id = None
 
+    def __copy__(self):
+        # 'tt' here is not a mistake. Keep in mind that
+        # a root element is constructed not just a tt_type instance.
+        copied_tt = tt_type(
+            lang=self.lang,
+            extent=self.extent,
+            timeBase=self.timeBase,
+            frameRate=self.frameRate,
+            frameRateMultiplier=self.frameRateMultiplier,
+            markerMode=self.markerMode,
+            dropMode=self.dropMode,
+            clockMode=self.clockMode,
+            cellResolution=self.cellResolution,
+            sequenceIdentifier=self.sequenceIdentifier,
+            sequenceNumber=self.sequenceNumber,
+            authoringDelay=self.authoringDelay,
+            authorsGroupIdentifier=self.authorsGroupIdentifier,
+            authorsGroupControlToken=self.authorsGroupControlToken,
+            authorsGroupControlRequest=self.authorsGroupControlRequest,
+            referenceClockIdentifier=self.referenceClockIdentifier,
+            _strict_keywords=False
+        )
+        return copied_tt
+
     @classmethod
     def __check_bds(cls, bds):
         if bds:
@@ -94,6 +118,10 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             encoding=encoding,
             indent='  '
         )
+
+    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+        # This one does not have another parent to link with but it can make itself an element
+        self._setElement(raw.tt)
 
     def __semantic_test_smpte_attrs_present(self):
         smpte_attrs = [
@@ -208,6 +236,24 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
 raw.tt_type._SetSupersedingClass(tt_type)
 
 
+# Head classes
+# ============
+
+
+class head_type(SemanticValidationMixin, raw.head_type):
+
+    def __copy__(self):
+        copied_head = head_type()
+        return copied_head
+
+
+raw.head_type._SetSupersedingClass(head_type)
+
+
+# Body classes
+# ============
+
+
 class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidationMixin,
              SemanticValidationMixin, raw.p_type):
 
@@ -215,6 +261,21 @@ class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidation
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
+
+    def __copy__(self):
+        copied_p = p_type(
+            id=self.id,
+            space=self.space,
+            lang=self.lang,
+            region=self.region,
+            style=self.style,
+            begin=self.begin,
+            end=self.end,
+            agent=self.agent,
+            role=self.role,
+            _strict_keywords=False
+        )
+        return copied_p
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_register_id(dataset=dataset)
@@ -240,6 +301,20 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
+    def __copy__(self):
+        copied_span = span_type(
+            id=self.id,
+            style=self.style,
+            begin=self.begin,
+            end=self.end,
+            space=self.space,
+            lang=self.lang,
+            agent=self.agent,
+            role=self.role,
+            _strict_keywords=False
+        )
+        return copied_span
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
@@ -255,6 +330,15 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
 raw.span_type._SetSupersedingClass(span_type)
 
 
+class br_type(SemanticValidationMixin, raw.br_type):
+
+    def __copy__(self):
+        return br_type()
+
+
+raw.br_type._SetSupersedingClass(br_type)
+
+
 class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):
 
@@ -262,6 +346,19 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
+
+    def __copy__(self):
+        copied_div = div_type(
+            id=self.id,
+            region=self.region,
+            style=self.style and list(self.style),
+            agent=self.agent,
+            role=self.role,
+            begin=self.begin,
+            end=self.end,
+            _strict_keywords=False
+        )
+        return copied_div
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_register_id(dataset=dataset)
@@ -286,6 +383,18 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute
     }
 
+    def __copy__(self):
+        copied_body = body_type(
+            agent = self.agent,
+            role = self.role,
+            begin=self.begin,
+            dur=self.dur,
+            end=self.end,
+            style=self.style and list(self.style),
+            _strict_keywords=False
+        )
+        return copied_body
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
@@ -295,6 +404,7 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
     def _semantic_after_traversal(self, dataset, element_content=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
+
 
 raw.body_type._SetSupersedingClass(body_type)
 
@@ -311,6 +421,27 @@ class style_type(IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.st
             id=self.id,
             addr=hex(id(self))
         )
+
+    def __copy__(self):
+        copied_style = style_type(
+            id=self.id,
+            style=self.style and list(self.style),  # list type needs to be cloned appropriately
+            direction=self.direction,
+            fontFamily=self.fontFamily,
+            fontSize=self.fontSize,
+            lineHeight=self.lineHeight,
+            textAlign=self.textAlign,
+            color=self.color,
+            backgroundColor=self.backgroundColor,
+            fontStyle=self.fontStyle,
+            fontWeight=self.fontWeight,
+            textDecoration=self.textDecoration,
+            unicodeBidi=self.unicodeBidi,
+            wrapOption=self.wrapOption,
+            padding=self.padding,
+            _strict_keywords=False
+        )
+        return copied_style
 
     def ordered_styles(self, dataset):
         """
@@ -361,6 +492,10 @@ raw.style._SetSupersedingClass(style_type)
 
 class styling(SemanticValidationMixin, raw.styling):
 
+    def __copy__(self):
+        copied_styling = styling()
+        return copied_styling
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         pass
 
@@ -370,6 +505,21 @@ raw.styling._SetSupersedingClass(styling)
 
 class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
 
+    def __copy__(self):
+        copied_region = region_type(
+            id=self.id,
+            origin=self.origin,
+            extent=self.extent,
+            style=self.style and list(self.style),
+            displayAlign=self.displayAlign,
+            padding=self.padding,
+            writingMode=self.writingMode,
+            showBackground=self.showBackground,
+            overflow=self.overflow
+        )
+
+        return copied_region
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
@@ -378,6 +528,13 @@ class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticVa
 
 
 raw.region._SetSupersedingClass(region_type)
+
+
+class layout(SemanticValidationMixin, raw.layout):
+
+    def __copy__(self):
+        copied_layout = layout()
+        return copied_layout
 
 
 # EBU TT D classes

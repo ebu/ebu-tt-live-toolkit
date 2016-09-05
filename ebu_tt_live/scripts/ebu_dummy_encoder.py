@@ -11,7 +11,7 @@ log = logging.getLogger('ebu_dummy_encoder')
 
 
 def main():
-    create_loggers()
+    create_loggers(logging.DEBUG)
     log.info('Dummy XML Encoder')
 
     tt = bindings.tt(
@@ -49,7 +49,7 @@ def main():
                 )
             )
         ),
-        body=BIND(
+        body=bindings.body_type(
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(

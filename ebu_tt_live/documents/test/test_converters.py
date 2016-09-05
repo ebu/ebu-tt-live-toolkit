@@ -1,6 +1,5 @@
 
 from unittest import TestCase
-from pytest import mark
 from datetime import timedelta
 from ebu_tt_live.documents.converters import ebutt3_to_ebuttd
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
@@ -10,7 +9,7 @@ from ebu_tt_live.bindings import div_type, p_type, span_type, br_type, ebuttdt
 class TestEBUTT3ToEBUTTDConverter(TestCase):
 
     def test_simple(self):
-
+        self.skipTest('Too premature stage')
         div = div_type(
             p_type(
                 span_type(

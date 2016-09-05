@@ -11,8 +11,8 @@ from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTI
 from ebu_tt_live.errors import SemanticValidationError, LogicError
 from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
-from sortedcontainers import SortedSet
 import logging
+import re
 
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
@@ -53,6 +53,34 @@ class SemanticValidationMixin(object):
         """
         pass
 
+    def _do_link_with_parent(self, dataset, element_content):
+        celem = dataset['instance_mapping'][self]
+        # Link with parent
+        cparent = dataset['instance_mapping'][self.parent_binding]
+
+        if element_content.elementDeclaration.isPlural():
+            cparent.append(celem)
+        else:
+            setattr(cparent, element_content.elementDeclaration.name().localName(), celem)
+
+    def _semantic_before_subtree_copy(self, dataset, element_content=None):
+        """
+        This is helpful hook function at the copying operation
+        :param dataset:
+        :param element_content:
+        :return:
+        """
+        pass
+
+    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+        """
+        This is helpful hook function at the copying operation
+        :param dataset:
+        :param element_content:
+        :return:
+        """
+        self._do_link_with_parent(dataset=dataset, element_content=element_content)
+
     def _semantic_attributes_missing(self, attr_names):
         """
         Making sure that attributes specified in attr_names have no value defined on the binding.
@@ -71,6 +99,23 @@ class SemanticValidationMixin(object):
         result = [attr for attr in attr_names if getattr(self, attr) is not None]
         return result
 
+    # Yes I know this does not get inherited but for the sake of documentation and 'interface' keep it here.
+    def __copy__(self):
+        """
+        Creates an independent copy of the element with its attributes but without its children.
+        The omission of the children is useful when it comes to segmenting.
+        :return:
+        """
+        raise NotImplementedError()
+
+    def merge(self, other_elem):
+        """
+        Try and merge the contents of 2 elements of the same type.
+        :param other_elem:
+        :return:
+        """
+        raise NotImplementedError()
+
 
 class SemanticDocumentMixin(SemanticValidationMixin):
 
@@ -79,6 +124,14 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.
         """
         pass
+
+    def _semantic_wire_parent(self, children, parent_binding):
+        # Extending pyxb bindings with parent property
+        for child in children:
+            if isinstance(child, ElementContent):
+                child.value.parent_binding = parent_binding
+        return children
+
 
     def _semantic_after_validation(self, **extra_kwargs):
         """
@@ -99,8 +152,8 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Call preprocess hooks for tt element
         self._semantic_before_traversal(dataset=semantic_dataset)
-
-        to_visit.extend(reversed(self._validatedChildren()))
+        to_visit.extend(list(reversed(self._validatedChildren())))
+        self._semantic_wire_parent(to_visit, self)
 
         while to_visit:
             content = to_visit.pop()
@@ -123,12 +176,9 @@ class SemanticDocumentMixin(SemanticValidationMixin):
                     to_visit.append(content)
 
                 if hasattr(content.value, '_validatedChildren'):
-                    ordered_children = reversed(content.value._validatedChildren())
-                    # Extending pyxb bindings with parent property
-                    for child in ordered_children:
-                        if isinstance(child, ElementContent):
-                            child.value.parent_binding = content.value
-                        to_visit.append(child)
+                    ordered_children = list(reversed(content.value._validatedChildren()))
+                    self._semantic_wire_parent(ordered_children, content.value)
+                    to_visit.extend(ordered_children)
 
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
@@ -482,6 +532,7 @@ class StyledElementMixin(object):
     """
     _referenced_styles = None
     _validated_styles = None
+    _inherited_region = None
 
     def _semantic_collect_applicable_styles(self, dataset, style_type):
         referenced_styles = []
@@ -507,6 +558,8 @@ class StyledElementMixin(object):
                     inherited_styles.append(inh_style)
 
         region = dataset.get('region', None)
+        self._inherited_region = region
+
         if region is not None:
             # At last apply any region styles we may found
             for region_style in region.validated_styles:
@@ -527,6 +580,10 @@ class StyledElementMixin(object):
         if self._validated_styles is None:
             raise SemanticValidationError(ERR_SEMANTIC_VALIDATION_EXPECTED)
         return self._validated_styles
+
+    @property
+    def inherited_region(self):
+        return self._inherited_region
 
 
 class RegionedElementMixin(object):
@@ -553,6 +610,16 @@ class IDMixin(object):
     """
     Making sure the IDs are collected and maintained appropriately
     """
+
+    _re_ebu_id_deconflict = re.compile('SEQ([0-9]+)\.(.*)')
+    _tp_ebu_id_deconflict = 'SEQ{sequence_number}.{original_id}'
+
+    def deconflict_id(self):
+        if self.id is not None:
+            self.id = self._tp_ebu_id_deconflict.format(
+                sequence_identifier=self._document.sequence_identifier,
+                original_id=self.id
+            )
 
     def _semantic_register_id(self, dataset):
         ebid = dataset['elements_by_id']
