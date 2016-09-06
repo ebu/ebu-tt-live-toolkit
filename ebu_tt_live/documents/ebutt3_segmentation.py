@@ -56,11 +56,15 @@ class EBUTT3Segmenter(object):
 
     def _do_deconflict_id(self, element):
         if isinstance(element, IDMixin):
-            element.deconflict_id()
+            element.deconflict_id(self._document.sequence_number)
 
 
     def _do_copy(self, element, dataset):
-        celem = copy.copy(element)
+
+        if hasattr(element, '_semantic_copy'):
+            celem = element._semantic_copy(dataset=dataset)
+        else:
+            celem = copy.copy(element)
 
         if self.deconflict_ids:
             self._do_deconflict_id(celem)
@@ -77,7 +81,10 @@ class EBUTT3Segmenter(object):
 
         segment = self._do_copy(element=self.document.binding, dataset=dataset)
 
-        to_visit.extend(list(self._document.binding.orderedContent()))
+        ordered_content = list(reversed(list(self._document.binding.orderedContent())))
+        log.debug(ordered_content)
+        to_visit.extend(ordered_content)
+        log.debug(to_visit)
 
         while to_visit:
             content = to_visit.pop()
@@ -105,7 +112,7 @@ class EBUTT3Segmenter(object):
                     to_visit.append(content)
 
                 if hasattr(content.value, 'orderedContent'):
-                    to_visit.extend(list(content.value.orderedContent()))
+                    to_visit.extend(list(reversed(list(content.value.orderedContent()))))
 
         self._segment = segment
 
@@ -123,6 +130,8 @@ class EBUTT3Segmenter(object):
                 affected_elements.append(item.inherited_region)
 
         dataset = {
+            'segment_begin': self.begin,
+            'segment_end': self.end,
             'affected_elements': affected_elements,
             'instance_mapping': {},
             'capture_counter': 0,

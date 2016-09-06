@@ -12,6 +12,7 @@ from ebu_tt_live.errors import SemanticValidationError, LogicError
 from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
 import logging
+import copy
 import re
 
 log = logging.getLogger(__name__)
@@ -99,6 +100,15 @@ class SemanticValidationMixin(object):
         result = [attr for attr in attr_names if getattr(self, attr) is not None]
         return result
 
+    def _semantic_copy(self, dataset):
+        """
+        This copy function is more powerful as it accepts an extra copying context where a smarter copy can be made.
+        It can be customised by classes. The default is the shallow copy.
+        :param dataset:
+        :return: cloned element
+        """
+        return copy.copy(self)
+
     # Yes I know this does not get inherited but for the sake of documentation and 'interface' keep it here.
     def __copy__(self):
         """
@@ -115,6 +125,31 @@ class SemanticValidationMixin(object):
         :return:
         """
         raise NotImplementedError()
+
+    def _find_deconflicted_elem_by_id(self, elem_id, dataset):
+        old_elem = dataset['tt_element'].get_element_by_id(elem_id)
+        new_elem = dataset['instance_mapping'][old_elem]
+        return new_elem
+
+    def _semantic_deconflicted_ids(self, attr_name, dataset):
+        """
+        Looks up its referenced styles/region in the conversion mapping and returns the new idref string
+        :param datset:
+        :return:
+        """
+        old_elem_ids = getattr(self, attr_name)
+        if old_elem_ids is None:
+            return None
+
+        if isinstance(old_elem_ids, basestring):
+            new_elem = self._find_deconflicted_elem_by_id(elem_id=old_elem_ids, dataset=dataset)
+            return new_elem.id
+        else:
+            new_elem_ids = []
+            for elem_id in old_elem_ids:
+                new_elem = self._find_deconflicted_elem_by_id(elem_id=elem_id, dataset=dataset)
+                new_elem_ids.append(new_elem.id)
+            return new_elem_ids
 
 
 class SemanticDocumentMixin(SemanticValidationMixin):
@@ -152,7 +187,8 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Call preprocess hooks for tt element
         self._semantic_before_traversal(dataset=semantic_dataset)
-        to_visit.extend(list(reversed(self._validatedChildren())))
+        to_visit.extend(reversed(list(self._validatedChildren())))
+        log.info([item.value  for item in to_visit])
         self._semantic_wire_parent(to_visit, self)
 
         while to_visit:
@@ -176,9 +212,11 @@ class SemanticDocumentMixin(SemanticValidationMixin):
                     to_visit.append(content)
 
                 if hasattr(content.value, '_validatedChildren'):
-                    ordered_children = list(reversed(content.value._validatedChildren()))
+                    ordered_children = list(reversed(list(content.value._validatedChildren())))
+                    log.info('children: {}'.format([item.value for item in ordered_children]))
                     self._semantic_wire_parent(ordered_children, content.value)
                     to_visit.extend(ordered_children)
+                    log.info('to_visit: {}'.format([item.value for item in to_visit]))
 
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
@@ -614,10 +652,10 @@ class IDMixin(object):
     _re_ebu_id_deconflict = re.compile('SEQ([0-9]+)\.(.*)')
     _tp_ebu_id_deconflict = 'SEQ{sequence_number}.{original_id}'
 
-    def deconflict_id(self):
+    def deconflict_id(self, seq_num):
         if self.id is not None:
             self.id = self._tp_ebu_id_deconflict.format(
-                sequence_identifier=self._document.sequence_identifier,
+                sequence_number=seq_num,
                 original_id=self.id
             )
 

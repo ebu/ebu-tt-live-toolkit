@@ -71,8 +71,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
     _elements_by_id = None
 
     def __copy__(self):
-        # 'tt' here is not a mistake. Keep in mind that
-        # a root element is constructed not just a tt_type instance.
         copied_tt = tt_type(
             lang=self.lang,
             extent=self.extent,
@@ -262,13 +260,13 @@ class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidation
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
-    def __copy__(self):
+    def _semantic_copy(self, dataset):
         copied_p = p_type(
             id=self.id,
             space=self.space,
             lang=self.lang,
-            region=self.region,
-            style=self.style,
+            region=self._semantic_deconflicted_ids(attr_name='region', dataset=dataset),
+            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
             begin=self.begin,
             end=self.end,
             agent=self.agent,
@@ -301,10 +299,10 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
-    def __copy__(self):
+    def _semantic_copy(self, dataset):
         copied_span = span_type(
             id=self.id,
-            style=self.style,
+            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
             begin=self.begin,
             end=self.end,
             space=self.space,
@@ -327,6 +325,7 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
+
 raw.span_type._SetSupersedingClass(span_type)
 
 
@@ -347,11 +346,11 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
     }
 
-    def __copy__(self):
+    def _semantic_copy(self, dataset):
         copied_div = div_type(
             id=self.id,
-            region=self.region,
-            style=self.style and list(self.style),
+            region=self._semantic_deconflicted_ids(attr_name='region', dataset=dataset),
+            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
             agent=self.agent,
             role=self.role,
             begin=self.begin,
@@ -372,6 +371,7 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
 
+
 raw.div_type._SetSupersedingClass(div_type)
 
 
@@ -383,14 +383,14 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
         (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute
     }
 
-    def __copy__(self):
+    def _semantic_copy(self, dataset):
         copied_body = body_type(
             agent = self.agent,
             role = self.role,
             begin=self.begin,
             dur=self.dur,
             end=self.end,
-            style=self.style and list(self.style),
+            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
             _strict_keywords=False
         )
         return copied_body
@@ -405,11 +405,13 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
+    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+        self._do_link_with_parent(dataset=dataset, element_content=element_content)
 
 raw.body_type._SetSupersedingClass(body_type)
 
 
-class style_type(IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.style):
+class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.style):
 
     # This helps us detecting infinite loops.
     _styling_lock = None
@@ -422,10 +424,10 @@ class style_type(IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.st
             addr=hex(id(self))
         )
 
-    def __copy__(self):
+    def _semantic_copy(self, dataset):
         copied_style = style_type(
             id=self.id,
-            style=self.style and list(self.style),  # list type needs to be cloned appropriately
+            style=self.style,  # there is no ordering requirement in styling so too soon to deconflict here
             direction=self.direction,
             fontFamily=self.fontFamily,
             fontSize=self.fontSize,
@@ -442,6 +444,11 @@ class style_type(IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.st
             _strict_keywords=False
         )
         return copied_style
+
+    @property
+    def validated_styles(self):
+        # The style element itself is not meant to implement this.
+        raise NotImplementedError()
 
     def ordered_styles(self, dataset):
         """
@@ -505,12 +512,12 @@ raw.styling._SetSupersedingClass(styling)
 
 class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
 
-    def __copy__(self):
+    def _semantic_copy(self, dataset):
         copied_region = region_type(
             id=self.id,
             origin=self.origin,
             extent=self.extent,
-            style=self.style and list(self.style),
+            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
             displayAlign=self.displayAlign,
             padding=self.padding,
             writingMode=self.writingMode,
