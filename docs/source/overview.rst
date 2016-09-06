@@ -31,7 +31,7 @@ This is very similar to the Simple Producer. It also performs validation but it 
 
 User input forwarder
 --------------------
-This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` parameter like this: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file.   
+This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` argument: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file.   
 
 .. toctree::
     nodes_and_carriage_mechanisms
