@@ -19,8 +19,8 @@ Feature: Splicing documents for sequence
     Then the segment has <seq_id_seg>
     And the segment has sequenceNumber <seq_no_seg>
     And the segment has element <id_seg>
-    And the elements has begin time <begin_3>
-    And the elements has end time <end_3>
+    And the element has begin time <begin_3>
+    And the element has end time <end_3>
 
 
     Examples:
