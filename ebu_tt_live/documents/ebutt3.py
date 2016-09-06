@@ -56,6 +56,13 @@ class TimingEventBegin(TimingEvent):
     def __init__(self, element):
         super(TimingEventBegin, self).__init__(element=element, when=element.computed_begin_time)
 
+    def __repr__(self):
+        return '<{}({}): {}>'.format(
+            type(self),
+            self.when,
+            self.element
+        )
+
 
 # R17
 class TimingEventEnd(TimingEvent):
@@ -65,6 +72,12 @@ class TimingEventEnd(TimingEvent):
     def __init__(self, element):
         super(TimingEventEnd, self).__init__(element=element, when=element.computed_end_time)
 
+    def __repr__(self):
+        return '<{}({}): {}>'.format(
+            type(self),
+            self.when,
+            self.element
+        )
 
 class TimelineUtilMixin(object):
     """
@@ -80,6 +93,9 @@ class TimelineUtilMixin(object):
         if self._timeline is None:
             self._timeline = sortedlist.SortedListWithKey(key=lambda item: item.when)
         return self._timeline
+
+    def reset_timeline(self):
+        self._timeline = None
 
     def add_to_timeline(self, element):
         """
@@ -115,11 +131,14 @@ class TimelineUtilMixin(object):
 
         # Coming from the beginning of the timeline in any case
         for item in self.timeline.irange(maximum=end is not None and TimingEventEnd(end) or None):
+
             if isinstance(item, TimingEventBegin):
-                affected_elements.append(item.element)
+                if item.when != end:
+                    # Don't take 0 long elements
+                    affected_elements.append(item.element)
                 continue
             elif isinstance(item, TimingEventEnd):
-                if begin is not None and item.when < begin:
+                if begin is not None and item.when <= begin:
                     # Remove elements, which had ended before the specified range began.
                     affected_elements.remove(item.element)
         return affected_elements
@@ -282,6 +301,8 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         return self.resolved_begin_time >= self.resolved_end_time
 
     def validate(self):
+        # Reset timeline
+        self.reset_timeline()
         # This is assuming availability from the beginning of our time coordinate system.
         availability_time = self.availability_time or timedelta()
         # Run validation

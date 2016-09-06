@@ -53,3 +53,10 @@ class ExtentMissingError(Exception):
 
     def __str__(self):
         return ERR_DOCUMENT_EXTENT_MISSING.format(type=type(self._attribute), value=self._attribute)
+
+
+class OutsideSegmentError(Exception):
+    """
+    This exception is meant to be raised by the copying functionality to make the iterator know that a particular
+    subtree is not meant to be parsed.
+    """

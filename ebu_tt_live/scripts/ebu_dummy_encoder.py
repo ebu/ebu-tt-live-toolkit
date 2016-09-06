@@ -82,3 +82,8 @@ def main():
 
     log.info('XML output printed')
     log.info('p applicable styles are as follows: {}'.format(document.binding.body.div[0].p[0].validated_styles))
+
+    import time
+    time.sleep(0.2)
+    cdoc = document.extract_segment()
+    print cdoc.get_xml()

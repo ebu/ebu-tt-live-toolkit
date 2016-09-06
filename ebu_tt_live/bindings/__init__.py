@@ -13,12 +13,13 @@ from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
 from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, \
     BodyTimingValidationMixin, SizingValidationMixin, StyledElementMixin, RegionedElementMixin, IDMixin
-from ebu_tt_live.errors import SemanticValidationError
+from ebu_tt_live.errors import SemanticValidationError, OutsideSegmentError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, \
     ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES, ERR_SEMANTIC_STYLE_CIRCLE, ERR_SEMANTIC_STYLE_MISSING, \
     ERR_SEMANTIC_ELEMENT_BY_ID_MISSING, ERR_SEMANTIC_VALIDATION_EXPECTED
 from pyxb.exceptions_ import SimpleTypeValueError, ComplexTypeValidationError
 from pyxb.utils.domutils import BindingDOMSupport
+from pyxb.binding.basis import ElementContent
 from datetime import timedelta
 import threading
 
@@ -226,7 +227,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         if self._elements_by_id is None:
             raise SemanticValidationError(ERR_SEMANTIC_VALIDATION_EXPECTED)
         element = self._elements_by_id.get(elem_id, None)
-        if elem_type is not None and not isinstance(element, elem_type):
+        if element is None or elem_type is not None and not isinstance(element, elem_type):
             raise LookupError(ERR_SEMANTIC_ELEMENT_BY_ID_MISSING.format(id=elem_id))
         return element
 
@@ -289,6 +290,9 @@ class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidation
         self._semantic_unset_region(dataset=dataset)
         self._semantic_pop_styles(dataset=dataset)
 
+    def _semantic_before_copy(self, dataset, element_content=None):
+        self._assert_in_segment(dataset=dataset, element_content=element_content)
+
 raw.p_type._SetSupersedingClass(p_type)
 
 
@@ -325,6 +329,8 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
+    def _semantic_before_copy(self, dataset, element_content=None):
+        self._assert_in_segment(dataset=dataset, element_content=element_content)
 
 raw.span_type._SetSupersedingClass(span_type)
 
@@ -371,6 +377,9 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
 
+    def _semantic_before_copy(self, dataset, element_content=None):
+        self._assert_in_segment(dataset=dataset, element_content=element_content)
+
 
 raw.div_type._SetSupersedingClass(div_type)
 
@@ -405,8 +414,9 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
-    def _semantic_after_subtree_copy(self, dataset, element_content=None):
-        self._do_link_with_parent(dataset=dataset, element_content=element_content)
+    def _semantic_before_copy(self, dataset, element_content=None):
+        self._assert_in_segment(dataset=dataset, element_content=element_content)
+
 
 raw.body_type._SetSupersedingClass(body_type)
 
@@ -493,6 +503,10 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         self._styling_lock = threading.Lock()
         self._ordered_styles = None
 
+    def _semantic_before_copy(self, dataset, element_content=None):
+        if self not in dataset['affected_elements']:
+            raise OutsideSegmentError()
+
 
 raw.style._SetSupersedingClass(style_type)
 
@@ -503,8 +517,19 @@ class styling(SemanticValidationMixin, raw.styling):
         copied_styling = styling()
         return copied_styling
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
-        pass
+    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+        # The styles are not ordered by inheritance so they need an extra step here
+        # to get their style ID resolutions sorted
+        for style_elem in \
+                [
+                    item.value
+                    for item in self.orderedContent()
+                    if isinstance(item, ElementContent) and isinstance(item.value, style_type)
+                ]:
+            style_elem_styles = style_elem._semantic_deconflicted_ids(attr_name='style', dataset=dataset)
+            if style_elem_styles:
+                style_elem.style = style_elem_styles
+        self._do_link_with_parent(dataset=dataset, element_content=element_content)
 
 
 raw.styling._SetSupersedingClass(styling)

@@ -4,6 +4,8 @@ import logging
 import copy
 from pyxb.binding.basis import NonElementContent, ElementContent
 from ebu_tt_live.bindings.validation import SemanticValidationMixin, StyledElementMixin, IDMixin
+from ebu_tt_live.bindings import tt
+from ebu_tt_live.errors import OutsideSegmentError
 
 # Splicer and segmentation
 # ========================
@@ -89,30 +91,48 @@ class EBUTT3Segmenter(object):
         while to_visit:
             content = to_visit.pop()
 
-            if content in post_visited or isinstance(content, NonElementContent):
+            if content in post_visited:
                 # This means we visited the current element already.
                 continue
             elif content in pre_visited:
                 # This means we visited the current element's preprocessing and now postprocessing is in order
                 log.debug('post copy step: {}'.format(content.value))
-                # Call postprocess hooks of current element
-                content.value._semantic_after_subtree_copy(dataset=dataset, element_content=content)
-                if content.value not in dataset['affected_elements']:
-                    pass
+                if isinstance(content.value, SemanticValidationMixin):
+                    # Call postprocess hooks of current element
+                    content.value._semantic_after_subtree_copy(dataset=dataset, element_content=content)
+                elif isinstance(content, NonElementContent):
+                    parent = dataset['instance_mapping'][content.parent_binding]
+                    parent.append(copy.deepcopy(content.value))
+
                 post_visited.add(content)
             else:
                 # This means the current element has not been processed yet. Preprocessing is in order.
                 log.debug('pre copy step: {}'.format(content.value))
-                if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
-                    # Shallow copy element
-                    self._do_copy(content.value, dataset=dataset)
-                    # Call preprocess hooks of current element
-                    content.value._semantic_before_subtree_copy(dataset=dataset, element_content=content)
-                    pre_visited.add(content)
-                    to_visit.append(content)
+                if isinstance(content, ElementContent):
+                    if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
+                        # Shallow copy element
+                        try:
+                            # Call preprocess hooks of current element
+                            content.value._semantic_before_copy(dataset=dataset, element_content=content)
+                        except OutsideSegmentError:
+                            # Yay we don't need to process further
+                            continue
+                        # Shallow copy element
+                        self._do_copy(content.value, dataset=dataset)
+                        # Call preprocess hooks of current element's subtree
+                        content.value._semantic_before_subtree_copy(dataset=dataset, element_content=content)
+                    else:
+                        self._do_copy(content.value, dataset=dataset)
+
+                # In case of NonElementContent we do not need to copy just yet
+
+                pre_visited.add(content)
+                to_visit.append(content)
 
                 if hasattr(content.value, 'orderedContent'):
                     to_visit.extend(list(reversed(list(content.value.orderedContent()))))
+
+        segment._setElement(tt)
 
         self._segment = segment
 
@@ -123,11 +143,13 @@ class EBUTT3Segmenter(object):
         # Get the p and span elements in the range from the timeline
         affected_elements = self.document.lookup_range_on_timeline(begin=self.begin, end=self.end)
 
+        affected_elements = set(affected_elements)
+
         for item in [elem for elem in affected_elements if isinstance(elem, StyledElementMixin)]:
             # Styles and regions are meant to be preserved
-            affected_elements.extend(item.validated_styles)
+            affected_elements.update(item.validated_styles)
             if item.inherited_region is not None:
-                affected_elements.append(item.inherited_region)
+                affected_elements.add(item.inherited_region)
 
         dataset = {
             'segment_begin': self.begin,
@@ -143,5 +165,3 @@ class EBUTT3Segmenter(object):
         # Map instances to their converted versions because not everything has an id and there is no complete
         # equivalence check either
         self._instance_mapping = dataset.pop('instance_mapping')
-
-

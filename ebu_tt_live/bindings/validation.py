@@ -8,7 +8,7 @@ from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complex
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
     DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_REGION_MISSING, ERR_SEMANTIC_STYLE_MISSING, \
     ERR_SEMANTIC_VALIDATION_EXPECTED, ERR_SEMANTIC_ID_UNIQUENESS
-from ebu_tt_live.errors import SemanticValidationError, LogicError
+from ebu_tt_live.errors import SemanticValidationError, LogicError, OutsideSegmentError
 from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
 import logging
@@ -63,6 +63,15 @@ class SemanticValidationMixin(object):
             cparent.append(celem)
         else:
             setattr(cparent, element_content.elementDeclaration.name().localName(), celem)
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        """
+        Meant for checks before attempting to copy an element
+        :param dataset:
+        :param element_content:
+        :return:
+        """
+        pass
 
     def _semantic_before_subtree_copy(self, dataset, element_content=None):
         """
@@ -165,6 +174,9 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         for child in children:
             if isinstance(child, ElementContent):
                 child.value.parent_binding = parent_binding
+            elif isinstance(child, NonElementContent):
+                # In this case we must attach this to the container NonElementContainer directly
+                child.parent_binding = parent_binding
         return children
 
 
@@ -471,6 +483,26 @@ class TimingValidationMixin(object):
         # Register on timeline
         doc.add_to_timeline(self)
 
+    # This section covers the copying operations of timed containers.
+
+    def is_in_segment(self, begin=None, end=None):
+        if begin is not None:
+            if self.computed_end_time is not None and self.computed_end_time <= begin:
+                return False
+        if end is not None:
+            if self.computed_begin_time >= end:
+                return False
+        return True
+
+    def _assert_in_segment(self, dataset, element_content=None):
+        if not self.is_in_segment(
+            begin=dataset['segment_begin'],
+            end=dataset['segment_end']
+        ):
+            raise OutsideSegmentError()
+
+    def _semantic_copy_apply_leaf_timing(self, dataset, element_content=None):
+        pass
 
 class BodyTimingValidationMixin(TimingValidationMixin):
     """
