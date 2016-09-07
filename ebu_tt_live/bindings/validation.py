@@ -118,16 +118,7 @@ class SemanticValidationMixin(object):
         """
         return copy.copy(self)
 
-    # Yes I know this does not get inherited but for the sake of documentation and 'interface' keep it here.
-    def __copy__(self):
-        """
-        Creates an independent copy of the element with its attributes but without its children.
-        The omission of the children is useful when it comes to segmenting.
-        :return:
-        """
-        raise NotImplementedError()
-
-    def merge(self, other_elem):
+    def merge(self, other_elem, dataset):
         """
         Try and merge the contents of 2 elements of the same type.
         :param other_elem:

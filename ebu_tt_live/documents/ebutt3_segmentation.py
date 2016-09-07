@@ -60,7 +60,6 @@ class EBUTT3Segmenter(object):
         if isinstance(element, IDMixin):
             element.deconflict_id(self._document.sequence_number)
 
-
     def _do_copy(self, element, dataset):
 
         if hasattr(element, '_semantic_copy'):

@@ -19,9 +19,16 @@ from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, \
     ERR_SEMANTIC_ELEMENT_BY_ID_MISSING, ERR_SEMANTIC_VALIDATION_EXPECTED
 from pyxb.exceptions_ import SimpleTypeValueError, ComplexTypeValidationError
 from pyxb.utils.domutils import BindingDOMSupport
-from pyxb.binding.basis import ElementContent
+from pyxb.binding.basis import ElementContent, NonElementContent
 from datetime import timedelta
 import threading
+import copy
+import logging
+import time
+
+
+log = logging.getLogger(__name__)
+
 
 namespace_prefix_map = {
     'tt': raw.Namespace,
@@ -92,6 +99,29 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             _strict_keywords=False
         )
         return copied_tt
+
+    def merge(self, other, dataset):
+        # TODO: compatibility check, rules of merging TBD
+        merged_tt = tt_type(
+            lang=self.lang,
+            extent=self.extent,
+            timeBase=self.timeBase,
+            frameRate=self.frameRate,
+            frameRateMultiplier=self.frameRateMultiplier,
+            markerMode=self.markerMode,
+            dropMode=self.dropMode,
+            clockMode=self.clockMode,
+            cellResolution=self.cellResolution,
+            sequenceIdentifier=self.sequenceIdentifier,
+            sequenceNumber=self.sequenceNumber,
+            authoringDelay=self.authoringDelay,
+            authorsGroupIdentifier=self.authorsGroupIdentifier,
+            authorsGroupControlToken=self.authorsGroupControlToken,
+            authorsGroupControlRequest=self.authorsGroupControlRequest,
+            referenceClockIdentifier=self.referenceClockIdentifier,
+            _strict_keywords=False
+        )
+        return merged_tt
 
     @classmethod
     def __check_bds(cls, bds):
@@ -253,6 +283,10 @@ class head_type(SemanticValidationMixin, raw.head_type):
         copied_head = head_type()
         return copied_head
 
+    def merge(self, other_elem, dataset):
+        merged_head = head_type()
+        return merged_head
+
 
 raw.head_type._SetSupersedingClass(head_type)
 
@@ -276,6 +310,21 @@ class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidation
             lang=self.lang,
             region=self._semantic_deconflicted_ids(attr_name='region', dataset=dataset),
             style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            begin=self.begin,
+            end=self.end,
+            agent=self.agent,
+            role=self.role,
+            _strict_keywords=False
+        )
+        return copied_p
+
+    def __copy__(self):
+        copied_p = p_type(
+            id=self.id,
+            space=self.space,
+            lang=self.lang,
+            region=self.region,
+            style=self.style,
             begin=self.begin,
             end=self.end,
             agent=self.agent,
@@ -324,6 +373,20 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
         copied_span = span_type(
             id=self.id,
             style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            begin=self.begin,
+            end=self.end,
+            space=self.space,
+            lang=self.lang,
+            agent=self.agent,
+            role=self.role,
+            _strict_keywords=False
+        )
+        return copied_span
+
+    def __copy__(self):
+        copied_span = span_type(
+            id=self.id,
+            style=self.style,
             begin=self.begin,
             end=self.end,
             space=self.space,
@@ -391,6 +454,19 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
         )
         return copied_div
 
+    def __copy__(self):
+        copied_div = div_type(
+            id=self.id,
+            region=self.region,
+            style=self.style,
+            agent=self.agent,
+            role=self.role,
+            begin=self.begin,
+            end=self.end,
+            _strict_keywords=False
+        )
+        return copied_div
+
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
@@ -432,6 +508,64 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
             _strict_keywords=False
         )
         return copied_body
+
+    def __copy__(self):
+        copied_body = body_type(
+            agent=self.agent,
+            role=self.role,
+            begin=self.begin,
+            dur=self.dur,
+            end=self.end,
+            style=self.style,
+            _strict_keywords=False
+        )
+        return copied_body
+
+    @classmethod
+    def _merge_deconflict_ids(cls, element, dest, ids):
+        """
+        Deconflict ids of body elements
+        :param element:
+        :return:
+        """
+
+        children = element.orderedContent()
+        
+        output = []
+
+        for item in children:
+            log.info('processing child: {} of {}'.format(item.value, element))
+            if isinstance(item, NonElementContent):
+                copied_stuff = copy.copy(item.value)
+                output.append(copied_stuff)
+            elif isinstance(item, ElementContent):
+                copied_elem = copy.copy(item.value)
+                copied_elem._resetContent()
+                cls._merge_deconflict_ids(item.value, copied_elem, ids)
+                if isinstance(copied_elem, IDMixin):
+                    if copied_elem.id in ids:
+                        copied_elem.id = '{}.1'.format(copied_elem.id)
+                    ids.add(copied_elem.id)
+                output.append(copied_elem)
+
+        for item in output:
+            dest.append(item)
+
+        return dest
+
+    def merge(self, other_elem, dataset=None):
+        # TODO: Sort out timing and styling merging rules
+        merged_body = copy.copy(self)
+        merged_body.begin = None
+        merged_body.dur = None
+        merged_body.end = None
+        # The same recursive ID collision issue... DAMN!
+        ids = dataset['ids']
+
+        self._merge_deconflict_ids(element=self, dest=merged_body, ids=ids)
+        self._merge_deconflict_ids(element=other_elem, dest=merged_body, ids=ids)
+
+        return merged_body
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
@@ -549,6 +683,21 @@ class styling(SemanticValidationMixin, raw.styling):
         copied_styling = styling()
         return copied_styling
 
+    def merge(self, other_elem, dataset):
+        style_ids = dataset['ids']
+        merged_styling = styling()
+        for item in self.orderedContent():
+            style_ids.add(item.value.id)
+            merged_styling.append(copy.copy(item.value))
+        if other_elem:
+            for item in other_elem.orderedContent():
+                copied_style = copy.copy(item.value)
+                if item.value.id in style_ids:
+                    copied_style.id = '{}.1'.format(copied_style.id)
+                merged_styling.append(copied_style)
+
+        return merged_styling
+
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         # The styles are not ordered by inheritance so they need an extra step here
         # to get their style ID resolutions sorted
@@ -598,6 +747,23 @@ class layout(SemanticValidationMixin, raw.layout):
     def __copy__(self):
         copied_layout = layout()
         return copied_layout
+
+    def merge(self, other_elem, dataset):
+        region_ids = dataset['ids']
+        merged_layout = layout()
+        for item in self.orderedContent():
+            region_ids.add(item.value.id)
+            merged_layout.append(copy.copy(item.value))
+        if other_elem:
+            for item in other_elem.orderedContent():
+                copied_region = copy.copy(item.value)
+                if copied_region.id in region_ids:
+                    copied_region.id = '{}.1'.format(copied_region.id)
+                    region_ids.add(copied_region.id)
+                merged_layout.append(copied_region)
+
+
+        return merged_layout
 
 
 # EBU TT D classes

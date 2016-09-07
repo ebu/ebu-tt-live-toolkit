@@ -1,6 +1,7 @@
 import logging
 from .base import SubtitleDocument, TimeBase, CloningDocumentSequence
 from .ebutt3_segmentation import EBUTT3Segmenter
+from .ebutt3_splicer import EBUTT3Splicer
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
@@ -643,7 +644,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     def fork(self, *args, **kwargs):
         pass
 
-    def extract_segment(self, begin=None, end=None):
+    def extract_segment(self, begin=None, end=None, sequence_number=None):
         """
         Extract the subtitles from the sequence in the given timeframe. The return value is one
         merged EBUTT3Document
@@ -656,16 +657,20 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         document_segments = []
 
         for doc in affected_documents:
+            doc_ending = doc.resolved_end_time
+            if end is not None:
+                if end < doc_ending:
+                    doc_ending = end
             # Check only til resolved end, otherwise there will be unwanted parallel elements
-            doc_segment = doc.extract_segment(begin=begin, end=doc.resolved_end_time)
+            doc_segment = doc.extract_segment(begin=begin, end=doc_ending)
 
-            document_segments.append()
+            document_segments.append(doc_segment)
 
-        document = self.create_compatible_document()
-        # Temporarily create a validating document
-        document.add_div(div=bindings.div_type(
-            bindings.p_type(
-                id='p.001'
-            )
-        ))
+        splicer = EBUTT3Splicer(
+            sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
+            sequence_number=sequence_number or 1,
+            document_segments=document_segments
+        )
+
+        document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
         return document
