@@ -130,7 +130,7 @@ class TimelineUtilMixin(object):
         affected_elements = []
 
         # Coming from the beginning of the timeline in any case
-        for item in self.timeline.irange(maximum=end is not None and TimingEventEnd(end) or None):
+        for item in self.timeline.irange(maximum=end is not None and TimingEvent(None, end) or None):
 
             if isinstance(item, TimingEventBegin):
                 if item.when != end:

@@ -118,9 +118,9 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             indent='  '
         )
 
-    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         # This one does not have another parent to link with but it can make itself an element
-        self._setElement(raw.tt)
+        copied_instance._setElement(raw.tt)
 
     def __semantic_test_smpte_attrs_present(self):
         smpte_attrs = [
@@ -231,6 +231,14 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             raise LookupError(ERR_SEMANTIC_ELEMENT_BY_ID_MISSING.format(id=elem_id))
         return element
 
+    def get_timing_type(self, timedelta_in):
+        if self.timeBase == 'clock':
+            return ebuttdt.LimitedClockTimingType(timedelta_in)
+        if self.timeBase == 'media':
+            return ebuttdt.FullClockTimingType(timedelta_in)
+        if self.timeBase == 'smpte':
+            return ebuttdt.SMPTETimingType(timedelta_in)
+
 
 raw.tt_type._SetSupersedingClass(tt_type)
 
@@ -293,6 +301,15 @@ class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidation
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
+    def _is_timed_leaf(self):
+        if len(self.span):
+            return False
+        else:
+            return True
+
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+
 raw.p_type._SetSupersedingClass(p_type)
 
 
@@ -331,6 +348,15 @@ class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticVali
 
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
+
+    def _is_timed_leaf(self):
+        if len(self.span):
+            return False
+        else:
+            return True
+
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
 
 raw.span_type._SetSupersedingClass(span_type)
 
@@ -380,6 +406,9 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+
 
 raw.div_type._SetSupersedingClass(div_type)
 
@@ -416,6 +445,9 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
 
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
+
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
 
 
 raw.body_type._SetSupersedingClass(body_type)
@@ -517,7 +549,7 @@ class styling(SemanticValidationMixin, raw.styling):
         copied_styling = styling()
         return copied_styling
 
-    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         # The styles are not ordered by inheritance so they need an extra step here
         # to get their style ID resolutions sorted
         for style_elem in \
@@ -529,7 +561,6 @@ class styling(SemanticValidationMixin, raw.styling):
             style_elem_styles = style_elem._semantic_deconflicted_ids(attr_name='style', dataset=dataset)
             if style_elem_styles:
                 style_elem.style = style_elem_styles
-        self._do_link_with_parent(dataset=dataset, element_content=element_content)
 
 
 raw.styling._SetSupersedingClass(styling)

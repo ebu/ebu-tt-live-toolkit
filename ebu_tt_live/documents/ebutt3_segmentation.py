@@ -99,7 +99,13 @@ class EBUTT3Segmenter(object):
                 log.debug('post copy step: {}'.format(content.value))
                 if isinstance(content.value, SemanticValidationMixin):
                     # Call postprocess hooks of current element
-                    content.value._semantic_after_subtree_copy(dataset=dataset, element_content=content)
+                    celem = dataset['instance_mapping'][content.value]
+                    content.value._semantic_after_subtree_copy(
+                        copied_instance=celem,
+                        dataset=dataset,
+                        element_content=content
+                    )
+                    content.value._do_link_with_parent(dataset=dataset, element_content=content)
                 elif isinstance(content, NonElementContent):
                     parent = dataset['instance_mapping'][content.parent_binding]
                     parent.append(copy.deepcopy(content.value))
@@ -118,9 +124,13 @@ class EBUTT3Segmenter(object):
                             # Yay we don't need to process further
                             continue
                         # Shallow copy element
-                        self._do_copy(content.value, dataset=dataset)
+                        celem = self._do_copy(content.value, dataset=dataset)
                         # Call preprocess hooks of current element's subtree
-                        content.value._semantic_before_subtree_copy(dataset=dataset, element_content=content)
+                        content.value._semantic_before_subtree_copy(
+                            copied_instance=celem,
+                            dataset=dataset,
+                            element_content=content
+                        )
                     else:
                         self._do_copy(content.value, dataset=dataset)
 

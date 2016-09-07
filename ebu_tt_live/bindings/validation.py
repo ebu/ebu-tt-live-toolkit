@@ -73,7 +73,7 @@ class SemanticValidationMixin(object):
         """
         pass
 
-    def _semantic_before_subtree_copy(self, dataset, element_content=None):
+    def _semantic_before_subtree_copy(self, copied_instance, dataset, element_content=None):
         """
         This is helpful hook function at the copying operation
         :param dataset:
@@ -82,14 +82,14 @@ class SemanticValidationMixin(object):
         """
         pass
 
-    def _semantic_after_subtree_copy(self, dataset, element_content=None):
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         """
         This is helpful hook function at the copying operation
         :param dataset:
         :param element_content:
         :return:
         """
-        self._do_link_with_parent(dataset=dataset, element_content=element_content)
+        pass
 
     def _semantic_attributes_missing(self, attr_names):
         """
@@ -501,8 +501,32 @@ class TimingValidationMixin(object):
         ):
             raise OutsideSegmentError()
 
-    def _semantic_copy_apply_leaf_timing(self, dataset, element_content=None):
-        pass
+    def _is_timed_leaf(self):
+        return False
+
+    def _semantic_copy_apply_leaf_timing(self, copied_instance, dataset, element_content=None):
+        if not copied_instance._is_timed_leaf():
+            copied_instance.begin = None
+            copied_instance.end = None
+            if hasattr(copied_instance, 'dur'):
+                copied_instance.dur = None
+        else:
+            tt_elem = dataset['tt_element']
+            trimmed_begin = self.computed_begin_time
+            trimmed_end = self.computed_end_time
+            segment_begin = dataset['segment_begin']
+            segment_end = dataset['segment_end']
+            if segment_begin is not None:
+                if segment_begin > trimmed_begin:
+                    trimmed_begin = segment_begin
+            if segment_end is not None:
+                if trimmed_end is None or trimmed_end > segment_end:
+                    trimmed_end = segment_end
+
+            # Create compatible timing types
+            copied_instance.begin = tt_elem.get_timing_type(trimmed_begin)
+            copied_instance.end = tt_elem.get_timing_type(trimmed_end)
+
 
 class BodyTimingValidationMixin(TimingValidationMixin):
     """

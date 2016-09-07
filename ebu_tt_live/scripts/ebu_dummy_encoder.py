@@ -38,6 +38,10 @@ def main():
                     id='style3',
                     color='red',
                     fontSize='12px'
+                ),
+                bindings.style_type(
+                    id='style4',
+                    backgroundColor='blue'
                 )
             ),
             bindings.layout(
@@ -53,15 +57,20 @@ def main():
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'Some example text...'
+                        'Some example text...',
+                        begin=datatypes.LimitedClockTimingType(timedelta(seconds=1)),
+                        end=datatypes.LimitedClockTimingType(timedelta(seconds=2)),
+                        style=['style4'],
+                        id='span1'
                     ),
                     bindings.br_type(),
                     bindings.span_type(
-                        'And another line'
+                        'And another line',
+                        begin=datatypes.LimitedClockTimingType(timedelta(seconds=3)),
+                        end=datatypes.LimitedClockTimingType(timedelta(seconds=4)),
+                        id='span2'
                     ),
                     id='ID005',
-                    begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
-                    end=datatypes.LimitedClockTimingType(timedelta(seconds=3.42)),
                 ),
                 style=['style1'],
                 region='region1'
@@ -85,5 +94,5 @@ def main():
 
     import time
     time.sleep(0.2)
-    cdoc = document.extract_segment()
+    cdoc = document.extract_segment(begin=timedelta(seconds=3.6), end=timedelta(seconds=4.2))
     print cdoc.get_xml()
