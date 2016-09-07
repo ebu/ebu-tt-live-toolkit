@@ -666,6 +666,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
 
             document_segments.append(doc_segment)
 
+        if not document_segments:
+            # TODO: This is good question what now? no documents found for range
+            return None
+
         splicer = EBUTT3Splicer(
             sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
             sequence_number=sequence_number or 1,

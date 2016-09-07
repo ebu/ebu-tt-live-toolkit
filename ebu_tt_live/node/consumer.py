@@ -2,6 +2,7 @@
 from .base import Node
 from ebu_tt_live.documents import EBUTT3DocumentSequence, ebutt3_to_ebuttd
 from ebu_tt_live.strings import DOC_RECEIVED
+from ebu_tt_live.clocks.local import LocalMachineClock
 from datetime import timedelta
 import logging
 
@@ -49,19 +50,45 @@ class SimpleConsumer(Node):
 
 class EBUTTDEncoder(SimpleConsumer):
 
+    _last_segment_end = None
+    _segment_length = None
+
+    def __init__(self, node_id, carriage_impl, reference_clock, segment_length):
+        super(EBUTTDEncoder, self).__init__(
+            node_id=node_id,
+            carriage_impl=carriage_impl,
+            reference_clock=reference_clock
+        )
+        # We need clock factory to figure the timesync out
+        clock = LocalMachineClock()
+        self._last_segment_end = clock.get_time()
+        self._segment_length = timedelta(seconds=segment_length)
+
+    @property
+    def last_segment_end(self):
+        return self._last_segment_end
+
+    def increment_last_segment_end(self, increment_by):
+        self._last_segment_end += increment_by
+        return self._last_segment_end
+
     def process_document(self, document):
         super(EBUTTDEncoder, self).process_document(document)
         # segmentation, conversion... here
 
-    def convert_to_ebuttd(self, begin=None, end=None):
+    def get_segment(self, begin=None, end=None):
         if self._sequence is not None:
             segment_doc = self._sequence.extract_segment(begin=begin, end=end)
-            return ebutt3_to_ebuttd(segment_doc)
+            return segment_doc
         return None
 
     def convert_next_segment(self):
         # Figure out begin and end
-        ebuttd_doc = self.convert_to_ebuttd(begin=None, end=None)
-        if ebuttd_doc is not None:
+        ebutt3_doc = self.get_segment(
+            begin=self.last_segment_end,
+            end=self.increment_last_segment_end(self._segment_length)
+        )
+        if ebutt3_doc is not None:
+            ebuttd_doc = ebutt3_to_ebuttd(ebutt3_doc)
             log.info(ebuttd_doc.get_xml())
 

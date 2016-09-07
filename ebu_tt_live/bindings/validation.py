@@ -191,7 +191,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         # Call preprocess hooks for tt element
         self._semantic_before_traversal(dataset=semantic_dataset)
         to_visit.extend(reversed(list(self._validatedChildren())))
-        log.info([item.value  for item in to_visit])
+        log.debug([item.value  for item in to_visit])
         self._semantic_wire_parent(to_visit, self)
 
         while to_visit:
@@ -216,10 +216,10 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
                 if hasattr(content.value, '_validatedChildren'):
                     ordered_children = list(reversed(list(content.value._validatedChildren())))
-                    log.info('children: {}'.format([item.value for item in ordered_children]))
+                    log.debug('children: {}'.format([item.value for item in ordered_children]))
                     self._semantic_wire_parent(ordered_children, content.value)
                     to_visit.extend(ordered_children)
-                    log.info('to_visit: {}'.format([item.value for item in to_visit]))
+                    log.debug('to_visit: {}'.format([item.value for item in to_visit]))
 
         # Call postprocess hooks for tt element
         self._semantic_after_traversal(dataset=semantic_dataset)
