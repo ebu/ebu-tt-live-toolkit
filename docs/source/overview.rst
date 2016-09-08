@@ -27,11 +27,11 @@ This is a web page that adds a user interface and various configurations to the 
 
 User Input Consumer
 -------------------
-This is very similar to the Simple Producer. It also performs validation but it does not have a manifest option. You will need to start this script before connecting the User Input Producer to the WebSocket.
+This is very similar to the Simple Consumer. It also performs validation but it does not have a manifest option. It provides a WebSocket connection point for the User Input Producer. You'll beed to start either this or the User Input Forwarder before connecting the User Input Producer (but not both).
 
-User input forwarder
+User Input Forwarder
 --------------------
-This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` argument like this: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file.   
+This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` argument like this: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file. The User Input Forwarder can also be used as an incoming connection point for WebSocket connections from sources other than the User Input Producer.
 
 .. toctree::
     nodes_and_carriage_mechanisms
