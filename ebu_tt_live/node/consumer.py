@@ -99,5 +99,5 @@ class EBUTTDEncoder(SimpleConsumer):
             ebuttd_doc = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
             ebuttd_doc.validate()
             print(ebuttd_doc.get_xml())
-            self.increment_last_segment_end(self._segment_length)
+        self.increment_last_segment_end(self._segment_length)
 
