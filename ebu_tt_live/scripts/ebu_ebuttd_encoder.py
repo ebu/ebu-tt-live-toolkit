@@ -3,10 +3,11 @@ from argparse import ArgumentParser
 from .common import create_loggers
 
 from ebu_tt_live.node import EBUTTDEncoder
+from ebu_tt_live.documents.converters import MP4BoxConverter
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
-from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
+from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport
 from ebu_tt_live import bindings
 from twisted.internet import task, reactor
 
@@ -37,6 +38,8 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
 parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
                     help='This sets the offset value that is used to turn clock time into media time.',
                     default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
+parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
 
 
 def main():
@@ -49,7 +52,6 @@ def main():
     websocket_url = args.websocket_url
     websocket_channel = args.websocket_channel
 
-    consumer_impl = None
     fs_reader = None
 
     if manifest_path:
@@ -58,6 +60,13 @@ def main():
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
         consumer_impl = TwistedConsumerImpl()
+
+    if args.output_format == 'mp4':
+        outbound_carriage = MP4BoxConverter(args.output_folder, 'ebuttd-encode-{}.mp4')
+    elif args.output_format == 'xml':
+        outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{}.xml')
+    else:
+        raise Exception('Invalid output format: {}'.format(args.output_format))
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
@@ -69,6 +78,7 @@ def main():
     ebuttd_converter = EBUTTDEncoder(
         node_id='simple-consumer',
         carriage_impl=consumer_impl,
+        outbound_carriage_impl=outbound_carriage,
         reference_clock=reference_clock,
         segment_length=args.interval,
         media_time_zero=media_time_zero

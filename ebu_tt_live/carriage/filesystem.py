@@ -174,3 +174,23 @@ class FilesystemReader(object):
                         xml_content = xml_file.read()
                     data = [availability_time_str, xml_content]
                     self._custom_consumer.on_new_data(data)
+
+
+class SimpleFolderExport(ProducerCarriageImpl):
+
+    _dir_path = None
+    _file_name_pattern = None
+    _counter = None
+
+    def __init__(self, dir_path, file_name_pattern):
+        if not os.path.exists(dir_path):
+            raise Exception('Directory: {} could not be found.'.format(dir_path))
+        self._dir_path = dir_path
+        self._file_name_pattern = file_name_pattern
+        self._counter = 0
+
+    def emit_document(self, document):
+        self._counter += 1
+        filename = self._file_name_pattern.format(self._counter)
+        with open(os.path.join(self._dir_path, filename), 'w') as destfile:
+            destfile.write(document.get_xml())

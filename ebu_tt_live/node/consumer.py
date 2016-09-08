@@ -55,13 +55,15 @@ class EBUTTDEncoder(SimpleConsumer):
     _segment_length = None
     _ebuttd_converter = None
     _default_ebuttd_doc = None
+    _outbound_carriage_impl = None
 
-    def __init__(self, node_id, carriage_impl, reference_clock, segment_length, media_time_zero):
+    def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock, segment_length, media_time_zero):
         super(EBUTTDEncoder, self).__init__(
             node_id=node_id,
             carriage_impl=carriage_impl,
             reference_clock=reference_clock
         )
+        self._outbound_carriage_impl = outbound_carriage_impl
         # We need clock factory to figure the timesync out
         self._last_segment_end = reference_clock.get_time()
         self._segment_length = timedelta(seconds=segment_length)
@@ -101,8 +103,7 @@ class EBUTTDEncoder(SimpleConsumer):
             ebuttd_bindings = self._ebuttd_converter.convert_element(ebutt3_doc.binding, dataset={})
             ebuttd_doc = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
             ebuttd_doc.validate()
-            print(ebuttd_doc.get_xml())
         else:
-            print(self._default_ebuttd_doc.get_xml())
+            ebuttd_doc = self._default_ebuttd_doc
         self.increment_last_segment_end(self._segment_length)
-
+        self._outbound_carriage_impl.emit_document(ebuttd_doc)
