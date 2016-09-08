@@ -30,12 +30,14 @@ class EBUTT3EBUTTDConverter(object):
 
     def convert_tt(self, tt_in, dataset):
         dataset['timeBase'] = tt_in.timeBase
+        dataset['cellResolution'] = tt_in.cellResolution
         new_elem = ttd(
             head=self.convert_element(tt_in.head, dataset),
             body=self.convert_element(tt_in.body, dataset),
             timeBase='media',
             lang=tt_in.lang,
-            space=tt_in.space
+            space=tt_in.space,
+            cellResolution=tt_in.cellResolution
         )
         return new_elem
 
@@ -62,7 +64,16 @@ class EBUTT3EBUTTDConverter(object):
 
     def convert_region(self, region_in, dataset):
         new_elem = d_region_type(
-            *self.convert_children(region_in, dataset)
+            *self.convert_children(region_in, dataset),
+            id=region_in.id,
+            origin=region_in.origin,
+            extent=region_in.extent,
+            style=region_in.style,
+            displayAlign=region_in.displayAlign,
+            padding=region_in.padding,
+            writingMode=region_in.writingMode,
+            showBackground=region_in.showBackground,
+            overflow=region_in.overflow
         )
         return new_elem
 
@@ -77,10 +88,24 @@ class EBUTT3EBUTTDConverter(object):
 
     def convert_style(self, style_in, dataset):
         new_elem = d_style_type(
-            *self.convert_children(style_in, dataset)
+            *self.convert_children(style_in, dataset),
+            id=style_in.id,
+            style=style_in.style,  # there is no ordering requirement in styling so too soon to deconflict here
+            direction=style_in.direction,
+            fontFamily=style_in.fontFamily,
+            fontSize=style_in.fontSize,
+            lineHeight=style_in.lineHeight,
+            textAlign=style_in.textAlign,
+            color=style_in.color,
+            backgroundColor=style_in.backgroundColor,
+            fontStyle=style_in.fontStyle,
+            fontWeight=style_in.fontWeight,
+            textDecoration=style_in.textDecoration,
+            unicodeBidi=style_in.unicodeBidi,
+            wrapOption=style_in.wrapOption,
+            padding=style_in.padding,
+            _strict_keywords=False
         )
-        # Fill in the gaps here
-        # TODO
         return new_elem
 
     def convert_body(self, body_in, dataset):
