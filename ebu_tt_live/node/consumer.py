@@ -1,8 +1,9 @@
 
 from .base import Node
-from ebu_tt_live.documents import EBUTT3DocumentSequence, ebutt3_to_ebuttd
+from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTTDDocument
+from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.strings import DOC_RECEIVED
-from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.clocks.media import MediaClock
 from datetime import timedelta
 import logging
 
@@ -52,17 +53,22 @@ class EBUTTDEncoder(SimpleConsumer):
 
     _last_segment_end = None
     _segment_length = None
+    _ebuttd_converter = None
 
-    def __init__(self, node_id, carriage_impl, reference_clock, segment_length):
+    def __init__(self, node_id, carriage_impl, reference_clock, segment_length, media_time_zero):
         super(EBUTTDEncoder, self).__init__(
             node_id=node_id,
             carriage_impl=carriage_impl,
             reference_clock=reference_clock
         )
         # We need clock factory to figure the timesync out
-        clock = LocalMachineClock()
-        self._last_segment_end = clock.get_time()
+        self._last_segment_end = reference_clock.get_time()
         self._segment_length = timedelta(seconds=segment_length)
+        media_clock = MediaClock()
+        media_clock.adjust_time(timedelta(), media_time_zero)
+        self._ebuttd_converter = EBUTT3EBUTTDConverter(
+            media_clock=media_clock
+        )
 
     @property
     def last_segment_end(self):
@@ -86,9 +92,12 @@ class EBUTTDEncoder(SimpleConsumer):
         # Figure out begin and end
         ebutt3_doc = self.get_segment(
             begin=self.last_segment_end,
-            end=self.increment_last_segment_end(self._segment_length)
+            end=self.last_segment_end + self._segment_length
         )
         if ebutt3_doc is not None:
-            ebuttd_doc = ebutt3_to_ebuttd(ebutt3_doc)
-            log.info(ebuttd_doc.get_xml())
+            ebuttd_bindings = self._ebuttd_converter.convert_element(ebutt3_doc.binding, dataset={})
+            ebuttd_doc = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
+            ebuttd_doc.validate()
+            print(ebuttd_doc.get_xml())
+            self.increment_last_segment_end(self._segment_length)
 

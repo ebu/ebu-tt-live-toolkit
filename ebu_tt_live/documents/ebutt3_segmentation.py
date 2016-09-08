@@ -24,7 +24,7 @@ class EBUTT3Segmenter(object):
 
     def __init__(self, document, begin=None, end=None, deconflict_ids=False):
         self._document = document
-
+        log.info('Segmenter created')
         if begin is not None:
             assert isinstance(begin, timedelta)
             self._begin = begin
@@ -108,6 +108,7 @@ class EBUTT3Segmenter(object):
                 elif isinstance(content, NonElementContent):
                     parent = dataset['instance_mapping'][content.parent_binding]
                     parent.append(copy.deepcopy(content.value))
+                    content.parent_binding = None
 
                 post_visited.add(content)
             else:

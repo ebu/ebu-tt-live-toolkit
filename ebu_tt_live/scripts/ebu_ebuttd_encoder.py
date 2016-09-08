@@ -7,6 +7,7 @@ from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
+from ebu_tt_live import bindings
 from twisted.internet import task, reactor
 
 
@@ -17,7 +18,7 @@ parser = ArgumentParser()
 
 parser.add_argument('-c', '--config', dest='config', metavar='CONFIG')
 parser.add_argument('-i', '--interval', dest='interval', metavar='INTERVAL',
-                    type=float, default=2.0,
+                    type=float, default=1.0,
                     help='Segmentation interval')
 parser.add_argument('-m', '--manifest-path', dest='manifest_path',
                     help='Documents are read from the filesystem instead of the network, takes a manifest file as input',
@@ -33,6 +34,9 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
                     )
+parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
+                    help='This sets the offset value that is used to turn clock time into media time.',
+                    default='current', metavar='HH:MM:SS.mmm')
 
 
 def main():
@@ -58,11 +62,16 @@ def main():
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
+    media_time_zero = \
+        args.media_time_zero == 'current' and reference_clock.get_time() \
+        or bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero)).timedelta
+
     ebuttd_converter = EBUTTDEncoder(
         node_id='simple-consumer',
         carriage_impl=consumer_impl,
         reference_clock=reference_clock,
-        segment_length=args.interval
+        segment_length=args.interval,
+        media_time_zero=media_time_zero
     )
 
     if manifest_path:

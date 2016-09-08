@@ -59,6 +59,8 @@ class SemanticValidationMixin(object):
         # Link with parent
         cparent = dataset['instance_mapping'][self.parent_binding]
 
+        self.parent_binding = None
+
         if element_content.elementDeclaration.isPlural():
             cparent.append(celem)
         else:
@@ -190,7 +192,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
 
         # Call preprocess hooks for tt element
         self._semantic_before_traversal(dataset=semantic_dataset)
-        to_visit.extend(reversed(list(self._validatedChildren())))
+        to_visit.extend(list(reversed(list(self._validatedChildren()))))
         log.debug([item.value  for item in to_visit])
         self._semantic_wire_parent(to_visit, self)
 

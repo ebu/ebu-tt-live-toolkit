@@ -6,7 +6,7 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
-    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
@@ -365,6 +365,14 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         :param deconflict_ids: prevent id clash across documents by prefixing the IDs
         :return: tuple of partial data that is enough to create a document out of.
         """
+        document_logger.info(
+            DOC_REQ_SEGMENT.format(
+                sequence_identifier=self.sequence_identifier,
+                sequence_number=self.sequence_number,
+                begin=begin,
+                end=end
+            )
+        )
         segmenter = EBUTT3Segmenter(self, begin=begin, end=end, deconflict_ids=deconflict_ids)
         return EBUTT3Document.create_from_raw_binding(segmenter.segment)
 
@@ -652,6 +660,13 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         :param end:
         :return: EBUTT3Document
         """
+        document_logger.info(
+            DOC_SEQ_REQ_SEGMENT.format(
+                sequence_identifier=self.sequence_identifier,
+                begin=begin,
+                end=end
+            )
+        )
         affected_documents = self.lookup_range_on_timeline(begin=begin, end=end)
 
         document_segments = []
@@ -662,13 +677,15 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 if end < doc_ending:
                     doc_ending = end
             # Check only til resolved end, otherwise there will be unwanted parallel elements
-            doc_segment = doc.extract_segment(begin=begin, end=doc_ending)
+            doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
 
             document_segments.append(doc_segment)
+            begin = doc_ending
 
         if not document_segments:
             # TODO: This is good question what now? no documents found for range
             return None
+
 
         splicer = EBUTT3Splicer(
             sequence_identifier='{}_resegmented'.format(self.sequence_identifier),

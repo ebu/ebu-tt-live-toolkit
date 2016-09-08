@@ -3,13 +3,16 @@ from unittest import TestCase
 from datetime import timedelta
 from ebu_tt_live.documents.converters import ebutt3_to_ebuttd
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
+from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.bindings import div_type, p_type, span_type, br_type, ebuttdt
 
 
 class TestEBUTT3ToEBUTTDConverter(TestCase):
 
+    def setUp(self):
+        self._media_clock = MediaClock()
+
     def test_simple(self):
-        self.skipTest('Too premature stage')
         div = div_type(
             p_type(
                 span_type(
@@ -32,4 +35,4 @@ class TestEBUTT3ToEBUTTDConverter(TestCase):
         document.add_div(div)
         document.validate()
 
-        ebutt3_to_ebuttd(document)
+        ebutt3_to_ebuttd(document, self._media_clock)
