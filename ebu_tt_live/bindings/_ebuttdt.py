@@ -348,3 +348,17 @@ class PixelLengthType(SizingValidationMixin, ebuttdt_raw.pixelLengthType):
 
 
 ebuttdt_raw.pixelLengthType._SetSupersedingClass(PixelLengthType)
+
+
+class PercentageLengthType(ebuttdt_raw.percentageLengthType):
+    pass
+
+
+ebuttdt_raw.percentageLengthType._SetSupersedingClass(PercentageLengthType)
+
+
+class CellLengthType(ebuttdt_raw.cellLengthType):
+    pass
+
+
+ebuttdt_raw.cellLengthType._SetSupersedingClass(CellLengthType)

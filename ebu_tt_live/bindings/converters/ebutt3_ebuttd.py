@@ -87,14 +87,18 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_style(self, style_in, dataset):
+        lineHeight = style_in.lineHeight
+        if lineHeight is not None:
+            if lineHeight.endswith('c'):
+                lineHeight = lineHeight[:-1]+'00%'
         new_elem = d_style_type(
             *self.convert_children(style_in, dataset),
             id=style_in.id,
             style=style_in.style,  # there is no ordering requirement in styling so too soon to deconflict here
             direction=style_in.direction,
             fontFamily=style_in.fontFamily,
-            fontSize=style_in.fontSize,
-            lineHeight=style_in.lineHeight,
+            fontSize=None,  #style_in.fontSize TODO: Calculate fonts appropriately
+            lineHeight=lineHeight,
             textAlign=style_in.textAlign,
             color=style_in.color,
             backgroundColor=style_in.backgroundColor,
