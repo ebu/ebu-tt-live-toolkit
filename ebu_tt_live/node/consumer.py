@@ -54,6 +54,7 @@ class EBUTTDEncoder(SimpleConsumer):
     _last_segment_end = None
     _segment_length = None
     _ebuttd_converter = None
+    _default_ebuttd_doc = None
 
     def __init__(self, node_id, carriage_impl, reference_clock, segment_length, media_time_zero):
         super(EBUTTDEncoder, self).__init__(
@@ -69,6 +70,8 @@ class EBUTTDEncoder(SimpleConsumer):
         self._ebuttd_converter = EBUTT3EBUTTDConverter(
             media_clock=media_clock
         )
+        self._default_ebuttd_doc = EBUTTDDocument(lang='en-GB')
+        self._default_ebuttd_doc.validate()
 
     @property
     def last_segment_end(self):
@@ -99,5 +102,7 @@ class EBUTTDEncoder(SimpleConsumer):
             ebuttd_doc = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
             ebuttd_doc.validate()
             print(ebuttd_doc.get_xml())
+        else:
+            print(self._default_ebuttd_doc.get_xml())
         self.increment_last_segment_end(self._segment_length)
 
