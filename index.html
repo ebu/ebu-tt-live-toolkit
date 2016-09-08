@@ -43,6 +43,31 @@ header {
       font-weight: bold;
       text-decoration: none;
    }
+
+   .q {
+      color: rgb(250, 250, 250);
+      background-color: rgb(27, 64, 152);
+      display: inline-block;
+      min-height: 50px;
+      box-sizing: border-box;
+      text-align: center;
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-radius: 5px;
+   }
+
+   .q a {
+      color: rgb(250, 250, 250);
+   }
+
+   .b
+   {
+      margin-right: 10px;
+      margin-left: 10px;
+   }
+
 </style>
    </head>
 
@@ -59,10 +84,16 @@ header {
       <p>If you are writing code to produce live subtitles in EBU-TT Live, you should try plugging it into the <i>consumer</i> to validate the sequences you make. If you are writing code to consume live subtitles, you should try using the <i>producer</i> to generate test data.</p>
       <h2>The Project</h2>
       <p>This is an open source project hosted by <a href="https://tech.ebu.ch/home">EBU</a> on GitHub, using Travis-CI for continuous integration and coveralls for code test coverage. The license is BSD3.</p>
-      <p>This is an activity of the EBU <a href="https://tech.ebu.ch/groups/pdfxp">Subtitles in XML</a> group.</p>
+      <p>This is an activity of the EBU <a href="https://tech.ebu.ch/subtitling">Subtitles in XML</a> group.</p>
       <p>You can find details about the project, including details of how to contribute, on its <a href="https://github.com/ebu/ebu-tt-live-toolkit/">github page</a>.</p>
-      <h3>Documentation</h3>
-      <p>The code documentation is available <a href="html/index.html">here</a>.</p>
+      <h3>Quick links</h3>
+      <p>
+         <span class="q"><a href="html/index.html">documentation</a></span>
+         <span class="b"> </span>
+         <span class="q"><a href="https://github.com/ebu/ebu-tt-live-toolkit/">repository</a></span>
+         <span class="b"> </span>
+         <span class="q"><a href="https://tech.ebu.ch/publications/tech3370">specification</a></span>
+      </p>
       <footer>
       </footer>
    </body>
