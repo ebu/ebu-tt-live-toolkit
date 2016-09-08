@@ -11,9 +11,9 @@ The components mimic the nodes and carriage mechanisms defined in the specificat
 
 Simple Producer
 ---------------
-This is a command line script. It loads static text from a file (``ebu-tt-live-toolkit/ebu_tt_live/example_data/simple_producer.txt``) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the commend ``ebu-simple-producer`` without any arguments. 
+This is a command line script. It loads static text from a file (``ebu-tt-live-toolkit/ebu_tt_live/example_data/simple_producer.txt``) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command ``ebu-simple-producer`` without any arguments. 
 
-The carriage mechanism is WebSocket, so you will need to listen to ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just that. After you launch ``ebu-simple-producer``, open ``/ebu-tt-live-toolkit/test.html`` in your browser. The 'Broadcast message' field should be populated with the correct address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can also change the identifier for the sequence. The documents should appear in the window below.  
+The default carriage mechanism is WebSocket, so you will need to listen to ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just that. After you launch ``ebu-simple-producer``, open ``test.html`` in your browser. The 'Broadcast message' field should be populated with the correct address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can also change the identifier for the sequence. The documents should appear in the window below.  
 
 Alternatively, the Simple Producer can use the file system as the carriage mechanism. Start it with the folder argument, like this: ``ebu-simple-producer --folder-export myFolder``. This saves the documents in ``myFolder`` together with a manifest file that can be used by the Simple Consumer (below). See `<filesystem_carriage_mechanism.html>`__ for more details about the file system carriage mechanism. 
 
@@ -23,12 +23,12 @@ This script reads and validates documents in a sequence. It performs both semant
 
 User Input Producer
 -------------------
-This is a web page that adds a user interface and various configurations to the Simple Producer. It needs to connect to either the User Input Consumer or a User Input Forwarder. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu-tt-live-toolkit/ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__. 
+This is a web page that adds a user interface and various configurations to the Simple Producer. It needs to connect to either the User Input Consumer or a User Input Forwarder. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__. 
 
 
 User Input Consumer
 -------------------
-This is very similar to the Simple Consumer. It also performs validation but it does not have a manifest option. It provides a WebSocket connection point for the User Input Producer. You'll beed to start either this or the User Input Forwarder before connecting the User Input Producer (but not both).
+This is very similar to the Simple Consumer. It also performs validation but it does not have a manifest option. It provides a WebSocket connection point for the User Input Producer. You'll need to start either this or the User Input Forwarder before connecting the User Input Producer (but not both).
 
 User Input Forwarder
 --------------------
