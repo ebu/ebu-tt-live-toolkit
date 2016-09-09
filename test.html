@@ -28,7 +28,6 @@
             if (sock) {
                sock.onopen = function() {
                   log("Connected to " + wsuri);
-                  sock.send('test string');
                   connect_button.textContent = 'Disconnect';
                }
 
