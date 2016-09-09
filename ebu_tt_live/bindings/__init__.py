@@ -618,6 +618,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             unicodeBidi=self.unicodeBidi,
             wrapOption=self.wrapOption,
             padding=self.padding,
+            linePadding=self.linePadding,
             _strict_keywords=False
         )
         return copied_style
@@ -760,6 +761,8 @@ class layout(SemanticValidationMixin, raw.layout):
                 self.append(copied_region)
         return self
 
+
+raw.layout._SetSupersedingClass(layout)
 
 # EBU TT D classes
 # ================

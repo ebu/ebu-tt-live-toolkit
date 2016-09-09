@@ -2,7 +2,11 @@ from ebu_tt_live.bindings import tt, ttd, tt_type, d_tt_type, body_type, d_body_
     p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type, d_head_type, d_style_type, \
     d_styling_type, head_type, style_type, styling, layout, d_layout_type, region_type, d_region_type, ebuttdt
 import copy
+import logging
 from pyxb.binding.basis import NonElementContent, ElementContent
+
+
+log = logging.getLogger(__name__)
 
 
 class EBUTT3EBUTTDConverter(object):
@@ -43,13 +47,23 @@ class EBUTT3EBUTTDConverter(object):
 
     def convert_head(self, head_in, dataset):
         new_elem = d_head_type(
-            *self.convert_children(head_in, dataset)
         )
+        head_children = self.convert_children(head_in, dataset)
+        for item in head_children:
+            if isinstance(item, d_styling_type):
+                new_elem.styling = item
+            elif isinstance(item, d_layout_type):
+                new_elem.layout = item
+            else:
+                new_elem.append(item)
+
         # We need default values here in case styling or layout is omitted from the source document.
         if not self._children_contain(new_elem, d_styling_type):
-            new_elem.append(d_styling_type.create_default_value())
+            new_elem.styling = d_styling_type.create_default_value()
         if not self._children_contain(new_elem, d_layout_type):
-            new_elem.append(d_layout_type.create_default_value())
+            log.info('converter added a default layout')
+            log.info([item.value for item in new_elem.orderedContent()])
+            new_elem.layout = d_layout_type.create_default_value()
 
         return new_elem
 
@@ -59,6 +73,7 @@ class EBUTT3EBUTTDConverter(object):
         )
         # Fill in the gaps with default values
         if not self._children_contain(new_elem, d_region_type):
+            log.info('converter added a default region')
             new_elem.append(d_region_type.create_default_value())
         return new_elem
 
@@ -108,6 +123,7 @@ class EBUTT3EBUTTDConverter(object):
             unicodeBidi=style_in.unicodeBidi,
             wrapOption=style_in.wrapOption,
             padding=style_in.padding,
+            linePadding=style_in.linePadding,
             _strict_keywords=False
         )
         return new_elem

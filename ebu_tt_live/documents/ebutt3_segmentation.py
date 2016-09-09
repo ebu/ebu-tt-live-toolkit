@@ -24,7 +24,7 @@ class EBUTT3Segmenter(object):
 
     def __init__(self, document, begin=None, end=None, deconflict_ids=False):
         self._document = document
-        log.info('Segmenter created')
+        log.debug('Segmenter created')
         if begin is not None:
             assert isinstance(begin, timedelta)
             self._begin = begin

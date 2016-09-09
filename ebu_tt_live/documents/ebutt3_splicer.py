@@ -47,7 +47,6 @@ class EBUTT3Splicer(object):
         while self._document_segments:
             current_doc = self._document_segments.pop()
             current_tt = current_doc.binding
-
             merged_tt = merged_tt.merge(current_tt, self._dataset)
 
             if merged_head:

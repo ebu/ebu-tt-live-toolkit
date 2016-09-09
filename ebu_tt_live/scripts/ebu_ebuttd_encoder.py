@@ -42,6 +42,12 @@ parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
 
 
+def start_timer(encoder):
+    segment_timer = task.LoopingCall(encoder.convert_next_segment)
+    segment_timer.start(encoder.segment_length.total_seconds())
+    return segment_timer
+
+
 def main():
     args = parser.parse_args()
     create_loggers()
@@ -81,7 +87,8 @@ def main():
         outbound_carriage_impl=outbound_carriage,
         reference_clock=reference_clock,
         segment_length=args.interval,
-        media_time_zero=media_time_zero
+        media_time_zero=media_time_zero,
+        segment_timer=start_timer
     )
 
     if manifest_path:
@@ -98,8 +105,5 @@ def main():
         factory.protocol = ClientNodeProtocol
 
         factory.connect()
-
-        segment_timer = task.LoopingCall(ebuttd_converter.convert_next_segment)
-        segment_timer.start(args.interval)
 
         reactor.run()

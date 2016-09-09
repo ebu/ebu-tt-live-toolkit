@@ -56,8 +56,10 @@ class EBUTTDEncoder(SimpleConsumer):
     _ebuttd_converter = None
     _default_ebuttd_doc = None
     _outbound_carriage_impl = None
+    _segment_timer = None
 
-    def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock, segment_length, media_time_zero):
+    def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock,
+                 segment_length, media_time_zero, segment_timer):
         super(EBUTTDEncoder, self).__init__(
             node_id=node_id,
             carriage_impl=carriage_impl,
@@ -74,18 +76,27 @@ class EBUTTDEncoder(SimpleConsumer):
         )
         self._default_ebuttd_doc = EBUTTDDocument(lang='en-GB')
         self._default_ebuttd_doc.validate()
+        self._segment_timer = segment_timer
 
     @property
     def last_segment_end(self):
         return self._last_segment_end
+
+    @property
+    def segment_length(self):
+        return self._segment_length
 
     def increment_last_segment_end(self, increment_by):
         self._last_segment_end += increment_by
         return self._last_segment_end
 
     def process_document(self, document):
+        sequence_missing = self._sequence is None
         super(EBUTTDEncoder, self).process_document(document)
         # segmentation, conversion... here
+        if sequence_missing and self._sequence is not None:
+            # Ok we just got a relevant document call the function that returns us a timer object
+            self._segment_timer = self._segment_timer(self)
 
     def get_segment(self, begin=None, end=None):
         if self._sequence is not None:
