@@ -784,7 +784,7 @@ class d_tt_type(raw.d_tt_type):
             parent=parent,
             element_name=element_name
         )
-        xml_dom.documentElement.tagName = 'tt'
+        xml_dom.documentElement.tagName = 'tt:tt'
         return xml_dom
 
     def toxml(self, encoding=None, bds=None, root_only=False, element_name=None):
