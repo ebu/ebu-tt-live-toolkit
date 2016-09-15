@@ -58,11 +58,12 @@ class RecursiveOperation(object):
     generic content iteration logic with hook functions that are meant to be customized by descendant classes.
     """
 
-    __filter_criteria = None
-    __root_element = None
-    __post_order = None
+    _filter_criteria = None
+    _root_element = None
+    _post_order = None
+    _children_iterator = None
 
-    def __init__(self, root_element, filter=None, post_order=False):
+    def __init__(self, root_element, filter=None, post_order=False, children_iterator=None):
         """
         This class requires a root element to operate on and an optional filter function to help limit the elements
         selected for the operations defined in the hook functions thereby reducing their complexity and improving
@@ -70,16 +71,25 @@ class RecursiveOperation(object):
         :param root_element: Practically the document root but could be any PyXB type instance that has children
         :param filter: A function that filters the elements selected for processing.
         :param post_order(boolean): Post order processing during the traversal. Defaults to False(pre-order).
+        :param children_iterator: PyXB has multiple ways it likes to traverse the structure. It can be based on the
+        order described in the XSD or it can be the order described by the document that is using that schema. The
+        value of this parameter will be resolved on matching complexTypeDefinition objects and called to give children
+        in the specified order.
         """
         if filter is None:
-            self.__filter_criteria = lambda x: True
+            self._filter_criteria = lambda value, element: True
         else:
-            self.__filter_criteria = filter
+            self._filter_criteria = filter
 
-        self.__root_element = root_element
-        self.__post_order = post_order
+        self._root_element = root_element
+        self._post_order = post_order
 
-    def _process_children(self, element_value, **kwargs):
+        if children_iterator is None:
+            self._children_iterator = 'orderedContent'
+        else:
+            self._children_iterator = children_iterator
+
+    def _process_children(self, value, element=None, proc_value=None, **kwargs):
         """
         Recursive step
         :param element:
@@ -88,26 +98,27 @@ class RecursiveOperation(object):
         """
         output = []
 
-        if isinstance(element_value, complexTypeDefinition):
-            children = element_value.orderedContent()
+        if isinstance(value, complexTypeDefinition):
+            children = getattr(value, self._children_iterator)()
 
             for item in children:
-                proc_elem = self._recursive_step(element=item, **kwargs)
+                proc_elem = self._recursive_step(value=item.value, element=item, **kwargs)
                 if proc_elem is not None:
                     output.append(proc_elem)
         return output
 
-    def _recursive_step(self, element, **kwargs):
+    def _recursive_step(self, value, element, **kwargs):
         children = []
         proc_value = None
-        element_value = element.value
-        if isinstance(element, ElementContent) and self.__filter_criteria(element) is True:
+        element_value = value
+        if (element is not None and isinstance(element, ElementContent) or element is None) \
+                and self._filter_criteria(value, element) is True:
             self._before_element(value=element_value, element=element, **kwargs)
 
-            if self.__post_order:
+            if self._post_order:
                 children = self._process_children(value=element_value, element=element, **kwargs)
                 proc_value = self._process_element(value=element_value, element=element, proc_value=proc_value, children=children, **kwargs)
-            if not self.__post_order:
+            if not self._post_order:
                 proc_value = self._process_element(value=element_value, element=element, **kwargs)
                 children = self._process_children(value=element_value, element=element, proc_value=proc_value, **kwargs)
 
@@ -117,7 +128,7 @@ class RecursiveOperation(object):
         return proc_value
 
     def proceed(self, **kwargs):
-        self._recursive_step(self.__root_element, **kwargs)
+        return self._recursive_step(value=self._root_element, element=None, **kwargs)
 
     def _before_element(self, value, element=None, **kwargs):
         return None

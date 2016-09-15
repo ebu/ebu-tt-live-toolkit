@@ -3,7 +3,8 @@ from datetime import timedelta
 import logging
 import copy
 from pyxb.binding.basis import NonElementContent, ElementContent
-from ebu_tt_live.bindings.validation import SemanticValidationMixin, StyledElementMixin, IDMixin
+from ebu_tt_live.bindings.validation.base import SemanticValidationMixin, IDMixin
+from ebu_tt_live.bindings.validation.presentation import StyledElementMixin
 from ebu_tt_live.bindings import tt
 from ebu_tt_live.errors import OutsideSegmentError
 

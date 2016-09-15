@@ -11,20 +11,21 @@ from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
 from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
-from .validation import SemanticDocumentMixin, SemanticValidationMixin, TimingValidationMixin, \
-    BodyTimingValidationMixin, SizingValidationMixin, StyledElementMixin, RegionedElementMixin, IDMixin
+from .validation.base import SemanticDocumentMixin, SemanticValidationMixin, IDMixin
+from ebu_tt_live.bindings.validation.presentation import SizingValidationMixin, StyledElementMixin, RegionedElementMixin
+from ebu_tt_live.bindings.validation.timing import TimingValidationMixin, BodyTimingValidationMixin
+from .validation.validator import SemanticValidator
 from ebu_tt_live.errors import SemanticValidationError, OutsideSegmentError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, \
     ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES, ERR_SEMANTIC_STYLE_CIRCLE, ERR_SEMANTIC_STYLE_MISSING, \
     ERR_SEMANTIC_ELEMENT_BY_ID_MISSING, ERR_SEMANTIC_VALIDATION_EXPECTED
-from pyxb.exceptions_ import SimpleTypeValueError, ComplexTypeValidationError
+from pyxb.exceptions_ import SimpleTypeValueError
 from pyxb.utils.domutils import BindingDOMSupport
 from pyxb.binding.basis import ElementContent, NonElementContent
 from datetime import timedelta
 import threading
 import copy
 import logging
-import time
 
 
 log = logging.getLogger(__name__)
@@ -77,6 +78,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         (pyxb.namespace.ExpandedName(ttp.Namespace, 'timeBase')).uriTuple(): __post_time_base_set_attribute
     }
     _elements_by_id = None
+    _validator_class = SemanticValidator
 
     def __copy__(self):
         copied_tt = tt_type(

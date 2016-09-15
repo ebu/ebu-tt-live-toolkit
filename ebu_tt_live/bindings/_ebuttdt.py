@@ -8,8 +8,8 @@ from pyxb.exceptions_ import SimpleTypeValueError
 from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
 from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE
 from .pyxb_utils import get_xml_parsing_context
-from .validation import SemanticValidationMixin, SizingValidationMixin
-
+from .validation.base import SemanticValidationMixin
+from .validation.presentation import SizingValidationMixin
 
 log = logging.getLogger(__name__)
 
