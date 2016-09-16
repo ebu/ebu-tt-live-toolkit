@@ -102,42 +102,46 @@ class RecursiveOperation(object):
             children = getattr(value, self._children_iterator)()
 
             for item in children:
-                proc_elem = self._recursive_step(value=item.value, element=item, **kwargs)
+                proc_elem = self._recursive_step(value=item.value, element=item, parent_binding=value, **kwargs)
                 if proc_elem is not None:
                     output.append(proc_elem)
         return output
 
-    def _recursive_step(self, value, element, **kwargs):
+    def _recursive_step(self, value, element, parent_binding=None, **kwargs):
         children = []
         proc_value = None
         element_value = value
         if (element is not None and isinstance(element, ElementContent) or element is None) \
                 and self._filter_criteria(value, element) is True:
-            self._before_element(value=element_value, element=element, **kwargs)
+            self._before_element(value=element_value, element=element, parent_binding=parent_binding, **kwargs)
 
             if self._post_order:
                 children = self._process_children(value=element_value, element=element, **kwargs)
-                proc_value = self._process_element(value=element_value, element=element, proc_value=proc_value, children=children, **kwargs)
+                proc_value = self._process_element(
+                    value=element_value, element=element, parent_binding=parent_binding,proc_value=proc_value,
+                    children=children, **kwargs)
             if not self._post_order:
-                proc_value = self._process_element(value=element_value, element=element, **kwargs)
+                proc_value = self._process_element(
+                    value=element_value, element=element, parent_binding=parent_binding, **kwargs)
                 children = self._process_children(value=element_value, element=element, proc_value=proc_value, **kwargs)
 
             self._after_element(value=element_value, element=element, proc_value=proc_value, children=children, **kwargs)
         else:
-            proc_value = self._process_non_element(value=element_value, non_element=element, **kwargs)
+            proc_value = self._process_non_element(
+                value=element_value, non_element=element, parent_binding=parent_binding, **kwargs)
         return proc_value
 
     def proceed(self, **kwargs):
         return self._recursive_step(value=self._root_element, element=None, **kwargs)
 
-    def _before_element(self, value, element=None, **kwargs):
+    def _before_element(self, value, element=None, parent_binding=None, **kwargs):
         return None
 
-    def _process_element(self, value, element=None, **kwargs):
+    def _process_element(self, value, element=None, parent_binding=None, **kwargs):
         raise NotImplementedError()
 
-    def _process_non_element(self, value, non_element, **kwargs):
+    def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
         raise NotImplementedError()
 
-    def _after_element(self, value, element=None, **kwargs):
+    def _after_element(self, value, element=None, parent_binding=None, **kwargs):
         return None
