@@ -1,6 +1,7 @@
 
 from ..pyxb_utils import RecursiveOperation
 from .base import SemanticValidationMixin
+from pyxb.binding.basis import NonElementContent
 
 
 class SemanticValidator(RecursiveOperation):
@@ -26,7 +27,11 @@ class SemanticValidator(RecursiveOperation):
         pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        self.parent_binding = parent_binding
+        value.parent_binding = parent_binding
+        if hasattr(value, '_validatedChildren'):
+            for child in value._validatedChildren():
+                if isinstance(child, NonElementContent):
+                    child.parent_binding = parent_binding
         return None
 
     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
