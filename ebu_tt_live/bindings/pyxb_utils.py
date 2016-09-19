@@ -4,7 +4,7 @@ This file contains those bits and pieces that are necessary to give PyXB extra f
 
 import threading
 import logging
-import copy
+from ebu_tt_live.errors import StopBranchIteration
 from pyxb.binding.basis import NonElementContent, ElementContent, complexTypeDefinition
 
 log = logging.getLogger(__name__)
@@ -102,9 +102,14 @@ class RecursiveOperation(object):
             children = getattr(value, self._children_iterator)()
 
             for item in children:
-                proc_elem = self._recursive_step(value=item.value, element=item, parent_binding=value, **kwargs)
-                if proc_elem is not None:
-                    output.append(proc_elem)
+                try:
+                    proc_elem = self._recursive_step(value=item.value, element=item, parent_binding=value, **kwargs)
+                    if proc_elem is not None:
+                        output.append(proc_elem)
+                except StopBranchIteration:
+                    # Moving on...
+                    continue
+
         return output
 
     def _recursive_step(self, value, element, parent_binding=None, **kwargs):

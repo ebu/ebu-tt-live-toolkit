@@ -55,8 +55,17 @@ class ExtentMissingError(Exception):
         return ERR_DOCUMENT_EXTENT_MISSING.format(type=type(self._attribute), value=self._attribute)
 
 
-class OutsideSegmentError(Exception):
+class StopBranchIteration(Exception):
+    """
+    Let the iterator know that it can proceed to the next branch. It does not need to traverse the current one any
+    further.
+    """
+
+
+class OutsideSegmentError(StopBranchIteration):
     """
     This exception is meant to be raised by the copying functionality to make the iterator know that a particular
     subtree is not meant to be parsed.
     """
+
+
