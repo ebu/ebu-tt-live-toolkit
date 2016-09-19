@@ -111,7 +111,7 @@ class EBUTT3Segmenter(RecursiveOperation):
             if element:
                 value._do_link_with_parent(dataset=self._semantic_dataset, element_content=element)
             else:
-                self._segment = value
+                self._segment = celem
 
     def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
         parent = self._semantic_dataset['instance_mapping'][non_element.parent_binding]
