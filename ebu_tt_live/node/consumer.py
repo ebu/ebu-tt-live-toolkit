@@ -95,7 +95,8 @@ class EBUTTDEncoder(SimpleConsumer):
         super(EBUTTDEncoder, self).process_document(document)
         # segmentation, conversion... here
         if sequence_missing and self._sequence is not None:
-            # Ok we just got a relevant document call the function that returns us a timer object
+            # Ok we just got a relevant document. Let's call the function
+            # that schedules the periodic segmentation.
             self._segment_timer = self._segment_timer(self)
 
     def get_segment(self, begin=None, end=None):

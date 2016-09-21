@@ -109,14 +109,13 @@ class EBUTT3Segmenter(RecursiveOperation):
                 element_content=element
             )
             if element:
-                value._do_link_with_parent(dataset=self._semantic_dataset, element_content=element)
+                value._do_link_with_parent(dataset=self._semantic_dataset, element_content=element, parent_binding=parent_binding)
             else:
                 self._segment = celem
 
     def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
-        parent = self._semantic_dataset['instance_mapping'][non_element.parent_binding]
+        parent = self._semantic_dataset['instance_mapping'][parent_binding]
         parent.append(copy.deepcopy(value))
-        non_element.parent_binding = None
 
     def proceed(self, **kwargs):
         self._semantic_dataset = {}

@@ -27,11 +27,6 @@ class SemanticValidator(RecursiveOperation):
         pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        value.parent_binding = parent_binding
-        if hasattr(value, '_validatedChildren'):
-            for child in value._validatedChildren():
-                if isinstance(child, NonElementContent):
-                    child.parent_binding = parent_binding
         return None
 
     def _after_element(self, value, element=None, parent_binding=None, **kwargs):

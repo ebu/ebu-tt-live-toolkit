@@ -130,7 +130,7 @@ class RecursiveOperation(object):
                     value=element_value, element=element, parent_binding=parent_binding, **kwargs)
                 children = self._process_children(value=element_value, element=element, proc_value=proc_value, **kwargs)
 
-            self._after_element(value=element_value, element=element, proc_value=proc_value, children=children, **kwargs)
+            self._after_element(value=element_value, element=element, parent_binding=parent_binding, proc_value=proc_value, children=children, **kwargs)
         else:
             proc_value = self._process_non_element(
                 value=element_value, non_element=element, parent_binding=parent_binding, **kwargs)

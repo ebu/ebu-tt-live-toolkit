@@ -49,12 +49,10 @@ class SemanticValidationMixin(object):
         """
         pass
 
-    def _do_link_with_parent(self, dataset, element_content):
+    def _do_link_with_parent(self, dataset, element_content, parent_binding):
         celem = dataset['instance_mapping'][self]
         # Link with parent
-        cparent = dataset['instance_mapping'][self.parent_binding]
-
-        self.parent_binding = None
+        cparent = dataset['instance_mapping'][parent_binding]
 
         if element_content.elementDeclaration.isPlural():
             cparent.append(celem)
@@ -158,72 +156,6 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.
         """
         pass
-
-    def _semantic_wire_parent(self, children, parent_binding):
-        # Extending pyxb bindings with parent property
-        for child in children:
-            if isinstance(child, ElementContent):
-                child.value.parent_binding = parent_binding
-            elif isinstance(child, NonElementContent):
-                # In this case we must attach this to the container NonElementContainer directly
-                child.parent_binding = parent_binding
-        return children
-
-
-    def _semantic_after_validation(self, **extra_kwargs):
-        """
-        After PyXB successfully validated the syntax this hook runs where the user may execute custom code.
-
-        At this point the validation of syntax has passed and the semantic validation can now begin.
-        A new traversal of the structure is needed to get the appropriate context down to individual parts of the nodes.
-        """
-        # Let's initiate DFS
-        document_logger.info(DOC_SYNTACTIC_VALIDATION_SUCCESSFUL)
-        # Create new semantic context object
-        semantic_dataset = {}
-        semantic_dataset.update(extra_kwargs)
-        # Collections of visited elements
-        pre_visited = set()
-        post_visited = set()
-        to_visit = []
-
-        # Call preprocess hooks for tt element
-        self._semantic_before_traversal(dataset=semantic_dataset)
-        to_visit.extend(list(reversed(list(self._validatedChildren()))))
-        log.debug([item.value  for item in to_visit])
-        self._semantic_wire_parent(to_visit, self)
-
-        while to_visit:
-            content = to_visit.pop()
-            if content in post_visited or isinstance(content, NonElementContent):
-                # This means we visited the current element already.
-                continue
-            elif content in pre_visited:
-                # This means we visited the current element's preprocessing and now postprocessing is in order
-                log.debug('post visit step: {}'.format(content.value))
-                # Call postprocess hooks of current element
-                content.value._semantic_after_traversal(dataset=semantic_dataset, element_content=content)
-                post_visited.add(content)
-            else:
-                # This means the current element has not been processed yet. Preprocessing is in order.
-                log.debug('pre visit step: {}'.format(content.value))
-                if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
-                    # Call preprocess hooks of current element
-                    content.value._semantic_before_traversal(dataset=semantic_dataset, element_content=content)
-                    pre_visited.add(content)
-                    to_visit.append(content)
-
-                if hasattr(content.value, '_validatedChildren'):
-                    ordered_children = list(reversed(list(content.value._validatedChildren())))
-                    log.debug('children: {}'.format([item.value for item in ordered_children]))
-                    self._semantic_wire_parent(ordered_children, content.value)
-                    to_visit.extend(ordered_children)
-                    log.debug('to_visit: {}'.format([item.value for item in to_visit]))
-
-        # Call postprocess hooks for tt element
-        self._semantic_after_traversal(dataset=semantic_dataset)
-        document_logger.info(DOC_SEMANTIC_VALIDATION_SUCCESSFUL)
-        return semantic_dataset
 
     def validateBinding (self, **extra_kwargs):
         """Check whether the binding content matches its content model.
