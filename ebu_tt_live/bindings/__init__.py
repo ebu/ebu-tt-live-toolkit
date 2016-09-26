@@ -62,6 +62,18 @@ def CreateFromDOM(*args, **kwargs):
         result = raw.CreateFromDOM(*args, **kwargs)
     return result
 
+
+# Customizing validation mixins before application
+# ================================================
+
+
+class LiveStyledElementMixin(StyledElementMixin):
+
+    @classmethod
+    def assign_style_type(cls, style_type_in):
+        cls._compatible_style_type = style_type_in
+
+
 # EBU TT Live classes
 # ===================
 
@@ -664,6 +676,18 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
 
             self._ordered_styles = ordered_styles
             return ordered_styles
+
+    @classmethod
+    def calculate_effective_style(cls, referenced_styles, inherited_styles, region_styles):
+        """
+        This function holds the styling semantics of containers considering direct reference, inheritance and
+        containment variables
+        :param referenced_styles: Directly referenced resolved styles
+        :param inherited_styles: Inherited styling information from parent container
+        :param region_styles: Default region styling information
+        :return:
+        """
+        return cls()
 
     def _semantic_before_traversal(self, dataset, element_content=None):
         self._semantic_register_id(dataset=dataset)

@@ -360,10 +360,11 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         """
         Create a valid ebutt3 document subset. As it collects data it will also prefix the ids in the document with
         the document sequence number so that later merge does not have collision.
+
         :param begin:
         :param end:
         :param deconflict_ids: prevent id clash across documents by prefixing the IDs
-        :return: tuple of partial data that is enough to create a document out of.
+        :return: EBUTT3Document
         """
         document_logger.info(
             DOC_REQ_SEGMENT.format(
@@ -447,6 +448,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     def create_compatible_document(self, *args, **kwargs):
         """
         This utility function is used by the converter to extract segments and by the new_document function.
+
         :param args:
         :param kwargs:
         :return:
@@ -474,7 +476,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
           - Document discard scenario in which case the document is already overwritten in the sequence so
             it will not get inserted.
 
-        :raises ValueError, SequenceOverridden, DocumentDiscardedError
+        :raises: ValueError, SequenceOverridden, DocumentDiscardedError
         """
         # Our document's begin and end times. Initially they correspond with the computed document begin- and end times.
         this_begins = TimingEventBegin(document)
@@ -556,6 +558,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     def _insert_document(self, document, ends=None):
         """
         In the end this function adds the document to the sequence registers.
+
         :param document:
         :param ends:
         :return:
@@ -574,6 +577,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         This function clears the timeline and the associated documents after the document in the parameter.
         This happens when a document with a higher sequence number is added preceding some other documents with lower
         sequence numbers.
+
         :param document:
         :return:
         """
@@ -656,6 +660,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         """
         Extract the subtitles from the sequence in the given timeframe. The return value is one
         merged EBUTT3Document
+
         :param begin:
         :param end:
         :return: EBUTT3Document

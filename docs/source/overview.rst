@@ -6,3 +6,4 @@ Overview of the EBU-TT live toolkit.
     validation
     user_input_producer
     timing_resolution
+    segmentation

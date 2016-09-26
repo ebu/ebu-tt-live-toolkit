@@ -20,8 +20,10 @@ def main():
         timeBase='clock',
         extent='800px 600px',
         clockMode='local',
-        lang='en-GB',
-        head=bindings.head_type(
+        lang='en-GB'
+    )
+
+    head_elem = bindings.head_type(
             metadata.headMetadata_type(
                 metadata.documentMetadata()
             ),
@@ -52,34 +54,38 @@ def main():
                     style=['style3']
                 )
             )
-        ),
-        body=bindings.body_type(
-            bindings.div_type(
-                bindings.p_type(
-                    bindings.span_type(
-                        'Some example text...',
-                        begin=datatypes.LimitedClockTimingType(timedelta(seconds=1)),
-                        end=datatypes.LimitedClockTimingType(timedelta(seconds=2)),
-                        style=['style4'],
-                        id='span1'
-                    ),
-                    bindings.br_type(),
-                    bindings.span_type(
-                        'And another line',
-                        begin=datatypes.LimitedClockTimingType(timedelta(seconds=3)),
-                        end=datatypes.LimitedClockTimingType(timedelta(seconds=4)),
-                        id='span2'
-                    ),
-                    id='ID005',
-                ),
-                style=['style1'],
-                region='region1'
-            ),
-            begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
-            dur=datatypes.LimitedClockTimingType(timedelta(seconds=5)),
-            style=['style2']
         )
+
+    body_elem = bindings.body_type(
+        bindings.div_type(
+            bindings.p_type(
+                bindings.span_type(
+                    'Some example text...',
+                    begin=datatypes.LimitedClockTimingType(timedelta(seconds=1)),
+                    end=datatypes.LimitedClockTimingType(timedelta(seconds=2)),
+                    style=['style4'],
+                    id='span1'
+                ),
+                bindings.br_type(),
+                bindings.span_type(
+                    'And another line',
+                    begin=datatypes.LimitedClockTimingType(timedelta(seconds=3)),
+                    end=datatypes.LimitedClockTimingType(timedelta(seconds=4)),
+                    id='span2'
+                ),
+                id='ID005',
+            ),
+            style=['style1'],
+            region='region1'
+        ),
+        begin=datatypes.LimitedClockTimingType(timedelta(seconds=.5)),
+        dur=datatypes.LimitedClockTimingType(timedelta(seconds=5)),
+        style=['style2']
     )
+
+    tt.head = head_elem
+    tt.body = body_elem
+
 
     document = EBUTT3Document.create_from_raw_binding(tt)
 

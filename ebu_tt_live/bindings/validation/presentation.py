@@ -31,6 +31,7 @@ class StyledElementMixin(object):
     """
     This functionality applies to all styled boxes to help computing styling related information
     """
+    _compatible_style_type = None
     _referenced_styles = None
     _validated_styles = None
     _inherited_region = None
@@ -62,7 +63,7 @@ class StyledElementMixin(object):
         self._inherited_region = region
 
         if region is not None:
-            # At last apply any region styles we may found
+            # At last apply any region styles we may find
             for region_style in region.validated_styles:
                 if region_style not in referenced_styles and region_style not in inherited_styles:
                     region_styles.append(region_style)
@@ -75,6 +76,14 @@ class StyledElementMixin(object):
 
     def _semantic_pop_styles(self, dataset):
         dataset['styles_stack'].pop()
+
+    def effective_style(self):
+        """
+        In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize
+        in any styled element container. Without it conversion from absolute values to relative would not be possible.
+        :return:
+        """
+        return self._compatible_style_type.calculate_effective_style
 
     @property
     def validated_styles(self):
