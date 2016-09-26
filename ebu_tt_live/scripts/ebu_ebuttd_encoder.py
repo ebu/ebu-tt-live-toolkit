@@ -51,7 +51,7 @@ def start_timer(encoder):
 def main():
     args = parser.parse_args()
     create_loggers()
-    log.info('This is a Simple Consumer example')
+    log.info('This is the EBU-TT-D encoder')
 
     manifest_path = args.manifest_path
 

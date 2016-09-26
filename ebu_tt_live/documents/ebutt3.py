@@ -381,10 +381,11 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
 class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     """
     EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.
+
     The sequence object can be used in 2 different modes:
-     - It can be used to produce a sequence(i.e.: new_document method)
-     - as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
-       (i.e.: add_document method.
+      - It can be used to produce a sequence(i.e.: new_document method)
+      - as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
+        (i.e.: add_document method.
 
     The sequence is responsible to keep the documents ordered and filter those documents out, which were eventually
     overwritten. It ensures that at any given time exactly 0 or 1 document is active (R14).
