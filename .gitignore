@@ -119,3 +119,5 @@ ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
 docs/build/*
 !docs/build/index.html
 !docs/build/img
+
+testing/bdd/features/merging/styles.feature
