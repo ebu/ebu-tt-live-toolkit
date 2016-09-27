@@ -4,7 +4,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
 # TODO: paddding, reference chain
 
   # Elements referencing styles with different fontSize attribute values
-  Scenario: Font size inheritance
+  Scenario: Font size inheritance 
     Given an EBU-TT Live document <xml_file>
     And the document has a cell resolution of <cell_resolution>
     And the document contains a region with applied font size <region_size> 
