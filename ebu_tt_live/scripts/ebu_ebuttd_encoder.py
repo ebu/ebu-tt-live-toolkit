@@ -3,7 +3,6 @@ from argparse import ArgumentParser
 from .common import create_loggers
 
 from ebu_tt_live.node import EBUTTDEncoder
-from ebu_tt_live.documents.converters import MP4BoxConverter
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
@@ -67,9 +66,7 @@ def main():
     else:
         consumer_impl = TwistedConsumerImpl()
 
-    if args.output_format == 'mp4':
-        outbound_carriage = MP4BoxConverter(args.output_folder, 'ebuttd-encode-{}.mp4')
-    elif args.output_format == 'xml':
+    if args.output_format == 'xml':
         outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{}.xml')
     else:
         raise Exception('Invalid output format: {}'.format(args.output_format))
