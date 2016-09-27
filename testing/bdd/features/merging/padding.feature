@@ -20,3 +20,6 @@ Feature: Compute padding on a single EBU-TT Live element
     | xml_file    | cell_resolution | region_extent | region_padding | div_padding | p_padding | span_padding | computed_padding |  
     | padding.xml |                 | 100% 100%     | 1%             |             |           |              | 1%               |  
 
+
+#TODO: In TTML padding applies to region only. Percentages are relative to width and height of region. Padding is not inherited. So percentages always override? Why then allow them on both region and referenced style? 
+
