@@ -44,7 +44,7 @@ parser.add_argument('-of', '--output-format', dest='output_format', default='xml
 
 def start_timer(encoder):
     segment_timer = task.LoopingCall(encoder.convert_next_segment)
-    segment_timer.start(encoder.segment_length.total_seconds())
+    segment_timer.start(encoder.segment_length.total_seconds(), now=False)
     return segment_timer
 
 
