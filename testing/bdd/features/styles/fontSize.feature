@@ -1,7 +1,7 @@
 @styles @document
 Feature: Compute fontSize on a single EBU-TT Live element
  
-# TODO: paddding, reference chain
+  # TODO: paddding, reference chain
 
   # Elements referencing styles with different fontSize attribute values
   Scenario: Font size inheritance 
@@ -10,7 +10,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
     And the document contains a region with applied font size <region_size> 
     And the document contains a div with applied font size <div_size> that references the region
     And the div has a child p with applied font size <p_size>
-    And the p has a child span with applied style <span_style>    
+    And the p has a child span with applied font size <span_size>
     Then the computed text size is <computed_size>
 
     Examples:
@@ -39,7 +39,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
     Then the computed text size is <computed_size>
 
     Examples:
-    | fontSize.xml | cell_resolution | S1_size  | S2_size   | S3_size | applied_style | computed_size |  
+    | xml_file     | cell_resolution | S1_size  | S2_size   | S3_size | applied_style | computed_size |
     | fontSize.xml | 32 15           | 100%     | 50%       | 100%    | S2            | 50%           |  
     | fontSize.xml | 32 15           | 100%     | 50%       | 100%    | S3            | 100%          |  
     | fontSize.xml | 10 10           | 100%     | 200%      | 50%     | S2            | 2c            |  
