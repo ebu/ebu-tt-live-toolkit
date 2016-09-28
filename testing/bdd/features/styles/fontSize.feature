@@ -38,20 +38,21 @@ Feature: Compute fontSize on a single EBU-TT Live element
   # <style xml:id="S3" tts:fontSize="50%" style="S1" />   // computed: 100%
   Scenario: Styles reference chain
     Given an xml file <xml_file>
-    When the document has a cell resolution of <cell_resolution>
+    When it has a cell resolution of <cell_resolution>
     And it has extent of <extent>
-    And the document declares style S1 with font size <S1_value>
-    And the document declares style S2 that references S1 then sets font size <S2_value> 
-    And the document declares style S3 with font size <S3_value> then references S1
-    And style <applied_style> is applied to text
-    And the document is generated
-    Then the computed <style_attribute> in <elem_id> is <computed_value>
+    And it has style S1 with <style_attribute> with value <S1_value> 
+    And it has style S2 with <style_attribute> with value <S2_value> and <other_style_attribute> with value <other_style_value>
+    And style S2 is applied to <elem_id>
+    When the document is generated
+    Then the computed value for <style_attribute> is <computed_value>
 
     Examples:
-    | xml_file     | cell_resolution | S1_value | S2_value  | S3_value | applied_style | computed_value |  
-    | fontSize.xml | 32 15           | 100%     | 50%       | 100%     | S2            | 50%            |  
-    | fontSize.xml | 32 15           | 100%     | 50%       | 100%     | S3            | 100%           |  
-    | fontSize.xml | 10 10           | 100%     | 200%      | 50%      | S2            | 2c             |  
-    | fontSize.xml | 10 10           | 100%     | 200%      | 50%      | S3            | 1c             |  
-    | fontSize.xml | 10 10           | 100% 50% | 200% 100% | 50% 50%  | S2            | 2c 1c          |  
-    | fontSize.xml | 10 10           | 100% 50% | 200%      | 50%      | S3            | 1c .5c         |  
+    | xml_file                | cell_resolution | extent      | S1_value  | S2_value  | other_style_attribute | other_style_value | computed_value |  
+    | style_attribute_chained | 10 10           |             | 1c        | 2c        | style                 | S1                | 1c             |  
+    | style_attribute_chained | 10 10           |             | 1c        | 2c        | tts:fontSize          | 3c                | 3c             |  
+    | style_attribute_chained | 10 10           |             | 1c        |           | tts:style             | 1c                | 1c             |  
+    # Style 2 references itself:
+    | style_attribute_chained | 10 10           | 100px 100px | 10px 20px | 20px 10px | tts:style             | S2                | 20px 10px      |  
+    # No-existent style is ignored (or should it reset to default?)
+    | style_attribute_chained | 10 10           | 100px 100px | 10px 10px | 20px 10px | tts:style             | no_such_style     | 10px 10px      |  
+

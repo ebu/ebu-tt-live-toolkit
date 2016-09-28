@@ -21,23 +21,21 @@
       <ebuttm:documentMetadata/>
     </tt:metadata>
     <tt:styling>
-      <tt:style {% if S1_value and S1_value != "*?Empty?*" %} {{ style_attribute }}="{{ S1_value }}" {% endif %} xml:id="S1"/>
-      <tt:style 
-        {% if S1_value and S1_value != "*?Empty?*" %} {{ style_attribute }}="{{ S1_value }}" {% endif %}  
-        {% if S2_value and S2_value != "*?Empty?*" %} {{ style_attribute }}="{{ S2_value }}" {% endif %} xml:id="S2"/>
-      <tt:style 
-        {% if S1_value and S1_value != "*?Empty?*" %} {{ style_attribute }}="{{ S1_value }}" {% endif %}  
-        {% if S2_value and S2_value != "*?Empty?*" %} {{ style_attribute }}="{{ S2_value }}" {% endif %}  
-        {% if S3_value and S3_value != "*?Empty?*" %} {{ style_attribute }}="{{ S3_value }}" {% endif %} xml:id="S3"/>
+      <tt:style xml:id="S1"
+        {% if S1_value and S1_value != "*?Empty?*" %} {{ style_attribute }}="{{ S1_value }}" {% endif %} />
+      <tt:style xml:id="S2"          
+        {% if S2_value and S2_value != "*?Empty?*" %} {{ style_attribute }}="{{ S2_value }}" {% endif %} 
+        {% if S3_value and S3_value != "*?Empty?*" %} {{ other_style_attribute }}="{{ other_style_value }}" {% endif %}/>
+    </tt:styling>
     </tt:styling>
     <tt:layout>
-      <tt:region style="S1" xml:id="R1"/>
+      <tt:region xml:id="R1"/>
     </tt:layout>
   </tt:head>
   <tt:body begin="00:00:00.500" dur="00:00:05">
-    <tt:div region="R1" style="S2">
+    <tt:div region="R1">
       <tt:p xml:id="ID005">
-        <tt:span begin="00:00:01" end="00:00:02" style="S3" xml:id="{{ elem_id }}">Some example text...</tt:span>
+        <tt:span style="S2" begin="00:00:01" end="00:00:02" xml:id="{{ elem_id }}">Some example text...</tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
