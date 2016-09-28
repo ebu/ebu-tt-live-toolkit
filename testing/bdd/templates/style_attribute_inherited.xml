@@ -33,7 +33,7 @@
   <tt:body begin="00:00:00.500" dur="00:00:05">
     <tt:div region="R1" style="S2">
       <tt:p xml:id="ID005" style="S3">
-        <tt:span begin="00:00:01" end="00:00:02" style="S4" xml:id="span1">Some example text...</tt:span>
+        <tt:span begin="00:00:01" end="00:00:02" style="S4" xml:id="{{ elem_id }}">Some example text...</tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
