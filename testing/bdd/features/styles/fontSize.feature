@@ -1,7 +1,6 @@
 @styles @document
 Feature: Compute fontSize on a single EBU-TT Live element
  
-  # TODO: paddding, reference chain
 
   Examples:
   | elem_id | style_attribute |
