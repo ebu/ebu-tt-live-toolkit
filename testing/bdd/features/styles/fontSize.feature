@@ -19,16 +19,16 @@ Feature: Compute fontSize on a single EBU-TT Live element
     Then the computed <style_attribute> in <elem_id> is <computed_value>
 
     Examples:
-    | xml_file                      | extent      | cell_resolution | region_value | div_value | p_value  | span_value | computed_value |  
-    | style_attribute_inherited.xml |             | 32 15           | 100%         | 100%      | 100%     | 100%       | 1c             |  
-    | style_attribute_inherited.xml |             | 32 15           | 50%          | 200%      | 50%      | 200%       | 1c             |  
-    | style_attribute_inherited.xml |             | 32 15           | 1c           | 200%      | 100%     | 50%        | 1c             |  
-    | style_attribute_inherited.xml |             | 32 15           | 100%         | 2c        | 100%     | 50%        | 1c             |  
-    | style_attribute_inherited.xml |             | 10 10           | 100%         |           |          | 50%        | .5c            |  
-    | style_attribute_inherited.xml |             | 10 10           |              | 50%       |          | 400%       | 20%            |  
-    | style_attribute_inherited.xml |             | 10 10           | 1c 2c        | 100% 50%  | 50% 100% | 200% 100%  | 10% 10%        |  
-    | style_attribute_inherited.xml | 100px 100px |                 |              | 10px      | 200%     | 50%        | 10px           |  
-    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c        | 100% 50%  | 5px 20px | 200% 50%   | 1c             |  
+    | xml_file                      | extent      | cell_resolution | S1_value | S2_value | S3_value | S4_value  | computed_value |  
+    | style_attribute_inherited.xml |             | 32 15           | 100%     | 100%     | 100%     | 100%      | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 50%      | 200%     | 50%      | 200%      | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 1c       | 200%     | 100%     | 50%       | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 100%     | 2c       | 100%     | 50%       | 1c             |  
+    | style_attribute_inherited.xml |             | 10 10           | 100%     |          |          | 50%       | .5c            |  
+    | style_attribute_inherited.xml |             | 10 10           |          | 50%      |          | 400%      | 20%            |  
+    | style_attribute_inherited.xml |             | 10 10           | 1c 2c    | 100% 50% | 50% 100% | 200% 100% | 10% 10%        |  
+    | style_attribute_inherited.xml | 100px 100px |                 |          | 10px     | 200%     | 50%       | 10px           |  
+    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c    | 100% 50% | 5px 20px | 200% 50%  | 1c             |  
 
 
   # One style references another style. Note that the ordering matters.
@@ -50,9 +50,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
     | xml_file                | cell_resolution | extent      | S1_value  | S2_value  | other_style_attribute | other_style_value | computed_value |  
     | style_attribute_chained | 10 10           |             | 1c        | 2c        | style                 | S1                | 1c             |  
     | style_attribute_chained | 10 10           |             | 1c        | 2c        | tts:fontSize          | 3c                | 3c             |  
-    | style_attribute_chained | 10 10           |             | 1c        |           | tts:style             | 1c                | 1c             |  
+    | style_attribute_chained | 10 10           |             | 1c        |           | style                 | S1                | 1c             |  
     # Style 2 references itself:
-    | style_attribute_chained | 10 10           | 100px 100px | 10px 20px | 20px 10px | tts:style             | S2                | 20px 10px      |  
-    # No-existent style is ignored (or should it reset to default?)
-    | style_attribute_chained | 10 10           | 100px 100px | 10px 10px | 20px 10px | tts:style             | no_such_style     | 10px 10px      |  
+    | style_attribute_chained | 10 10           | 100px 100px | 10px 20px | 20px 10px | style                 | S2                | 20px 10px      |  
 
