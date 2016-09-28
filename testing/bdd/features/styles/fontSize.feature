@@ -28,6 +28,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
     | fontSize_inheritance.xml |             | 10 10           |             | 50%      |          | 400%      | 20%            |  
     | fontSize_inheritance.xml |             | 10 10           | 1c 2c       | 100% 50% | 50% 100% | 200% 100% | 10% 10%        |  
     | fontSize_inheritance.xml | 100px 100px |                 |             | 10px     | 200%     | 50%       | 10px           |  
+    | fontSize_inheritance.xml | 100px 100px | 10 10           | 1c 2c       | 100% 50% | 5px 20px | 200% 50%  | 1c             |  
 
 
   # One style references another style. Note that the ordering matters.
