@@ -12,7 +12,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
     When it has a cell resolution of <cell_resolution>
     And it has extent of <extent>
     And it contains a region with applied style S1 with <style_attribute> value <S1_value>
-    And it contains a div with applied style S1 with <style_attribute> value <S2_value> that references the region
+    And it contains a div with applied style S2 with <style_attribute> value <S2_value> that references the region
     And the div has a child p with applied style S3 with <style_attribute> value <S3_value>
     And the p has a child span with applied style S4 with <style_attribute> value <S4_value>
     And the document is generated
