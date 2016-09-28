@@ -5,8 +5,10 @@
 {% if cell_resolution and cell_resolution != "*?Empty?*" %}
        ttp:cellResolution="{{ cell_resolution }}"
 {% endif %}
+{% if extent and extent != "*?Empty?*" %}
+       tts:extent="{{ extent }}"
+{% endif %}
        ttp:timeBase="clock"
-       tts:extent="800px 600px"
        xml:lang="en-GB"
        xmlns:ebuttm="urn:ebu:tt:metadata"
        xmlns:ebuttp="urn:ebu:tt:parameters"
