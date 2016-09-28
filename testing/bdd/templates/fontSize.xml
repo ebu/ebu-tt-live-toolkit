@@ -2,10 +2,8 @@
 <tt:tt ebuttp:sequenceIdentifier="testSequence001"
        ebuttp:sequenceNumber="1"
        ttp:clockMode="local"
-{% if cell_resolution %}
-   {% if cell_resolution == "*?Empty?*" %}
-       ttp:cellResolution="{{ cell_resolution }}
-   {% endif %}
+{% if cell_resolution and cell_resolution != "*?Empty?*" %}
+       ttp:cellResolution="{{ cell_resolution }}"
 {% endif %}
        ttp:timeBase="clock"
        tts:extent="800px 600px"
@@ -21,10 +19,10 @@
       <ebuttm:documentMetadata/>
     </tt:metadata>
     <tt:styling>
-      <tt:style xml:id="S1"/>
-      <tt:style xml:id="S2"/>
-      <tt:style xml:id="S3"/>
-      <tt:style xml:id="S4"/>
+      <tt:style {% if S1_font_size and S1_font_size != "*?Empty?*" %}tts:fontSize="{{ S1_font_size }}" {% endif %}xml:id="S1"/>
+      <tt:style {% if S2_font_size and S2_font_size != "*?Empty?*" %}tts:fontSize="{{ S2_font_size }}" {% endif %}xml:id="S2"/>
+      <tt:style {% if S3_font_size and S3_font_size != "*?Empty?*" %}tts:fontSize="{{ S3_font_size }}" {% endif %}xml:id="S3"/>
+      <tt:style {% if S4_font_size and S4_font_size != "*?Empty?*" %}tts:fontSize="{{ S4_font_size }}" {% endif %}xml:id="S4"/>
     </tt:styling>
     <tt:layout>
       <tt:region style="S4" xml:id="R1"/>

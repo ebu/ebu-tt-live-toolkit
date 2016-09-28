@@ -47,10 +47,19 @@ def invalid_doc(template_file, template_dict):
 
 @given('the document is generated')
 def gen_document(template_file, template_dict):
+    # TODO: This is legacy and to be removed when tests are refactored
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
     document.validate()
     return document
+
+
+@when('the document is generated')
+def when_doc_generated(test_context, template_dict, template_file):
+    # This is a more standard-compliant way to do this
+    xml_file = template_file.render(template_dict)
+    document = EBUTT3Document.create_from_xml(xml_file)
+    test_context['document'] = document
 
 
 def timestr_to_timedelta(time_str, time_base):
@@ -75,6 +84,11 @@ def valid_computed_end_time(computed_end, gen_document):
     else:
         computed_end_timedelta = None
     assert gen_document.computed_end_time == computed_end_timedelta
+
+
+@then('the computed <style_attribute> in <elem_id> is <computed_value>')
+def then_computed_style_value_is(style_attribute, elem_id, computed_value):
+    pass
 
 
 @given('it has availability time <avail_time>')
