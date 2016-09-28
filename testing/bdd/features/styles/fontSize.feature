@@ -11,15 +11,15 @@ Feature: Compute fontSize on a single EBU-TT Live element
     Given an xml file <xml_file>
     When it has a cell resolution of <cell_resolution>
     And it has extent of <extent>
-    And it contains a region with applied style S1 with style attribute value <S1_value>
-    And it contains a div with applied style S1 with style attribute value <S2_value> that references the region
-    And the div has a child p with applied style S3 with style attribute value <S3_value>
-    And the p has a child span with applied style S4 with style attribute value <S4_value>
+    And it contains a region with applied style S1 with <style_attribute> value <S1_value>
+    And it contains a div with applied style S1 with <style_attribute> value <S2_value> that references the region
+    And the div has a child p with applied style S3 with <style_attribute> value <S3_value>
+    And the p has a child span with applied style S4 with <style_attribute> value <S4_value>
     And the document is generated
     Then the computed <style_attribute> in <elem_id> is <computed_value>
 
     Examples:
-    | xml_file                 | extent      | cell_resolution | region_value | div_value | p_value  | span_value | computed_value |  
+    | xml_file                      | extent      | cell_resolution | region_value | div_value | p_value  | span_value | computed_value |  
     | style_attribute_inherited.xml |             | 32 15           | 100%         | 100%      | 100%     | 100%       | 1c             |  
     | style_attribute_inherited.xml |             | 32 15           | 50%          | 200%      | 50%      | 200%       | 1c             |  
     | style_attribute_inherited.xml |             | 32 15           | 1c           | 200%      | 100%     | 50%        | 1c             |  
@@ -39,6 +39,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
   Scenario: Styles reference chain
     Given an xml file <xml_file>
     When the document has a cell resolution of <cell_resolution>
+    And it has extent of <extent>
     And the document declares style S1 with font size <S1_value>
     And the document declares style S2 that references S1 then sets font size <S2_value> 
     And the document declares style S3 with font size <S3_value> then references S1
