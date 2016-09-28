@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="testSequence001"
+       ebuttp:sequenceNumber="1"
+       ttp:clockMode="local"
+{% if cell_resolution and cell_resolution != "*?Empty?*" %}
+       ttp:cellResolution="{{ cell_resolution }}"
+{% endif %}
+{% if extent and extent != "*?Empty?*" %}
+       tts:extent="{{ extent }}"
+{% endif %}
+       ttp:timeBase="clock"
+       xml:lang="en-GB"
+       xmlns:ebuttm="urn:ebu:tt:metadata"
+       xmlns:ebuttp="urn:ebu:tt:parameters"
+       xmlns:tt="http://www.w3.org/ns/ttml"
+       xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+       xmlns:tts="http://www.w3.org/ns/ttml#styling"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style {% if attribute and value_1 != "*?Empty?*" %} {{ attribute }}="{{ value_1 }}" {% endif %} xml:id="S1" />
+    </tt:styling>
+    <tt:layout>
+      <tt:region xml:id="{{ elem_id }}" style="S1" tts:origin="0 0" tts:extent="100% 100%"
+        {% if attribute and value_2 != "*?Empty?*" %} {{ attribute }}="{{ value_2 }}" {% endif %} />
+    </tt:layout>
+  </tt:head>
+  <tt:body begin="00:00:00.500" dur="00:00:05">
+    <tt:div region="R1">
+      <tt:p xml:id="p1">
+        <tt:span begin="00:00:01" end="00:00:02" xml:id="span1">Some example text...</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
