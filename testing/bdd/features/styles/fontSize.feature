@@ -11,24 +11,24 @@ Feature: Compute fontSize on a single EBU-TT Live element
     Given an xml file <xml_file>
     When it has a cell resolution of <cell_resolution>
     And it has extent of <extent>
-    And it contains a region with applied font size <region_value>
-    And it contains a div with applied font size <div_value> that references the region
-    And the div has a child p with applied font size <p_value>
-    And the p has a child span with applied font size <span_value>
+    And it contains a region with applied style S1 with style attribute value <S1_value>
+    And it contains a div with applied style S1 with style attribute value <S2_value> that references the region
+    And the div has a child p with applied style S3 with style attribute value <S3_value>
+    And the p has a child span with applied style S4 with style attribute value <S4_value>
     And the document is generated
     Then the computed <style_attribute> in <elem_id> is <computed_value>
 
     Examples:
     | xml_file                 | extent      | cell_resolution | region_value | div_value | p_value  | span_value | computed_value |  
-    | fontSize_inheritance.xml |             | 32 15           | 100%         | 100%      | 100%     | 100%       | 1c             |  
-    | fontSize_inheritance.xml |             | 32 15           | 50%          | 200%      | 50%      | 200%       | 1c             |  
-    | fontSize_inheritance.xml |             | 32 15           | 1c           | 200%      | 100%     | 50%        | 1c             |  
-    | fontSize_inheritance.xml |             | 32 15           | 100%         | 2c        | 100%     | 50%        | 1c             |  
-    | fontSize_inheritance.xml |             | 10 10           | 100%         |           |          | 50%        | .5c            |  
-    | fontSize_inheritance.xml |             | 10 10           |              | 50%       |          | 400%       | 20%            |  
-    | fontSize_inheritance.xml |             | 10 10           | 1c 2c        | 100% 50%  | 50% 100% | 200% 100%  | 10% 10%        |  
-    | fontSize_inheritance.xml | 100px 100px |                 |              | 10px      | 200%     | 50%        | 10px           |  
-    | fontSize_inheritance.xml | 100px 100px | 10 10           | 1c 2c        | 100% 50%  | 5px 20px | 200% 50%   | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 100%         | 100%      | 100%     | 100%       | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 50%          | 200%      | 50%      | 200%       | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 1c           | 200%      | 100%     | 50%        | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 100%         | 2c        | 100%     | 50%        | 1c             |  
+    | style_attribute_inherited.xml |             | 10 10           | 100%         |           |          | 50%        | .5c            |  
+    | style_attribute_inherited.xml |             | 10 10           |              | 50%       |          | 400%       | 20%            |  
+    | style_attribute_inherited.xml |             | 10 10           | 1c 2c        | 100% 50%  | 50% 100% | 200% 100%  | 10% 10%        |  
+    | style_attribute_inherited.xml | 100px 100px |                 |              | 10px      | 200%     | 50%        | 10px           |  
+    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c        | 100% 50%  | 5px 20px | 200% 50%   | 1c             |  
 
 
   # One style references another style. Note that the ordering matters.
