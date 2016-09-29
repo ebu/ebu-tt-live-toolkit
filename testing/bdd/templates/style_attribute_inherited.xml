@@ -27,13 +27,13 @@
       <tt:style {% if S4_value and S4_value != "*?Empty?*" %} {{ style_attribute }}="{{ S4_value }}" {% endif %}xml:id="S4"/>
     </tt:styling>
     <tt:layout>
-      <tt:region style="S1" xml:id="R1"/>
+      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c" xml:id="R1"/>
     </tt:layout>
   </tt:head>
   <tt:body begin="00:00:00.500" dur="00:00:05">
     <tt:div region="R1" style="S2">
       <tt:p xml:id="ID005" style="S3">
-        <tt:span begin="00:00:01" end="00:00:02" style="S4" xml:id="{{ elem_id }}">Some example text...</tt:span>
+        <tt:span begin="00:00:01" end="00:00:02" style="S4" xml:id="span1">Some example text...</tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
