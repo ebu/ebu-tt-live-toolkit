@@ -678,7 +678,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             return ordered_styles
 
     @classmethod
-    def calculate_effective_style(cls, referenced_styles, inherited_styles, region_styles):
+    def compute_style(cls, referenced_styles, inherited_styles, region_styles):
         """
         This function holds the styling semantics of containers considering direct reference, inheritance and
         containment variables

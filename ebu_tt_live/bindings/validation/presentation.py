@@ -77,13 +77,19 @@ class StyledElementMixin(object):
     def _semantic_pop_styles(self, dataset):
         dataset['styles_stack'].pop()
 
-    def effective_style(self):
+    def computed_style(self):
         """
         In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize
         in any styled element container. Without it conversion from absolute values to relative would not be possible.
+        This is a requirement for the EBU-TT-D conversion where only percentages are allowed in sizing attributes.
+        To support converting the pixel/celll values that don't cascade to percentages that do the simplest
+        approach is to compute the style in whatever crazy constellation of units it may be provided in and generate
+        percentage based styles for p and span elements taking into account their relative cascading nature. Yes if
+        this confused you please refer to the documentation of EBU-TT-D, EBU-TT-Live, TTML and whatever else TTML might
+        refer to in terms of these style attributes.
         :return:
         """
-        return self._compatible_style_type.calculate_effective_style
+        return self._compatible_style_type.compute_style
 
     @property
     def validated_styles(self):
