@@ -67,11 +67,112 @@ def CreateFromDOM(*args, **kwargs):
 # ================================================
 
 
-class LiveStyledElementMixin(StyledElementMixin):
+class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.style):
+
+    # This helps us detecting infinite loops.
+    _styling_lock = None
+    # ordered styles cached
+    _ordered_styles = None
+
+    def __repr__(self):
+        return u'<style ID: {id} at {addr}>'.format(
+            id=self.id,
+            addr=hex(id(self))
+        )
+
+    def _semantic_copy(self, dataset):
+        copied_style = style_type(
+            id=self.id,
+            style=self.style,  # there is no ordering requirement in styling so too soon to deconflict here
+            direction=self.direction,
+            fontFamily=self.fontFamily,
+            fontSize=self.fontSize,
+            lineHeight=self.lineHeight,
+            textAlign=self.textAlign,
+            color=self.color,
+            backgroundColor=self.backgroundColor,
+            fontStyle=self.fontStyle,
+            fontWeight=self.fontWeight,
+            textDecoration=self.textDecoration,
+            unicodeBidi=self.unicodeBidi,
+            wrapOption=self.wrapOption,
+            padding=self.padding,
+            linePadding=self.linePadding,
+            _strict_keywords=False
+        )
+        return copied_style
+
+    @property
+    def validated_styles(self):
+        # The style element itself is not meant to implement this.
+        raise NotImplementedError()
+
+    def ordered_styles(self, dataset):
+        """
+        This function figures out the chain of styles.
+        WARNING: Do not call this before the semantic validation of tt/head/styling is finished. Otherwise your style
+        may not have been found yet!
+        :param dataset: Semantic dataset
+        :return: a list of styles applicable in order
+        """
+
+        if self._styling_lock.locked():
+            raise SemanticValidationError(ERR_SEMANTIC_STYLE_CIRCLE.format(
+                style=self.id
+            ))
+
+        with self._styling_lock:
+            if self._ordered_styles is not None:
+                return self._ordered_styles
+            ordered_styles = [self]
+            if self.style is not None:
+                for style_id in self.style:
+                    try:
+                        style_elem = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
+                        cascading_styles = style_elem.ordered_styles(dataset=dataset)
+                        for style_elem in cascading_styles:
+                            if style_elem in ordered_styles:
+                                continue
+                            ordered_styles.append(style_elem)
+                    except LookupError:
+                        raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(
+                            style=style_id
+                        ))
+
+            self._ordered_styles = ordered_styles
+            return ordered_styles
 
     @classmethod
-    def assign_style_type(cls, style_type_in):
-        cls._compatible_style_type = style_type_in
+    def compute_style(cls, referenced_styles, inherited_styles, region_styles):
+        """
+        This function holds the styling semantics of containers considering direct reference, inheritance and
+        containment variables
+        :param referenced_styles: Directly referenced resolved styles
+        :param inherited_styles: Inherited styling information from parent container
+        :param region_styles: Default region styling information
+        :return:
+        """
+        return cls()
+
+    def _semantic_before_traversal(self, dataset, element_content=None):
+        self._semantic_register_id(dataset=dataset)
+        self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
+        self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
+        # Init recursion loop detection lock
+        self._styling_lock = threading.Lock()
+        self._ordered_styles = None
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        if self not in dataset['affected_elements']:
+            raise OutsideSegmentError()
+
+
+raw.style._SetSupersedingClass(style_type)
+
+
+class LiveStyledElementMixin(StyledElementMixin):
+
+    _compatible_style_type = style_type
 
 
 # EBU TT Live classes
@@ -307,7 +408,7 @@ raw.head_type._SetSupersedingClass(head_type)
 # ============
 
 
-class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidationMixin,
+class p_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
              SemanticValidationMixin, raw.p_type):
 
     _attr_en_pre = {
@@ -374,7 +475,7 @@ class p_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidation
 raw.p_type._SetSupersedingClass(p_type)
 
 
-class span_type(IDMixin, StyledElementMixin, TimingValidationMixin, SemanticValidationMixin, raw.span_type):
+class span_type(IDMixin, LiveStyledElementMixin, TimingValidationMixin, SemanticValidationMixin, raw.span_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -445,7 +546,7 @@ class br_type(SemanticValidationMixin, raw.br_type):
 raw.br_type._SetSupersedingClass(br_type)
 
 
-class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidationMixin,
+class div_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):
 
     _attr_en_pre = {
@@ -501,7 +602,7 @@ class div_type(IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidati
 raw.div_type._SetSupersedingClass(div_type)
 
 
-class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
+class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
@@ -602,109 +703,6 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
 raw.body_type._SetSupersedingClass(body_type)
 
 
-class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.style):
-
-    # This helps us detecting infinite loops.
-    _styling_lock = None
-    # ordered styles cached
-    _ordered_styles = None
-
-    def __repr__(self):
-        return u'<style ID: {id} at {addr}>'.format(
-            id=self.id,
-            addr=hex(id(self))
-        )
-
-    def _semantic_copy(self, dataset):
-        copied_style = style_type(
-            id=self.id,
-            style=self.style,  # there is no ordering requirement in styling so too soon to deconflict here
-            direction=self.direction,
-            fontFamily=self.fontFamily,
-            fontSize=self.fontSize,
-            lineHeight=self.lineHeight,
-            textAlign=self.textAlign,
-            color=self.color,
-            backgroundColor=self.backgroundColor,
-            fontStyle=self.fontStyle,
-            fontWeight=self.fontWeight,
-            textDecoration=self.textDecoration,
-            unicodeBidi=self.unicodeBidi,
-            wrapOption=self.wrapOption,
-            padding=self.padding,
-            linePadding=self.linePadding,
-            _strict_keywords=False
-        )
-        return copied_style
-
-    @property
-    def validated_styles(self):
-        # The style element itself is not meant to implement this.
-        raise NotImplementedError()
-
-    def ordered_styles(self, dataset):
-        """
-        This function figures out the chain of styles.
-        WARNING: Do not call this before the semantic validation of tt/head/styling is finished. Otherwise your style
-        may not have been found yet!
-        :param dataset: Semantic dataset
-        :return: a list of styles applicable in order
-        """
-
-        if self._styling_lock.locked():
-            raise SemanticValidationError(ERR_SEMANTIC_STYLE_CIRCLE.format(
-                style=self.id
-            ))
-
-        with self._styling_lock:
-            if self._ordered_styles is not None:
-                return self._ordered_styles
-            ordered_styles = [self]
-            if self.style is not None:
-                for style_id in self.style:
-                    try:
-                        style_elem = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
-                        cascading_styles = style_elem.ordered_styles(dataset=dataset)
-                        for style_elem in cascading_styles:
-                            if style_elem in ordered_styles:
-                                continue
-                            ordered_styles.append(style_elem)
-                    except LookupError:
-                        raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(
-                            style=style_id
-                        ))
-
-            self._ordered_styles = ordered_styles
-            return ordered_styles
-
-    @classmethod
-    def compute_style(cls, referenced_styles, inherited_styles, region_styles):
-        """
-        This function holds the styling semantics of containers considering direct reference, inheritance and
-        containment variables
-        :param referenced_styles: Directly referenced resolved styles
-        :param inherited_styles: Inherited styling information from parent container
-        :param region_styles: Default region styling information
-        :return:
-        """
-        return cls()
-
-    def _semantic_before_traversal(self, dataset, element_content=None):
-        self._semantic_register_id(dataset=dataset)
-        self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
-        self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
-        # Init recursion loop detection lock
-        self._styling_lock = threading.Lock()
-        self._ordered_styles = None
-
-    def _semantic_before_copy(self, dataset, element_content=None):
-        if self not in dataset['affected_elements']:
-            raise OutsideSegmentError()
-
-
-raw.style._SetSupersedingClass(style_type)
-
-
 class styling(SemanticValidationMixin, raw.styling):
 
     def __copy__(self):
@@ -741,7 +739,7 @@ class styling(SemanticValidationMixin, raw.styling):
 raw.styling._SetSupersedingClass(styling)
 
 
-class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
+class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
 
     def _semantic_copy(self, dataset):
         copied_region = region_type(

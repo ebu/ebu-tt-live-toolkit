@@ -33,6 +33,8 @@ class StyledElementMixin(object):
     """
     _compatible_style_type = None
     _referenced_styles = None
+    _inherited_styles = None
+    _region_styles = None
     _validated_styles = None
     _inherited_region = None
 
@@ -69,6 +71,8 @@ class StyledElementMixin(object):
                     region_styles.append(region_style)
 
         self._referenced_styles = referenced_styles
+        self._inherited_styles = inherited_styles
+        self._region_styles = region_styles
         self._validated_styles = referenced_styles + inherited_styles + region_styles
 
     def _semantic_push_styles(self, dataset):
@@ -89,7 +93,8 @@ class StyledElementMixin(object):
         refer to in terms of these style attributes.
         :return:
         """
-        return self._compatible_style_type.compute_style
+        return self._compatible_style_type.compute_style(
+            self._referenced_styles, self._inherited_styles, self._region_styles)
 
     @property
     def validated_styles(self):

@@ -5,6 +5,8 @@ import copy
 import logging
 import re
 
+from pyxb.namespace import ExpandedName
+
 from ebu_tt_live.errors import SemanticValidationError
 from ebu_tt_live.strings import DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
     DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_ID_UNIQUENESS
@@ -145,6 +147,20 @@ class SemanticValidationMixin(object):
                 new_elem = self._find_deconflicted_elem_by_id(elem_id=elem_id, dataset=dataset)
                 new_elem_ids.append(new_elem.id)
             return new_elem_ids
+
+    def get_attribute_value(self, att_name):
+        """
+        This function is a handy extension that allows us to easily look up attribute values regardless whether they
+        are local or namespaced attribute names. I did not find its equivalent in PyXB.
+        :param att_name:
+        :return:
+        """
+        attr_en = ExpandedName(*att_name.split(':'))
+        # NOTE: At this point we should go to attribute map locate the attribute but for that the namespace has to be
+        # located too because its fully qualified name is required... etc. cutting corners here as we don't mix local
+        # and namespaced attributes of the same name so fairly safe to just take the localname bit. But this
+        # is not a fully XML compliant way to support all possibilities in all cases.
+        return getattr(self, attr_en.localName())
 
 
 class SemanticDocumentMixin(SemanticValidationMixin):

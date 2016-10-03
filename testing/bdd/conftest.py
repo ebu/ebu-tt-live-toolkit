@@ -87,8 +87,10 @@ def valid_computed_end_time(computed_end, gen_document):
 
 
 @then('the computed <style_attribute> in <elem_id> is <computed_value>')
-def then_computed_style_value_is(style_attribute, elem_id, computed_value):
-    pass
+def then_computed_style_value_is(style_attribute, elem_id, computed_value, test_context):
+    document = test_context['document']
+    elem = document.get_element_by_id(elem_id)
+    assert elem.computed_style().get_attribute_value(style_attribute) == computed_value
 
 
 @given('it has availability time <avail_time>')
