@@ -47,7 +47,7 @@ class TestEBUTT3ToEBUTTDConverter(TestCase):
 
     def test_ericsson_1(self):
 
-        xml_file = self._load_asset('1.xml')
+        xml_file = self._load_asset('converter_ericsson1.xml')
 
         self._media_clock.adjust_time(timedelta(), ebuttdt.LimitedClockTimingType('12:11:50.000').timedelta)
 
