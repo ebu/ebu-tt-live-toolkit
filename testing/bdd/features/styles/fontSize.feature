@@ -19,7 +19,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
 
     Examples:
     | xml_file                      | extent      | cell_resolution | S1_value | S2_value | S3_value | S4_value  | computed_value |  
-    | style_attribute_inherited.xml |             | 32 15           | 100%     | 100%     | 100%     | 100%      | 1c             |  
+    | style_attribute_inherited.xml |             | 32 15           | 100%     | 100%     | 100%     | 100%      | 1c             |
     | style_attribute_inherited.xml |             | 32 15           | 50%      | 200%     | 50%      | 200%      | 1c             |  
     | style_attribute_inherited.xml |             | 32 15           | 1c       | 200%     | 100%     | 50%       | 1c             |  
     | style_attribute_inherited.xml |             | 32 15           | 100%     | 2c       | 100%     | 50%       | 1c             |  
@@ -27,7 +27,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
     | style_attribute_inherited.xml |             | 10 10           |          | 50%      |          | 400%      | 20%            |  
     | style_attribute_inherited.xml |             | 10 10           | 1c 2c    | 100% 50% | 50% 100% | 200% 100% | 10% 10%        |  
     | style_attribute_inherited.xml | 100px 100px |                 |          | 10px     | 200%     | 50%       | 10px           |  
-    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c    | 100% 50% | 5px 20px | 200% 50%  | 1c             |  
+    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c    | 100% 50% | 5px 20px | 200% 50%  | 1c 1c          |
 
 
   # One style references another style. Note that the ordering matters.

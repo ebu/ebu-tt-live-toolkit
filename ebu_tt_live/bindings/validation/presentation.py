@@ -37,8 +37,13 @@ class StyledElementMixin(object):
     _region_styles = None
     _validated_styles = None
     _inherited_region = None
+    _specified_style = None
+    _computed_style = None
 
-    def _semantic_collect_applicable_styles(self, dataset, style_type):
+    def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding):
+        self._specified_style = None
+        self._computed_style = None
+        self._parent_computed_style = None
         referenced_styles = []
         inherited_styles = []
         region_styles = []
@@ -75,12 +80,40 @@ class StyledElementMixin(object):
         self._region_styles = region_styles
         self._validated_styles = referenced_styles + inherited_styles + region_styles
 
+        if parent_binding is not None and hasattr(parent_binding, 'computed_style'):
+            parent_computed_style = parent_binding.computed_style
+        else:
+            parent_computed_style = None
+
+        if region is not None and hasattr(region, 'computed_style'):
+            region_computed_style = region.computed_style
+        else:
+            region_computed_style = None
+
+        # Let's resolve the specified styles
+        self._specified_style = self._compatible_style_type.resolve_styles(referenced_styles)
+
+        # Let's force the computed style to be generated
+        self._computed_style = self._compatible_style_type.compute_style(
+            self._specified_style, parent_computed_style, region_computed_style
+        )
+
     def _semantic_push_styles(self, dataset):
         dataset['styles_stack'].append(self._referenced_styles)
 
     def _semantic_pop_styles(self, dataset):
         dataset['styles_stack'].pop()
 
+    @property
+    def specified_style(self):
+        """
+        This is the resolution of the Style attributes that are directly linked to this element even via implicit
+        inheritance of the style attributes
+        :return:
+        """
+        return self._specified_style
+
+    @property
     def computed_style(self):
         """
         In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize
@@ -93,8 +126,7 @@ class StyledElementMixin(object):
         refer to in terms of these style attributes.
         :return:
         """
-        return self._compatible_style_type.compute_style(
-            self._referenced_styles, self._inherited_styles, self._region_styles)
+        return self._computed_style
 
     @property
     def validated_styles(self):

@@ -142,19 +142,62 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             self._ordered_styles = ordered_styles
             return ordered_styles
 
+    def add(self, other):
+        if self.direction is None and other.direction is not None:
+            self.direction = other.direction
+        if self.fontFamily is None and other.fontFamily is not None:
+            self.fontFamily = other.fontFamily
+        if self.fontSize is None and other.fontSize is not None:
+            self.fontSize = other.fontSize
+        if self.lineHeight is None and other.lineHeight is not None:
+            self.lineHeight = other.lineHeight
+        if self.textAlign is None and other.textAlign is not None:
+            self.textAlign = other.textAlign
+        if self.color is None and other.color is not None:
+            self.color = other.color
+        if self.backgroundColor is None and other.backgroundColor is not None:
+            self.backgroundColor = other.backgroundColor
+        if self.fontStyle is None and other.fontStyle is not None:
+            self.fontStyle = other.fontStyle
+        if self.fontWeight is None and other.fontWeight is not None:
+            self.fontWeight = other.fontWeight
+        if self.textDecoration is None and other.textDecoration is not None:
+            self.textDecoration = other.textDecoration
+        if self.unicodeBidi is None and other.unicodeBidi is not None:
+            self.unicodeBidi = other.unicodeBidi
+        if self.wrapOption is None and other.wrapOption is not None:
+            self.wrapOption = other.wrapOption
+        if self.padding is None and other.padding is not None:
+            self.padding = other.padding
+        if self.linePadding is None and other.linePadding is not None:
+            self.linePadding = other.linePadding
+        return self
+
     @classmethod
-    def compute_style(cls, referenced_styles, inherited_styles, region_styles):
+    def resolve_styles(cls, referenced_styles):
+        """
+        Resolve the style attributes in inheritance chain
+        :param referenced_styles:
+        :return:
+        """
+        instance = cls()
+        for item in referenced_styles:
+            instance.add(item)
+        return instance
+
+    @classmethod
+    def compute_style(cls, specified_style, parent_computed_style, region_computed_style):
         """
         This function holds the styling semantics of containers considering direct reference, inheritance and
         containment variables
-        :param referenced_styles: Directly referenced resolved styles
-        :param inherited_styles: Inherited styling information from parent container
-        :param region_styles: Default region styling information
+        :param specified_style: Directly referenced resolved styles
+        :param parent_computed_style: Inherited styling information from parent container
+        :param region_computed_style: Default region styling information
         :return:
         """
-        return cls()
+        return specified_style
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
         self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
@@ -337,7 +380,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         if self.extent is not None and not isinstance(self.extent, ebuttdt.pixelExtentType):
             raise SimpleTypeValueError(type(self.extent), self.extent)
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
         # attributes.
         dataset['timing_begin_stack'] = []
@@ -358,7 +401,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         else:
             self.__semantic_test_time_base_clock_attrs_absent()
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         # Save this for id lookup.
         self._elements_by_id = dataset['elements_by_id']
 
@@ -446,15 +489,15 @@ class p_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValida
         )
         return copied_p
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
@@ -510,14 +553,14 @@ class span_type(IDMixin, LiveStyledElementMixin, TimingValidationMixin, Semantic
         )
         return copied_span
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
@@ -580,15 +623,15 @@ class div_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingVali
         )
         return copied_div
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
 
@@ -683,13 +726,13 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
 
         return merged_body
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
@@ -756,11 +799,11 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
 
         return copied_region
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
 
 
 raw.region._SetSupersedingClass(region_type)
