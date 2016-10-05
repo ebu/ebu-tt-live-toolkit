@@ -195,6 +195,13 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         :param region_computed_style: Default region styling information
         :return:
         """
+        instance = cls()
+        # Here we need to check for multiple things for each style attribute:
+        # 1: If specified
+        # 2: If specified value is relative
+        # 3: If not specified and there is parent style attr
+        # 4: If no parent style attr but there is region style attr
+        # 5: If none of the above assume the default
         return specified_style
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
