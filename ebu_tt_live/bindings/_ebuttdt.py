@@ -306,17 +306,6 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
 ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
 
 
-class PixelFontSizeType(SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
-
-    def _semantic_validate_sizing_context(self, dataset):
-        extent = dataset['tt_element'].extent
-        if extent is None:
-            raise ExtentMissingError(self)
-
-
-ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
-
-
 class PixelOriginType(SizingValidationMixin, ebuttdt_raw.pixelOriginType):
 
     def _semantic_validate_sizing_context(self, dataset):
@@ -362,3 +351,109 @@ class CellLengthType(ebuttdt_raw.cellLengthType):
 
 
 ebuttdt_raw.cellLengthType._SetSupersedingClass(CellLengthType)
+
+
+class TwoDimSizingMixin(object):
+
+    _groups_regex = None
+    _1dim_format = None
+    _2dim_format = None
+
+    @classmethod
+    def as_tuple(cls, instance):
+        first, second = cls._groups_regex.match(instance).groups()
+        return float(first), second is not None and float(second) or None
+
+    @classmethod
+    def from_tuple(cls, instance):
+        if len(instance) > 1:
+            return cls._2dim_format.format(*instance)
+        else:
+            return cls._1dim_format.format(*instance)
+
+    @property
+    def horizontal(self):
+        # TODO: Caching of tuple
+        tup_value = self.as_tuple(self)
+        if tup_value[1] is not None:
+            return tup_value[0]
+        else:
+            return None
+
+    @property
+    def vertical(self):
+        tup_value = self.as_tuple(self)
+        if tup_value[1] is not None:
+            return tup_value[1]
+        else:
+            return tup_value[0]
+
+    @classmethod
+    def _ConvertArguments_vx(cls, args, kw):
+        result = []
+        current_pair = []
+        for item in args:
+            if isinstance(item, int) or isinstance(item, float):
+                current_pair.append(item)
+                if len(current_pair) > 1:
+                    result.append(cls.from_tuple(tuple(current_pair)))
+                    current_pair = []
+            else:
+                result.append(item)
+        return tuple(result)
+
+
+class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
+
+    _groups_regex = re.compile('([+]?(?P<first>\d*\.?\d+)(px))(\s([+]?(?P<second>\d*\.?\d+)(px)))?')
+
+    _1dim_format = '{}px'
+    _2dim_format = '{}px {}px'
+
+    def _semantic_validate_sizing_context(self, dataset):
+        extent = dataset['tt_element'].extent
+        if extent is None:
+            raise ExtentMissingError(self)
+
+ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
+
+
+class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
+
+    _groups_regex = re.compile('([+]?(?P<first>\d*\.?\d+)(c))(\s([+]?(?P<second>\d*\.?\d+)(c)))?')
+
+    _1dim_format = '{}c'
+    _2dim_format = '{}c {}c'
+
+ebuttdt_raw.cellFontSizeType._SetSupersedingClass(CellFontSizeType)
+
+
+class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeType):
+
+    _groups_regex = re.compile('([+]?(?P<first>\d*\.?\d+)(%))(\s([+]?(?P<second>\d*\.?\d+)(%)))?')
+
+    _1dim_format = '{}%'
+    _2dim_format = '{}% {}%'
+
+    def do_mul(self, other):
+        if isinstance(other, CellFontSizeType):
+            if other.horizontal is not None:
+                return CellFontSizeType(other.vertical, other.horizontal)
+            else:
+                return CellFontSizeType(other.vertical)
+        if isinstance(other, PixelFontSizeType):
+            if other.horizontal is not None:
+                return PixelFontSizeType(other.vertical, other.horizontal)
+            else:
+                return PixelFontSizeType(other.vertical)
+        else:
+            return NotImplemented
+
+    def __mul__(self, other):
+        return self.do_mul(other)
+
+    def __rmul__(self, other):
+        return self.do_mul(other)
+
+
+ebuttdt_raw.percentageFontSizeType._SetSupersedingClass(PercentageFontSizeType)
