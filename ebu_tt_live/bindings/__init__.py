@@ -188,17 +188,19 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     @classmethod
     def compute_font_size(cls, specified_style, parent_computed_style, region_computed_style):
         spec_font_size = specified_style.fontSize
+        default_font_size = ebuttdt.cellFontSizeType('1c')
         if spec_font_size is not None:
             # Check relativeness
             if isinstance(spec_font_size, ebuttdt.percentageFontSizeType):
                 if parent_computed_style is not None and parent_computed_style.fontSize is not None:
-                    pass
+                    return parent_computed_style.fontSize * spec_font_size
                 elif region_computed_style is not None and region_computed_style.fontSize is not None:
-                    pass
+                    return region_computed_style.fontSize * spec_font_size
                 else:
                     # This means the default font size needs to be modulated by the percentage
-                    pass
+                    return default_font_size * spec_font_size
             else:
+                # TODO: control the type here
                 return spec_font_size
         else:
             if parent_computed_style is not None and parent_computed_style.fontSize is not None:
@@ -206,7 +208,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             elif region_computed_style is not None and region_computed_style.fontSize is not None:
                 return region_computed_style.fontSize
             else:
-                return ebuttdt.cellFontSizeType('1c')
+                return default_font_size
 
     @classmethod
     def compute_style(cls, specified_style, parent_computed_style, region_computed_style):
