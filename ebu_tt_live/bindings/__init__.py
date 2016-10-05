@@ -186,6 +186,29 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         return instance
 
     @classmethod
+    def compute_font_size(cls, specified_style, parent_computed_style, region_computed_style):
+        spec_font_size = specified_style.fontSize
+        if spec_font_size is not None:
+            # Check relativeness
+            if isinstance(spec_font_size, ebuttdt.percentageFontSizeType):
+                if parent_computed_style is not None and parent_computed_style.fontSize is not None:
+                    pass
+                elif region_computed_style is not None and region_computed_style.fontSize is not None:
+                    pass
+                else:
+                    # This means the default font size needs to be modulated by the percentage
+                    pass
+            else:
+                return spec_font_size
+        else:
+            if parent_computed_style is not None and parent_computed_style.fontSize is not None:
+                return parent_computed_style.fontSize
+            elif region_computed_style is not None and region_computed_style.fontSize is not None:
+                return region_computed_style.fontSize
+            else:
+                return ebuttdt.cellFontSizeType('1c')
+
+    @classmethod
     def compute_style(cls, specified_style, parent_computed_style, region_computed_style):
         """
         This function holds the styling semantics of containers considering direct reference, inheritance and
@@ -202,6 +225,9 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         # 3: If not specified and there is parent style attr
         # 4: If no parent style attr but there is region style attr
         # 5: If none of the above assume the default
+
+
+
         return specified_style
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
