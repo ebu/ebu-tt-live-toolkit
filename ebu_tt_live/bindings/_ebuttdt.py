@@ -404,6 +404,8 @@ class TwoDimSizingMixin(object):
                     current_pair = []
             else:
                 result.append(item)
+        if len(current_pair) > 0:
+            result.append(cls.from_tuple(tuple(current_pair)))
         return tuple(result)
 
 
