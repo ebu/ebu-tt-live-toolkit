@@ -93,6 +93,8 @@ class _TimedeltaBindingMixin(object):
     def timedelta(self):
         return self.as_timedelta(self)
 
+def cells_to_pixels(cells_in, extent, cell_resolution):
+    pass
 
 class TwoDimSizingMixin(object):
 
@@ -391,7 +393,10 @@ class PercentageOriginType(TwoDimSizingMixin, ebuttdt_raw.percentageOriginType):
 ebuttdt_raw.percentageOriginType._SetSupersedingClass(PercentageOriginType)
 
 
-class PixelExtentType(SizingValidationMixin, ebuttdt_raw.pixelExtentType):
+class PixelExtentType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelExtentType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:px))')
+    _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
         extent = dataset['tt_element'].extent
@@ -400,6 +405,22 @@ class PixelExtentType(SizingValidationMixin, ebuttdt_raw.pixelExtentType):
 
 
 ebuttdt_raw.pixelExtentType._SetSupersedingClass(PixelExtentType)
+
+
+class CellExtentType(TwoDimSizingMixin, ebuttdt_raw.cellExtentType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _2dim_format = '{}c {}c'
+
+ebuttdt_raw.cellExtentType._SetSupersedingClass(CellExtentType)
+
+
+class PercentageExtentType(TwoDimSizingMixin, ebuttdt_raw.percentageExtentType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:%))')
+    _2dim_format = '{}% {}%'
+
+ebuttdt_raw.percentageExtentType._SetSupersedingClass(PercentageExtentType)
 
 
 class PixelLengthType(SizingValidationMixin, ebuttdt_raw.pixelLengthType):
@@ -460,27 +481,33 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
     _2dim_format = '{}% {}%'
 
     def do_mul(self, other):
-        if isinstance(other, CellFontSizeType):
-            if other.horizontal is not None:
-                return CellFontSizeType(other.vertical, other.horizontal)
+        if self.horizontal is not None:
+            if isinstance(other, CellFontSizeType):
+                if other.horizontal is not None:
+                    return CellFontSizeType(other.vertical, other.horizontal)
+                else:
+                    return CellFontSizeType(other.vertical)
+            if isinstance(other, PixelFontSizeType):
+                if other.horizontal is not None:
+                    return PixelFontSizeType(other.vertical, other.horizontal)
+                else:
+                    return PixelFontSizeType(other.vertical)
             else:
-                return CellFontSizeType(other.vertical)
-        if isinstance(other, PixelFontSizeType):
-            if other.horizontal is not None:
-                return PixelFontSizeType(other.vertical, other.horizontal)
-            else:
-                return PixelFontSizeType(other.vertical)
+                return NotImplemented
         else:
-            return NotImplemented
-
+            pass
     def __mul__(self, other):
         return self.do_mul(other)
 
     def __rmul__(self, other):
         return self.do_mul(other)
 
-
 ebuttdt_raw.percentageFontSizeType._SetSupersedingClass(PercentageFontSizeType)
 
 
+class CellResolutionType(TwoDimSizingMixin ,ebuttdt_raw.cellResolutionType):
 
+    _groups_regex = re.compile('(?P<first>[0]*[1-9][0-9]*)\s(?P<second>[0]*[1-9][0-9]*)')
+    _2dim_format = '{} {}'
+    
+ebuttdt_raw.cellResolutionType._SetSupersedingClass(CellResolutionType)
