@@ -4,7 +4,7 @@ from raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
 from decimal import Decimal
 import re, logging
-from pyxb.exceptions_ import SimpleTypeValueError
+from pyxb.exceptions_ import SimpleTypeValueError, SimpleFacetValueError
 from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
 from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE
 from .pyxb_utils import get_xml_parsing_context
@@ -92,6 +92,62 @@ class _TimedeltaBindingMixin(object):
     @property
     def timedelta(self):
         return self.as_timedelta(self)
+
+
+class TwoDimSizingMixin(object):
+
+    _groups_regex = None
+    _1dim_format = None
+    _2dim_format = None
+
+    @classmethod
+    def as_tuple(cls, instance):
+        first, second = cls._groups_regex.match(instance).groups()
+        return float(first), second is not None and float(second) or None
+
+    @classmethod
+    def from_tuple(cls, instance):
+        if len(instance) > 1:
+            if cls._2dim_format is None:
+                raise SimpleTypeValueError(cls, 'This type accepts 1 dimensional values only')
+            return cls._2dim_format.format(*instance)
+        else:
+            if cls._1dim_format is None:
+                raise SimpleTypeValueError(cls, 'This type accepts 2 dimensnional values only')
+            return cls._1dim_format.format(*instance)
+
+    @property
+    def horizontal(self):
+        # TODO: Caching of tuple
+        tup_value = self.as_tuple(self)
+        if tup_value[1] is not None:
+            return tup_value[0]
+        else:
+            return None
+
+    @property
+    def vertical(self):
+        tup_value = self.as_tuple(self)
+        if tup_value[1] is not None:
+            return tup_value[1]
+        else:
+            return tup_value[0]
+
+    @classmethod
+    def _ConvertArguments_vx(cls, args, kw):
+        result = []
+        current_pair = []
+        for item in args:
+            if isinstance(item, int) or isinstance(item, float):
+                current_pair.append(item)
+                if len(current_pair) > 1:
+                    result.append(cls.from_tuple(tuple(current_pair)))
+                    current_pair = []
+            else:
+                result.append(item)
+        if len(current_pair) > 0:
+            result.append(cls.from_tuple(tuple(current_pair)))
+        return tuple(result)
 
 
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
@@ -306,15 +362,33 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
 ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
 
 
-class PixelOriginType(SizingValidationMixin, ebuttdt_raw.pixelOriginType):
+class PixelOriginType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelOriginType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:px))')
+    _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
         extent = dataset['tt_element'].extent
         if extent is None:
             raise ExtentMissingError(self)
 
-
 ebuttdt_raw.pixelOriginType._SetSupersedingClass(PixelOriginType)
+
+
+class CellOriginType(TwoDimSizingMixin, ebuttdt_raw.cellOriginType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _2dim_format = '{}c {}c'
+
+ebuttdt_raw.cellOriginType._SetSupersedingClass(CellOriginType)
+
+
+class PercentageOriginType(TwoDimSizingMixin, ebuttdt_raw.percentageOriginType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:%))')
+    _2dim_format = '{}% {}%'
+
+ebuttdt_raw.percentageOriginType._SetSupersedingClass(PercentageOriginType)
 
 
 class PixelExtentType(SizingValidationMixin, ebuttdt_raw.pixelExtentType):
@@ -351,62 +425,6 @@ class CellLengthType(ebuttdt_raw.cellLengthType):
 
 
 ebuttdt_raw.cellLengthType._SetSupersedingClass(CellLengthType)
-
-
-class TwoDimSizingMixin(object):
-
-    _groups_regex = None
-    _1dim_format = None
-    _2dim_format = None
-
-    @classmethod
-    def as_tuple(cls, instance):
-        first, second = cls._groups_regex.match(instance).groups()
-        return float(first), second is not None and float(second) or None
-
-    @classmethod
-    def from_tuple(cls, instance):
-        if len(instance) > 1:
-            if cls._2dim_format is None:
-                raise SimpleTypeValueError()
-            return cls._2dim_format.format(*instance)
-        else:
-            if cls._1dim_format is None:
-                raise SimpleTypeValueError()
-            return cls._1dim_format.format(*instance)
-
-    @property
-    def horizontal(self):
-        # TODO: Caching of tuple
-        tup_value = self.as_tuple(self)
-        if tup_value[1] is not None:
-            return tup_value[0]
-        else:
-            return None
-
-    @property
-    def vertical(self):
-        tup_value = self.as_tuple(self)
-        if tup_value[1] is not None:
-            return tup_value[1]
-        else:
-            return tup_value[0]
-
-    @classmethod
-    def _ConvertArguments_vx(cls, args, kw):
-        result = []
-        current_pair = []
-        for item in args:
-            if isinstance(item, int) or isinstance(item, float):
-                current_pair.append(item)
-                if len(current_pair) > 1:
-                    result.append(cls.from_tuple(tuple(current_pair)))
-                    current_pair = []
-            else:
-                result.append(item)
-        if len(current_pair) > 0:
-            result.append(cls.from_tuple(tuple(current_pair)))
-        return tuple(result)
 
 
 class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
@@ -463,3 +481,6 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
 
 
 ebuttdt_raw.percentageFontSizeType._SetSupersedingClass(PercentageFontSizeType)
+
+
+
