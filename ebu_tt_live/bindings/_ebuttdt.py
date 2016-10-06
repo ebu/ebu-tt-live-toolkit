@@ -367,8 +367,12 @@ class TwoDimSizingMixin(object):
     @classmethod
     def from_tuple(cls, instance):
         if len(instance) > 1:
+            if cls._2dim_format is None:
+                raise SimpleTypeValueError()
             return cls._2dim_format.format(*instance)
         else:
+            if cls._1dim_format is None:
+                raise SimpleTypeValueError()
             return cls._1dim_format.format(*instance)
 
     @property
@@ -405,7 +409,7 @@ class TwoDimSizingMixin(object):
 
 class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
 
-    _groups_regex = re.compile('([+]?(?P<first>\d*\.?\d+)(px))(\s([+]?(?P<second>\d*\.?\d+)(px)))?')
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:px))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:px)))?')
 
     _1dim_format = '{}px'
     _2dim_format = '{}px {}px'
@@ -420,7 +424,7 @@ ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
 
 class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
 
-    _groups_regex = re.compile('([+]?(?P<first>\d*\.?\d+)(c))(\s([+]?(?P<second>\d*\.?\d+)(c)))?')
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:c))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:c)))?')
 
     _1dim_format = '{}c'
     _2dim_format = '{}c {}c'
@@ -430,7 +434,7 @@ ebuttdt_raw.cellFontSizeType._SetSupersedingClass(CellFontSizeType)
 
 class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeType):
 
-    _groups_regex = re.compile('([+]?(?P<first>\d*\.?\d+)(%))(\s([+]?(?P<second>\d*\.?\d+)(%)))?')
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:%))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:%)))?')
 
     _1dim_format = '{}%'
     _2dim_format = '{}% {}%'
