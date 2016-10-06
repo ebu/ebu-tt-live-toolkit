@@ -94,8 +94,27 @@ class _TimedeltaBindingMixin(object):
     def timedelta(self):
         return self.as_timedelta(self)
 
-def cells_to_pixels(cells_in, extent, cell_resolution):
-    pass
+
+def cells_to_pixels(cells_in, root_extent, cell_resolution):
+    if not isinstance(root_extent, PixelExtentType):
+        raise Exception()
+    if cells_in.horizontal is not None:
+        # 2dimensional
+        return cells_in.horizontal * root_extent.horizontal / cell_resolution.horizontal, \
+               cells_in.vertical * root_extent.vertical / cell_resolution.vertical
+    else:
+        return cells_in.vertical * root_extent.vertical / cell_resolution.vertical
+
+
+def pixels_to_cells(pixels_in, root_extent, cell_resolution):
+    if not isinstance(root_extent, PixelExtentType):
+        raise Exception()
+    if pixels_in.horizontal is not None:
+        return pixels_in.horizontal * cell_resolution.horizontal / root_extent.horizontal, \
+               pixels_in.vertical * cell_resolution.vertical / root_extent.vertical
+    else:
+        return pixels_in.vertical * cell_resolution.vertical / root_extent.vertical
+
 
 class TwoDimSizingMixin(object):
 
