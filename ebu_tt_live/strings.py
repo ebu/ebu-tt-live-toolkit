@@ -20,6 +20,8 @@ ERR_DOCUMENT_NOT_COMPATIBLE = gettext('Document is not compatible with the seque
 ERR_DOCUMENT_NOT_PART_OF_SEQUENCE = gettext('Document is not part of any sequence')
 ERR_DOCUMENT_SEQUENCE_INCONSISTENCY = gettext('Timeline consistency problem.')
 ERR_DOCUMENT_EXTENT_MISSING = gettext('{type} cannot be instantiated from {value} because document extent is missing (from the tt element)')
+ERR_1DIM_ONLY = gettext('{type} accepts 1 dimensional values only')
+ERR_2DIM_ONLY = gettext('{type} accepts 2 dimensional values only')
 END_OF_DATA = gettext('End of available data reached')
 
 

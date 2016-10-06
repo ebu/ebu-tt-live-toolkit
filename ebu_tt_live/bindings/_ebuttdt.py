@@ -6,7 +6,8 @@ from decimal import Decimal
 import re, logging
 from pyxb.exceptions_ import SimpleTypeValueError, SimpleFacetValueError
 from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
-from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE
+from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE, ERR_1DIM_ONLY, \
+    ERR_2DIM_ONLY
 from .pyxb_utils import get_xml_parsing_context
 from .validation.base import SemanticValidationMixin
 from .validation.presentation import SizingValidationMixin
@@ -111,11 +112,15 @@ class TwoDimSizingMixin(object):
     def from_tuple(cls, instance):
         if len(instance) > 1:
             if cls._2dim_format is None:
-                raise SimpleTypeValueError(cls, 'This type accepts 1 dimensional values only')
+                raise SimpleTypeValueError(cls, ERR_1DIM_ONLY.format(
+                    type=cls
+                ))
             return cls._2dim_format.format(*instance)
         else:
             if cls._1dim_format is None:
-                raise SimpleTypeValueError(cls, 'This type accepts 2 dimensnional values only')
+                raise SimpleTypeValueError(cls, ERR_2DIM_ONLY.format(
+                    type=cls
+                ))
             return cls._1dim_format.format(*instance)
 
     @property
