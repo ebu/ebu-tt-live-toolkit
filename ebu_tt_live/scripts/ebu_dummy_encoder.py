@@ -96,23 +96,3 @@ def main():
     )
 
     log.info('XML output printed')
-    log.info('p applicable styles are as follows: {}'.format(document.binding.body.div[0].p[0].validated_styles))
-
-    import time
-    time.sleep(0.2)
-    cdoc1 = document.extract_segment(end=timedelta(seconds=3.6), deconflict_ids=True)
-    cdoc2 = document.extract_segment(begin=timedelta(seconds=3.6), end=timedelta(seconds=4.2), deconflict_ids=True)
-
-    from ebu_tt_live.documents.ebutt3_splicer import EBUTT3Splicer
-
-    splicer = EBUTT3Splicer(
-        document_segments=[cdoc1, cdoc2],
-        sequence_identifier='dummy_merged',
-        sequence_number=1
-    )
-
-    spliced = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
-
-    print(
-        spliced.get_xml()
-    )
