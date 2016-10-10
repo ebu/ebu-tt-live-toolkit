@@ -764,6 +764,10 @@ class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticVa
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
         self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
 
+    def _semantic_before_copy(self, dataset, element_content=None):
+        if self not in dataset['affected_elements']:
+            raise OutsideSegmentError()
+
 
 raw.region._SetSupersedingClass(region_type)
 

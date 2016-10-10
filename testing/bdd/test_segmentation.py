@@ -5,6 +5,13 @@ from pytest_bdd import scenarios, when, then
 scenarios('features/segmentation/splitting_documents.feature')
 
 
+def assert_raises(exc_class, callable, *args, **kwargs):
+    try:
+        callable(*args, **kwargs)
+    except Exception as exc:
+        assert isinstance(exc, exc_class)
+
+
 @when('it has sequenceIdentifier <sequence_identifier>')
 def when_sequence_identifier(template_dict, sequence_identifier):
     template_dict['sequence_identifier'] = sequence_identifier
@@ -51,29 +58,51 @@ def when_range_requested(template_file, test_context, template_dict, range_from,
 
 @then('the fragment contains body from <frag_body_begin> to <frag_body_end>')
 def then_fragment_body_times(test_context, frag_body_begin, frag_body_end):
+
     assert test_context['fragment'].binding.body.computed_begin_time == FullClockTimingType(frag_body_begin).timedelta
-    assert test_context['fragment'].binding.body.computed_end_time == FullClockTimingType(frag_body_end).timedelta
+    if frag_body_end == 'undefined':
+        assert test_context['fragment'].binding.body.computed_end_time is None
+    else:
+        assert test_context['fragment'].binding.body.computed_end_time == FullClockTimingType(frag_body_end).timedelta
 
 
 @then('the fragment contains span1 from <frag_span1_begin> to <frag_span1_end>')
 def then_fragment_span1_times(test_context, frag_span1_begin, frag_span1_end):
-    assert test_context['fragment'].get_element_by_id('span1').computed_begin_time == FullClockTimingType(
-        frag_span1_begin).timedelta
-    assert test_context['fragment'].get_element_by_id('span1').computed_end_time == FullClockTimingType(
-        frag_span1_end).timedelta
+    if frag_span1_begin == 'deleted':
+        assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span1')
+    else:
+        assert test_context['fragment'].get_element_by_id('span1').computed_begin_time == FullClockTimingType(
+            frag_span1_begin).timedelta
+        if frag_span1_end == 'undefined':
+            assert test_context['fragment'].get_element_by_id('span1').computed_end_time is None
+        else:
+            assert test_context['fragment'].get_element_by_id('span1').computed_end_time == FullClockTimingType(
+                frag_span1_end).timedelta
 
 
 @then('the fragment contains span2 from <frag_span2_begin> to <frag_span2_end>')
 def then_fragment_span2_times(test_context, frag_span2_begin, frag_span2_end):
-    assert test_context['fragment'].get_element_by_id('span2').computed_begin_time == FullClockTimingType(
-        frag_span2_begin).timedelta
-    assert test_context['fragment'].get_element_by_id('span2').computed_end_time == FullClockTimingType(
-        frag_span2_end).timedelta
+    if frag_span2_begin == 'deleted':
+        assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span2')
+    else:
+        assert test_context['fragment'].get_element_by_id('span2').computed_begin_time == FullClockTimingType(
+            frag_span2_begin).timedelta
+        if frag_span2_end == 'undefined':
+            assert test_context['fragment'].get_element_by_id('span2').computed_end_time is None
+        else:
+            assert test_context['fragment'].get_element_by_id('span2').computed_end_time == FullClockTimingType(
+                frag_span2_end).timedelta
 
 
 @then('the fragment contains span3 from <frag_span3_begin> to <frag_span3_end>')
 def then_fragment_span3_times(test_context, frag_span3_begin, frag_span3_end):
-    assert test_context['fragment'].get_element_by_id('span3').computed_begin_time == FullClockTimingType(
-        frag_span3_begin).timedelta
-    assert test_context['fragment'].get_element_by_id('span3').computed_end_time == FullClockTimingType(
-        frag_span3_end).timedelta
+    if frag_span3_begin == 'deleted':
+        assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span3')
+    else:
+        assert test_context['fragment'].get_element_by_id('span3').computed_begin_time == FullClockTimingType(
+            frag_span3_begin).timedelta
+        if frag_span3_end == 'undefined':
+            assert test_context['fragment'].get_element_by_id('span3').computed_end_time is None
+        else:
+            assert test_context['fragment'].get_element_by_id('span3').computed_end_time == FullClockTimingType(
+                frag_span3_end).timedelta

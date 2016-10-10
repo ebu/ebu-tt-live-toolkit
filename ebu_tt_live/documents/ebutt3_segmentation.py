@@ -2,12 +2,10 @@
 from datetime import timedelta
 import logging
 import copy
-from pyxb.binding.basis import NonElementContent, ElementContent
 from ebu_tt_live.bindings.validation.base import SemanticValidationMixin, IDMixin
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation
 from ebu_tt_live.bindings.validation.presentation import StyledElementMixin
-from ebu_tt_live.bindings import tt
-from ebu_tt_live.errors import OutsideSegmentError
+from ebu_tt_live.bindings import ebuttdt
 
 # Splicer and segmentation
 # ========================
@@ -123,6 +121,14 @@ class EBUTT3Segmenter(RecursiveOperation):
 
         super(EBUTT3Segmenter, self).proceed(**kwargs)
 
+    def _convert_time(self, timedelta_value):
+        if self.document.time_base == 'clock':
+            return ebuttdt.LimitedClockTimingType(timedelta_value)
+        elif self.document.time_base == 'media':
+            return ebuttdt.FullClockTimingType(timedelta_value)
+        else:
+            return ebuttdt.SMPTETimingType(timedelta_value)
+
     def compute_document_segment(self):
         # Init
         # Make sure it is validated
@@ -131,6 +137,9 @@ class EBUTT3Segmenter(RecursiveOperation):
         affected_elements = self.document.lookup_range_on_timeline(begin=self.begin, end=self.end)
 
         affected_elements = set(affected_elements)
+
+        # Empty document edge-case: Body is always affected
+        affected_elements.add(self.document.binding.body)
 
         for item in [elem for elem in affected_elements if isinstance(elem, StyledElementMixin)]:
             # Styles and regions are meant to be preserved
@@ -151,3 +160,8 @@ class EBUTT3Segmenter(RecursiveOperation):
 
         # Drop instance_mapping
         self._instance_mapping = dataset.pop('instance_mapping')
+
+        # Empty document edge-case
+        if len(self._segment.body.orderedContent()) == 0:
+            self._segment.body.begin = self._convert_time(self.begin)
+            self._segment.body.end = self._convert_time(self.end)

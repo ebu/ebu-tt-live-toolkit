@@ -26,12 +26,12 @@
       <tt:region style="style3" tts:extent="300px 150px" tts:origin="200px 450px" xml:id="region1"/>
     </tt:layout>
   </tt:head>
-  <tt:body begin="{{ body_begin }}" end="{{ body_end }}" style="style2">
+  <tt:body {% if body_begin != undefined %}begin="{{ body_begin }}"{% endif %} {% if body_end != undefined %}end="{{ body_end }}"{% endif %} style="style2">
     <tt:div region="region1" style="style1">
       <tt:p xml:id="ID005">
-        <tt:span begin="{{ span1_begin }}" end="{{ span1_end }}" style="style4" xml:id="span1">Some example text...</tt:span>
-        <tt:span begin="{{ span2_begin }}" end="{{ span2_end }}" xml:id="span2">And another line</tt:span>
-        <tt:span begin="{{ span3_begin }}" end="{{ span3_end }}" xml:id="span3">And yet another line</tt:span>
+        <tt:span {% if span1_begin != undefined %}begin="{{ span1_begin }}"{% endif %} {% if span1_end != undefined %}end="{{ span1_end }}"{% endif %} style="style4" xml:id="span1">Some example text...</tt:span>
+        <tt:span {% if span2_begin != undefined %}begin="{{ span2_begin }}"{% endif %} {% if span2_end != undefined %}end="{{ span2_end }}"{% endif %} xml:id="span2">And another line</tt:span>
+        <tt:span {% if span3_begin != undefined %}begin="{{ span3_begin }}"{% endif %} {% if span3_end != undefined %}end="{{ span3_end }}"{% endif %} xml:id="span3">And yet another line</tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
