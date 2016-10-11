@@ -49,7 +49,7 @@ class SemanticValidationMixin(object):
         """
         pass
 
-    def _do_link_with_parent(self, dataset, element_content, parent_binding):
+    def _do_link_copy_with_copied_parent(self, dataset, element_content, parent_binding):
         celem = dataset['instance_mapping'][self]
         # Link with parent
         cparent = dataset['instance_mapping'][parent_binding]

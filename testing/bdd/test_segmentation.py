@@ -1,4 +1,5 @@
 from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.bindings import style_type, region_type
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType
 from pytest_bdd import scenarios, when, then
 
@@ -50,10 +51,11 @@ def when_span3_times(template_dict, span3_begin, span3_end):
 def when_range_requested(template_file, test_context, template_dict, range_from, range_to):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
-    test_context['fragment'] = document.extract_segment(
+    fragment = document.extract_segment(
         FullClockTimingType(range_from).timedelta,
         FullClockTimingType(range_to).timedelta
     )
+    test_context['fragment'] = fragment
 
 
 @then('the fragment contains body from <frag_body_begin> to <frag_body_end>')
@@ -106,3 +108,37 @@ def then_fragment_span3_times(test_context, frag_span3_begin, frag_span3_end):
         else:
             assert test_context['fragment'].get_element_by_id('span3').computed_end_time == FullClockTimingType(
                 frag_span3_end).timedelta
+
+
+@then('the fragment only contains styles <frag_styles>')
+def then_fragment_styles_present(test_context, frag_styles):
+    fragment = test_context['fragment']
+    styling = fragment.binding.head.styling
+    styles_present = []
+    if frag_styles:
+        styles_required = map(lambda item: item.strip(), frag_styles.split(','))
+    else:
+        styles_required = []
+
+    if styling is not None:
+        for item in styling.style:
+            styles_present.append(item.id)
+
+    assert set(styles_present) == set(styles_required)
+
+
+@then('the fragment only contains regions <frag_regions>')
+def then_fragment_regions_present(test_context, frag_regions):
+    fragment = test_context['fragment']
+    layout = fragment.binding.head.layout
+    regions_present = []
+    if frag_regions:
+        regions_required = map(lambda item: item.strip(), frag_regions.split(','))
+    else:
+        regions_required = []
+
+    if layout is not None:
+        for item in layout.region:
+            regions_present.append(item.id)
+
+    assert set(regions_present) == set(regions_required)

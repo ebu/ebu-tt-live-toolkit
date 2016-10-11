@@ -69,3 +69,9 @@ class OutsideSegmentError(StopBranchIteration):
     """
 
 
+class DiscardElement(Exception):
+    """
+    There is a possibility that an element may become superfluous or lose its value. Such a possibility  can happen
+    in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting
+    an interval between them so the container ends up being empty and thus should be discarded.
+    """

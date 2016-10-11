@@ -5,6 +5,8 @@ import copy
 from ebu_tt_live.bindings.validation.base import SemanticValidationMixin, IDMixin
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation
 from ebu_tt_live.bindings.validation.presentation import StyledElementMixin
+from ebu_tt_live.bindings import style_type, region_type
+from ebu_tt_live.errors import DiscardElement
 from ebu_tt_live.bindings import ebuttdt
 
 # Splicer and segmentation
@@ -101,15 +103,24 @@ class EBUTT3Segmenter(RecursiveOperation):
         if isinstance(value, SemanticValidationMixin):
             # Call postprocess hooks of current element
             celem = self._semantic_dataset['instance_mapping'][value]
-            value._semantic_after_subtree_copy(
-                copied_instance=celem,
-                dataset=self._semantic_dataset,
-                element_content=element
-            )
-            if element:
-                value._do_link_with_parent(dataset=self._semantic_dataset, element_content=element, parent_binding=parent_binding)
-            else:
-                self._segment = celem
+            try:
+                value._semantic_after_subtree_copy(
+                    copied_instance=celem,
+                    dataset=self._semantic_dataset,
+                    element_content=element
+                )
+
+                if element:
+                    value._do_link_copy_with_copied_parent(
+                        dataset=self._semantic_dataset,
+                        element_content=element,
+                        parent_binding=parent_binding
+                    )
+                else:
+                    self._segment = celem
+            except DiscardElement:
+                log.debug('{} discarded during copy'.format(value))
+
 
     def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
         parent = self._semantic_dataset['instance_mapping'][parent_binding]
@@ -129,6 +140,18 @@ class EBUTT3Segmenter(RecursiveOperation):
         else:
             return ebuttdt.SMPTETimingType(timedelta_value)
 
+    def _prune_orphan_elements(self):
+        """
+        Unused elements need to go from the head section.
+        :return:
+        """
+        # TODO: This is not too nice. No time now, improve later.
+        for item in self._semantic_dataset['orphaned_elements']:
+            if isinstance(item, style_type):
+                self._segment.head.styling.style.remove(self._semantic_dataset['instance_mapping'][item])
+            if isinstance(item, region_type):
+                self._segment.head.layout.region.remove(self._semantic_dataset['instance_mapping'][item])
+
     def compute_document_segment(self):
         # Init
         # Make sure it is validated
@@ -140,23 +163,35 @@ class EBUTT3Segmenter(RecursiveOperation):
 
         # Empty document edge-case: Body is always affected
         affected_elements.add(self.document.binding.body)
+        orphaned_elements = set()
 
-        for item in [elem for elem in affected_elements if isinstance(elem, StyledElementMixin)]:
-            # Styles and regions are meant to be preserved
+        for item in [
+            elem for elem in affected_elements
+            if isinstance(elem, StyledElementMixin)
+        ]:
+            # Styles and regions are meant to be preserved. We put in everything that is likely to be needed
+            # NOTE: There is a possibility that after copying some containers stay empty so they get removed from the
+            # copy . In that case the unreferenced elements will be removed from the head.
             affected_elements.update(item.validated_styles)
+            orphaned_elements.update(item.validated_styles)
             if item.inherited_region is not None:
                 affected_elements.add(item.inherited_region)
+                orphaned_elements.add(item.inherited_region)
 
         dataset = {
             'segment_begin': self.begin,
             'segment_end': self.end,
             'affected_elements': affected_elements,
+            'orphaned_elements': orphaned_elements,
             'instance_mapping': {},
             'capture_counter': 0,
             'tt_element': self.document.binding
         }
 
         self.proceed(**dataset)
+
+        # Remove orphaned content
+        self._prune_orphan_elements()
 
         # Drop instance_mapping
         self._instance_mapping = dataset.pop('instance_mapping')
