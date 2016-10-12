@@ -216,4 +216,5 @@ class BroadcastClientFactory(WebSocketClientFactory):
         self._stopped = True
 
     def connect(self):
+        log.info('Connecting to {}'.format(self.url))
         connectWS(self)
