@@ -4,6 +4,7 @@ from ebu_tt_live.bindings._ebuttdt import FullClockTimingType
 from pytest_bdd import scenarios, when, then
 
 scenarios('features/segmentation/splitting_documents.feature')
+scenarios('features/segmentation/segmenting_sequence.feature')
 
 
 def assert_raises(exc_class, callable, *args, **kwargs):
@@ -11,6 +12,27 @@ def assert_raises(exc_class, callable, *args, **kwargs):
         callable(*args, **kwargs)
     except Exception as exc:
         assert isinstance(exc, exc_class)
+
+
+@when('we create a new document with <body_end> <span1_begin> <span2_begin> <span1_end> <span2_end>')
+def when_new_doc(template_dict, sequence, body_end, span1_begin, span1_end, span2_begin, span2_end):
+    template_dict.clear()
+    new_dummy_doc = sequence.new_document()
+    template_dict['sequence_identifier'] = new_dummy_doc.sequence_identifier
+    template_dict['sequence_number'] = new_dummy_doc.sequence_number
+    template_dict['time_base'] = new_dummy_doc.time_base
+    template_dict['body_end'] = body_end
+    template_dict['span1_begin'] = span1_begin
+    template_dict['span1_end'] = span1_end
+    template_dict['span2_begin'] = span2_begin
+    template_dict['span2_end'] = span2_end
+
+
+@when('document added to the sequence')
+def when_doc_added_to_sequence(template_file, template_dict, sequence):
+    xml_file = template_file.render(template_dict)
+    document = EBUTT3Document.create_from_xml(xml_file)
+    sequence.add_document(document)
 
 
 @when('it has sequenceIdentifier <sequence_identifier>')
@@ -27,6 +49,21 @@ def when_sequence_number(template_dict, sequence_number):
 def when_body_times(template_dict, body_begin, body_end):
     template_dict['body_begin'] = body_begin
     template_dict['body_end'] = body_end
+
+
+@when('body begins at <body1_begin>')
+def when_body1_begins(template_dict, body1_begin):
+    template_dict['body_begin'] = body1_begin
+
+
+@when('body begins at <body2_begin>')
+def when_body2_begins(template_dict, body2_begin):
+    template_dict['body_begin'] = body2_begin
+
+
+@when('body begins at <body3_begin>')
+def when_body3_begins(template_dict, body3_begin):
+    template_dict['body_begin'] = body3_begin
 
 
 @when('it has span1 from <span1_begin> to <span1_end>')
@@ -55,6 +92,12 @@ def when_range_requested(template_file, test_context, template_dict, range_from,
         FullClockTimingType(range_from).timedelta,
         FullClockTimingType(range_to).timedelta
     )
+    test_context['fragment'] = fragment
+
+
+@when('the sequence is segmented from <range_from> to <range_to>')
+def when_sequence_segmented(sequence, test_context, range_from, range_to):
+    fragment = sequence.extract_segment(range_from, range_to)
     test_context['fragment'] = fragment
 
 
