@@ -14,6 +14,7 @@ from .pyxb_utils import xml_parsing_context, get_xml_parsing_context
 from .validation.base import SemanticDocumentMixin, SemanticValidationMixin, IDMixin
 from ebu_tt_live.bindings.validation.presentation import SizingValidationMixin, StyledElementMixin, RegionedElementMixin
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin, BodyTimingValidationMixin
+from ebu_tt_live.bindings.validation.content import SubtitleContentContainer, ContentContainerMixin
 from .validation.validator import SemanticValidator
 from ebu_tt_live.errors import SemanticValidationError, OutsideSegmentError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, \
@@ -484,8 +485,7 @@ raw.head_type._SetSupersedingClass(head_type)
 # ============
 
 
-class p_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
-             SemanticValidationMixin, raw.p_type):
+class p_type(RegionedElementMixin, LiveStyledElementMixin, SubtitleContentContainer, raw.p_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -546,12 +546,17 @@ class p_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValida
             return True
 
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
-        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        copied_instance._assert_empty_container()
+        self._semantic_copy_apply_leaf_timing(
+            copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        self._semantic_copy_verify_referenced_styles(dataset=dataset)
+        self._semantic_copy_verify_referenced_region(dataset=dataset)
+
 
 raw.p_type._SetSupersedingClass(p_type)
 
 
-class span_type(IDMixin, LiveStyledElementMixin, TimingValidationMixin, SemanticValidationMixin, raw.span_type):
+class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -608,7 +613,10 @@ class span_type(IDMixin, LiveStyledElementMixin, TimingValidationMixin, Semantic
             return True
 
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
-        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        copied_instance._assert_empty_container()
+        self._semantic_copy_apply_leaf_timing(
+            copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        self._semantic_copy_verify_referenced_styles(dataset=dataset)
 
 raw.span_type._SetSupersedingClass(span_type)
 
@@ -622,7 +630,7 @@ class br_type(SemanticValidationMixin, raw.br_type):
 raw.br_type._SetSupersedingClass(br_type)
 
 
-class div_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
+class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):
 
     _attr_en_pre = {
@@ -671,8 +679,21 @@ class div_type(IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingVali
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
+    def is_empty(self):
+        if len(self.div):
+            return False
+
+        if len(self.p):
+            return False
+
+        return True
+
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
-        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        copied_instance._assert_empty_container()
+        self._semantic_copy_apply_leaf_timing(
+            copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        self._semantic_copy_verify_referenced_styles(dataset=dataset)
+        self._semantic_copy_verify_referenced_region(dataset=dataset)
 
 
 raw.div_type._SetSupersedingClass(div_type)
@@ -773,7 +794,9 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
-        self._semantic_copy_apply_leaf_timing(copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        self._semantic_copy_apply_leaf_timing(
+            copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        self._semantic_copy_verify_referenced_styles(dataset=dataset)
 
 
 raw.body_type._SetSupersedingClass(body_type)
@@ -837,6 +860,10 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
         self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        if self not in dataset['affected_elements']:
+            raise OutsideSegmentError()
 
 
 raw.region._SetSupersedingClass(region_type)

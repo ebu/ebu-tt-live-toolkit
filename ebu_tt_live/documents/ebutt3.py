@@ -318,14 +318,6 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         # Default value for the computed begin time of the document is the active begin time of the body
         # This only changes if the body does not declare a begin time.
         self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
-        body_begin = self._ebutt3_content.body.begin
-        # This is the earliest computed begin time of any child within body
-        begin_limit = result['semantic_dataset']['timing_begin_limit']
-        # If the body defines no begin time, the document's computed begin time
-        # is the earliest computed begin time of body's children elements (and this
-        # applies recursively) How lucky it is that we collected this info during validation :)
-        if body_begin is None and begin_limit is not None:
-            self._computed_begin_time = begin_limit
 
         # End times
         self._computed_end_time = self._ebutt3_content.body.computed_end_time

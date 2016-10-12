@@ -120,4 +120,6 @@ docs/build/*
 !docs/build/index.html
 !docs/build/img
 
-testing/bdd/features/merging/styles.feature
+# Mac OS X files
+.DS_Store
+

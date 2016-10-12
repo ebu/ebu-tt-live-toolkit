@@ -138,17 +138,26 @@ class StyledElementMixin(object):
     def inherited_region(self):
         return self._inherited_region
 
+    def _semantic_copy_verify_referenced_styles(self, dataset):
+        orphans = dataset['orphaned_elements']
+        for item in self.validated_styles:
+            if item in orphans:
+                orphans.remove(item)
+
 
 class RegionedElementMixin(object):
     """
     Makes sure we always know where we are. Detects double region assignment which is a warning.
     """
 
+    _validated_region = None
+
     def _semantic_set_region(self, dataset, region_type):
         if self.region is not None:
             try:
                 region = dataset['tt_element'].get_element_by_id(self.region, region_type)
                 dataset['region'] = region
+                self._validated_region = region
             except LookupError:
                 raise SemanticValidationError(ERR_SEMANTIC_REGION_MISSING.format(
                     region=self.region
@@ -157,3 +166,9 @@ class RegionedElementMixin(object):
     def _semantic_unset_region(self, dataset):
         if self.region is not None:
             dataset['region'] = None
+
+    def _semantic_copy_verify_referenced_region(self, dataset):
+        orphans = dataset['orphaned_elements']
+        if self._validated_region is not None:
+            if self._validated_region in orphans:
+                orphans.remove(self._validated_region)

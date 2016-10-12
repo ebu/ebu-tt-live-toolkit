@@ -90,6 +90,25 @@ class TimingValidationMixin(object):
                 # This means that timing begin limit needs updating
                 self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
 
+    def _post_calculate_begin(self, children):
+        """
+        The computed begin time shall be moved down to match that of the earliest child begin time in case the container
+        does not specify a begin time itself. NOTE: This does not modify the syncbase.
+
+        :param children:
+        :return:
+        """
+
+        if not children:
+            return
+
+        children_computed_begin_times = [item.computed_begin_time for item in children]
+
+        earliest_child_computed_begin = min(children_computed_begin_times)
+        if earliest_child_computed_begin > self._computed_begin_time:
+            # Adjustment scenario
+            self._computed_begin_time = earliest_child_computed_begin
+
     def _semantic_preprocess_timing(self, dataset, element_content):
         """
         As the validator traverses in a Depth First Search this is the hook function to call on the way DOWN.
@@ -112,11 +131,15 @@ class TimingValidationMixin(object):
         self._pre_calculate_begin()
 
     def _post_pop_begin(self):
+        begin_timedelta = None
+
         if self._begin_timedelta is not None:
             # We pushed on the stack it is time to pop it. It could probably be removed
             # and replaced with self._begin_timedelta
             begin_timedelta = self._semantic_dataset['timing_begin_stack'].pop()
             self._semantic_dataset['timing_syncbase'] -= begin_timedelta
+
+        return begin_timedelta
 
     def _post_pop_end(self):
         end_timedelta = None
@@ -133,14 +156,15 @@ class TimingValidationMixin(object):
 
         Steps to take:
           - Fill in end times if element doesn't define end time
-          - Try using information from its children
-          - if no children are found look at parents end time constraints.
+          - Try using computed_end_time information from its children
+          - If no children are found look at parents end time constraints.
+          - Finalize computed_begin_time if begin is not specified using computed_begin_time of children.
 
         :param dataset: Semantic dataset from semantic validation framework
         :param element_content: PyXB's binding placeholder for this binding instance
         """
 
-        self._post_pop_begin()
+        begin_timedelta = self._post_pop_begin()
         # This end timedelta is an absolute calculated value on the timeline. Not relative.
         end_timedelta = self._post_pop_end()
 
@@ -154,6 +178,8 @@ class TimingValidationMixin(object):
             # This is just a simple sanity check. It should never be triggered.
             # Should the calculation be changed this filters out an obvious source of error.
             raise LogicError()
+
+        children = None
 
         if self.computed_end_time is None:
             # This requires calculation based on the timings in its children.
@@ -178,6 +204,14 @@ class TimingValidationMixin(object):
                 else:
                     # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
+
+        if begin_timedelta is None:
+
+            if children is None:
+                children = filter(lambda item: isinstance(item, TimingValidationMixin),
+                                  [x.value for x in self.orderedContent()])
+
+            self._post_calculate_begin(children=children)
 
     # The mixin approach is used since there are multiple timed element types.
     # The inspected values are all attributes of the element so they do not
