@@ -97,7 +97,10 @@ def when_range_requested(template_file, test_context, template_dict, range_from,
 
 @when('the sequence is segmented from <range_from> to <range_to>')
 def when_sequence_segmented(sequence, test_context, range_from, range_to):
-    fragment = sequence.extract_segment(range_from, range_to)
+    fragment = sequence.extract_segment(
+        FullClockTimingType(range_from).timedelta,
+        FullClockTimingType(range_to).timedelta
+    )
     test_context['fragment'] = fragment
 
 

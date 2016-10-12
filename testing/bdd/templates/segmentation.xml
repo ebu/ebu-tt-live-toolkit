@@ -2,8 +2,7 @@
 <tt:tt
         ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
         ebuttp:sequenceNumber="{{ sequence_number }}"
-        ttp:clockMode="local"
-        ttp:timeBase="clock"
+        ttp:timeBase="media"
         tts:extent="800px 600px"
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
