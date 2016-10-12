@@ -13,8 +13,15 @@ class EBUTTDDocument(SubtitleDocument):
 
     _ebuttd_content = None
 
-    def __init__(self):
-        self._ebuttd_content = bindings.ttd()
+    def __init__(self, lang):
+        self._ebuttd_content = bindings.ttd(
+            timeBase='media',
+            head=bindings.d_head_type(
+                styling=bindings.d_styling_type.create_default_value(),
+                layout=bindings.d_layout_type.create_default_value()
+            ),
+            lang=lang
+        )
 
     def validate(self):
         self._ebuttd_content.validateBinding()
