@@ -104,7 +104,7 @@ def when_sequence_segmented(sequence, test_context, range_from, range_to):
     test_context['fragment'] = fragment
 
 
-@then('the fragment contains body from <frag_body_begin> to <frag_body_end>')
+@then('the fragment contains body with computed times from <frag_body_begin> to <frag_body_end>')
 def then_fragment_body_times(test_context, frag_body_begin, frag_body_end):
 
     assert test_context['fragment'].binding.body.computed_begin_time == FullClockTimingType(frag_body_begin).timedelta
@@ -114,7 +114,7 @@ def then_fragment_body_times(test_context, frag_body_begin, frag_body_end):
         assert test_context['fragment'].binding.body.computed_end_time == FullClockTimingType(frag_body_end).timedelta
 
 
-@then('the fragment contains span1 from <frag_span1_begin> to <frag_span1_end>')
+@then('the fragment contains span1 with computed times from <frag_span1_begin> to <frag_span1_end>')
 def then_fragment_span1_times(test_context, frag_span1_begin, frag_span1_end):
     if frag_span1_begin == 'deleted':
         assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span1')
@@ -128,7 +128,7 @@ def then_fragment_span1_times(test_context, frag_span1_begin, frag_span1_end):
                 frag_span1_end).timedelta
 
 
-@then('the fragment contains span2 from <frag_span2_begin> to <frag_span2_end>')
+@then('the fragment contains span2 with computed times from <frag_span2_begin> to <frag_span2_end>')
 def then_fragment_span2_times(test_context, frag_span2_begin, frag_span2_end):
     if frag_span2_begin == 'deleted':
         assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span2')
@@ -142,7 +142,7 @@ def then_fragment_span2_times(test_context, frag_span2_begin, frag_span2_end):
                 frag_span2_end).timedelta
 
 
-@then('the fragment contains span3 from <frag_span3_begin> to <frag_span3_end>')
+@then('the fragment contains span3 with computed times from <frag_span3_begin> to <frag_span3_end>')
 def then_fragment_span3_times(test_context, frag_span3_begin, frag_span3_end):
     if frag_span3_begin == 'deleted':
         assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span3')

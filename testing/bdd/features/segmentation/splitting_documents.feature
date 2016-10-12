@@ -15,10 +15,10 @@ Feature: Segmentation of single document into pieces 1
     And it has span2 from <span2_begin> to <span2_end>
     And it has span3 from <span3_begin> to <span3_end>
     And the range from <range_from> to <range_to> is requested
-    Then the fragment contains body from <frag_body_begin> to <frag_body_end>
-    And the fragment contains span1 from <frag_span1_begin> to <frag_span1_end>
-    And the fragment contains span2 from <frag_span2_begin> to <frag_span2_end>
-    And the fragment contains span3 from <frag_span3_begin> to <frag_span3_end>
+    Then the fragment contains body with computed times from <frag_body_begin> to <frag_body_end>
+    And the fragment contains span1 with computed times from <frag_span1_begin> to <frag_span1_end>
+    And the fragment contains span2 with computed times from <frag_span2_begin> to <frag_span2_end>
+    And the fragment contains span3 with computed times from <frag_span3_begin> to <frag_span3_end>
     And the fragment only contains styles <frag_styles>
     And the fragment only contains regions <frag_regions>
 
