@@ -14,14 +14,14 @@ def assert_raises(exc_class, callable, *args, **kwargs):
         assert isinstance(exc, exc_class)
 
 
-@when('we create a new document with <body_end> <span1_begin> <span2_begin> <span1_end> <span2_end>')
-def when_new_doc(template_dict, sequence, body_end, span1_begin, span1_end, span2_begin, span2_end):
+@when('we create a new document with <body_dur> <span1_begin> <span2_begin> <span1_end> <span2_end>')
+def when_new_doc(template_dict, sequence, body_dur, span1_begin, span1_end, span2_begin, span2_end):
     template_dict.clear()
     new_dummy_doc = sequence.new_document()
     template_dict['sequence_identifier'] = new_dummy_doc.sequence_identifier
     template_dict['sequence_number'] = new_dummy_doc.sequence_number
     template_dict['time_base'] = new_dummy_doc.time_base
-    template_dict['body_end'] = body_end
+    template_dict['body_dur'] = body_dur
     template_dict['span1_begin'] = span1_begin
     template_dict['span1_end'] = span1_end
     template_dict['span2_begin'] = span2_begin

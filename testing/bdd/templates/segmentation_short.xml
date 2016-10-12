@@ -24,7 +24,7 @@
       <tt:region style="style3" tts:extent="300px 150px" tts:origin="200px 450px" xml:id="region1"/>
     </tt:layout>
   </tt:head>
-  <tt:body {% if body_begin != undefined %}begin="{{ body_begin }}"{% endif %} {% if body_end != undefined %}end="{{ body_end }}"{% endif %} style="style2">
+  <tt:body {% if body_begin != undefined %}begin="{{ body_begin }}"{% endif %} {% if body_dur != undefined %}dur="{{ body_dur }}"{% endif %} style="style2">
     <tt:div region="region1" style="style1">
       <tt:p xml:id="ID005">
         <tt:span {% if span1_begin != undefined %}begin="{{ span1_begin }}"{% endif %} {% if span1_end != undefined %}end="{{ span1_end }}"{% endif %} xml:id="span1">Some example text...</tt:span>
