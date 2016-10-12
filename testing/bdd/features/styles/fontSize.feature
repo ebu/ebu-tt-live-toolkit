@@ -1,10 +1,10 @@
-@styles @document
+@styles @document @skip
 Feature: Compute fontSize on a single EBU-TT Live element
 
   Examples:
   | elem_id | style_attribute |  
   | span1   | tts:fontSize    |  
-  
+
   # Elements referencing styles with different fontSize attribute values
   Scenario: Font size inheritance 
     Given an xml file <xml_file>
