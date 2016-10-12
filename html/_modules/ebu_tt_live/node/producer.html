@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
@@ -131,7 +134,7 @@
 <span></span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">div_type</span><span class="p">,</span> <span class="n">br_type</span><span class="p">,</span> <span class="n">p_type</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">div_type</span><span class="p">,</span> <span class="n">br_type</span><span class="p">,</span> <span class="n">p_type</span><span class="p">,</span> <span class="n">style_type</span><span class="p">,</span> <span class="n">styling</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">region_type</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="k">import</span> <span class="n">LimitedClockTimingType</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">END_OF_DATA</span>
@@ -167,12 +170,15 @@
         <span class="n">end_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">end_list</span>
 
-    <span class="k">def</span> <span class="nf">_create_fragment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_create_fragment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">div_type</span><span class="p">(</span>
             <span class="n">p_type</span><span class="p">(</span>
                 <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_interleave_line_breaks</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span>
-                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="p">)</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+                <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">),</span>
+            <span class="n">region</span><span class="o">=</span><span class="s1">&#39;bottomRegion&#39;</span>
         <span class="p">)</span>
 
 <div class="viewcode-block" id="SimpleProducer.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.producer.SimpleProducer.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
@@ -189,10 +195,31 @@
 
         <span class="n">document</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span><span class="o">.</span><span class="n">new_document</span><span class="p">()</span>
 
+        <span class="c1"># Add default style</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span> <span class="o">=</span> <span class="n">styling</span><span class="p">(</span>
+            <span class="n">style_type</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;defaultStyle1&#39;</span><span class="p">,</span>
+                <span class="n">backgroundColor</span><span class="o">=</span><span class="s2">&quot;rgb(0, 0, 0)&quot;</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;rgb(255, 255, 255)&quot;</span><span class="p">,</span>
+                <span class="n">linePadding</span><span class="o">=</span><span class="s2">&quot;0.5c&quot;</span><span class="p">,</span>
+                <span class="n">fontFamily</span><span class="o">=</span><span class="s2">&quot;sansSerif&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">layout</span><span class="p">(</span>
+            <span class="n">region_type</span><span class="p">(</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;bottomRegion&#39;</span><span class="p">,</span>
+                <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;14.375</span><span class="si">% 60%</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">extent</span><span class="o">=</span><span class="s1">&#39;71.25</span><span class="si">% 24%</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">displayAlign</span><span class="o">=</span><span class="s1">&#39;after&#39;</span><span class="p">,</span>
+                <span class="n">writingMode</span><span class="o">=</span><span class="s1">&#39;lrtb&#39;</span><span class="p">,</span>
+                <span class="n">overflow</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">document</span><span class="o">.</span><span class="n">add_div</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_create_fragment</span><span class="p">(</span>
-                <span class="n">lines</span>
-            <span class="p">)</span>
+                <span class="n">lines</span><span class="p">,</span>
+                <span class="s1">&#39;defaultStyle1&#39;</span>
+            <span class="p">),</span>
         <span class="p">)</span>
 
         <span class="n">document</span><span class="o">.</span><span class="n">set_dur</span><span class="p">(</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>

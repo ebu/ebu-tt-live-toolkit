@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
         <link rel="next" title="example_data Package" href="ebu_tt_live.example_data.html"/>
@@ -97,6 +100,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">documents</span></code> Package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.documents.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.documents.ebutt3"><code class="docutils literal"><span class="pre">ebutt3</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.documents.ebutt3_segmentation"><code class="docutils literal"><span class="pre">ebutt3_segmentation</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
@@ -263,7 +268,7 @@ it does not match the semantics of the sequence.</p>
 <dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3Document</code><span class="sig-paren">(</span><em>time_base</em>, <em>sequence_number</em>, <em>sequence_identifier</em>, <em>lang</em>, <em>clock_mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.base.SubtitleDocument" title="ebu_tt_live.documents.base.SubtitleDocument"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.SubtitleDocument</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin" title="ebu_tt_live.documents.ebutt3.TimelineUtilMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimelineUtilMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.documents.base.SubtitleDocument" title="ebu_tt_live.documents.base.SubtitleDocument"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.SubtitleDocument</span></code></a></p>
 <p>This class wraps the binding object representation of the XML and provides the features the applications in the
 specification require. e.g:availability time.</p>
 <dl class="attribute">
@@ -365,8 +370,36 @@ before the document begins.
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.extract_segment">
+<code class="descname">extract_segment</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em>, <em>deconflict_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.extract_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.extract_segment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a valid ebutt3 document subset. As it collects data it will also prefix the ids in the document with
+the document sequence number so that later merge does not have collision.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>begin</strong> &#8211; </li>
+<li><strong>end</strong> &#8211; </li>
+<li><strong>deconflict_ids</strong> &#8211; prevent id clash across documents by prefixing the IDs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">EBUTT3Document</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.get_dom">
 <code class="descname">get_dom</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.get_dom"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_dom" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.get_element_by_id">
+<code class="descname">get_element_by_id</code><span class="sig-paren">(</span><em>elem_id</em>, <em>elem_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.get_element_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.get_element_by_id" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -434,16 +467,17 @@ before the document begins.
 <dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3DocumentSequence</code><span class="sig-paren">(</span><em>sequence_identifier</em>, <em>reference_clock</em>, <em>lang</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.base.CloningDocumentSequence" title="ebu_tt_live.documents.base.CloningDocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.CloningDocumentSequence</span></code></a></p>
-<p>EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.
-The sequence object can be used in 2 different modes:</p>
-<blockquote>
-<div><ul class="simple">
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin" title="ebu_tt_live.documents.ebutt3.TimelineUtilMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimelineUtilMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.documents.base.CloningDocumentSequence" title="ebu_tt_live.documents.base.CloningDocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.CloningDocumentSequence</span></code></a></p>
+<p>EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.</p>
+<dl class="docutils">
+<dt>The sequence object can be used in 2 different modes:</dt>
+<dd><ul class="first last simple">
 <li>It can be used to produce a sequence(i.e.: new_document method)</li>
 <li>as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
 (i.e.: add_document method.</li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <p>The sequence is responsible to keep the documents ordered and filter those documents out, which were eventually
 overwritten. It ensures that at any given time exactly 0 or 1 document is active (R14).</p>
 <dl class="method">
@@ -474,10 +508,22 @@ overwritten. It ensures that at any given time exactly 0 or 1 document is active
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_document">
 <code class="descname">_insert_document</code><span class="sig-paren">(</span><em>document</em>, <em>ends=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._insert_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_document" title="Permalink to this definition">¶</a></dt>
-<dd><p>In the end this function adds the document to the sequence registers.
-:param document:
-:param ends:
-:return:</p>
+<dd><p>In the end this function adds the document to the sequence registers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>document</strong> &#8211; </li>
+<li><strong>ends</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -495,7 +541,14 @@ it will not get inserted.</li>
 </ul>
 </dd>
 </dl>
-<p>:raises ValueError, SequenceOverridden, DocumentDiscardedError</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">ValueError, SequenceOverridden, DocumentDiscardedError</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -513,9 +566,17 @@ it will not get inserted.</li>
 <code class="descname">_override_sequence</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence._override_sequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._override_sequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function clears the timeline and the associated documents after the document in the parameter.
 This happens when a document with a higher sequence number is added preceding some other documents with lower
-sequence numbers.
-:param document:
-:return:</p>
+sequence numbers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>document</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -533,11 +594,6 @@ sequence numbers.
 <code class="descname">_time_base</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._time_base" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._timeline">
-<code class="descname">_timeline</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._timeline" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document">
 <code class="descname">add_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.add_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document" title="Permalink to this definition">¶</a></dt>
@@ -546,10 +602,22 @@ sequence numbers.
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_compatible_document">
 <code class="descname">create_compatible_document</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.create_compatible_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_compatible_document" title="Permalink to this definition">¶</a></dt>
-<dd><p>This utility function is used by the converter to extract segments and by the new_document function.
-:param args:
-:param kwargs:
-:return:</p>
+<dd><p>This utility function is used by the converter to extract segments and by the new_document function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> &#8211; </li>
+<li><strong>kwargs</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="classmethod">
@@ -559,12 +627,24 @@ sequence numbers.
 
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment">
-<code class="descname">extract_segment</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.extract_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment" title="Permalink to this definition">¶</a></dt>
+<code class="descname">extract_segment</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em>, <em>sequence_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.extract_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the subtitles from the sequence in the given timeframe. The return value is one
-merged EBUTT3Document
-:param begin:
-:param end:
-:return: EBUTT3Document</p>
+merged EBUTT3Document</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>begin</strong> &#8211; </li>
+<li><strong>end</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">EBUTT3Document</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -610,14 +690,63 @@ merged EBUTT3Document
 </dd></dl>
 
 <dl class="class">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimelineUtilMixin</code><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimelineUtilMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This mixin is responsible for managing the shared timeline functionality</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin._timeline">
+<code class="descname">_timeline</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin._timeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin.add_to_timeline">
+<code class="descname">add_to_timeline</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimelineUtilMixin.add_to_timeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin.add_to_timeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>The element gets added to the timeline so it would be easier to look up.
+:param element:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin.locate_element_begin">
+<code class="descname">locate_element_begin</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimelineUtilMixin.locate_element_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin.locate_element_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin.locate_element_end">
+<code class="descname">locate_element_end</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimelineUtilMixin.locate_element_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin.locate_element_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin.lookup_range_on_timeline">
+<code class="descname">lookup_range_on_timeline</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimelineUtilMixin.lookup_range_on_timeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin.lookup_range_on_timeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract a segment of the timeline and
+:param begin:
+:param end:
+:return: A list of elements in chronological order</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin.reset_timeline">
+<code class="descname">reset_timeline</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimelineUtilMixin.reset_timeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin.reset_timeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.TimelineUtilMixin.timeline">
+<code class="descname">timeline</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin.timeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.TimingEvent">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEvent</code><span class="sig-paren">(</span><em>document</em>, <em>when</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEvent</code><span class="sig-paren">(</span><em>element</em>, <em>when</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class wraps a document and an associated resolved timing event into an object that can be placed
 on the timeline.</p>
 <dl class="attribute">
-<dt id="ebu_tt_live.documents.ebutt3.TimingEvent._document">
-<code class="descname">_document</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent._document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent._element">
+<code class="descname">_element</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent._element" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -626,8 +755,8 @@ on the timeline.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="ebu_tt_live.documents.ebutt3.TimingEvent.document">
-<code class="descname">document</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent.document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.documents.ebutt3.TimingEvent.element">
+<code class="descname">element</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEvent.element" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -639,16 +768,181 @@ on the timeline.</p>
 
 <dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.TimingEventBegin">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEventBegin</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEventBegin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEventBegin" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEventBegin</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEventBegin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEventBegin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="ebu_tt_live.documents.ebutt3.TimingEvent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimingEvent</span></code></a></p>
-<p>Document resolved begin time</p>
+<p>Element/document resolved begin time</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.TimingEventEnd">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEventEnd</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEventEnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEventEnd" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">TimingEventEnd</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#TimingEventEnd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.TimingEventEnd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimingEvent" title="ebu_tt_live.documents.ebutt3.TimingEvent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimingEvent</span></code></a></p>
-<p>Document resolved end time.</p>
+<p>Element/document resolved end time.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.documents.ebutt3_segmentation">
+<span id="ebutt3-segmentation-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebutt3_segmentation</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.documents.ebutt3_segmentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3_segmentation.</code><code class="descname">EBUTT3Segmenter</code><span class="sig-paren">(</span><em>document</em>, <em>begin=None</em>, <em>end=None</em>, <em>deconflict_ids=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation" title="ebu_tt_live.bindings.pyxb_utils.RecursiveOperation"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.RecursiveOperation</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._after_element">
+<code class="descname">_after_element</code><span class="sig-paren">(</span><em>value</em>, <em>element=None</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._after_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._after_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._before_element">
+<code class="descname">_before_element</code><span class="sig-paren">(</span><em>value</em>, <em>element=None</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._before_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._before_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._begin">
+<code class="descname">_begin</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._convert_time">
+<code class="descname">_convert_time</code><span class="sig-paren">(</span><em>timedelta_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._convert_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._convert_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._deconflict_ids">
+<code class="descname">_deconflict_ids</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._deconflict_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._do_copy">
+<code class="descname">_do_copy</code><span class="sig-paren">(</span><em>element</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._do_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._do_copy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._do_deconflict_id">
+<code class="descname">_do_deconflict_id</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._do_deconflict_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._do_deconflict_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._document">
+<code class="descname">_document</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._end">
+<code class="descname">_end</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._instance_mapping">
+<code class="descname">_instance_mapping</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._instance_mapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._process_element">
+<code class="descname">_process_element</code><span class="sig-paren">(</span><em>value</em>, <em>element=None</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._process_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._process_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._process_non_element">
+<code class="descname">_process_non_element</code><span class="sig-paren">(</span><em>value</em>, <em>non_element</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._process_non_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._process_non_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._prune_orphan_elements">
+<code class="descname">_prune_orphan_elements</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter._prune_orphan_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._prune_orphan_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unused elements need to go from the head section.
+:return:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._segment">
+<code class="descname">_segment</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._segment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._semantic_dataset">
+<code class="descname">_semantic_dataset</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._semantic_dataset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.begin">
+<code class="descname">begin</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.compute_document_segment">
+<code class="descname">compute_document_segment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter.compute_document_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.compute_document_segment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.deconflict_ids">
+<code class="descname">deconflict_ids</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.deconflict_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.document">
+<code class="descname">document</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.end">
+<code class="descname">end</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.proceed">
+<code class="descname">proceed</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_segmentation.html#EBUTT3Segmenter.proceed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.proceed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.segment">
+<code class="descname">segment</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.segment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.documents.ebutt3_splicer">
+<span id="ebutt3-splicer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebutt3_splicer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.documents.ebutt3_splicer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3_splicer.</code><code class="descname">EBUTT3Splicer</code><span class="sig-paren">(</span><em>document_segments</em>, <em>sequence_identifier</em>, <em>sequence_number</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_splicer.html#EBUTT3Splicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._dataset">
+<code class="descname">_dataset</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._dataset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._do_splice">
+<code class="descname">_do_splice</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3_splicer.html#EBUTT3Splicer._do_splice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._do_splice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._document_segments">
+<code class="descname">_document_segments</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._document_segments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._sequence_identifier">
+<code class="descname">_sequence_identifier</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._sequence_identifier" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._sequence_number">
+<code class="descname">_sequence_number</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._sequence_number" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._spliced_document">
+<code class="descname">_spliced_document</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer._spliced_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer.spliced_document">
+<code class="descname">spliced_document</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer.spliced_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>

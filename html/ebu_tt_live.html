@@ -30,9 +30,12 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="next" title="bindings Package" href="ebu_tt_live.bindings.html"/>
-        <link rel="prev" title="Timing resolution and consumer logic" href="timing_resolution.html"/> 
+        <link rel="prev" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -152,6 +155,15 @@ what the different components and classes are responsible for.</p>
 <div class="section" id="module-ebu_tt_live.errors">
 <span id="errors-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">errors</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.errors" title="Permalink to this headline">¶</a></h2>
 <dl class="exception">
+<dt id="ebu_tt_live.errors.DiscardElement">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">DiscardElement</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#DiscardElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.DiscardElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>There is a possibility that an element may become superfluous or lose its value. Such a possibility  can happen
+in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting
+an interval between them so the container ends up being empty and thus should be discarded.</p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.DocumentDiscardedError">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">DocumentDiscardedError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#DocumentDiscardedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.DocumentDiscardedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -193,6 +205,14 @@ what the different components and classes are responsible for.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="ebu_tt_live.errors.OutsideSegmentError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">OutsideSegmentError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#OutsideSegmentError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.OutsideSegmentError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.errors.StopBranchIteration" title="ebu_tt_live.errors.StopBranchIteration"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.errors.StopBranchIteration</span></code></a></p>
+<p>This exception is meant to be raised by the copying functionality to make the iterator know that a particular
+subtree is not meant to be parsed.</p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.SemanticValidationError">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">SemanticValidationError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#SemanticValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.SemanticValidationError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -202,6 +222,14 @@ what the different components and classes are responsible for.</p>
 <dt id="ebu_tt_live.errors.SequenceOverridden">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">SequenceOverridden</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#SequenceOverridden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.SequenceOverridden" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ebu_tt_live.errors.StopBranchIteration">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">StopBranchIteration</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#StopBranchIteration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.StopBranchIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Let the iterator know that it can proceed to the next branch. It does not need to traverse the current one any
+further.</p>
 </dd></dl>
 
 <dl class="exception">
@@ -290,6 +318,8 @@ NOTE: This is a slightly modified version of the one suggested by the following 
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#id1"><code class="docutils literal"><span class="pre">documents</span></code> Package</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3"><code class="docutils literal"><span class="pre">ebutt3</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_segmentation"><code class="docutils literal"><span class="pre">ebutt3_segmentation</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a><ul>
@@ -334,7 +364,7 @@ NOTE: This is a slightly modified version of the one suggested by the following 
         <a href="ebu_tt_live.bindings.html" class="btn btn-neutral float-right" title="bindings Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="timing_resolution.html" class="btn btn-neutral" title="Timing resolution and consumer logic" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="segmentation.html" class="btn btn-neutral" title="Segmentation of EBU-TT-Live document sequences" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

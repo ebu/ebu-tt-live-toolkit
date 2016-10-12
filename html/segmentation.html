@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Filesystem Carriage Mechanism &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>Segmentation of EBU-TT-Live document sequences &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
   
 
   
@@ -34,9 +34,9 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
-        <link rel="up" title="Nodes and Carriage Mechanisms" href="nodes_and_carriage_mechanisms.html"/>
-        <link rel="next" title="Document and sequence validation" href="validation.html"/>
-        <link rel="prev" title="Nodes and Carriage Mechanisms" href="nodes_and_carriage_mechanisms.html"/> 
+        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
+        <link rel="next" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="prev" title="Timing resolution and consumer logic" href="timing_resolution.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -92,14 +92,11 @@
 <li class="toctree-l2"><a class="reference internal" href="overview.html#user-input-producer">User Input Producer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="overview.html#user-input-consumer">User Input Consumer</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="overview.html#user-input-forwarder">User Input Forwarder</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a><ul class="current">
-<li class="toctree-l4 current"><a class="current reference internal" href="#">Filesystem Carriage Mechanism</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
 <li class="toctree-l3"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Segmentation of EBU-TT-Live document sequences</a></li>
 </ul>
 </li>
 </ul>
@@ -137,13 +134,11 @@
       
           <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
       
-          <li><a href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a> &raquo;</li>
-      
-    <li>Filesystem Carriage Mechanism</li>
+    <li>Segmentation of EBU-TT-Live document sequences</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/filesystem_carriage_mechanism.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/segmentation.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -153,15 +148,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="filesystem-carriage-mechanism">
-<h1>Filesystem Carriage Mechanism<a class="headerlink" href="#filesystem-carriage-mechanism" title="Permalink to this headline">¶</a></h1>
-<p>The filesystem carriage mechanism writes produced documents to the filesystem and consumes documents from the filesystem. Along with the documents, it writes a manifest file named according to the format <cite>manifest_&lt;sequence identifier&gt;.txt</cite>. Documents are named following the format <cite>&lt;sequence identifier&gt;_&lt;sequence number&gt;.xml</cite>.</p>
-<p>Each time a document is written to the file system, a line using the following format is appended to the manifest file:</p>
-<p><cite>availability_time,path_to_xml_file</cite></p>
-<p>For example:</p>
-<p><cite>09:20:31.279,TestSequence1_474.xml</cite></p>
-<p>The format is <cite>hh:mm:ss.fff,path</cite> where <cite>fff</cite> represents milliseconds digits.</p>
-<p>The manifest file gives the availability time for each document along with the path to the corresponding document. The timeline used for the availability times is the same as the one used in the documents, indeed the carriage implementation uses the same clock (or time reference) as the node that produces the documents. The writing order and thus the reading order is from top to bottom.</p>
+  <div class="section" id="segmentation-of-ebu-tt-live-document-sequences">
+<h1>Segmentation of EBU-TT-Live document sequences<a class="headerlink" href="#segmentation-of-ebu-tt-live-document-sequences" title="Permalink to this headline">¶</a></h1>
+<p>Document sequences may contain arbitrary length of documents with irregular issue times. Some output formats or
+carriage mechanisms may require a regular issuing schedule of documents (i.e. every 2 seconds). Therefore the live
+sequence supports resegmentation of the subtitle stream into blocks required by the user. The sequence object
+has the <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment()</span></code></a> function that looks up the
+internal timeline to find any documents that intersect the requested range and in turn calls
+<a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.extract_segment" title="ebu_tt_live.documents.ebutt3.EBUTT3Document.extract_segment"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3Document.extract_segment()</span></code></a> on each of them
+using <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter" title="ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter</span></code></a> and merge the resulting
+documents into one EBUTT3Document in the end using <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer" title="ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3_splicer.EBUTT3Splicer</span></code></a>
+After that these documents can be converted to EBU-TT-D for instance to be embedded into DASH,
+which requires such a regular document issuing strategy.</p>
 </div>
 
 
@@ -171,10 +169,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="validation.html" class="btn btn-neutral float-right" title="Document and sequence validation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ebu_tt_live.html" class="btn btn-neutral float-right" title="Source code reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="nodes_and_carriage_mechanisms.html" class="btn btn-neutral" title="Nodes and Carriage Mechanisms" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="timing_resolution.html" class="btn btn-neutral" title="Timing resolution and consumer logic" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

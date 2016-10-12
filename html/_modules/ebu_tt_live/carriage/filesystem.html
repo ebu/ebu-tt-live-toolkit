@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
@@ -304,6 +307,26 @@
                         <span class="n">xml_content</span> <span class="o">=</span> <span class="n">xml_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
                     <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SimpleFolderExport"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.SimpleFolderExport">[docs]</a><span class="k">class</span> <span class="nc">SimpleFolderExport</span><span class="p">(</span><span class="n">ProducerCarriageImpl</span><span class="p">):</span>
+
+    <span class="n">_dir_path</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_counter</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name_pattern</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Directory: </span><span class="si">{}</span><span class="s1"> could not be found.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dir_path</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">=</span> <span class="n">dir_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="n">file_name_pattern</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="SimpleFolderExport.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">destfile</span><span class="p">:</span>
+            <span class="n">destfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div></div>
 </pre></div>
 
            </div>

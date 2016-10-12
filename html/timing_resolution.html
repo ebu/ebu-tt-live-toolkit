@@ -30,9 +30,12 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
-        <link rel="next" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="next" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/>
         <link rel="prev" title="User input producer" href="user_input_producer.html"/> 
 
   
@@ -84,12 +87,20 @@
             
                 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Timing resolution and consumer logic</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#document-timings">Document Timings</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sequence-timings">Sequence Timings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#simple-producer">Simple Producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#simple-consumer">Simple consumer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#user-input-producer">User Input Producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#user-input-consumer">User Input Consumer</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="overview.html#user-input-forwarder">User Input Forwarder</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Timing resolution and consumer logic</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#document-timings">Document Timings</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sequence-timings">Sequence Timings</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
 </ul>
 </li>
 </ul>
@@ -150,7 +161,7 @@ timeline where possible collisions are detected and resolved with the possible d
 <div class="section" id="document-timings">
 <h2>Document Timings<a class="headerlink" href="#document-timings" title="Permalink to this headline">¶</a></h2>
 <p>The document timing resolution logic is built using the validation framework and mostly is in
-<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.TimingValidationMixin" title="ebu_tt_live.bindings.validation.TimingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.TimingValidationMixin</span></code></a></p>
+<code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.TimingValidationMixin</span></code></p>
 <p>The approach is that the element timing semantics require parent and children derived information to calculate
 begin and end events on an absolute timeline. For this we hook into the Depth First Search the validation framework
 uses to process element validation. It is very important to notice that the begin and end times are possible to be
@@ -193,7 +204,7 @@ end times and detects collisions. If there are any the collisions are resolved b
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ebu_tt_live.html" class="btn btn-neutral float-right" title="Source code reference" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="segmentation.html" class="btn btn-neutral float-right" title="Segmentation of EBU-TT-Live document sequences" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="user_input_producer.html" class="btn btn-neutral" title="User input producer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="ebu_tt_live.bindings" href="../bindings.html"/> 
 
@@ -140,8 +143,8 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">TimeFormatOverflowError</span><span class="p">,</span> <span class="n">ExtentMissingError</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_TIME_FORMAT_OVERFLOW</span><span class="p">,</span> <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span>
 <span class="kn">from</span> <span class="nn">.pyxb_utils</span> <span class="k">import</span> <span class="n">get_xml_parsing_context</span>
-<span class="kn">from</span> <span class="nn">.validation</span> <span class="k">import</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">SizingValidationMixin</span>
-
+<span class="kn">from</span> <span class="nn">.validation.base</span> <span class="k">import</span> <span class="n">SemanticValidationMixin</span>
+<span class="kn">from</span> <span class="nn">.validation.presentation</span> <span class="k">import</span> <span class="n">SizingValidationMixin</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -480,6 +483,20 @@
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelLengthType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PixelLengthType</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PercentageLengthType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PercentageLengthType">[docs]</a><span class="k">class</span> <span class="nc">PercentageLengthType</span><span class="p">(</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageLengthType</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageLengthType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageLengthType</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CellLengthType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellLengthType">[docs]</a><span class="k">class</span> <span class="nc">CellLengthType</span><span class="p">(</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLengthType</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLengthType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellLengthType</span><span class="p">)</span>
 </pre></div>
 
            </div>

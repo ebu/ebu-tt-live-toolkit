@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../../index.html"/>
         <link rel="up" title="ebu_tt_live.bindings.raw" href="../raw.html"/> 
 
@@ -135,7 +138,7 @@
 <span></span><span class="c1"># ./ebu_tt_live/bindings/raw/_ttm.py</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># PyXB bindings for NM:20bf17fcf9b73854cba2c110c3abf6a8b2d3ceeb</span>
-<span class="c1"># Generated 2016-09-06 13:59:14.656052 by PyXB version 1.2.4 using Python 2.7.12.final.0</span>
+<span class="c1"># Generated 2016-10-12 17:22:33.174753 by PyXB version 1.2.5 using Python 2.7.12.final.0</span>
 <span class="c1"># Namespace http://www.w3.org/ns/ttml#metadata [xmlns:ttm]</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">unicode_literals</span>
@@ -147,15 +150,18 @@
 <span class="kn">import</span> <span class="nn">pyxb.utils.domutils</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">pyxb.utils.six</span> <span class="k">as</span> <span class="nn">_six</span>
-
 <span class="c1"># Unique identifier for bindings created at the same time</span>
-<span class="n">_GenerationUID</span> <span class="o">=</span> <span class="n">pyxb</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">UniqueIdentifier</span><span class="p">(</span><span class="s1">&#39;urn:uuid:1828b0d2-743a-11e6-9f40-42010a800063&#39;</span><span class="p">)</span>
+<span class="n">_GenerationUID</span> <span class="o">=</span> <span class="n">pyxb</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">UniqueIdentifier</span><span class="p">(</span><span class="s1">&#39;urn:uuid:75e7b2ea-90a0-11e6-b1ec-42010a80000e&#39;</span><span class="p">)</span>
 
 <span class="c1"># Version of PyXB used to generate the bindings</span>
-<span class="n">_PyXBVersion</span> <span class="o">=</span> <span class="s1">&#39;1.2.4&#39;</span>
+<span class="n">_PyXBVersion</span> <span class="o">=</span> <span class="s1">&#39;1.2.5&#39;</span>
 <span class="c1"># Generated bindings are not compatible across PyXB versions</span>
 <span class="k">if</span> <span class="n">pyxb</span><span class="o">.</span><span class="n">__version__</span> <span class="o">!=</span> <span class="n">_PyXBVersion</span><span class="p">:</span>
     <span class="k">raise</span> <span class="n">pyxb</span><span class="o">.</span><span class="n">PyXBVersionError</span><span class="p">(</span><span class="n">_PyXBVersion</span><span class="p">)</span>
+
+<span class="c1"># A holder for module-level binding classes so we can access them from</span>
+<span class="c1"># inside class definitions where property names may conflict.</span>
+<span class="n">_module_typeBindings</span> <span class="o">=</span> <span class="n">pyxb</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">utility</span><span class="o">.</span><span class="n">Object</span><span class="p">()</span>
 
 <span class="c1"># Import bindings for namespaces imported into schema</span>
 <span class="kn">import</span> <span class="nn">pyxb.binding.datatypes</span>

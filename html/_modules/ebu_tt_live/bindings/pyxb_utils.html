@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="ebu_tt_live.bindings" href="../bindings.html"/> 
 
@@ -136,6 +139,8 @@
 
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">StopBranchIteration</span>
+<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="k">import</span> <span class="n">NonElementContent</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">,</span> <span class="n">complexTypeDefinition</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
 
@@ -179,6 +184,107 @@
 
     <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
         <span class="n">reset_xml_parsing_context</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RecursiveOperation"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation">[docs]</a><span class="k">class</span> <span class="nc">RecursiveOperation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A recursive operation can be a validation of the content model, a full- or partial copy of the document tree, the</span>
+<span class="sd">    splicing of two documents together or conversion of one document format to another. This class contains the</span>
+<span class="sd">    generic content iteration logic with hook functions that are meant to be customized by descendant classes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_filter_criteria</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_root_element</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_post_order</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_children_iterator</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">children_iterator</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class requires a root element to operate on and an optional filter function to help limit the elements</span>
+<span class="sd">        selected for the operations defined in the hook functions thereby reducing their complexity and improving</span>
+<span class="sd">        general processing speeds.</span>
+<span class="sd">        :param root_element: Practically the document root but could be any PyXB type instance that has children</span>
+<span class="sd">        :param filter: A function that filters the elements selected for processing.</span>
+<span class="sd">        :param post_order(boolean): Post order processing during the traversal. Defaults to False(pre-order).</span>
+<span class="sd">        :param children_iterator: PyXB has multiple ways it likes to traverse the structure. It can be based on the</span>
+<span class="sd">        order described in the XSD or it can be the order described by the document that is using that schema. The</span>
+<span class="sd">        value of this parameter will be resolved on matching complexTypeDefinition objects and called to give children</span>
+<span class="sd">        in the specified order.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">filter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_filter_criteria</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_filter_criteria</span> <span class="o">=</span> <span class="nb">filter</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root_element</span> <span class="o">=</span> <span class="n">root_element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_order</span> <span class="o">=</span> <span class="n">post_order</span>
+
+        <span class="k">if</span> <span class="n">children_iterator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_children_iterator</span> <span class="o">=</span> <span class="s1">&#39;orderedContent&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_children_iterator</span> <span class="o">=</span> <span class="n">children_iterator</span>
+
+    <span class="k">def</span> <span class="nf">_process_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proc_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursive step</span>
+<span class="sd">        :param element:</span>
+<span class="sd">        :param dataset:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">complexTypeDefinition</span><span class="p">):</span>
+            <span class="n">children</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children_iterator</span><span class="p">)()</span>
+
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">proc_elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recursive_step</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">item</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">proc_elem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proc_elem</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">StopBranchIteration</span><span class="p">:</span>
+                    <span class="c1"># Moving on...</span>
+                    <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+
+    <span class="k">def</span> <span class="nf">_recursive_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">proc_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">element_value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">element</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">)</span> <span class="ow">or</span> <span class="n">element</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> \
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_criteria</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_before_element</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_order</span><span class="p">:</span>
+                <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_children</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">proc_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_element</span><span class="p">(</span>
+                    <span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span><span class="n">proc_value</span><span class="o">=</span><span class="n">proc_value</span><span class="p">,</span>
+                    <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post_order</span><span class="p">:</span>
+                <span class="n">proc_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_element</span><span class="p">(</span>
+                    <span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_children</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">proc_value</span><span class="o">=</span><span class="n">proc_value</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_after_element</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="n">proc_value</span><span class="o">=</span><span class="n">proc_value</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">proc_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_non_element</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">non_element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">proc_value</span>
+
+<div class="viewcode-block" id="RecursiveOperation.proceed"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation.proceed">[docs]</a>    <span class="k">def</span> <span class="nf">proceed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recursive_step</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_root_element</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_before_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_process_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_non_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">non_element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_after_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 </pre></div>
 
            </div>

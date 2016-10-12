@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Document and sequence validation" href="validation.html"/>
         <link rel="next" title="User input producer" href="user_input_producer.html"/>
@@ -84,14 +87,22 @@
             
                 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="validation.html">Document and sequence validation</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Validation framework</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#semantic-parser-patch">Semantic parser patch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#simple-producer">Simple Producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#simple-consumer">Simple consumer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#user-input-producer">User Input Producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#user-input-consumer">User Input Consumer</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="overview.html#user-input-forwarder">User Input Forwarder</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="validation.html">Document and sequence validation</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Validation framework</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#semantic-parser-patch">Semantic parser patch</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
@@ -157,7 +168,7 @@ In order to provide semantic validation there is need for a semantic validation 
 A common object that shared information can be collected to and each type/element receives it as a parameter in its
 semantic validation hooks if the element needs to take part in the semantic validation process.</p>
 <p>For an element to be part of the semantic validation flow it needs to inherit the
-<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.validation.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.SemanticValidationMixin</span></code></a> mixin, which contains the boilerplate
+<code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.SemanticValidationMixin</span></code> mixin, which contains the boilerplate
 that enables semantic validation and the hook functions, that the developer can override and write custom
 functionality that effectively does the semantic validation of the type.</p>
 </div>

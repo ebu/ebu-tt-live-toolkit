@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
@@ -130,8 +133,10 @@
   <h1>Source code for ebu_tt_live.node.consumer</h1><div class="highlight"><pre>
 <span></span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3DocumentSequence</span><span class="p">,</span> <span class="n">ebutt3_to_ebuttd</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3DocumentSequence</span><span class="p">,</span> <span class="n">EBUTTDDocument</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents.converters</span> <span class="k">import</span> <span class="n">EBUTT3EBUTTDConverter</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">DOC_RECEIVED</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.clocks.media</span> <span class="k">import</span> <span class="n">MediaClock</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -179,22 +184,74 @@
 
 <div class="viewcode-block" id="EBUTTDEncoder"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder">[docs]</a><span class="k">class</span> <span class="nc">EBUTTDEncoder</span><span class="p">(</span><span class="n">SimpleConsumer</span><span class="p">):</span>
 
-<div class="viewcode-block" id="EBUTTDEncoder.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTTDEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span></div>
-        <span class="c1"># segmentation, conversion... here</span>
+    <span class="n">_last_segment_end</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_segment_length</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_ebuttd_converter</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_default_ebuttd_doc</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_outbound_carriage_impl</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_segment_timer</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="EBUTTDEncoder.convert_to_ebuttd"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.convert_to_ebuttd">[docs]</a>    <span class="k">def</span> <span class="nf">convert_to_ebuttd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">,</span> <span class="n">outbound_carriage_impl</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">,</span>
+                 <span class="n">segment_length</span><span class="p">,</span> <span class="n">media_time_zero</span><span class="p">,</span> <span class="n">segment_timer</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTTDEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
+            <span class="n">carriage_impl</span><span class="o">=</span><span class="n">carriage_impl</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="n">reference_clock</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outbound_carriage_impl</span> <span class="o">=</span> <span class="n">outbound_carriage_impl</span>
+        <span class="c1"># We need clock factory to figure the timesync out</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_segment_end</span> <span class="o">=</span> <span class="n">reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_segment_length</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">segment_length</span><span class="p">)</span>
+        <span class="n">media_clock</span> <span class="o">=</span> <span class="n">MediaClock</span><span class="p">()</span>
+        <span class="n">media_clock</span><span class="o">.</span><span class="n">adjust_time</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(),</span> <span class="n">media_time_zero</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ebuttd_converter</span> <span class="o">=</span> <span class="n">EBUTT3EBUTTDConverter</span><span class="p">(</span>
+            <span class="n">media_clock</span><span class="o">=</span><span class="n">media_clock</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_ebuttd_doc</span> <span class="o">=</span> <span class="n">EBUTTDDocument</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s1">&#39;en-GB&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_ebuttd_doc</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_segment_timer</span> <span class="o">=</span> <span class="n">segment_timer</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">last_segment_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_segment_end</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">segment_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segment_length</span>
+
+<div class="viewcode-block" id="EBUTTDEncoder.increment_last_segment_end"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.increment_last_segment_end">[docs]</a>    <span class="k">def</span> <span class="nf">increment_last_segment_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">increment_by</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_segment_end</span> <span class="o">+=</span> <span class="n">increment_by</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_segment_end</span></div>
+
+<div class="viewcode-block" id="EBUTTDEncoder.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="n">sequence_missing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTTDEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="c1"># segmentation, conversion... here</span>
+        <span class="k">if</span> <span class="n">sequence_missing</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Ok we just got a relevant document. Let&#39;s call the function</span>
+            <span class="c1"># that schedules the periodic segmentation.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_segment_timer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segment_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTTDEncoder.get_segment"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.get_segment">[docs]</a>    <span class="k">def</span> <span class="nf">get_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">segment_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">extract_segment</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">ebutt3_to_ebuttd</span><span class="p">(</span><span class="n">segment_doc</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">segment_doc</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="EBUTTDEncoder.convert_next_segment"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.convert_next_segment">[docs]</a>    <span class="k">def</span> <span class="nf">convert_next_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># Figure out begin and end</span>
-        <span class="n">ebuttd_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_ebuttd</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ebuttd_doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">ebuttd_doc</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div></div>
-
+        <span class="n">ebutt3_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_segment</span><span class="p">(</span>
+            <span class="n">begin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_segment_end</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">last_segment_end</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segment_length</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">ebutt3_doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ebuttd_bindings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebuttd_converter</span><span class="o">.</span><span class="n">convert_element</span><span class="p">(</span><span class="n">ebutt3_doc</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="p">{})</span>
+            <span class="n">ebuttd_doc</span> <span class="o">=</span> <span class="n">EBUTTDDocument</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">ebuttd_bindings</span><span class="p">)</span>
+            <span class="n">ebuttd_doc</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ebuttd_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_ebuttd_doc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increment_last_segment_end</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_segment_length</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outbound_carriage_impl</span><span class="o">.</span><span class="n">emit_document</span><span class="p">(</span><span class="n">ebuttd_doc</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

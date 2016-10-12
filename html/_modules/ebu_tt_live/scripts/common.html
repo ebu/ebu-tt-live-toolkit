@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
@@ -142,13 +145,13 @@
 <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;^.*(\.yml|\.yaml)(\w)?$&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="create_loggers"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.create_loggers">[docs]</a><span class="k">def</span> <span class="nf">create_loggers</span><span class="p">():</span>
+<div class="viewcode-block" id="create_loggers"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.create_loggers">[docs]</a><span class="k">def</span> <span class="nf">create_loggers</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
     <span class="c1"># Pipe Twisted&#39;s loggers into python logging package</span>
     <span class="n">log_observer</span> <span class="o">=</span> <span class="n">twisted_log</span><span class="o">.</span><span class="n">PythonLoggingObserver</span><span class="p">()</span>
     <span class="n">log_observer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
     <span class="c1"># Python logging setup</span>
     <span class="c1"># TODO: Make this configurable (https://github.com/bbc/ebu-tt-live-toolkit/issues/15)</span>
-    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">log_format</span><span class="p">)</span></div>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">log_format</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="parse_config"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.parse_config">[docs]</a><span class="k">def</span> <span class="nf">parse_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">module_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

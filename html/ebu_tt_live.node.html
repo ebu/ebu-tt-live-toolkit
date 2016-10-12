@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
         <link rel="next" title="scripts Package" href="ebu_tt_live.scripts.html"/>
@@ -190,7 +193,7 @@ A node must implement this method.
 <span id="consumer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.consumer" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ebu_tt_live.node.consumer.EBUTTDEncoder">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.node.consumer.</code><code class="descname">EBUTTDEncoder</code><span class="sig-paren">(</span><em>node_id</em>, <em>carriage_impl</em>, <em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#EBUTTDEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.consumer.</code><code class="descname">EBUTTDEncoder</code><span class="sig-paren">(</span><em>node_id</em>, <em>carriage_impl</em>, <em>outbound_carriage_impl</em>, <em>reference_clock</em>, <em>segment_length</em>, <em>media_time_zero</em>, <em>segment_timer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#EBUTTDEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.consumer.SimpleConsumer" title="ebu_tt_live.node.consumer.SimpleConsumer"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.consumer.SimpleConsumer</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.convert_next_segment">
@@ -198,13 +201,28 @@ A node must implement this method.
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.convert_to_ebuttd">
-<code class="descname">convert_to_ebuttd</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#EBUTTDEncoder.convert_to_ebuttd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder.convert_to_ebuttd" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.get_segment">
+<code class="descname">get_segment</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#EBUTTDEncoder.get_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder.get_segment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.increment_last_segment_end">
+<code class="descname">increment_last_segment_end</code><span class="sig-paren">(</span><em>increment_by</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#EBUTTDEncoder.increment_last_segment_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder.increment_last_segment_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.last_segment_end">
+<code class="descname">last_segment_end</code><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder.last_segment_end" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.process_document">
 <code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#EBUTTDEncoder.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder.process_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.node.consumer.EBUTTDEncoder.segment_length">
+<code class="descname">segment_length</code><a class="headerlink" href="#ebu_tt_live.node.consumer.EBUTTDEncoder.segment_length" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

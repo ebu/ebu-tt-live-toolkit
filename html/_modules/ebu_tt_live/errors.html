@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
@@ -183,6 +186,28 @@
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">ERR_DOCUMENT_EXTENT_MISSING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_attribute</span><span class="p">),</span> <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_attribute</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StopBranchIteration"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.StopBranchIteration">[docs]</a><span class="k">class</span> <span class="nc">StopBranchIteration</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Let the iterator know that it can proceed to the next branch. It does not need to traverse the current one any</span>
+<span class="sd">    further.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="OutsideSegmentError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.OutsideSegmentError">[docs]</a><span class="k">class</span> <span class="nc">OutsideSegmentError</span><span class="p">(</span><span class="n">StopBranchIteration</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This exception is meant to be raised by the copying functionality to make the iterator know that a particular</span>
+<span class="sd">    subtree is not meant to be parsed.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="DiscardElement"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.DiscardElement">[docs]</a><span class="k">class</span> <span class="nc">DiscardElement</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    There is a possibility that an element may become superfluous or lose its value. Such a possibility  can happen</span>
+<span class="sd">    in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting</span>
+<span class="sd">    an interval between them so the container ends up being empty and thus should be discarded.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
 </pre></div>
 
            </div>

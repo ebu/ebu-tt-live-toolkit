@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.documents.ebutt3_segmentation &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>ebu_tt_live.documents.ebutt3_segmentation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.documents.ebutt3_segmentation</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.validation.base</span> <span class="k">import</span> <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">IDMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.pyxb_utils</span> <span class="k">import</span> <span class="n">RecursiveOperation</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.validation.presentation</span> <span class="k">import</span> <span class="n">StyledElementMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">style_type</span><span class="p">,</span> <span class="n">region_type</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">DiscardElement</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">ebuttdt</span>
+
+<span class="c1"># Splicer and segmentation</span>
+<span class="c1"># ========================</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="EBUTT3Segmenter"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3Segmenter</span><span class="p">(</span><span class="n">RecursiveOperation</span><span class="p">):</span>
+
+    <span class="n">_begin</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_end</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_document</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_segment</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_deconflict_ids</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_instance_mapping</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_semantic_dataset</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">deconflict_ids</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTT3Segmenter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
+            <span class="n">root_element</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document</span> <span class="o">=</span> <span class="n">document</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Segmenter created&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_begin</span> <span class="o">=</span> <span class="n">begin</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_end</span> <span class="o">=</span> <span class="n">end</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deconflict_ids</span> <span class="o">=</span> <span class="n">deconflict_ids</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_document_segment</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_begin</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">document</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">segment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_segment</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">deconflict_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deconflict_ids</span>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._do_deconflict_id"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._do_deconflict_id">[docs]</a>    <span class="k">def</span> <span class="nf">_do_deconflict_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">IDMixin</span><span class="p">):</span>
+            <span class="n">element</span><span class="o">.</span><span class="n">deconflict_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._do_copy"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._do_copy">[docs]</a>    <span class="k">def</span> <span class="nf">_do_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s1">&#39;_semantic_copy&#39;</span><span class="p">):</span>
+            <span class="n">celem</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">_semantic_copy</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">celem</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deconflict_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_deconflict_id</span><span class="p">(</span><span class="n">celem</span><span class="p">)</span>
+
+        <span class="c1"># Map instances to their converted versions because not everything has an id and there is no complete</span>
+        <span class="c1"># equivalence check either</span>
+        <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="n">celem</span>
+
+        <span class="k">return</span> <span class="n">celem</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._before_element"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._before_element">[docs]</a>    <span class="k">def</span> <span class="nf">_before_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">):</span>  <span class="c1"># WARNING: Refactoring naming changes</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">_semantic_before_copy</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._process_element"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._process_element">[docs]</a>    <span class="k">def</span> <span class="nf">_process_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">):</span>  <span class="c1"># WARNING: Refactoring naming changes</span>
+            <span class="c1"># Shallow copy element</span>
+            <span class="n">celem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">)</span>
+            <span class="c1"># Call preprocess hooks of current element&#39;s subtree</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">_semantic_before_subtree_copy</span><span class="p">(</span>
+                <span class="n">copied_instance</span><span class="o">=</span><span class="n">celem</span><span class="p">,</span>
+                <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">,</span>
+                <span class="n">element_content</span><span class="o">=</span><span class="n">element</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_copy</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._after_element"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._after_element">[docs]</a>    <span class="k">def</span> <span class="nf">_after_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SemanticValidationMixin</span><span class="p">):</span>
+            <span class="c1"># Call postprocess hooks of current element</span>
+            <span class="n">celem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">value</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">_semantic_after_subtree_copy</span><span class="p">(</span>
+                    <span class="n">copied_instance</span><span class="o">=</span><span class="n">celem</span><span class="p">,</span>
+                    <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">,</span>
+                    <span class="n">element_content</span><span class="o">=</span><span class="n">element</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">element</span><span class="p">:</span>
+                    <span class="n">value</span><span class="o">.</span><span class="n">_do_link_copy_with_copied_parent</span><span class="p">(</span>
+                        <span class="n">dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">,</span>
+                        <span class="n">element_content</span><span class="o">=</span><span class="n">element</span><span class="p">,</span>
+                        <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_segment</span> <span class="o">=</span> <span class="n">celem</span>
+            <span class="k">except</span> <span class="n">DiscardElement</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> discarded during copy&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="EBUTT3Segmenter._process_non_element"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._process_non_element">[docs]</a>    <span class="k">def</span> <span class="nf">_process_non_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">non_element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">parent_binding</span><span class="p">]</span>
+        <span class="n">parent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter.proceed"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.proceed">[docs]</a>    <span class="k">def</span> <span class="nf">proceed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTT3Segmenter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">proceed</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._convert_time"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._convert_time">[docs]</a>    <span class="k">def</span> <span class="nf">_convert_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timedelta_value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta_value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta_value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">SMPTETimingType</span><span class="p">(</span><span class="n">timedelta_value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter._prune_orphan_elements"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter._prune_orphan_elements">[docs]</a>    <span class="k">def</span> <span class="nf">_prune_orphan_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Unused elements need to go from the head section.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: This is not too nice. No time now, improve later.</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;orphaned_elements&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">style_type</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_segment</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">item</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">region_type</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_segment</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">item</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="EBUTT3Segmenter.compute_document_segment"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3_segmentation.EBUTT3Segmenter.compute_document_segment">[docs]</a>    <span class="k">def</span> <span class="nf">compute_document_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Init</span>
+        <span class="c1"># Make sure it is validated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># Get the p and span elements in the range from the timeline</span>
+        <span class="n">affected_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">lookup_range_on_timeline</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+
+        <span class="n">affected_elements</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">affected_elements</span><span class="p">)</span>
+
+        <span class="c1"># Empty document edge-case: Body is always affected</span>
+        <span class="n">affected_elements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+        <span class="n">orphaned_elements</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">elem</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">affected_elements</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">elem</span><span class="p">,</span> <span class="n">StyledElementMixin</span><span class="p">)</span>
+        <span class="p">]:</span>
+            <span class="c1"># Styles and regions are meant to be preserved. We put in everything that is likely to be needed</span>
+            <span class="c1"># NOTE: There is a possibility that after copying some containers stay empty so they get removed from the</span>
+            <span class="c1"># copy . In that case the unreferenced elements will be removed from the head.</span>
+            <span class="n">affected_elements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">validated_styles</span><span class="p">)</span>
+            <span class="n">orphaned_elements</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">validated_styles</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">inherited_region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">affected_elements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">inherited_region</span><span class="p">)</span>
+                <span class="n">orphaned_elements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">inherited_region</span><span class="p">)</span>
+
+        <span class="n">dataset</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;segment_begin&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+            <span class="s1">&#39;segment_end&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+            <span class="s1">&#39;affected_elements&#39;</span><span class="p">:</span> <span class="n">affected_elements</span><span class="p">,</span>
+            <span class="s1">&#39;orphaned_elements&#39;</span><span class="p">:</span> <span class="n">orphaned_elements</span><span class="p">,</span>
+            <span class="s1">&#39;instance_mapping&#39;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s1">&#39;capture_counter&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;tt_element&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">proceed</span><span class="p">(</span><span class="o">**</span><span class="n">dataset</span><span class="p">)</span>
+
+        <span class="c1"># Remove orphaned content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prune_orphan_elements</span><span class="p">()</span>
+
+        <span class="c1"># Drop instance_mapping</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_mapping</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Empty document edge-case</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_segment</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_segment</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_segment</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

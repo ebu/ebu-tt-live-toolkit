@@ -30,6 +30,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
@@ -141,46 +144,81 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.ebu_dummy_encoder.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">create_loggers</span><span class="p">()</span>
+    <span class="n">create_loggers</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Dummy XML Encoder&#39;</span><span class="p">)</span>
 
     <span class="n">tt</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">tt</span><span class="p">(</span>
         <span class="n">sequenceIdentifier</span><span class="o">=</span><span class="s1">&#39;testSequence001&#39;</span><span class="p">,</span>
         <span class="n">sequenceNumber</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">,</span>
         <span class="n">timeBase</span><span class="o">=</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span>
+        <span class="n">extent</span><span class="o">=</span><span class="s1">&#39;800px 600px&#39;</span><span class="p">,</span>
         <span class="n">clockMode</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span>
-        <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;en-GB&#39;</span><span class="p">,</span>
-        <span class="n">head</span><span class="o">=</span><span class="n">bindings</span><span class="o">.</span><span class="n">head_type</span><span class="p">(</span>
+        <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;en-GB&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">head_elem</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">head_type</span><span class="p">(</span>
             <span class="n">metadata</span><span class="o">.</span><span class="n">headMetadata_type</span><span class="p">(</span>
                 <span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span><span class="p">()</span>
             <span class="p">),</span>
             <span class="n">bindings</span><span class="o">.</span><span class="n">styling</span><span class="p">(</span>
                 <span class="n">bindings</span><span class="o">.</span><span class="n">style_type</span><span class="p">(</span>
-                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID001&#39;</span><span class="p">,</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;style1&#39;</span><span class="p">,</span>
                     <span class="n">fontSize</span><span class="o">=</span><span class="s1">&#39;12px&#39;</span>
+                <span class="p">),</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">style_type</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;style2&#39;</span><span class="p">,</span>
+                    <span class="n">fontSize</span><span class="o">=</span><span class="s1">&#39;15px&#39;</span>
+                <span class="p">),</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">style_type</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;style3&#39;</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span>
+                    <span class="n">fontSize</span><span class="o">=</span><span class="s1">&#39;12px&#39;</span>
+                <span class="p">),</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">style_type</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;style4&#39;</span><span class="p">,</span>
+                    <span class="n">backgroundColor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span>
                 <span class="p">)</span>
             <span class="p">),</span>
-            <span class="n">bindings</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
-        <span class="p">),</span>
-        <span class="n">body</span><span class="o">=</span><span class="n">BIND</span><span class="p">(</span>
-            <span class="n">bindings</span><span class="o">.</span><span class="n">div_type</span><span class="p">(</span>
-                <span class="n">bindings</span><span class="o">.</span><span class="n">p_type</span><span class="p">(</span>
-                    <span class="n">bindings</span><span class="o">.</span><span class="n">span_type</span><span class="p">(</span>
-                        <span class="s1">&#39;Some example text...&#39;</span>
-                    <span class="p">),</span>
-                    <span class="n">bindings</span><span class="o">.</span><span class="n">br_type</span><span class="p">(),</span>
-                    <span class="n">bindings</span><span class="o">.</span><span class="n">span_type</span><span class="p">(</span>
-                        <span class="s1">&#39;And another line&#39;</span>
-                    <span class="p">),</span>
-                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID005&#39;</span><span class="p">,</span>
-                    <span class="n">begin</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=.</span><span class="mi">5</span><span class="p">)),</span>
-                    <span class="n">end</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mf">3.42</span><span class="p">)),</span>
+            <span class="n">bindings</span><span class="o">.</span><span class="n">layout</span><span class="p">(</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">region_type</span><span class="p">(</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;region1&#39;</span><span class="p">,</span>
+                    <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;200px 450px&#39;</span><span class="p">,</span>
+                    <span class="n">extent</span><span class="o">=</span><span class="s1">&#39;300px 150px&#39;</span><span class="p">,</span>
+                    <span class="n">style</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;style3&#39;</span><span class="p">]</span>
                 <span class="p">)</span>
-            <span class="p">),</span>
-            <span class="n">begin</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=.</span><span class="mi">5</span><span class="p">)),</span>
-            <span class="n">dur</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+            <span class="p">)</span>
         <span class="p">)</span>
+
+    <span class="n">body_elem</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">body_type</span><span class="p">(</span>
+        <span class="n">bindings</span><span class="o">.</span><span class="n">div_type</span><span class="p">(</span>
+            <span class="n">bindings</span><span class="o">.</span><span class="n">p_type</span><span class="p">(</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">span_type</span><span class="p">(</span>
+                    <span class="s1">&#39;Some example text...&#39;</span><span class="p">,</span>
+                    <span class="n">begin</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+                    <span class="n">end</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">2</span><span class="p">)),</span>
+                    <span class="n">style</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;style4&#39;</span><span class="p">],</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;span1&#39;</span>
+                <span class="p">),</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">br_type</span><span class="p">(),</span>
+                <span class="n">bindings</span><span class="o">.</span><span class="n">span_type</span><span class="p">(</span>
+                    <span class="s1">&#39;And another line&#39;</span><span class="p">,</span>
+                    <span class="n">begin</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">3</span><span class="p">)),</span>
+                    <span class="n">end</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">4</span><span class="p">)),</span>
+                    <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;span2&#39;</span>
+                <span class="p">),</span>
+                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID005&#39;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">style</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;style1&#39;</span><span class="p">],</span>
+            <span class="n">region</span><span class="o">=</span><span class="s1">&#39;region1&#39;</span>
+        <span class="p">),</span>
+        <span class="n">begin</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=.</span><span class="mi">5</span><span class="p">)),</span>
+        <span class="n">dur</span><span class="o">=</span><span class="n">datatypes</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">)),</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;style2&#39;</span><span class="p">]</span>
     <span class="p">)</span>
+
+    <span class="n">tt</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">head_elem</span>
+    <span class="n">tt</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body_elem</span>
+
 
     <span class="n">document</span> <span class="o">=</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">tt</span><span class="p">)</span>
 
