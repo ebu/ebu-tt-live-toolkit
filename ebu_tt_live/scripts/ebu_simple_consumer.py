@@ -30,6 +30,7 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
                     )
+parser.add_argument('--proxy', dest='proxy', help='Proxy server', type=str, metavar='PROXY:PORT')
 
 
 def main():
@@ -62,13 +63,19 @@ def main():
     if manifest_path:
         fs_reader.resume_reading()
     else:
+        factory_args = {}
+        if args.proxy:
+            proxyHost, proxyPort = args.proxy.split(':')
+            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
         factory = BroadcastClientFactory(
             url=websocket_url,
             channels=[websocket_channel],
             consumer=TwistedConsumer(
                 custom_consumer=consumer_impl
-            )
+            ),
+            **factory_args
         )
+
         factory.protocol = ClientNodeProtocol
 
         factory.connect()
