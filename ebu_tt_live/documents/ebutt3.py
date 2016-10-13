@@ -14,6 +14,7 @@ from datetime import timedelta
 from pyxb import BIND
 from sortedcontainers import sortedset
 from sortedcontainers import sortedlist
+import gc
 
 
 log = logging.getLogger(__name__)
@@ -141,7 +142,8 @@ class TimelineUtilMixin(object):
             elif isinstance(item, TimingEventEnd):
                 if begin is not None and item.when <= begin:
                     # Remove elements, which had ended before the specified range began.
-                    affected_elements.remove(item.element)
+                    if item.element in affected_elements:
+                        affected_elements.remove(item.element)
         return affected_elements
 
 
@@ -594,6 +596,29 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             for event in events:
                 self.timeline.remove(event)
 
+    def discard_before(self, document):
+        """
+        This function gets rid of old documents we do not wish to keep any longer.
+        :param document: The document up to which we would like to discard things
+        :return:
+        """
+        discarded_timing_events = {}
+        resolved_begin = TimingEventBegin(document)
+        discard_time = timedelta()
+
+        for item in self.timeline.irange(maximum=resolved_begin, inclusive=(True, True)):
+            if isinstance(item, TimingEventBegin) and item.element != document or \
+                    isinstance(item, TimingEventEnd) and item.when == resolved_begin.when:
+                discarded_timing_events.setdefault(item.element, []).append(item)
+
+        for item, events in discarded_timing_events.items():
+            item.discard_document(resolved_end_time=discard_time)
+            self._documents.remove(item)
+            for event in events:
+                self.timeline.remove(event)
+            del item
+            gc.collect()
+
     def add_document(self, document):
         self._check_document_compatibility(document)
         document.sequence = self
@@ -649,7 +674,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     def fork(self, *args, **kwargs):
         pass
 
-    def extract_segment(self, begin=None, end=None, sequence_number=None):
+    def extract_segment(self, begin=None, end=None, sequence_number=None, discard=False):
         """
         Extract the subtitles from the sequence in the given timeframe. The return value is one
         merged EBUTT3Document
@@ -697,4 +722,8 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         )
 
         document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
+
+        if discard is True and affected_documents:
+            self.discard_before(affected_documents[-1])
+
         return document
