@@ -78,11 +78,19 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_region(self, region_in, dataset):
+        origin = region_in.origin
+        if origin is not None:
+            if isinstance(origin, ebuttdt.cellOriginType):
+                origin = ebuttdt.convert_cell_region_to_percentage(origin, dataset['cellResolution'])
+        extent = region_in.extent
+        if extent is not None:
+            if isinstance(extent, ebuttdt.cellExtentType):
+                extent = ebuttdt.convert_cell_region_to_percentage(extent, dataset['cellResolution'])
         new_elem = d_region_type(
             *self.convert_children(region_in, dataset),
             id=region_in.id,
-            origin=region_in.origin,
-            extent=region_in.extent,
+            origin=origin,
+            extent=extent,
             style=region_in.style,
             displayAlign=region_in.displayAlign,
             padding=region_in.padding,
@@ -106,6 +114,14 @@ class EBUTT3EBUTTDConverter(object):
         if lineHeight is not None:
             if lineHeight.endswith('c'):
                 lineHeight = lineHeight[:-1]+'00%'
+        color = style_in.color
+        if color is not None:
+            if isinstance(color, ebuttdt.namedColorType):
+                color = ebuttdt.named_color_to_rgba(color)
+        backgroundColor = style_in.backgroundColor
+        if backgroundColor is not None:
+            if isinstance(backgroundColor, ebuttdt.namedColorType):
+                backgroundColor = ebuttdt.named_color_to_rgba(backgroundColor)
         new_elem = d_style_type(
             *self.convert_children(style_in, dataset),
             id=style_in.id,
@@ -115,8 +131,8 @@ class EBUTT3EBUTTDConverter(object):
             fontSize=None,  #style_in.fontSize TODO: Calculate fonts appropriately
             lineHeight=lineHeight,
             textAlign=style_in.textAlign,
-            color=style_in.color,
-            backgroundColor=style_in.backgroundColor,
+            color=color,
+            backgroundColor=backgroundColor,
             fontStyle=style_in.fontStyle,
             fontWeight=style_in.fontWeight,
             textDecoration=style_in.textDecoration,

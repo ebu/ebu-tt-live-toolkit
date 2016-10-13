@@ -675,7 +675,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 if doc_ending is None or end < doc_ending:
                     doc_ending = end
             # Check only til resolved end, otherwise there will be unwanted parallel elements
-            doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
+            try:
+                doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
+            except Exception:
+                log.error('Error extracting document segment from {}'.format(doc))
 
             document_segments.append(doc_segment)
             begin = doc_ending
