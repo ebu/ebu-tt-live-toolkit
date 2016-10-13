@@ -41,8 +41,10 @@ class EBUTT3EBUTTDConverter(object):
             timeBase='media',
             lang=tt_in.lang,
             space=tt_in.space,
-            cellResolution=tt_in.cellResolution
+            cellResolution=tt_in.cellResolution,
+            _strict_keywords=False
         )
+
         return new_elem
 
     def convert_head(self, head_in, dataset):
@@ -145,6 +147,8 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_body(self, body_in, dataset):
+        if len(body_in.div) == 0:
+            return None
         new_elem = d_body_type(
             *self.convert_children(body_in, dataset),
             agent=body_in.agent,
