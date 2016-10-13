@@ -5,7 +5,7 @@ from .common import create_loggers
 from ebu_tt_live.node import SimpleConsumer
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
 from twisted.internet import reactor
 
@@ -30,6 +30,9 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
                     )
+parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
+
+parser.add_argument('--proxy', dest='proxy', help='Proxy server', type=str, metavar='PROXY:PORT')
 
 
 def main():
@@ -48,7 +51,10 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        consumer_impl = TwistedConsumerImpl()
+        if args.correct:
+            consumer_impl = TwistedCorrectorConsumerImpl()
+        else:
+            consumer_impl = TwistedConsumerImpl()
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
@@ -62,12 +68,17 @@ def main():
     if manifest_path:
         fs_reader.resume_reading()
     else:
+        factory_args = {}
+        if args.proxy:
+            proxyHost, proxyPort = args.proxy.split(':')
+            factory_args['proxy'] = {'host': proxyHost, 'port': proxyPort}
         factory = BroadcastClientFactory(
             url=websocket_url,
             channels=[websocket_channel],
             consumer=TwistedConsumer(
                 custom_consumer=consumer_impl
-            )
+            ),
+            **factory_args
         )
         factory.protocol = ClientNodeProtocol
 
