@@ -5,7 +5,7 @@ from .common import create_loggers
 from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport
 from ebu_tt_live import bindings
 from twisted.internet import task, reactor
@@ -39,6 +39,9 @@ parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
                     default='current', metavar='HH:MM:SS.mmm')
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
+parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
+
+parser.add_argument('--proxy', dest='proxy', help='Proxy server', type=str, metavar='PROXY:PORT')
 
 
 def start_timer(encoder):
@@ -64,7 +67,10 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        consumer_impl = TwistedConsumerImpl()
+        if args.correct:
+            consumer_impl = TwistedCorrectorConsumerImpl()
+        else:
+            consumer_impl = TwistedConsumerImpl()
 
     if args.output_format == 'xml':
         outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{}.xml')
@@ -92,12 +98,17 @@ def main():
         fs_reader.resume_reading()
         # TODO: Do segmentation in filesystem mode. Especially bad is the tail usecase #209
     else:
+        factory_args = {}
+        if args.proxy:
+            proxyHost, proxyPort = args.proxy.split(':')
+            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
         factory = BroadcastClientFactory(
             url=websocket_url,
             channels=[websocket_channel],
             consumer=TwistedConsumer(
                 custom_consumer=consumer_impl
-            )
+            ),
+            **factory_args
         )
         factory.protocol = ClientNodeProtocol
 
