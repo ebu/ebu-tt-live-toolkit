@@ -6,7 +6,7 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
-    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, DOC_INSERTED
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
@@ -564,6 +564,11 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             computed_end = TimingEventEnd(document)
             if computed_end.when is not None:
                 self.timeline.add(computed_end)
+
+        document_logger.info(DOC_INSERTED.format(
+            sequence_identifier=document.sequence_identifier,
+            sequence_number=document.sequence_number
+        ))
 
     def _override_sequence(self, document):
         """
