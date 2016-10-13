@@ -6,7 +6,8 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
-    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, DOC_INSERTED
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
+    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
@@ -310,6 +311,13 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         result = self._ebutt3_content.validateBinding(
             availability_time=availability_time,
             document=self
+        )
+
+        document_logger.debug(
+            DOC_SEMANTIC_VALIDATION_SUCCESSFUL.format(
+                sequence_identifier=self.sequence_identifier,
+                sequence_number=self.sequence_number
+            )
         )
         # Extract results
 
