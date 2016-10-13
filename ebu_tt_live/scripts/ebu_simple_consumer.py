@@ -71,7 +71,7 @@ def main():
         factory_args = {}
         if args.proxy:
             proxyHost, proxyPort = args.proxy.split(':')
-            factory_args['proxy'] = {'host': proxyHost, 'port': proxyPort}
+            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
         factory = BroadcastClientFactory(
             url=websocket_url,
             channels=[websocket_channel],
