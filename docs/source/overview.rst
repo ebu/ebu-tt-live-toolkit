@@ -39,3 +39,4 @@ This script mimics a distribution node. It listens to documents coming from the 
     validation
     user_input_producer
     timing_resolution
+    segmentation

@@ -76,7 +76,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:attribute>
-	<xs:attribute name="cellResolution" type="ebuttdt:cellResolutionType">
+	<xs:attribute name="cellResolution" type="ebuttdt:cellResolutionType" default="23 15">
 		<xs:annotation>
 			<xs:documentation>Expresses a virtual visual grid composed of horizontal and vertical
 				cells. This virtual grid shall divide the active video in rows and
