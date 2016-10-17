@@ -377,6 +377,14 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         segmenter = EBUTT3Segmenter(self, begin=begin, end=end, deconflict_ids=deconflict_ids)
         return EBUTT3Document.create_from_raw_binding(segmenter.segment)
 
+    def cleanup(self):
+        """
+        This function is meant to get rid of all the validation added data that may be blocking garbage collection of
+        the objects.
+        :return:
+        """
+        self.reset_timeline()
+
 
 class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     """
@@ -705,3 +713,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
 
         document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
         return document
+
+    def cleanup(self):
+        self.reset_timeline()
+        del self._documents
