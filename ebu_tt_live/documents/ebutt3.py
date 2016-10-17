@@ -628,8 +628,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         discard_time = timedelta()
 
         for item in self.timeline.irange(maximum=resolved_begin, inclusive=(True, True)):
-            if isinstance(item, TimingEventBegin) and item.element != document or \
-                    isinstance(item, TimingEventEnd) and item.when == resolved_begin.when:
+            if item.element != document:
                 discarded_timing_events.setdefault(item.element, []).append(item)
 
         for item, events in discarded_timing_events.items():
@@ -638,7 +637,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             for event in events:
                 self.timeline.remove(event)
             del item
-            gc.collect()
+        del discarded_timing_events
 
     def add_document(self, document):
         self._check_document_compatibility(document)

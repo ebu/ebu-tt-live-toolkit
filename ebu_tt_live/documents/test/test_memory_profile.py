@@ -154,8 +154,8 @@ class TestDocumentLeaks(TestCase):
     def test_discard_partial_sequence(self):
 
         doc1 = self._generate_document(sequence_number=1, offset=timedelta(seconds=0))
-        doc2 = self._generate_document(sequence_number=1, offset=timedelta(seconds=4))
-        doc3 = self._generate_document(sequence_number=1, offset=timedelta(seconds=8))
+        doc2 = self._generate_document(sequence_number=2, offset=timedelta(seconds=5))
+        doc3 = self._generate_document(sequence_number=3, offset=timedelta(seconds=10))
 
         doc_refs = [
             weakref.ref(doc1),
@@ -170,11 +170,22 @@ class TestDocumentLeaks(TestCase):
         sequence.add_document(doc2)
         sequence.add_document(doc3)
 
+        del doc1
+        del doc2
+        del doc3
+
         gc.collect()
 
         self.assertIsInstance(seq_ref(), EBUTT3DocumentSequence)
         for item in doc_refs:
             self.assertIsInstance(item(), EBUTT3Document)
 
-        # TODO: Start removing them 
+        sequence.discard_before(doc_refs[1]())
+
+        gc.collect()
+
+        self.assertIsNone(doc_refs[0]())
+        self.assertIsInstance(doc_refs[1](), EBUTT3Document)
+        self.assertIsInstance(doc_refs[2](), EBUTT3Document)
+
 
