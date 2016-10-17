@@ -3,12 +3,10 @@ from unittest import TestCase
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
 from ebu_tt_live.bindings import ebuttdt
 import gc
-from memory_profiler import profile, exec_with_profiler
 import os
 from datetime import timedelta
 from jinja2 import Environment, FileSystemLoader, Template
 import weakref
-import time
 
 
 raw_template = """<?xml version="1.0" ?>
