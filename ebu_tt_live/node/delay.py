@@ -41,8 +41,7 @@ class FixedDelayNode(Node):
                 document.set_end(
                     LimitedClockTimingType(document.binding.body.end.timedelta + fixed_delay.timedelta))
 
-                document.set_dur(
-                    LimitedClockTimingType(document.binding.body.dur.timedelta + fixed_delay.timedelta))
+                update_children_timing(document.binding, fixed_delay)
 
             elif document.time_base == 'media':
 
@@ -54,10 +53,7 @@ class FixedDelayNode(Node):
                 document.set_end(
                     FullClockTimingType(document.binding.body.end.timedelta + fixed_delay.timedelta))
 
-                document.set_dur(
-                    FullClockTimingType(document.binding.body.dur.timedelta + fixed_delay.timedelta))
-
-            # TODO: traverse all the elements on content and change their begin/end/dur attributes
+                update_children_timing(document.binding, fixed_delay)
 
             self._carriage_impl.emit_document(document)
 
@@ -66,3 +62,21 @@ class FixedDelayNode(Node):
 
             time.sleep(fixed_delay_int)
             self._carriage_impl.emit_document(document)
+
+
+def update_children_timing(element, delay):
+
+    # if the element has a child
+    if hasattr(element, 'orderedContent'):
+
+        children = element.orderedContent()
+
+        for child in children:
+
+            if hasattr(child.value, 'begin') and child.value.begin != None:
+                child.value.begin = LimitedClockTimingType(child.value.begin.timedelta + delay.timedelta)
+
+            if hasattr(child.value, 'end') and child.value.end != None:
+                child.value.end = LimitedClockTimingType(child.value.end.timedelta + delay.timedelta)
+
+            update_children_timing(child.value, delay)
