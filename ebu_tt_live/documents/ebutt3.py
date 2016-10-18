@@ -6,7 +6,8 @@ from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
-    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT
+    ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
+    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
@@ -313,6 +314,13 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
             availability_time=availability_time,
             document=self
         )
+
+        document_logger.debug(
+            DOC_SEMANTIC_VALIDATION_SUCCESSFUL.format(
+                sequence_identifier=self.sequence_identifier,
+                sequence_number=self.sequence_number
+            )
+        )
         # Extract results
 
         # Begin times
@@ -370,6 +378,14 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         )
         segmenter = EBUTT3Segmenter(self, begin=begin, end=end, deconflict_ids=deconflict_ids)
         return EBUTT3Document.create_from_raw_binding(segmenter.segment)
+
+    def cleanup(self):
+        """
+        This function is meant to get rid of all the validation added data that may be blocking garbage collection of
+        the objects.
+        :return:
+        """
+        self.reset_timeline()
 
 
 class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
@@ -567,6 +583,11 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             if computed_end.when is not None:
                 self.timeline.add(computed_end)
 
+        document_logger.info(DOC_INSERTED.format(
+            sequence_identifier=document.sequence_identifier,
+            sequence_number=document.sequence_number
+        ))
+
     def _override_sequence(self, document):
         """
         This function clears the timeline and the associated documents after the document in the parameter.
@@ -617,7 +638,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             for event in events:
                 self.timeline.remove(event)
             del item
-            gc.collect()
+        del discarded_timing_events
 
     def add_document(self, document):
         self._check_document_compatibility(document)
@@ -727,3 +748,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             self.discard_before(affected_documents[-1])
 
         return document
+
+    def cleanup(self):
+        self.reset_timeline()
+        del self._documents

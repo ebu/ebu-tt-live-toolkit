@@ -41,8 +41,8 @@ parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
 parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
 
-parser.add_argument('--proxy', dest='proxy', help='Proxy server', type=str, metavar='PROXY:PORT')
-parser.add_argument('--discard', dest='discard', help='Discard old', action='store_true', default=False)
+parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
+parser.add_argument('--discard', dest='discard', help='Discard already converted documents', action='store_true', default=False)
 
 
 def start_timer(encoder):

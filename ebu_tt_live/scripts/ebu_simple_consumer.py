@@ -32,7 +32,7 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     )
 parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
 
-parser.add_argument('--proxy', dest='proxy', help='Proxy server', type=str, metavar='PROXY:PORT')
+parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
 
 
 def main():
@@ -80,6 +80,7 @@ def main():
             ),
             **factory_args
         )
+
         factory.protocol = ClientNodeProtocol
 
         factory.connect()
