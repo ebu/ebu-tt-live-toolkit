@@ -213,6 +213,8 @@ class TimingValidationMixin(object):
 
             self._post_calculate_begin(children=children)
 
+        self._post_cleanup_variables()
+
     # The mixin approach is used since there are multiple timed element types.
     # The inspected values are all attributes of the element so they do not
     # take part in the traversal directly we process them in the timed element's context instead: body, div, p, span

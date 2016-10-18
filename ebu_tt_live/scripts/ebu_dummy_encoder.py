@@ -11,7 +11,7 @@ log = logging.getLogger('ebu_dummy_encoder')
 
 
 def main():
-    create_loggers(logging.DEBUG)
+    create_loggers(logging.INFO)
     log.info('Dummy XML Encoder')
 
     tt = bindings.tt(
