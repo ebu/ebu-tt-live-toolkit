@@ -190,9 +190,10 @@
     <span class="n">_default_ebuttd_doc</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_outbound_carriage_impl</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_segment_timer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_discard</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">,</span> <span class="n">outbound_carriage_impl</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">,</span>
-                 <span class="n">segment_length</span><span class="p">,</span> <span class="n">media_time_zero</span><span class="p">,</span> <span class="n">segment_timer</span><span class="p">):</span>
+                 <span class="n">segment_length</span><span class="p">,</span> <span class="n">media_time_zero</span><span class="p">,</span> <span class="n">segment_timer</span><span class="p">,</span> <span class="n">discard</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">EBUTTDEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span>
             <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
             <span class="n">carriage_impl</span><span class="o">=</span><span class="n">carriage_impl</span><span class="p">,</span>
@@ -210,6 +211,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_default_ebuttd_doc</span> <span class="o">=</span> <span class="n">EBUTTDDocument</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s1">&#39;en-GB&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_default_ebuttd_doc</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_segment_timer</span> <span class="o">=</span> <span class="n">segment_timer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_discard</span> <span class="o">=</span> <span class="n">discard</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_segment_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -234,7 +236,7 @@
 
 <div class="viewcode-block" id="EBUTTDEncoder.get_segment"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.EBUTTDEncoder.get_segment">[docs]</a>    <span class="k">def</span> <span class="nf">get_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">segment_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">extract_segment</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">)</span>
+            <span class="n">segment_doc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">extract_segment</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">discard</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_discard</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">segment_doc</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 

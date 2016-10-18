@@ -139,7 +139,8 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">TimingValidationMixin</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span><span class="p">,</span> \
     <span class="n">ERR_DOCUMENT_NOT_COMPATIBLE</span><span class="p">,</span> <span class="n">ERR_DOCUMENT_NOT_PART_OF_SEQUENCE</span><span class="p">,</span> \
-    <span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">,</span> <span class="n">DOC_DISCARDED</span><span class="p">,</span> <span class="n">DOC_TRIMMED</span><span class="p">,</span> <span class="n">DOC_REQ_SEGMENT</span><span class="p">,</span> <span class="n">DOC_SEQ_REQ_SEGMENT</span>
+    <span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">,</span> <span class="n">DOC_DISCARDED</span><span class="p">,</span> <span class="n">DOC_TRIMMED</span><span class="p">,</span> <span class="n">DOC_REQ_SEGMENT</span><span class="p">,</span> <span class="n">DOC_SEQ_REQ_SEGMENT</span><span class="p">,</span> \
+    <span class="n">DOC_INSERTED</span><span class="p">,</span> <span class="n">DOC_SEMANTIC_VALIDATION_SUCCESSFUL</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">IncompatibleSequenceError</span><span class="p">,</span> <span class="n">DocumentDiscardedError</span><span class="p">,</span> \
     <span class="n">SequenceOverridden</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.clocks</span> <span class="k">import</span> <span class="n">get_clock_from_document</span>
@@ -147,6 +148,7 @@
 <span class="kn">from</span> <span class="nn">pyxb</span> <span class="k">import</span> <span class="n">BIND</span>
 <span class="kn">from</span> <span class="nn">sortedcontainers</span> <span class="k">import</span> <span class="n">sortedset</span>
 <span class="kn">from</span> <span class="nn">sortedcontainers</span> <span class="k">import</span> <span class="n">sortedlist</span>
+<span class="kn">import</span> <span class="nn">gc</span>
 
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
@@ -274,7 +276,8 @@
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventEnd</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">when</span> <span class="o">&lt;=</span> <span class="n">begin</span><span class="p">:</span>
                     <span class="c1"># Remove elements, which had ended before the specified range began.</span>
-                    <span class="n">affected_elements</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">element</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">element</span> <span class="ow">in</span> <span class="n">affected_elements</span><span class="p">:</span>
+                        <span class="n">affected_elements</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">element</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">affected_elements</span></div></div>
 
 
@@ -444,6 +447,13 @@
             <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span><span class="p">,</span>
             <span class="n">document</span><span class="o">=</span><span class="bp">self</span>
         <span class="p">)</span>
+
+        <span class="n">document_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="n">DOC_SEMANTIC_VALIDATION_SUCCESSFUL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">sequence_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_number</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
         <span class="c1"># Extract results</span>
 
         <span class="c1"># Begin times</span>
@@ -500,7 +510,15 @@
             <span class="p">)</span>
         <span class="p">)</span>
         <span class="n">segmenter</span> <span class="o">=</span> <span class="n">EBUTT3Segmenter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">deconflict_ids</span><span class="o">=</span><span class="n">deconflict_ids</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">segmenter</span><span class="o">.</span><span class="n">segment</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">segmenter</span><span class="o">.</span><span class="n">segment</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3Document.cleanup"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function is meant to get rid of all the validation added data that may be blocking garbage collection of</span>
+<span class="sd">        the objects.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_timeline</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3DocumentSequence</span><span class="p">(</span><span class="n">TimelineUtilMixin</span><span class="p">,</span> <span class="n">CloningDocumentSequence</span><span class="p">):</span>
@@ -696,7 +714,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">computed_end</span> <span class="o">=</span> <span class="n">TimingEventEnd</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">computed_end</span><span class="o">.</span><span class="n">when</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">computed_end</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">computed_end</span><span class="p">)</span>
+
+        <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_INSERTED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
+        <span class="p">))</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence._override_sequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._override_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">_override_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -726,6 +749,28 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.discard_before"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.discard_before">[docs]</a>    <span class="k">def</span> <span class="nf">discard_before</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function gets rid of old documents we do not wish to keep any longer.</span>
+<span class="sd">        :param document: The document up to which we would like to discard things</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">discarded_timing_events</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">resolved_begin</span> <span class="o">=</span> <span class="n">TimingEventBegin</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="n">discard_time</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">irange</span><span class="p">(</span><span class="n">maximum</span><span class="o">=</span><span class="n">resolved_begin</span><span class="p">,</span> <span class="n">inclusive</span><span class="o">=</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">element</span> <span class="o">!=</span> <span class="n">document</span><span class="p">:</span>
+                <span class="n">discarded_timing_events</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">element</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">events</span> <span class="ow">in</span> <span class="n">discarded_timing_events</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">discard_document</span><span class="p">(</span><span class="n">resolved_end_time</span><span class="o">=</span><span class="n">discard_time</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">del</span> <span class="n">item</span>
+        <span class="k">del</span> <span class="n">discarded_timing_events</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence.add_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document">[docs]</a>    <span class="k">def</span> <span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_document_compatibility</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
@@ -782,7 +827,7 @@
 <div class="viewcode-block" id="EBUTT3DocumentSequence.fork"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.fork">[docs]</a>    <span class="k">def</span> <span class="nf">fork</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="EBUTT3DocumentSequence.extract_segment"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment">[docs]</a>    <span class="k">def</span> <span class="nf">extract_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3DocumentSequence.extract_segment"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.extract_segment">[docs]</a>    <span class="k">def</span> <span class="nf">extract_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">discard</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract the subtitles from the sequence in the given timeframe. The return value is one</span>
 <span class="sd">        merged EBUTT3Document</span>
@@ -824,7 +869,15 @@
         <span class="p">)</span>
 
         <span class="n">document</span> <span class="o">=</span> <span class="n">EBUTT3Document</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">splicer</span><span class="o">.</span><span class="n">spliced_document</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">document</span></div></div>
+
+        <span class="k">if</span> <span class="n">discard</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">affected_documents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">discard_before</span><span class="p">(</span><span class="n">affected_documents</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">document</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.cleanup"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_timeline</span><span class="p">()</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_documents</span></div></div>
 </pre></div>
 
            </div>
