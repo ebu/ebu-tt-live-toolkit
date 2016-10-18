@@ -39,6 +39,8 @@ parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
                     default='current', metavar='HH:MM:SS.mmm')
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
+parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
+parser.add_argument('--discard', dest='discard', help='Discard already converted documents', action='store_true', default=False)
 
 
 def start_timer(encoder):
@@ -85,19 +87,25 @@ def main():
         reference_clock=reference_clock,
         segment_length=args.interval,
         media_time_zero=media_time_zero,
-        segment_timer=start_timer
+        segment_timer=start_timer,
+        discard=args.discard
     )
 
     if manifest_path:
         fs_reader.resume_reading()
         # TODO: Do segmentation in filesystem mode. Especially bad is the tail usecase #209
     else:
+        factory_args = {}
+        if args.proxy:
+            proxyHost, proxyPort = args.proxy.split(':')
+            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
         factory = BroadcastClientFactory(
             url=websocket_url,
             channels=[websocket_channel],
             consumer=TwistedConsumer(
                 custom_consumer=consumer_impl
-            )
+            ),
+            **factory_args
         )
         factory.protocol = ClientNodeProtocol
 
