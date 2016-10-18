@@ -35,6 +35,7 @@ Feature: Compute fontSize on a single EBU-TT Live element
   # <style xml:id="S1" tts:fontSize="100%" />             
   # <style xml:id="S2" style="S1" tts:fontSize="50%" />   // computed: 50%
   # <style xml:id="S3" tts:fontSize="50%" style="S1" />   // computed: 100%
+  @skip
   Scenario: Styles reference chain
     Given an xml file <xml_file>
     When it has a cell resolution of <cell_resolution>
