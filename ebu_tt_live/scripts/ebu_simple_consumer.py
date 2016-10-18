@@ -30,7 +30,7 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
                     )
-parser.add_argument('--proxy', dest='proxy', help='Proxy server', type=str, metavar='PROXY:PORT')
+parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
 
 
 def main():
