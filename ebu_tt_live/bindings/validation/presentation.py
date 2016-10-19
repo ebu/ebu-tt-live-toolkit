@@ -93,9 +93,9 @@ class StyledElementMixin(object):
         # Let's resolve the specified styles
         self._specified_style = self._compatible_style_type.resolve_styles(referenced_styles)
 
-        # Let's force the computed style to be generated
+        # Let's generate the computed style of the element
         self._computed_style = self._compatible_style_type.compute_style(
-            self._specified_style, parent_computed_style, region_computed_style
+            self._specified_style, parent_computed_style, region_computed_style, dataset
         )
 
     def _semantic_push_styles(self, dataset):

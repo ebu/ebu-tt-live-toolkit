@@ -552,7 +552,8 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
             else:
                 return NotImplemented
         else:
-            pass
+            if isinstance(other, CellFontSizeType):
+                return
     def __mul__(self, other):
         return self.do_mul(other)
 
