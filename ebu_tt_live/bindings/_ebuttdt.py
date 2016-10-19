@@ -541,14 +541,14 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
         if self.horizontal is not None:
             if isinstance(other, CellFontSizeType):
                 if other.horizontal is not None:
-                    return CellFontSizeType(other.vertical, other.horizontal)
+                    return CellFontSizeType(other.horizontal * self.horizontal, other.vertical * self.vertical)
                 else:
-                    return CellFontSizeType(other.vertical)
+                    return CellFontSizeType(other.vertical * self.horizontal, other.vertical * self.vertical)
             if isinstance(other, PixelFontSizeType):
                 if other.horizontal is not None:
-                    return PixelFontSizeType(other.vertical, other.horizontal)
+                    return PixelFontSizeType(other.horizontal * self.horizontal, other.vertical * self.vertical)
                 else:
-                    return PixelFontSizeType(other.vertical)
+                    return PixelFontSizeType(other.vertical * self.horizontal, other.vertical * self.vertical)
             else:
                 return NotImplemented
         else:
