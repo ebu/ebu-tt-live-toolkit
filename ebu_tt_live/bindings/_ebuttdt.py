@@ -208,6 +208,12 @@ class TwoDimSizingMixin(object):
             result.append(cls.from_tuple(tuple(current_pair)))
         return tuple(result)
 
+    def __eq__(self, other):
+        if self.horizontal == other.horizontal and self.vertical == other.vertical:
+            return True
+        else:
+            return False
+
 
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
     """
@@ -541,19 +547,54 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
         if self.horizontal is not None:
             if isinstance(other, CellFontSizeType):
                 if other.horizontal is not None:
-                    return CellFontSizeType(other.horizontal * self.horizontal, other.vertical * self.vertical)
+                    return CellFontSizeType(
+                        other.horizontal * self.horizontal / 100,
+                        other.vertical * self.vertical / 100
+                    )
                 else:
-                    return CellFontSizeType(other.vertical * self.horizontal, other.vertical * self.vertical)
+                    # This uses TTML's assumption of 1c => 1c 1c
+                    return CellFontSizeType(
+                        other.vertical * self.horizontal / 100,
+                        other.vertical * self.vertical / 100
+                    )
             if isinstance(other, PixelFontSizeType):
                 if other.horizontal is not None:
-                    return PixelFontSizeType(other.horizontal * self.horizontal, other.vertical * self.vertical)
+                    return PixelFontSizeType(
+                        other.horizontal * self.horizontal / 100,
+                        other.vertical * self.vertical / 100
+                    )
                 else:
-                    return PixelFontSizeType(other.vertical * self.horizontal, other.vertical * self.vertical)
+                    # This uses TTML's assumption of 1px => 1px 1px
+                    return PixelFontSizeType(
+                        other.vertical * self.horizontal / 100,
+                        other.vertical * self.vertical / 100
+                    )
             else:
                 return NotImplemented
         else:
             if isinstance(other, CellFontSizeType):
-                return
+                if other.horizontal is not None:
+                    return CellFontSizeType(
+                        other.horizontal * self.vertical / 100,
+                        other.vertical * self.vertical / 100
+                    )
+                else:
+                    return CellFontSizeType(
+                        other.vertical * self.vertical / 100
+                    )
+            if isinstance(other, PixelFontSizeType):
+                if other.horizontal is not None:
+                    return CellFontSizeType(
+                        other.horizontal * self.vertical / 100,
+                        other.vertical * self.vertical / 100
+                    )
+                else:
+                    return CellFontSizeType(
+                        other.vertical * self.vertical / 100
+                    )
+            else:
+                return NotImplemented
+
     def __mul__(self, other):
         return self.do_mul(other)
 

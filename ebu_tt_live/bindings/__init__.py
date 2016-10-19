@@ -189,7 +189,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     @classmethod
     def compute_font_size(cls, specified_style, parent_computed_style, region_computed_style, dataset):
         spec_font_size = specified_style.fontSize
-        default_font_size = ebuttdt.cellFontSizeType('1c')
+        default_font_size = ebuttdt.CellFontSizeType('1c')
         result_font_size = None
         if spec_font_size is not None:
             # Check relativeness
