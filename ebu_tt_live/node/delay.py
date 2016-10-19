@@ -34,25 +34,11 @@ class FixedDelayNode(Node):
             if document.time_base == 'clock':
 
                 fixed_delay = LimitedClockTimingType(timedelta(seconds=fixed_delay_int))
-
-                document.set_begin(
-                    LimitedClockTimingType(document.binding.body.begin.timedelta + fixed_delay.timedelta))
-
-                document.set_end(
-                    LimitedClockTimingType(document.binding.body.end.timedelta + fixed_delay.timedelta))
-
                 update_children_timing(document.binding, fixed_delay)
 
             elif document.time_base == 'media':
 
                 fixed_delay = FullClockTimingType(timedelta(seconds=fixed_delay_int))
-
-                document.set_begin(
-                    FullClockTimingType(document.binding.body.begin.timedelta + fixed_delay.timedelta))
-
-                document.set_end(
-                    FullClockTimingType(document.binding.body.end.timedelta + fixed_delay.timedelta))
-
                 update_children_timing(document.binding, fixed_delay)
 
             self._carriage_impl.emit_document(document)
