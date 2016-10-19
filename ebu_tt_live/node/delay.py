@@ -31,16 +31,7 @@ class FixedDelayNode(Node):
         # document is explicitly timed: modify the document
         if document.binding.body.begin or document.binding.body.end:
 
-            if document.time_base == 'clock':
-
-                fixed_delay = LimitedClockTimingType(timedelta(seconds=fixed_delay_int))
-                update_children_timing(document.binding, fixed_delay)
-
-            elif document.time_base == 'media':
-
-                fixed_delay = FullClockTimingType(timedelta(seconds=fixed_delay_int))
-                update_children_timing(document.binding, fixed_delay)
-
+            update_children_timing(document.binding, document.time_base, fixed_delay_int)
             self._carriage_impl.emit_document(document)
 
         # document is implicitly timed: pause a while, re-emit later
@@ -50,7 +41,7 @@ class FixedDelayNode(Node):
             self._carriage_impl.emit_document(document)
 
 
-def update_children_timing(element, delay):
+def update_children_timing(element, timebase, delay_int):
 
     # if the element has a child
     if hasattr(element, 'orderedContent'):
@@ -60,9 +51,21 @@ def update_children_timing(element, delay):
         for child in children:
 
             if hasattr(child.value, 'begin') and child.value.begin != None:
-                child.value.begin = LimitedClockTimingType(child.value.begin.timedelta + delay.timedelta)
+
+                if timebase == 'clock':
+                    delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+                    child.value.begin = LimitedClockTimingType(child.value.begin.timedelta + delay.timedelta)
+                elif timebase == 'media':
+                    delay = FullClockTimingType(timedelta(seconds=delay_int))
+                    child.value.begin = FullClockTimingType(child.value.begin.timedelta + delay.timedelta)
 
             if hasattr(child.value, 'end') and child.value.end != None:
-                child.value.end = LimitedClockTimingType(child.value.end.timedelta + delay.timedelta)
 
-            update_children_timing(child.value, delay)
+                if timebase == 'clock':
+                    delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+                    child.value.end = LimitedClockTimingType(child.value.end.timedelta + delay.timedelta)
+                elif timebase == 'media':
+                    delay = FullClockTimingType(timedelta(seconds=delay_int))
+                    child.value.end = FullClockTimingType(child.value.end.timedelta + delay.timedelta)
+
+            update_children_timing(child.value, timebase, delay_int)
