@@ -225,10 +225,12 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
 
         if result_font_size is not None:
             if isinstance(result_font_size, ebuttdt.pixelFontSizeType):
-                result_font_size = ebuttdt.pixels_to_cells(
-                    result_font_size,
-                    dataset['tt_element'].extent,
-                    dataset['tt_element'].cellResolution
+                result_font_size = ebuttdt.CellFontSizeType(
+                    *ebuttdt.pixels_to_cells(
+                        result_font_size,
+                        dataset['tt_element'].extent,
+                        dataset['tt_element'].cellResolution
+                    )
                 )
 
         return result_font_size
