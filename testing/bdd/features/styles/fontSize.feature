@@ -23,11 +23,12 @@ Feature: Compute fontSize on a single EBU-TT Live element
     | style_attribute_inherited.xml |             | 32 15           | 50%      | 200%     | 50%      | 200%      | 1c             |  
     | style_attribute_inherited.xml |             | 32 15           | 1c       | 200%     | 100%     | 50%       | 1c             |  
     | style_attribute_inherited.xml |             | 32 15           | 100%     | 2c       | 100%     | 50%       | 1c             |  
-    | style_attribute_inherited.xml |             | 10 10           | 100%     |          |          | 50%       | .5c            |  
+    | style_attribute_inherited.xml |             | 10 10           | 100%     |          |          | 50%       | .5c            |
+    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c    | 100% 50% | 5px 20px | 200% 50%  | 1c 1c          |
+    @skip
     | style_attribute_inherited.xml |             | 10 10           |          | 50%      |          | 400%      | 20%            |  
     | style_attribute_inherited.xml |             | 10 10           | 1c 2c    | 100% 50% | 50% 100% | 200% 100% | 10% 10%        |  
-    | style_attribute_inherited.xml | 100px 100px |                 |          | 10px     | 200%     | 50%       | 10px           |  
-    | style_attribute_inherited.xml | 100px 100px | 10 10           | 1c 2c    | 100% 50% | 5px 20px | 200% 50%  | 1c 1c          |
+    | style_attribute_inherited.xml | 100px 100px |                 |          | 10px     | 200%     | 50%       | 10px           |
 
 
   # One style references another style. Note that the ordering matters.

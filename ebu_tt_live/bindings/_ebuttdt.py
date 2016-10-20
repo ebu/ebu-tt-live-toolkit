@@ -544,56 +544,37 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
     _2dim_format = '{}% {}%'
 
     def do_mul(self, other):
-        if self.horizontal is not None:
-            if isinstance(other, CellFontSizeType):
-                if other.horizontal is not None:
-                    return CellFontSizeType(
-                        other.horizontal * self.horizontal / 100,
-                        other.vertical * self.vertical / 100
-                    )
-                else:
-                    # This uses TTML's assumption of 1c => 1c 1c
-                    return CellFontSizeType(
-                        other.vertical * self.horizontal / 100,
-                        other.vertical * self.vertical / 100
-                    )
-            if isinstance(other, PixelFontSizeType):
-                if other.horizontal is not None:
-                    return PixelFontSizeType(
-                        other.horizontal * self.horizontal / 100,
-                        other.vertical * self.vertical / 100
-                    )
-                else:
-                    # This uses TTML's assumption of 1px => 1px 1px
-                    return PixelFontSizeType(
-                        other.vertical * self.horizontal / 100,
-                        other.vertical * self.vertical / 100
-                    )
-            else:
-                return NotImplemented
+        if isinstance(other, CellFontSizeType):
+            result_type = CellFontSizeType
+        elif isinstance(other, PixelFontSizeType):
+            result_type = PixelFontSizeType
+        elif isinstance(other, PercentageFontSizeType):
+            result_type = PercentageFontSizeType
         else:
-            if isinstance(other, CellFontSizeType):
-                if other.horizontal is not None:
-                    return CellFontSizeType(
-                        other.horizontal * self.vertical / 100,
-                        other.vertical * self.vertical / 100
-                    )
-                else:
-                    return CellFontSizeType(
-                        other.vertical * self.vertical / 100
-                    )
-            if isinstance(other, PixelFontSizeType):
-                if other.horizontal is not None:
-                    return CellFontSizeType(
-                        other.horizontal * self.vertical / 100,
-                        other.vertical * self.vertical / 100
-                    )
-                else:
-                    return CellFontSizeType(
-                        other.vertical * self.vertical / 100
-                    )
+            return NotImplemented
+
+        if self.horizontal is not None:
+            if other.horizontal is not None:
+                return result_type(
+                    other.horizontal * self.horizontal / 100,
+                    other.vertical * self.vertical / 100
+                )
             else:
-                return NotImplemented
+                # This uses TTML's assumption of 1c => 1c 1c
+                return result_type(
+                    other.vertical * self.horizontal / 100,
+                    other.vertical * self.vertical / 100
+                )
+        else:
+            if other.horizontal is not None:
+                return result_type(
+                    other.horizontal * self.vertical / 100,
+                    other.vertical * self.vertical / 100
+                )
+            else:
+                return result_type(
+                    other.vertical * self.vertical / 100
+                )
 
     def __mul__(self, other):
         return self.do_mul(other)

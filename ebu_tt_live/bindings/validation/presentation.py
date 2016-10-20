@@ -40,7 +40,7 @@ class StyledElementMixin(object):
     _specified_style = None
     _computed_style = None
 
-    def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding):
+    def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding, defer_font_size=False):
         self._specified_style = None
         self._computed_style = None
         self._parent_computed_style = None
@@ -95,7 +95,11 @@ class StyledElementMixin(object):
 
         # Let's generate the computed style of the element
         self._computed_style = self._compatible_style_type.compute_style(
-            self._specified_style, parent_computed_style, region_computed_style, dataset
+            self._specified_style,
+            parent_computed_style,
+            region_computed_style,
+            dataset,
+            defer_font_size
         )
 
     def _semantic_push_styles(self, dataset):
