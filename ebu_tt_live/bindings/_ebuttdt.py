@@ -209,10 +209,12 @@ class TwoDimSizingMixin(object):
         return tuple(result)
 
     def __eq__(self, other):
-        if self.horizontal == other.horizontal and self.vertical == other.vertical:
+        if type(self) == type(other) and self.horizontal == other.horizontal and self.vertical == other.vertical:
             return True
+        elif isinstance(other, basestring):
+            return str(self) == str(other)
         else:
-            return False
+            return NotImplemented
 
 
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
