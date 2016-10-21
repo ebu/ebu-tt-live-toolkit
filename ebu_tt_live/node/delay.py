@@ -29,7 +29,7 @@ class FixedDelayNode(Node):
         fixed_delay_int = 2
 
         # document is explicitly timed: modify the document
-        if document.binding.body.begin or document.binding.body.end:
+        if is_explicitly_timed(document.binding):
 
             update_children_timing(document.binding, document.time_base, fixed_delay_int)
             self._carriage_impl.emit_document(document)
@@ -69,3 +69,22 @@ def update_children_timing(element, timebase, delay_int):
                     child.value.end = FullClockTimingType(child.value.end.timedelta + delay.timedelta)
 
             update_children_timing(child.value, timebase, delay_int)
+
+
+def is_explicitly_timed(element):
+
+    # if element has begin or end attribute
+    if hasattr(element, 'begin') and element.begin != None or hasattr(element, 'end') and element.end != None:
+        return True
+
+    else:
+
+        # if element has children
+        if hasattr(element, 'orderedContent'):
+
+            children = element.orderedContent()
+
+            for child in children:
+                res = is_explicitly_timed(child.value)
+                if res:
+                    return res
