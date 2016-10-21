@@ -70,7 +70,10 @@ def update_children_timing(element, timebase, delay_int):
                     child.value.end = FullClockTimingType(child.value.end.timedelta + delay.timedelta)
                 # TODO: smpte
 
-            update_children_timing(child.value, timebase, delay_int)
+            if not (hasattr(child.value, 'begin') and child.value.begin != None) and \
+                not (hasattr(child.value, 'end') and child.value.end != None):
+
+                update_children_timing(child.value, timebase, delay_int)
 
 
 def is_explicitly_timed(element):
