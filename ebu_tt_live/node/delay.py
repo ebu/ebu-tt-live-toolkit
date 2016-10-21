@@ -50,6 +50,16 @@ def update_children_timing(element, timebase, delay_int):
 
         for child in children:
 
+            if hasattr(child.value, 'end') and child.value.end != None:
+
+                if timebase == 'clock':
+                    delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+                    child.value.end = LimitedClockTimingType(child.value.end.timedelta + delay.timedelta)
+                elif timebase == 'media':
+                    delay = FullClockTimingType(timedelta(seconds=delay_int))
+                    child.value.end = FullClockTimingType(child.value.end.timedelta + delay.timedelta)
+                    # TODO: smpte
+
             if hasattr(child.value, 'begin') and child.value.begin != None:
 
                 if timebase == 'clock':
@@ -60,19 +70,7 @@ def update_children_timing(element, timebase, delay_int):
                     child.value.begin = FullClockTimingType(child.value.begin.timedelta + delay.timedelta)
                 # TODO: permit timebase = "smpte" with clockMode="continuous"
 
-            if hasattr(child.value, 'end') and child.value.end != None:
-
-                if timebase == 'clock':
-                    delay = LimitedClockTimingType(timedelta(seconds=delay_int))
-                    child.value.end = LimitedClockTimingType(child.value.end.timedelta + delay.timedelta)
-                elif timebase == 'media':
-                    delay = FullClockTimingType(timedelta(seconds=delay_int))
-                    child.value.end = FullClockTimingType(child.value.end.timedelta + delay.timedelta)
-                # TODO: smpte
-
-            if not (hasattr(child.value, 'begin') and child.value.begin != None) and \
-                not (hasattr(child.value, 'end') and child.value.end != None):
-
+            else:
                 update_children_timing(child.value, timebase, delay_int)
 
 
