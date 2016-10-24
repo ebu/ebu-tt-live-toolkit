@@ -3,41 +3,37 @@ from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
 import time
-import random
 
 
 class FixedDelayNode(Node):
 
     _reference_clock = None
-    _sequence = None
+    _document_sequence = None
+    _fixed_delay = None
 
-    def __init__(self, node_id, carriage_impl, reference_clock):
+    def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
         super(FixedDelayNode, self).__init__(node_id, carriage_impl)
         self._reference_clock = reference_clock
-
-        random_int = random.randint(0, 9999999999)
-        new_identifier = 'sequence_{0}'.format(str(random_int))
-        self._sequence = new_identifier
+        self._fixed_delay = fixed_delay
+        self._document_sequence = document_sequence
 
     def process_document(self, document):
 
         # change the sequence identifier
-        document.sequence_identifier = self._sequence
+        document.sequence_identifier = self._document_sequence
 
         # TODO: add an ebuttm:trace element to the document metadata
-
-        fixed_delay_int = 2
 
         # document is explicitly timed: modify the document
         if is_explicitly_timed(document.binding):
 
-            update_children_timing(document.binding, document.time_base, fixed_delay_int)
+            update_children_timing(document.binding, document.time_base, self._fixed_delay)
             self._carriage_impl.emit_document(document)
 
         # document is implicitly timed: pause a while, re-emit later
         else:
 
-            time.sleep(fixed_delay_int)
+            time.sleep(self._fixed_delay)
             self._carriage_impl.emit_document(document)
 
 
