@@ -528,7 +528,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             # This loop goes forward looking at offending events
             if isinstance(item, TimingEventEnd):
                 ends_after = item
-                if ends_after.element != begins_before.element:
+                if begins_before and ends_after.element != begins_before.element and ends_after.when != begins_before.when:
                     raise ValueError(ERR_DOCUMENT_SEQUENCE_INCONSISTENCY)
 
             elif isinstance(item, TimingEventBegin):
