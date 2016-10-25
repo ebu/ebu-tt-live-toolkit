@@ -661,7 +661,7 @@
             <span class="c1"># This loop goes forward looking at offending events</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventEnd</span><span class="p">):</span>
                 <span class="n">ends_after</span> <span class="o">=</span> <span class="n">item</span>
-                <span class="k">if</span> <span class="n">ends_after</span><span class="o">.</span><span class="n">element</span> <span class="o">!=</span> <span class="n">begins_before</span><span class="o">.</span><span class="n">element</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">begins_before</span> <span class="ow">and</span> <span class="n">ends_after</span><span class="o">.</span><span class="n">element</span> <span class="o">!=</span> <span class="n">begins_before</span><span class="o">.</span><span class="n">element</span> <span class="ow">and</span> <span class="n">ends_after</span><span class="o">.</span><span class="n">when</span> <span class="o">!=</span> <span class="n">begins_before</span><span class="o">.</span><span class="n">when</span><span class="p">:</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">TimingEventBegin</span><span class="p">):</span>
