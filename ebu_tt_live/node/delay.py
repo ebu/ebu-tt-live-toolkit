@@ -1,8 +1,9 @@
 
+from twisted.internet import reactor
+
 from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
-import time
 
 
 class FixedDelayNode(Node):
@@ -33,8 +34,8 @@ class FixedDelayNode(Node):
         # document is implicitly timed: pause a while, re-emit later
         else:
 
-            time.sleep(self._fixed_delay)
-            self._carriage_impl.emit_document(document)
+            reactor.callLater(self._fixed_delay, self._carriage_impl.emit_document, document)
+            reactor.run()
 
 
 def update_children_timing(element, timebase, delay_int):
