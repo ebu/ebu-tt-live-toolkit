@@ -8,8 +8,7 @@ import re
 from pyxb.namespace import ExpandedName
 
 from ebu_tt_live.errors import SemanticValidationError
-from ebu_tt_live.strings import DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
-    DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_ID_UNIQUENESS
+from ebu_tt_live.strings import DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_ID_UNIQUENESS
 from pyxb.binding.basis import NonElementContent, ElementContent
 
 log = logging.getLogger(__name__)
