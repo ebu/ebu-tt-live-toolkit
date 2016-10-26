@@ -1,6 +1,7 @@
 import logging
 from argparse import ArgumentParser
 from .common import create_loggers
+from datetime import timedelta
 
 from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
@@ -36,6 +37,9 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     )
 parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
                     help='This sets the offset value that is used to turn clock time into media time.',
+                    default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-ss', '--segmentation-starts', dest='segmentation_starts',
+                    help='This helps with local machine clock timing adjustment',
                     default='current', metavar='HH:MM:SS.mmm')
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
@@ -84,6 +88,10 @@ def main():
         args.media_time_zero == 'current' and reference_clock.get_time() \
         or bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero)).timedelta
 
+    segmentation_starts = None
+    if args.segmentation_starts != 'current':
+        segmentation_starts = bindings.ebuttdt.LimitedClockTimingType(str(args.segmentation_starts)).timedelta
+
     ebuttd_converter = EBUTTDEncoder(
         node_id='simple-consumer',
         carriage_impl=consumer_impl,
@@ -92,11 +100,16 @@ def main():
         segment_length=args.interval,
         media_time_zero=media_time_zero,
         segment_timer=start_timer,
-        discard=args.discard
+        discard=args.discard,
+        segmentation_starts=segmentation_starts
     )
 
     if manifest_path:
         fs_reader.resume_reading()
+        last_timing_event = ebuttd_converter._sequence.timeline[-1]
+        last_segment_end = timedelta()
+        while last_segment_end < last_timing_event.when:
+            last_segment_end = ebuttd_converter.convert_next_segment()
         # TODO: Do segmentation in filesystem mode. Especially bad is the tail usecase #209
     else:
         factory_args = {}

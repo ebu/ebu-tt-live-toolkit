@@ -60,7 +60,7 @@ class EBUTTDEncoder(SimpleConsumer):
     _discard = None
 
     def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock,
-                 segment_length, media_time_zero, segment_timer, discard):
+                 segment_length, media_time_zero, segment_timer, discard, segmentation_starts=None):
         super(EBUTTDEncoder, self).__init__(
             node_id=node_id,
             carriage_impl=carriage_impl,
@@ -79,6 +79,8 @@ class EBUTTDEncoder(SimpleConsumer):
         self._default_ebuttd_doc.validate()
         self._segment_timer = segment_timer
         self._discard = discard
+        if segmentation_starts is not None:
+            self._last_segment_end = segmentation_starts
 
     @property
     def last_segment_end(self):
@@ -121,3 +123,4 @@ class EBUTTDEncoder(SimpleConsumer):
             ebuttd_doc = self._default_ebuttd_doc
         self.increment_last_segment_end(self._segment_length)
         self._outbound_carriage_impl.emit_document(ebuttd_doc)
+        return self.last_segment_end
