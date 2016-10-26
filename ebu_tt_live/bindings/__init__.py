@@ -215,13 +215,20 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                 # TODO: control the type here
                 result_font_size = spec_font_size
         else:
-            if parent_computed_style is not None and parent_computed_style.fontSize is not None:
-                result_font_size = parent_computed_style.fontSize
-            elif region_computed_style is not None and region_computed_style.fontSize is not None:
+            if region_computed_style is not None and region_computed_style.fontSize is not None:
                 result_font_size = region_computed_style.fontSize
-            else:
+            if parent_computed_style is not None and parent_computed_style.fontSize is not None:
+                if isinstance(parent_computed_style.fontSize, ebuttdt.PercentageFontSizeType):
+                    if result_font_size is not None:
+                        # There is a region we can proceed
+                        result_font_size *= parent_computed_style.fontSize
+                    else:
+                        result_font_size = parent_computed_style.fontSize
+                else:
+                    result_font_size = parent_computed_style.fontSize
                 if defer is False:
-                    result_font_size = default_font_size
+                    if isinstance(result_font_size, ebuttdt.PercentageFontSizeType):
+                        result_font_size *= default_font_size
 
         if result_font_size is not None:
             if isinstance(result_font_size, ebuttdt.pixelFontSizeType):
@@ -232,6 +239,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                         dataset['tt_element'].cellResolution
                     )
                 )
+        else:
+            result_font_size = default_font_size
 
         return result_font_size
 
