@@ -62,7 +62,7 @@ def when_document_converted(test_context, local_time_mapping):
     ebuttd_converter = EBUTT3EBUTTDConverter(
         media_clock=media_clock
     )
-    converted_bindings = ebuttd_converter.convert_element(test_context['document'].binding, dataset={})
+    converted_bindings = ebuttd_converter.convert_document(test_context['document'].binding)
     ebuttd_document = EBUTTDDocument.create_from_raw_binding(converted_bindings)
     test_context['ebuttd_document'] = ebuttd_document
-    print(ebuttd_converter._semantic_dataset)
+    print(ebuttd_document.get_xml())

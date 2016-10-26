@@ -13,6 +13,7 @@ class EBUTT3EBUTTDConverter(object):
 
     _media_clock = None
     _font_size_style_template = 'autogenFontStyle_{}_{}'
+    _dataset_key_for_font_styles = 'adjusted_sizing_styles'
     _semantic_dataset = None
 
     def __init__(self, media_clock):
@@ -34,6 +35,9 @@ class EBUTT3EBUTTDConverter(object):
         if time_base == 'smpte':
             raise NotImplementedError()
 
+    def _adjusted_font_style_map(self):
+        return self._semantic_dataset.setdefault(self._dataset_key_for_font_styles, {})
+
     def _get_font_size_style(self, vertical, dataset, horizontal=None):
         """
         This function either points us to an already generated version of this style or creates it on demand.
@@ -42,8 +46,9 @@ class EBUTT3EBUTTDConverter(object):
         :return:
         """
         font_style_id = self._font_size_style_template.format(horizontal, vertical)
-        if font_style_id in dataset.setdefault('adjusted_sizing_styles', {}):
-            instance = dataset['adjusted_sizing_styles'][font_style_id]
+        adjusted_font_style_map = self._adjusted_font_style_map()
+        if font_style_id in adjusted_font_style_map:
+            instance = adjusted_font_style_map[font_style_id]
             return instance
         elif horizontal is None:
             instance = d_style_type(
@@ -56,7 +61,7 @@ class EBUTT3EBUTTDConverter(object):
                 fontSize=ebuttdt.PercentageFontSizeType(horizontal, vertical)
             )
 
-        dataset[font_style_id] = instance
+        adjusted_font_style_map[font_style_id] = instance
 
         return instance
 
@@ -103,6 +108,15 @@ class EBUTT3EBUTTDConverter(object):
 
             celem.style.insert(0, adjusted_style.id)
 
+    def _link_adjusted_fonts_styling(self, adjusted_fonts, root_element):
+        if not adjusted_fonts:
+            return
+        if root_element.head is None:
+            root_element.head = d_head_type()
+        if root_element.head.styling is None:
+            root_element.head.styling = d_styling_type()
+        root_element.head.styling.style.extend(adjusted_fonts.values())
+
     def convert_tt(self, tt_in, dataset):
         dataset['timeBase'] = tt_in.timeBase
         dataset['cellResolution'] = tt_in.cellResolution
@@ -114,6 +128,8 @@ class EBUTT3EBUTTDConverter(object):
             space=tt_in.space,
             cellResolution=tt_in.cellResolution
         )
+        self._link_adjusted_fonts_styling(self._adjusted_font_style_map(), new_elem)
+
         return new_elem
 
     def convert_head(self, head_in, dataset):
@@ -328,7 +344,14 @@ class EBUTT3EBUTTDConverter(object):
         return output
 
     def convert_element(self, element, dataset):
-        if dataset != self._semantic_dataset:
-            self._semantic_dataset = dataset
         converter = self.map_type(element)
         return converter(element, dataset)
+
+    def convert_document(self, root_element, dataset=None):
+        if dataset is None:
+            self._semantic_dataset = {}
+        else:
+            self._semantic_dataset = dataset
+        converted_bindings = self.convert_element(root_element, self._semantic_dataset)
+
+        return converted_bindings

@@ -544,12 +544,12 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
         if isinstance(other, CellFontSizeType):
             result_list = []
             if self.horizontal is not None and other.horizontal is not None:
-                result_list.append((float(other.horizontal) / float(self.horizontal)) * 100)
+                result_list.append((float(self.horizontal) / float(other.horizontal)) * 100)
             elif self.horizontal is None and other.horizontal is not None:
-                result_list.append((float(other.horizontal) / float(self.vertical)) * 100)
+                result_list.append((float(self.horizontal) / float(other.vertical)) * 100)
             elif self.horizontal is not None and other.horizontal is None:
-                result_list.append((float(other.vertical) / float(self.horizontal)) * 100)
-            result_list.append((float(other.vertical) / float(self.vertical)) * 100)
+                result_list.append((float(self.vertical) / float(other.horizontal)) * 100)
+            result_list.append((float(self.vertical) / float(other.vertical)) * 100)
             return PercentageFontSizeType(*result_list)
         else:
             return NotImplemented
