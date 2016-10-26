@@ -889,9 +889,12 @@
                     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()</span>
                     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">style_type</span><span class="p">)</span>
                 <span class="p">]:</span>
-            <span class="n">style_elem_styles</span> <span class="o">=</span> <span class="n">style_elem</span><span class="o">.</span><span class="n">_semantic_deconflicted_ids</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">style_elem_styles</span><span class="p">:</span>
-                <span class="n">style_elem</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style_elem_styles</span></div>
+            <span class="n">copied_style_elem</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">style_elem</span><span class="p">)</span>
+            <span class="c1"># The style may not have been copied at all because it isn&#39;t used in the requested segment</span>
+            <span class="k">if</span> <span class="n">copied_style_elem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">style_elem_styles</span> <span class="o">=</span> <span class="n">style_elem</span><span class="o">.</span><span class="n">_semantic_deconflicted_ids</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">style_elem_styles</span><span class="p">:</span>
+                    <span class="n">copied_style_elem</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style_elem_styles</span></div>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">styling</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">styling</span><span class="p">)</span>
