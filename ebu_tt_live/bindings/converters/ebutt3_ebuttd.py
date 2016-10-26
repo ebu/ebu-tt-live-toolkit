@@ -197,11 +197,6 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_style(self, style_in, dataset):
-        # TODO: This workaround doesn't look right. Calculate lineHeight appropriately!
-        lineHeight = style_in.lineHeight
-        if lineHeight is not None:
-            if lineHeight.endswith('c'):
-                lineHeight = lineHeight[:-1]+'00%'
         color = style_in.color
         if color is not None:
             if isinstance(color, ebuttdt.namedColorType):
@@ -217,7 +212,7 @@ class EBUTT3EBUTTDConverter(object):
             direction=style_in.direction,
             fontFamily=style_in.fontFamily,
             fontSize=None,  # It is far easier to regenerate fontSizes at the moment than introspecting the cases
-            lineHeight=lineHeight,
+            lineHeight=None,  # lineHeight also receives the fontSize treatment
             textAlign=style_in.textAlign,
             color=color,
             backgroundColor=backgroundColor,
