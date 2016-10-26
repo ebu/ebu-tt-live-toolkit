@@ -103,7 +103,7 @@ def cells_to_pixels(cells_in, root_extent, cell_resolution):
         return cells_in.horizontal * root_extent.horizontal / cell_resolution.horizontal, \
                cells_in.vertical * root_extent.vertical / cell_resolution.vertical
     else:
-        return cells_in.vertical * root_extent.vertical / cell_resolution.vertical
+        return cells_in.vertical * root_extent.vertical / cell_resolution.vertical,
 
 
 def pixels_to_cells(pixels_in, root_extent, cell_resolution):
@@ -113,7 +113,39 @@ def pixels_to_cells(pixels_in, root_extent, cell_resolution):
         return pixels_in.horizontal * cell_resolution.horizontal / root_extent.horizontal, \
                pixels_in.vertical * cell_resolution.vertical / root_extent.vertical
     else:
-        return pixels_in.vertical * cell_resolution.vertical / root_extent.vertical
+        return pixels_in.vertical * cell_resolution.vertical / root_extent.vertical,
+
+
+def named_color_to_rgba(named_color):
+    color_map = {
+        "transparent": "00000000",
+        "black": "000000ff",
+        "silver": "c0c0c0ff",
+        "gray": "808080ff",
+        "white": "ffffffff",
+        "maroon": "800000ff",
+        "red": "ff0000ff",
+        "purple": "800080ff",
+        "fuchsia": "ff00ffff",
+        "magenta": "ff00ffff",
+        "green": "008000ff",
+        "lime": "00ff00ff",
+        "olive": "808000ff",
+        "yellow": "ffff00ff",
+        "navy": "000080ff",
+        "blue": "0000ffff",
+        "teal": "008080ff",
+        "aqua": "00ffffff",
+        "cyan": "00ffffff"
+    }
+    return '#{}'.format(color_map[named_color])
+
+
+def convert_cell_region_to_percentage(cells_in, cell_resolution):
+    return '{}% {}%'.format(
+        (float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100,
+        (float(cells_in.vertical) / float(cell_resolution.vertical)) * 100
+    )
 
 
 def named_color_to_rgba(named_color):
@@ -157,7 +189,9 @@ class TwoDimSizingMixin(object):
     @classmethod
     def as_tuple(cls, instance):
         first, second = cls._groups_regex.match(instance).groups()
-        return float(first), second is not None and float(second) or None
+        if second is not None:
+            second = float(second)
+        return float(first), second
 
     @classmethod
     def from_tuple(cls, instance):
@@ -206,6 +240,14 @@ class TwoDimSizingMixin(object):
         if len(current_pair) > 0:
             result.append(cls.from_tuple(tuple(current_pair)))
         return tuple(result)
+
+    def __eq__(self, other):
+        if type(self) == type(other) and self.horizontal == other.horizontal and self.vertical == other.vertical:
+            return True
+        elif isinstance(other, basestring):
+            return str(self) == str(other)
+        else:
+            return NotImplemented
 
 
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
@@ -435,7 +477,7 @@ ebuttdt_raw.pixelOriginType._SetSupersedingClass(PixelOriginType)
 
 class CellOriginType(TwoDimSizingMixin, ebuttdt_raw.cellOriginType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _groups_regex = re.compile(r'(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
     _2dim_format = '{}c {}c'
 
 ebuttdt_raw.cellOriginType._SetSupersedingClass(CellOriginType)
@@ -526,6 +568,49 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
     _1dim_format = '{}c'
     _2dim_format = '{}c {}c'
 
+    def _do_div(self, other):
+        """
+        :param other: CellFontSizeType
+        :return:
+        """
+        if isinstance(other, CellFontSizeType):
+            result_list = []
+            if self.horizontal is not None and other.horizontal is not None:
+                result_list.append((float(self.horizontal) / float(other.horizontal)) * 100)
+            elif self.horizontal is None and other.horizontal is not None:
+                result_list.append((float(self.vertical) / float(other.horizontal)) * 100)
+            elif self.horizontal is not None and other.horizontal is None:
+                result_list.append((float(self.horizontal) / float(other.vertical)) * 100)
+            result_list.append((float(self.vertical) / float(other.vertical)) * 100)
+            return PercentageFontSizeType(*result_list)
+        else:
+            return NotImplemented
+
+    def __div__(self, other):
+        return self._do_div(other)
+
+    def _do_eq(self, other):
+        if isinstance(other, CellFontSizeType):
+            if self.horizontal is None and other.horizontal is None:
+                return self.vertical == other.vertical
+            elif self.horizontal is None:
+                return self.vertical == other.vertical and \
+                       self.vertical == other.horizontal
+            elif other.horizontal is None:
+                return self.vertical == other.vertical and \
+                       self.horizontal == other.vertical
+            else:
+                return self.vertical == other.vertical and \
+                       self.horizontal == other.horizontal
+        elif isinstance(other, basestring):
+            return str(self) == str(other)
+        else:
+            return NotImplemented
+
+    def __eq__(self, other):
+        return self._do_eq(other)
+
+
 ebuttdt_raw.cellFontSizeType._SetSupersedingClass(CellFontSizeType)
 
 
@@ -537,21 +622,38 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
     _2dim_format = '{}% {}%'
 
     def do_mul(self, other):
-        if self.horizontal is not None:
-            if isinstance(other, CellFontSizeType):
-                if other.horizontal is not None:
-                    return CellFontSizeType(other.vertical, other.horizontal)
-                else:
-                    return CellFontSizeType(other.vertical)
-            if isinstance(other, PixelFontSizeType):
-                if other.horizontal is not None:
-                    return PixelFontSizeType(other.vertical, other.horizontal)
-                else:
-                    return PixelFontSizeType(other.vertical)
-            else:
-                return NotImplemented
+        if isinstance(other, CellFontSizeType):
+            result_type = CellFontSizeType
+        elif isinstance(other, PixelFontSizeType):
+            result_type = PixelFontSizeType
+        elif isinstance(other, PercentageFontSizeType):
+            result_type = PercentageFontSizeType
         else:
-            pass
+            return NotImplemented
+
+        if self.horizontal is not None:
+            if other.horizontal is not None:
+                return result_type(
+                    other.horizontal * self.horizontal / 100,
+                    other.vertical * self.vertical / 100
+                )
+            else:
+                # This uses TTML's assumption of 1c => 1c 1c
+                return result_type(
+                    other.vertical * self.horizontal / 100,
+                    other.vertical * self.vertical / 100
+                )
+        else:
+            if other.horizontal is not None:
+                return result_type(
+                    other.horizontal * self.vertical / 100,
+                    other.vertical * self.vertical / 100
+                )
+            else:
+                return result_type(
+                    other.vertical * self.vertical / 100
+                )
+
     def __mul__(self, other):
         return self.do_mul(other)
 

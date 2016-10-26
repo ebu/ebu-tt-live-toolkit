@@ -34,7 +34,7 @@ class SemanticValidationMixin(object):
             self._attr_en_post[uri_tuple](self, au)
         return au
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         """
         Semantic validation preprocess hook.
         :param dataset: semantic context object
@@ -42,7 +42,7 @@ class SemanticValidationMixin(object):
         """
         pass
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         """
         Semantic validation postprocess hook.
         :param dataset: semantic context object

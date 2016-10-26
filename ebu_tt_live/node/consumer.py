@@ -114,7 +114,7 @@ class EBUTTDEncoder(SimpleConsumer):
             end=self.last_segment_end + self._segment_length
         )
         if ebutt3_doc is not None:
-            ebuttd_bindings = self._ebuttd_converter.convert_element(ebutt3_doc.binding, dataset={})
+            ebuttd_bindings = self._ebuttd_converter.convert_document(ebutt3_doc.binding)
             ebuttd_doc = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
             ebuttd_doc.validate()
         else:

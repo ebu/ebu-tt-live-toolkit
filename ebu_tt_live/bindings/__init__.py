@@ -187,38 +187,76 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         return instance
 
     @classmethod
-    def compute_font_size(cls, specified_style, parent_computed_style, region_computed_style):
+    def compute_font_size(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer=False):
         spec_font_size = specified_style.fontSize
-        default_font_size = ebuttdt.cellFontSizeType('1c')
+        default_font_size = ebuttdt.CellFontSizeType('1c')
+        result_font_size = None
         if spec_font_size is not None:
             # Check relativeness
-            if isinstance(spec_font_size, ebuttdt.percentageFontSizeType):
+            if isinstance(spec_font_size, ebuttdt.PercentageFontSizeType):
                 if parent_computed_style is not None and parent_computed_style.fontSize is not None:
-                    return parent_computed_style.fontSize * spec_font_size
+                    result_font_size = parent_computed_style.fontSize * spec_font_size
                 elif region_computed_style is not None and region_computed_style.fontSize is not None:
-                    return region_computed_style.fontSize * spec_font_size
+                    result_font_size = region_computed_style.fontSize * spec_font_size
                 else:
-                    # This means the default font size needs to be modulated by the percentage
-                    return default_font_size * spec_font_size
+                    if region_computed_style is None and defer is True:
+                        # This is an edge-case. body or div can have styles attached with fontSize but may still have no
+                        # region assigned so if they are percentage based the calculation needs to be deferred.
+                        # In this case and in this case only we save percentage in the computed fontSize value
+                        result_font_size = spec_font_size
+                    else:
+                        # This means the default font size needs to be modulated by the percentage
+                        result_font_size = default_font_size * spec_font_size
+
+                if isinstance(result_font_size, ebuttdt.PercentageFontSizeType) and defer is False:
+                    # We cannot defer any longer so now it is time to resolve it.
+                    result_font_size *= default_font_size
             else:
                 # TODO: control the type here
-                return spec_font_size
+                result_font_size = spec_font_size
         else:
+            if region_computed_style is not None and region_computed_style.fontSize is not None:
+                result_font_size = region_computed_style.fontSize
             if parent_computed_style is not None and parent_computed_style.fontSize is not None:
-                return parent_computed_style.fontSize
-            elif region_computed_style is not None and region_computed_style.fontSize is not None:
-                return region_computed_style.fontSize
-            else:
-                return default_font_size
+                if isinstance(parent_computed_style.fontSize, ebuttdt.PercentageFontSizeType):
+                    if result_font_size is not None:
+                        # There is a region we can proceed
+                        result_font_size *= parent_computed_style.fontSize
+                    else:
+                        result_font_size = parent_computed_style.fontSize
+                else:
+                    result_font_size = parent_computed_style.fontSize
+                if defer is False:
+                    if isinstance(result_font_size, ebuttdt.PercentageFontSizeType):
+                        result_font_size *= default_font_size
+
+        if result_font_size is not None:
+            if isinstance(result_font_size, ebuttdt.pixelFontSizeType):
+                result_font_size = ebuttdt.CellFontSizeType(
+                    *ebuttdt.pixels_to_cells(
+                        result_font_size,
+                        dataset['tt_element'].extent,
+                        dataset['tt_element'].cellResolution
+                    )
+                )
+        else:
+            result_font_size = default_font_size
+
+        return result_font_size
+
+    @property
+    def deferred_font_size(self):
+        return self._deferred_font_size
 
     @classmethod
-    def compute_style(cls, specified_style, parent_computed_style, region_computed_style):
+    def compute_style(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer_font_size):
         """
         This function holds the styling semantics of containers considering direct reference, inheritance and
         containment variables
         :param specified_style: Directly referenced resolved styles
         :param parent_computed_style: Inherited styling information from parent container
         :param region_computed_style: Default region styling information
+        :param dataset: Semantic dataset needed for conversion context
         :return:
         """
         instance = cls()
@@ -229,7 +267,16 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         # 4: If no parent style attr but there is region style attr
         # 5: If none of the above assume the default
 
-        return specified_style
+        instance.fontSize = cls.compute_font_size(
+            specified_style=specified_style,
+            parent_computed_style=parent_computed_style,
+            region_computed_style=region_computed_style,
+            dataset=dataset,
+            defer=defer_font_size
+        )
+        # TODO add the rest
+
+        return instance
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
@@ -413,6 +460,13 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # The following edge case is ruined by the XSD associating the same extent type to this extent element.
         if self.extent is not None and not isinstance(self.extent, ebuttdt.pixelExtentType):
             raise SimpleTypeValueError(type(self.extent), self.extent)
+        # This little gem is correcting a bug in PyXB and defult attribute values being instantiated to the old type
+        # and not the customized one
+        # e.g: instead of ebuttdt.CellResolutionType it creates raw._ebuttdt.cellResolutionType, which is a bug
+        # NOTE: As a side effect however this monkey patch will cause cellResolution to be defined on all generated
+        # documents' tt element.
+        if isinstance(self.cellResolution, ebuttdt.cellResolutionType):
+            self.cellResolution = ebuttdt.CellResolutionType(self.cellResolution)
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
@@ -669,7 +723,9 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
+        )
         self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
@@ -783,7 +839,9 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
+        )
         self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):

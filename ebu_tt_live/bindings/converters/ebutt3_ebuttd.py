@@ -1,6 +1,6 @@
 from ebu_tt_live.bindings import tt, ttd, tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
     p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type, d_head_type, d_style_type, \
-    d_styling_type, head_type, style_type, styling, layout, d_layout_type, region_type, d_region_type, ebuttdt
+    d_styling_type, head_type, style_type, styling, layout, d_layout_type, region_type, d_region_type, ebuttdt, StyledElementMixin
 import copy
 import logging
 from pyxb.binding.basis import NonElementContent, ElementContent
@@ -12,6 +12,9 @@ log = logging.getLogger(__name__)
 class EBUTT3EBUTTDConverter(object):
 
     _media_clock = None
+    _font_size_style_template = 'autogenFontStyle_{}_{}'
+    _dataset_key_for_font_styles = 'adjusted_sizing_styles'
+    _semantic_dataset = None
 
     def __init__(self, media_clock):
         self._media_clock = media_clock
@@ -32,6 +35,88 @@ class EBUTT3EBUTTDConverter(object):
         if time_base == 'smpte':
             raise NotImplementedError()
 
+    def _adjusted_font_style_map(self):
+        return self._semantic_dataset.setdefault(self._dataset_key_for_font_styles, {})
+
+    def _get_font_size_style(self, vertical, dataset, horizontal=None):
+        """
+        This function either points us to an already generated version of this style or creates it on demand.
+        :param vertical:
+        :param horizontal:
+        :return:
+        """
+        font_style_id = self._font_size_style_template.format(horizontal, vertical)
+        adjusted_font_style_map = self._adjusted_font_style_map()
+        if font_style_id in adjusted_font_style_map:
+            instance = adjusted_font_style_map[font_style_id]
+            return instance
+        elif horizontal is None:
+            instance = d_style_type(
+                id=font_style_id,
+                fontSize=ebuttdt.PercentageFontSizeType(vertical)
+            )
+        else:
+            instance = d_style_type(
+                id=font_style_id,
+                fontSize=ebuttdt.PercentageFontSizeType(horizontal, vertical)
+            )
+
+        adjusted_font_style_map[font_style_id] = instance
+
+        return instance
+
+    def _fix_fontsize(self, elem, celem, parent, dataset):
+        """
+        This function generates styles for the purpose of conversion from c,px values to percentage values.
+        The fontSize attributes were removed in the initial styling copy function so here we generate new ones to serve
+        our purpose best and easiest
+        :param elem: the original instance
+        :param celem: the converted instance
+        :param parent: the parent of the original
+        :param dataset: semantic dataset
+        :return:
+        """
+
+        if isinstance(elem, (p_type, span_type)):
+            computed_font_size = elem.computed_style.fontSize
+
+            if isinstance(elem, p_type):
+                # Since we eliminated all our fontSize attributes from the original styles here it is
+                # as simple as computing based on the default value. p does not recurse
+                default_font_size = ebuttdt.CellFontSizeType('1c')
+                if default_font_size == computed_font_size:
+                    return
+                else:
+                    relative_font_size = computed_font_size / default_font_size
+                    adjusted_style = self._get_font_size_style(
+                        vertical=relative_font_size.vertical,
+                        horizontal=relative_font_size.horizontal,
+                        dataset=dataset
+                    )
+
+            elif isinstance(elem, span_type):
+                parent_computed_font_size = parent.computed_style.fontSize
+                if parent_computed_font_size == computed_font_size:
+                    return
+                else:
+                    relative_font_size = computed_font_size / parent_computed_font_size
+                    adjusted_style = self._get_font_size_style(
+                        vertical=relative_font_size.vertical,
+                        horizontal=relative_font_size.horizontal,
+                        dataset=dataset
+                    )
+
+            celem.style.insert(0, adjusted_style.id)
+
+    def _link_adjusted_fonts_styling(self, adjusted_fonts, root_element):
+        if not adjusted_fonts:
+            return
+        if root_element.head is None:
+            root_element.head = d_head_type()
+        if root_element.head.styling is None:
+            root_element.head.styling = d_styling_type()
+        root_element.head.styling.style.extend(adjusted_fonts.values())
+
     def convert_tt(self, tt_in, dataset):
         dataset['timeBase'] = tt_in.timeBase
         dataset['cellResolution'] = tt_in.cellResolution
@@ -44,6 +129,7 @@ class EBUTT3EBUTTDConverter(object):
             cellResolution=tt_in.cellResolution,
             _strict_keywords=False
         )
+        self._link_adjusted_fonts_styling(self._adjusted_font_style_map(), new_elem)
 
         return new_elem
 
@@ -112,6 +198,7 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_style(self, style_in, dataset):
+        # TODO: This workaround doesn't look right. Calculate lineHeight appropriately!
         lineHeight = style_in.lineHeight
         if lineHeight is not None:
             if lineHeight.endswith('c'):
@@ -130,7 +217,7 @@ class EBUTT3EBUTTDConverter(object):
             style=style_in.style,  # there is no ordering requirement in styling so too soon to deconflict here
             direction=style_in.direction,
             fontFamily=style_in.fontFamily,
-            fontSize=None,  #style_in.fontSize TODO: Calculate fonts appropriately
+            fontSize=None,  # It is far easier to regenerate fontSizes at the moment than introspecting the cases
             lineHeight=lineHeight,
             textAlign=style_in.textAlign,
             color=color,
@@ -243,7 +330,15 @@ class EBUTT3EBUTTDConverter(object):
                 output.append(copy.deepcopy(item.value))
             elif isinstance(item, ElementContent):
                 conv_elem = self.convert_element(item.value, dataset)
+
                 if conv_elem is not None:
+                    if isinstance(item.value, StyledElementMixin) and not isinstance(item.value, style_type):
+                        self._fix_fontsize(
+                            elem=item.value,
+                            celem=conv_elem,
+                            parent=element,
+                            dataset=dataset
+                        )
                     output.append(conv_elem)
             else:
                 raise Exception('Can this even happen!??!?!?!')
@@ -252,3 +347,12 @@ class EBUTT3EBUTTDConverter(object):
     def convert_element(self, element, dataset):
         converter = self.map_type(element)
         return converter(element, dataset)
+
+    def convert_document(self, root_element, dataset=None):
+        if dataset is None:
+            self._semantic_dataset = {}
+        else:
+            self._semantic_dataset = dataset
+        converted_bindings = self.convert_element(root_element, self._semantic_dataset)
+
+        return converted_bindings

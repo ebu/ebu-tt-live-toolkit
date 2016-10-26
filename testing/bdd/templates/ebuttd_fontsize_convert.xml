@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="testSequence001"
+       ebuttp:sequenceNumber="1"
+       ttp:clockMode="local"
+{% if cell_resolution and cell_resolution != "*?Empty?*" %}
+       ttp:cellResolution="{{ cell_resolution }}"
+{% endif %}
+{% if extent and extent != "*?Empty?*" %}
+       tts:extent="{{ extent }}"
+{% endif %}
+       ttp:timeBase="clock"
+       xml:lang="en-GB"
+       xmlns:ebuttm="urn:ebu:tt:metadata"
+       xmlns:ebuttp="urn:ebu:tt:parameters"
+       xmlns:tt="http://www.w3.org/ns/ttml"
+       xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+       xmlns:tts="http://www.w3.org/ns/ttml#styling"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style tts:color="black" {% if S1_value and S1_value != "*?Empty?*" %} {{ style_attribute }}="{{ S1_value }}" {% endif %}xml:id="S1"/>
+      <tt:style tts:color="blue" {% if S2_value and S2_value != "*?Empty?*" %} {{ style_attribute }}="{{ S2_value }}" {% endif %}xml:id="S2"/>
+      <tt:style tts:color="red" {% if S3_value and S3_value != "*?Empty?*" %} {{ style_attribute }}="{{ S3_value }}" {% endif %}xml:id="S3"/>
+      <tt:style tts:color="green" {% if S4_value and S4_value != "*?Empty?*" %} {{ style_attribute }}="{{ S4_value }}" {% endif %}xml:id="S4"/>
+      <tt:style tts:color="green" {% if S5_value and S5_value != "*?Empty?*" %} {{ style_attribute }}="{{ S5_value }}" {% endif %}xml:id="S5"/>
+      <tt:style tts:color="green" {% if S6_value and S6_value != "*?Empty?*" %} {{ style_attribute }}="{{ S6_value }}" {% endif %}xml:id="S6"/>
+    </tt:styling>
+    <tt:layout>
+      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c" xml:id="R1"/>
+      <tt:region tts:origin="0c 11c" tts:extent="10c 10c" xml:id="R2"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body style="S2" begin="00:00:00.500" dur="00:00:10">
+    <tt:div region="R1">
+      <tt:p xml:id="p1" style="S3">
+        <tt:span begin="00:00:01" end="00:00:02" style="S5" xml:id="span1">Some example text...</tt:span>
+        <tt:span begin="00:00:03" end="00:00:04" style="S6" xml:id="span2">Some example text...</tt:span>
+      </tt:p>
+      <tt:p xml:id="p2" style="S4">
+        <tt:span begin="00:00:05" end="00:00:06" style="S5" xml:id="span3">Some example text...</tt:span>
+        <tt:span begin="00:00:07" end="00:00:08" style="S6" xml:id="span4">Some example text...</tt:span>
+      </tt:p>
+    </tt:div>
+    <tt:div region="R2">
+      <tt:p xml:id="p3" style="S3">
+        <tt:span begin="00:00:01" end="00:00:02" style="S5" xml:id="span5">Some example text...</tt:span>
+        <tt:span begin="00:00:03" end="00:00:04" style="S6" xml:id="span6">Some example text...</tt:span>
+      </tt:p>
+      <tt:p xml:id="p4" style="S4">
+        <tt:span begin="00:00:05" end="00:00:06" style="S5" xml:id="span7">Some example text...</tt:span>
+        <tt:span begin="00:00:07" end="00:00:08" style="S6" xml:id="span8">Some example text...</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
