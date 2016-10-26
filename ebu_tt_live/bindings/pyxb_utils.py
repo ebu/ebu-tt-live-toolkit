@@ -6,6 +6,8 @@ import threading
 import logging
 from ebu_tt_live.errors import StopBranchIteration
 from pyxb.binding.basis import NonElementContent, ElementContent, complexTypeDefinition
+from pyxb.exceptions_ import NotComplexContentError
+
 
 log = logging.getLogger(__name__)
 
@@ -99,7 +101,10 @@ class RecursiveOperation(object):
         output = []
 
         if isinstance(value, complexTypeDefinition):
-            children = getattr(value, self._children_iterator)()
+            try:
+                children = getattr(value, self._children_iterator)()
+            except NotComplexContentError:
+                return output
 
             for item in children:
                 try:
