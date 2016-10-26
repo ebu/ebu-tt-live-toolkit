@@ -1,6 +1,6 @@
 from pytest_bdd import when, given, then
 from jinja2 import Environment, FileSystemLoader
-from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence, EBUTTDDocument
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType, CellFontSizeType
@@ -60,6 +60,13 @@ def when_doc_generated(test_context, template_dict, template_file):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
     test_context['document'] = document
+
+
+@then('EBUTTD document is valid')
+def then_ebuttd_document_valid(test_context):
+    ebuttd_document = test_context['ebuttd_document']
+    ebuttd_document.validate()
+    assert isinstance(ebuttd_document, EBUTTDDocument)
 
 
 def timestr_to_timedelta(time_str, time_base):

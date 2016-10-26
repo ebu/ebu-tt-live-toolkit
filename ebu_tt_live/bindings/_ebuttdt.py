@@ -148,7 +148,6 @@ def convert_cell_region_to_percentage(cells_in, cell_resolution):
     )
 
 
-
 class TwoDimSizingMixin(object):
 
     _groups_regex = None
@@ -158,7 +157,9 @@ class TwoDimSizingMixin(object):
     @classmethod
     def as_tuple(cls, instance):
         first, second = cls._groups_regex.match(instance).groups()
-        return float(first), second is not None and float(second) or None
+        if second is not None:
+            second = float(second)
+        return float(first), second
 
     @classmethod
     def from_tuple(cls, instance):
@@ -444,7 +445,7 @@ ebuttdt_raw.pixelOriginType._SetSupersedingClass(PixelOriginType)
 
 class CellOriginType(TwoDimSizingMixin, ebuttdt_raw.cellOriginType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _groups_regex = re.compile(r'(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
     _2dim_format = '{}c {}c'
 
 ebuttdt_raw.cellOriginType._SetSupersedingClass(CellOriginType)
@@ -534,6 +535,49 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
 
     _1dim_format = '{}c'
     _2dim_format = '{}c {}c'
+
+    def _do_div(self, other):
+        """
+        :param other: CellFontSizeType
+        :return:
+        """
+        if isinstance(other, CellFontSizeType):
+            result_list = []
+            if self.horizontal is not None and other.horizontal is not None:
+                result_list.append((float(other.horizontal) / float(self.horizontal)) * 100)
+            elif self.horizontal is None and other.horizontal is not None:
+                result_list.append((float(other.horizontal) / float(self.vertical)) * 100)
+            elif self.horizontal is not None and other.horizontal is None:
+                result_list.append((float(other.vertical) / float(self.horizontal)) * 100)
+            result_list.append((float(other.vertical) / float(self.vertical)) * 100)
+            return PercentageFontSizeType(*result_list)
+        else:
+            return NotImplemented
+
+    def __div__(self, other):
+        return self._do_div(other)
+
+    def _do_eq(self, other):
+        if isinstance(other, CellFontSizeType):
+            if self.horizontal is None and other.horizontal is None:
+                return self.vertical == other.vertical
+            elif self.horizontal is None:
+                return self.vertical == other.vertical and \
+                       self.vertical == other.horizontal
+            elif other.horizontal is None:
+                return self.vertical == other.vertical and \
+                       self.horizontal == other.vertical
+            else:
+                return self.vertical == other.vertical and \
+                       self.horizontal == other.horizontal
+        elif isinstance(other, basestring):
+            return str(self) == str(other)
+        else:
+            return NotImplemented
+
+    def __eq__(self, other):
+        return self._do_eq(other)
+
 
 ebuttdt_raw.cellFontSizeType._SetSupersedingClass(CellFontSizeType)
 
