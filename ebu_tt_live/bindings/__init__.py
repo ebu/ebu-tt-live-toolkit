@@ -888,9 +888,12 @@ class styling(SemanticValidationMixin, raw.styling):
                     for item in self.orderedContent()
                     if isinstance(item, ElementContent) and isinstance(item.value, style_type)
                 ]:
-            style_elem_styles = style_elem._semantic_deconflicted_ids(attr_name='style', dataset=dataset)
-            if style_elem_styles:
-                style_elem.style = style_elem_styles
+            copied_style_elem = dataset['instance_mapping'].get(style_elem)
+            # The style may not have been copied at all because it isn't used in the requested segment
+            if copied_style_elem is not None:
+                style_elem_styles = style_elem._semantic_deconflicted_ids(attr_name='style', dataset=dataset)
+                if style_elem_styles:
+                    copied_style_elem.style = style_elem_styles
 
 
 raw.styling._SetSupersedingClass(styling)
