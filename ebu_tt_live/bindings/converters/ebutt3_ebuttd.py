@@ -90,7 +90,6 @@ class EBUTT3EBUTTDConverter(object):
                     relative_font_size = computed_font_size / default_font_size
                     adjusted_style = self._get_font_size_style(
                         vertical=relative_font_size.vertical,
-                        horizontal=relative_font_size.horizontal,
                         dataset=dataset
                     )
 
@@ -102,7 +101,6 @@ class EBUTT3EBUTTDConverter(object):
                     relative_font_size = computed_font_size / parent_computed_font_size
                     adjusted_style = self._get_font_size_style(
                         vertical=relative_font_size.vertical,
-                        horizontal=relative_font_size.horizontal,
                         dataset=dataset
                     )
 
