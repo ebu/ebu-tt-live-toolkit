@@ -79,6 +79,7 @@ class EBUTT3EBUTTDConverter(object):
 
         if isinstance(elem, (p_type, span_type)):
             computed_font_size = elem.computed_style.fontSize
+            computed_line_height = elem.computed_style.lineHeight
 
             if isinstance(elem, p_type):
                 # Since we eliminated all our fontSize attributes from the original styles here it is
@@ -105,6 +106,11 @@ class EBUTT3EBUTTDConverter(object):
                         horizontal=relative_font_size.horizontal,
                         dataset=dataset
                     )
+
+            if isinstance(computed_line_height, ebuttdt.CellLineHeightType):
+                adjusted_style.lineHeight = ebuttdt.PercentageLineHeightType(
+                    computed_line_height.vertical / computed_font_size.vertical * 100
+                )
 
             celem.style.insert(0, adjusted_style.id)
 

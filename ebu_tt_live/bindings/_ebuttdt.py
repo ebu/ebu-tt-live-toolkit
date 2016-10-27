@@ -156,7 +156,10 @@ class TwoDimSizingMixin(object):
 
     @classmethod
     def as_tuple(cls, instance):
-        first, second = cls._groups_regex.match(instance).groups()
+        if cls._2dim_format is None:
+            first, second = cls._groups_regex.match(instance).groups()[0], None
+        else:
+            first, second = cls._groups_regex.match(instance).groups()
         if second is not None:
             second = float(second)
         return float(first), second
@@ -637,3 +640,30 @@ class CellResolutionType(TwoDimSizingMixin ,ebuttdt_raw.cellResolutionType):
     _2dim_format = '{} {}'
     
 ebuttdt_raw.cellResolutionType._SetSupersedingClass(CellResolutionType)
+
+
+class CellLineHeightType(TwoDimSizingMixin, ebuttdt_raw.cellLineHeightType):
+
+    _groups_regex = re.compile('(?P<first>\d*\.?\d+)c')
+    _1dim_format = '{}c'
+
+
+ebuttdt_raw.cellLineHeightType._SetSupersedingClass(CellLineHeightType)
+
+
+class PercentageLineHeightType(TwoDimSizingMixin, ebuttdt_raw.percentageLineHeightType):
+
+    _groups_regex = re.compile('(?P<first>\d*\.?\d+)%')
+    _1dim_format = '{}%'
+
+
+ebuttdt_raw.percentageLineHeightType._SetSupersedingClass(PercentageLineHeightType)
+
+
+class PixelLineHeightType(TwoDimSizingMixin, ebuttdt_raw.pixelLineHeightType):
+
+    _groups_regex = re.compile('(?P<first>\d*\.?\d+)px')
+    _1dim_format = '{}px'
+
+
+ebuttdt_raw.pixelLineHeightType._SetSupersedingClass(PixelLineHeightType)
