@@ -28,7 +28,8 @@ class SimpleConsumer(Node):
                 document
             ))
             self._sequence = EBUTT3DocumentSequence.create_from_document(document)
-            self._reference_clock = self._sequence.reference_clock
+            if self._reference_clock is None:
+                self._reference_clock = self._sequence.reference_clock
             if document.availability_time is None:
                 document.availability_time = self._reference_clock.get_time()
 
