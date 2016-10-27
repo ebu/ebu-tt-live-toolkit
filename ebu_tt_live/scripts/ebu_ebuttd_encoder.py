@@ -5,6 +5,7 @@ from datetime import timedelta
 
 from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.clocks.utc import UTCClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
 from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport
@@ -41,6 +42,7 @@ parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
 parser.add_argument('-ss', '--segmentation-starts', dest='segmentation_starts',
                     help='This helps with local machine clock timing adjustment',
                     default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-utc', '--utc-reference-clock', dest='utc_clock', action='store_true', default=False)
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
 parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
@@ -81,7 +83,10 @@ def main():
     else:
         raise Exception('Invalid output format: {}'.format(args.output_format))
 
-    reference_clock = LocalMachineClock()
+    if args.utc_clock is True:
+        reference_clock = UTCClock()
+    else:
+        reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
     media_time_zero = \
