@@ -79,6 +79,7 @@ class EBUTT3EBUTTDConverter(object):
 
         if isinstance(elem, (p_type, span_type)):
             computed_font_size = elem.computed_style.fontSize
+            computed_line_height = elem.computed_style.lineHeight
 
             if isinstance(elem, p_type):
                 # Since we eliminated all our fontSize attributes from the original styles here it is
@@ -103,6 +104,11 @@ class EBUTT3EBUTTDConverter(object):
                         vertical=relative_font_size.vertical,
                         dataset=dataset
                     )
+
+            if isinstance(computed_line_height, ebuttdt.CellLineHeightType):
+                adjusted_style.lineHeight = ebuttdt.PercentageLineHeightType(
+                    computed_line_height.vertical / computed_font_size.vertical * 100
+                )
 
             celem.style.insert(0, adjusted_style.id)
 
@@ -196,11 +202,6 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_style(self, style_in, dataset):
-        # TODO: This workaround doesn't look right. Calculate lineHeight appropriately!
-        lineHeight = style_in.lineHeight
-        if lineHeight is not None:
-            if lineHeight.endswith('c'):
-                lineHeight = lineHeight[:-1]+'00%'
         color = style_in.color
         if color is not None:
             if isinstance(color, ebuttdt.namedColorType):
@@ -216,7 +217,7 @@ class EBUTT3EBUTTDConverter(object):
             direction=style_in.direction,
             fontFamily=style_in.fontFamily,
             fontSize=None,  # It is far easier to regenerate fontSizes at the moment than introspecting the cases
-            lineHeight=lineHeight,
+            lineHeight=None,  # lineHeight also receives the fontSize treatment
             textAlign=style_in.textAlign,
             color=color,
             backgroundColor=backgroundColor,

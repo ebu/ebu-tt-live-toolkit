@@ -244,6 +244,32 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
 
         return result_font_size
 
+    @classmethod
+    def compute_line_padding(cls, specified_style, parent_computed_style, region_computed_style, dataset):
+        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        for item in fallback_order:
+            if item is not None and item.linePadding is not None:
+                return item.linePadding
+        return '0c'
+
+    @classmethod
+    def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset):
+        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        for item in fallback_order:
+            if item is not None and item.lineHeight is not None:
+                selected_value = item.lineHeight
+                # TODO: What is supposed to be the computed value type of lineheight???
+                if isinstance(selected_value, ebuttdt.PixelLineHeightType):
+                    selected_value = ebuttdt.CellLineHeightType(
+                        *ebuttdt.pixels_to_cells(
+                            selected_value,
+                            dataset['tt_element'].extent,
+                            dataset['tt_element'].cellResolution
+                        )
+                    )
+                return selected_value
+        return 'normal'
+
     @property
     def deferred_font_size(self):
         return self._deferred_font_size
@@ -273,6 +299,18 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             region_computed_style=region_computed_style,
             dataset=dataset,
             defer=defer_font_size
+        )
+        instance.linePadding = cls.compute_line_padding(
+            specified_style=specified_style,
+            parent_computed_style=parent_computed_style,
+            region_computed_style=region_computed_style,
+            dataset=dataset
+        )
+        instance.lineHeight = cls.compute_line_height(
+            specified_style=specified_style,
+            parent_computed_style=parent_computed_style,
+            region_computed_style=region_computed_style,
+            dataset=dataset
         )
         # TODO add the rest
 
