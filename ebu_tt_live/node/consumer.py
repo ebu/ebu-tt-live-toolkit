@@ -59,9 +59,11 @@ class EBUTTDEncoder(SimpleConsumer):
     _outbound_carriage_impl = None
     _segment_timer = None
     _discard = None
+    _implicit_ns = False
 
     def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock,
-                 segment_length, media_time_zero, segment_timer, discard, segmentation_starts=None):
+            segment_length, media_time_zero, segment_timer, discard, segmentation_starts=None,
+            implicit_ns=False):
         super(EBUTTDEncoder, self).__init__(
             node_id=node_id,
             carriage_impl=carriage_impl,
@@ -76,6 +78,9 @@ class EBUTTDEncoder(SimpleConsumer):
         self._ebuttd_converter = EBUTT3EBUTTDConverter(
             media_clock=media_clock
         )
+        self._implicit_ns = implicit_ns
+        # Setting this globally so we don't have to do it everywhere
+        EBUTTDDocument._implicit_ns = self._implicit_ns
         self._default_ebuttd_doc = EBUTTDDocument(lang='en-GB')
         self._default_ebuttd_doc.validate()
         self._segment_timer = segment_timer

@@ -11,6 +11,7 @@ document_logger = logging.getLogger('document_logger')
 
 class EBUTTDDocument(SubtitleDocument):
 
+    _implicit_ns = False
     _ebuttd_content = None
 
     def __init__(self, lang):
@@ -22,6 +23,11 @@ class EBUTTDDocument(SubtitleDocument):
             ),
             lang=lang
         )
+
+    def set_implicit_ns(self, value):
+        if not isinstance(value, bool):
+            raise ValueError()
+        self._implicit_ns = value
 
     def validate(self):
         self._ebuttd_content.validateBinding()
@@ -46,8 +52,23 @@ class EBUTTDDocument(SubtitleDocument):
         instance._ebuttd_content = binding
         return instance
 
+    def _get_bds(self):
+        if self._implicit_ns:
+            return bindings.BindingDOMSupport(
+                namespace_prefix_map=bindings.namespace_prefix_map,
+                default_namespace=bindings.Namespace
+            )
+        else:
+            return bindings.BindingDOMSupport(
+                namespace_prefix_map=bindings.namespace_prefix_map
+            )
+
     def get_xml(self):
-        return self._ebuttd_content.toxml()
+        return self._ebuttd_content.toxml(
+            bds=self._get_bds()
+        )
 
     def get_dom(self):
-        return self._ebuttd_content.toDOM()
+        return self._ebuttd_content.toDOM(
+            bds=self._get_bds()
+        )

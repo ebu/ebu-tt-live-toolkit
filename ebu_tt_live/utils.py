@@ -1,4 +1,10 @@
 
+import collections
+import threading
+import Queue
+import os
+
+
 class ComparableMixin(object):
     """
     This mixin is meant to make implementing the comparison interface easier without having to clutter up
@@ -49,3 +55,88 @@ class ComparableMixin(object):
         :return:
         """
         pass
+
+
+class RingBufferWithCallback(collections.deque):
+    """
+    This class calls a callback when an item is falling out of the buffer due to removal.
+    On manual removal it does not. That is the user's responsibility.
+    """
+
+    _callback = None
+
+    def __init__(self, iterable=(), maxlen=None, callback = None):
+        if callback is not None  and not callable(callback):
+            raise ValueError('Callback: {} is not callable'.format(callback))
+        self._callback = callback
+        super(RingBufferWithCallback, self).__init__(iterable, maxlen)
+
+    def append(self, item):
+        if len(self) >= self.maxlen:
+            self._callback(self.popleft())
+        super(RingBufferWithCallback, self).append(item)
+
+
+class RotatingFileBuffer(RingBufferWithCallback):
+    """
+    This class holds the given number of file names and when they are pushed out of the buffer it deletes
+    them asynchronously. Preferably just the names and not open file handles.
+    """
+
+    _deletion_thread = None
+    _deletion_queue = None
+
+    def __init__(self, maxlen):
+        super(RotatingFileBuffer, self).__init__(maxlen=maxlen, callback=self.delete_file)
+        # In this case threads make sense since it is I/O we are going to be waiting for and that is releasing the GIL.
+        # Deletion is the means for us to send down files for deletion to the other thread(maybe process later)....
+        self._deletion_queue = Queue.Queue()
+        self._deletion_thread = threading.Thread(
+            target=self._delete_thread_loop,
+            kwargs={'q': self._deletion_queue}
+        )
+        # Ensuring the thread will not leave us hanging
+        self._deletion_thread.daemon = True
+        self._deletion_thread.start()
+
+    @classmethod
+    def _delete_thread_loop(cls, q):
+        files_waiting = []
+        default_wait = 0.2
+        while True:
+            if files_waiting:
+                try:
+                    # We got work to retry so we only try a little bit...
+                    files_waiting.append(q.get(timeout=default_wait))
+                except Queue.Empty:
+                    pass
+            else:
+                # No pending files in our buffer we can wait for the next item
+                try:
+                    files_waiting.append(q.get())
+                except Queue.Empty:
+                    pass
+
+            failed_files = []
+            # Now we can try to see if we have anything to delete
+            while files_waiting:
+                item = files_waiting.pop()
+                full_path = os.path.abspath(item)
+                if os.path.exists(item):
+                    # File is still there try to delete it
+                    # If not we do nothing. The loop discards the name
+                    try:
+                        os.remove(full_path)
+                    except IOError:
+                        # Horrible! Quick, put it back... NEXT
+                        failed_files.append(item)
+
+            files_waiting = failed_files
+
+    def delete_file(self, item):
+        """
+        This function hands the file down to our worker thread to deal with it.
+        :param item:
+        :return:
+        """
+        self._deletion_queue.put(item)

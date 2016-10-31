@@ -1005,12 +1005,16 @@ class d_tt_type(raw.d_tt_type):
             )
 
     def toDOM(self, bds=None, parent=None, element_name=None):
+        bds = self.__check_bds(bds)
         xml_dom = super(d_tt_type, self).toDOM(
-            bds=self.__check_bds(bds),
+            bds=bds,
             parent=parent,
             element_name=element_name
         )
-        xml_dom.documentElement.tagName = 'tt:tt'
+        if bds.defaultNamespace() != Namespace:
+            xml_dom.documentElement.tagName = 'tt:tt'
+        else:
+            xml_dom.documentElement.tagName = 'tt'
         return xml_dom
 
     def toxml(self, encoding=None, bds=None, root_only=False, element_name=None):
