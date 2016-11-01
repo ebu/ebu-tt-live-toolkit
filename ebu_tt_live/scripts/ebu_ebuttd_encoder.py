@@ -43,6 +43,9 @@ parser.add_argument('--implicit-ns', help='Some tools hardcode tt so they can\'t
 parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
                     help='This sets the offset value that is used to turn clock time into media time.',
                     default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-zo', '--clock-at-media-time-zero-offset', dest='media_time_zero_offset',
+                    help='This sets the offset value that is used to turn clock time into media time.',
+                    default='current', metavar='HH:MM:SS.mmm')
 parser.add_argument('-ss', '--segmentation-starts', dest='segmentation_starts',
                     help='This helps with local machine clock timing adjustment',
                     default='current', metavar='HH:MM:SS.mmm')
@@ -105,6 +108,9 @@ def main():
     media_time_zero = \
         args.media_time_zero == 'current' and reference_clock.get_time() \
         or bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero)).timedelta
+
+    if args.media_time_zero_offset != 'current':
+        media_time_zero += bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero_offset)).timedelta
 
     segmentation_starts = None
     if args.segmentation_starts != 'current':
