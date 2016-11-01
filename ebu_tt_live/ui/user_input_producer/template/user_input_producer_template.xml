@@ -29,13 +29,13 @@
   </tt:head>
   <tt:body
   {% if body_begin %}
-    tt:begin="{{ body_begin }}"
+    begin="{{ body_begin }}"
   {% endif %}
   {% if body_end %}
-    tt:end="{{ body_end }}"
+    end="{{ body_end }}"
   {% endif %}
   {% if dur %}
-    tt:dur="{{ dur }}"
+    dur="{{ dur }}"
   {% endif %}
   >
     <tt:div>
