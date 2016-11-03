@@ -1,12 +1,16 @@
 import logging
 from argparse import ArgumentParser
 from .common import create_loggers
+from datetime import timedelta
+import math
 
 from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.clocks.utc import UTCClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
-from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
+from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport, \
+    RotatingFolderExport
 from ebu_tt_live import bindings
 from twisted.internet import task, reactor
 
@@ -34,13 +38,28 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
                     )
+parser.add_argument('--implicit-ns', help='Some tools hardcode tt so they can\'t understand tt:tt so global namespace disappears',
+                    action='store_true', dest='implicit_ns', default=False)
 parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
                     help='This sets the offset value that is used to turn clock time into media time.',
                     default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-zo', '--clock-at-media-time-zero-offset', dest='media_time_zero_offset',
+                    help='This sets the offset value that is used to turn clock time into media time.',
+                    default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-ss', '--segmentation-starts', dest='segmentation_starts',
+                    help='This helps with local machine clock timing adjustment',
+                    default='current', metavar='HH:MM:SS.mmm')
+parser.add_argument('-utc', '--utc-reference-clock', dest='utc_clock', action='store_true', default=False)
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
+parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
 parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
 parser.add_argument('--discard', dest='discard', help='Discard already converted documents', action='store_true', default=False)
+parser.add_argument('--timeshift', help='timeshift buffer in length. Only works with the folder export', type=float,
+                    dest='timeshift', default=-1.0)
+parser.add_argument('--nowait', dest='nowait', action='store_true', help='Don\'t wait for the first Live sub to come in. Start'
+                                                    'sending empty docs to keep sync', default=False)
+
 
 
 def start_timer(encoder):
@@ -66,19 +85,36 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        consumer_impl = TwistedConsumerImpl()
+        if args.correct:
+            consumer_impl = TwistedCorrectorConsumerImpl()
+        else:
+            consumer_impl = TwistedConsumerImpl()
 
     if args.output_format == 'xml':
-        outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{}.xml')
+        if args.timeshift > 0.0:
+            buffer_size = math.ceil(args.timeshift / args.interval)
+            outbound_carriage = RotatingFolderExport(args.output_folder, 'ebuttd-encode-{}.xml', buffer_size)
+        else:
+            outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{}.xml')
     else:
         raise Exception('Invalid output format: {}'.format(args.output_format))
 
-    reference_clock = LocalMachineClock()
+    if args.utc_clock is True:
+        reference_clock = UTCClock()
+    else:
+        reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
     media_time_zero = \
         args.media_time_zero == 'current' and reference_clock.get_time() \
         or bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero)).timedelta
+
+    if args.media_time_zero_offset != 'current':
+        media_time_zero += bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero_offset)).timedelta
+
+    segmentation_starts = None
+    if args.segmentation_starts != 'current':
+        segmentation_starts = bindings.ebuttdt.LimitedClockTimingType(str(args.segmentation_starts)).timedelta
 
     ebuttd_converter = EBUTTDEncoder(
         node_id='simple-consumer',
@@ -87,12 +123,18 @@ def main():
         reference_clock=reference_clock,
         segment_length=args.interval,
         media_time_zero=media_time_zero,
-        segment_timer=start_timer,
-        discard=args.discard
+        segment_timer=args.nowait is False and start_timer or (lambda x: None),
+        discard=args.discard,
+        segmentation_starts=segmentation_starts,
+        implicit_ns=args.implicit_ns
     )
 
     if manifest_path:
         fs_reader.resume_reading()
+        last_timing_event = ebuttd_converter._sequence.timeline[-1]
+        last_segment_end = timedelta()
+        while last_segment_end < last_timing_event.when:
+            last_segment_end = ebuttd_converter.convert_next_segment()
         # TODO: Do segmentation in filesystem mode. Especially bad is the tail usecase #209
     else:
         factory_args = {}
@@ -110,5 +152,7 @@ def main():
         factory.protocol = ClientNodeProtocol
 
         factory.connect()
+
+        start_timer(ebuttd_converter)
 
         reactor.run()

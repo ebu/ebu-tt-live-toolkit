@@ -148,6 +148,38 @@ def convert_cell_region_to_percentage(cells_in, cell_resolution):
     )
 
 
+def named_color_to_rgba(named_color):
+    color_map = {
+        "transparent": "00000000",
+        "black": "000000ff",
+        "silver": "c0c0c0ff",
+        "gray": "808080ff",
+        "white": "ffffffff",
+        "maroon": "800000ff",
+        "red": "ff0000ff",
+        "purple": "800080ff",
+        "fuchsia": "ff00ffff",
+        "magenta": "ff00ffff",
+        "green": "008000ff",
+        "lime": "00ff00ff",
+        "olive": "808000ff",
+        "yellow": "ffff00ff",
+        "navy": "000080ff",
+        "blue": "0000ffff",
+        "teal": "008080ff",
+        "aqua": "00ffffff",
+        "cyan": "00ffffff"
+    }
+    return '#{}'.format(color_map[named_color])
+
+
+def convert_cell_region_to_percentage(cells_in, cell_resolution):
+    return '{}% {}%'.format(
+        (float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100,
+        (float(cells_in.vertical) / float(cell_resolution.vertical)) * 100
+    )
+
+
 class TwoDimSizingMixin(object):
 
     _groups_regex = None

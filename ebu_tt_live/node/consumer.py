@@ -28,7 +28,8 @@ class SimpleConsumer(Node):
                 document
             ))
             self._sequence = EBUTT3DocumentSequence.create_from_document(document)
-            self._reference_clock = self._sequence.reference_clock
+            if self._reference_clock is None:
+                self._reference_clock = self._sequence.reference_clock
             if document.availability_time is None:
                 document.availability_time = self._reference_clock.get_time()
 
@@ -58,9 +59,11 @@ class EBUTTDEncoder(SimpleConsumer):
     _outbound_carriage_impl = None
     _segment_timer = None
     _discard = None
+    _implicit_ns = False
 
     def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock,
-                 segment_length, media_time_zero, segment_timer, discard):
+            segment_length, media_time_zero, segment_timer, discard, segmentation_starts=None,
+            implicit_ns=False):
         super(EBUTTDEncoder, self).__init__(
             node_id=node_id,
             carriage_impl=carriage_impl,
@@ -75,10 +78,15 @@ class EBUTTDEncoder(SimpleConsumer):
         self._ebuttd_converter = EBUTT3EBUTTDConverter(
             media_clock=media_clock
         )
+        self._implicit_ns = implicit_ns
+        # Setting this globally so we don't have to do it everywhere
+        EBUTTDDocument._implicit_ns = self._implicit_ns
         self._default_ebuttd_doc = EBUTTDDocument(lang='en-GB')
         self._default_ebuttd_doc.validate()
         self._segment_timer = segment_timer
         self._discard = discard
+        if segmentation_starts is not None:
+            self._last_segment_end = segmentation_starts
 
     @property
     def last_segment_end(self):
@@ -121,3 +129,4 @@ class EBUTTDEncoder(SimpleConsumer):
             ebuttd_doc = self._default_ebuttd_doc
         self.increment_last_segment_end(self._segment_length)
         self._outbound_carriage_impl.emit_document(ebuttd_doc)
+        return self.last_segment_end
