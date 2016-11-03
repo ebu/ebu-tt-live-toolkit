@@ -7,6 +7,7 @@ from datetime import timedelta
 
 
 scenarios('features/styles/ebuttd_fontsize_conversion.feature')
+scenarios('features/styles/fontSize.feature')
 
 
 @when('it has a cell resolution of <cell_resolution>')

@@ -239,7 +239,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                         dataset['tt_element'].cellResolution
                     )
                 )
-        else:
+        elif defer is not True:
             result_font_size = default_font_size
 
         return result_font_size
