@@ -245,12 +245,26 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         return result_font_size
 
     @classmethod
-    def compute_line_padding(cls, specified_style, parent_computed_style, region_computed_style, dataset):
+    def compute_inherited_attribute(
+            cls, attr_name, default_value, specified_style, parent_computed_style, region_computed_style
+    ):
         fallback_order = [specified_style, parent_computed_style, region_computed_style]
         for item in fallback_order:
-            if item is not None and item.linePadding is not None:
-                return item.linePadding
-        return '0c'
+            if item is not None:
+                attr_value = getattr(item, attr_name)
+                if attr_value is not None:
+                    return attr_value
+        return default_value
+
+    @classmethod
+    def compute_simple_attribute(
+            cls, attr_name, default_value, specified_style
+    ):
+        if specified_style is not None:
+            attr_value = getattr(specified_style, attr_name)
+            if attr_value is not None:
+                return attr_value
+        return default_value
 
     @classmethod
     def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset):
@@ -300,19 +314,55 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             dataset=dataset,
             defer=defer_font_size
         )
-        instance.linePadding = cls.compute_line_padding(
-            specified_style=specified_style,
-            parent_computed_style=parent_computed_style,
-            region_computed_style=region_computed_style,
-            dataset=dataset
-        )
         instance.lineHeight = cls.compute_line_height(
             specified_style=specified_style,
             parent_computed_style=parent_computed_style,
             region_computed_style=region_computed_style,
             dataset=dataset
         )
-        # TODO add the rest
+        # This mapping is meant to simplify things. In case anything needs special calculation that value should be
+        # lifted out to its own function.
+        simple_attr_defaults = {
+            'backgroundColor': 'transparent',
+            'padding': '0px',
+            'unicodeBidi': 'normal'
+        }
+
+        inherited_attr_defaults = {
+            'color': None,  # See: https://www.w3.org/TR/ttaf1-dfxp/#style-attribute-color
+            'direction': 'ltr',
+            'fontFamily': 'default',
+            'fontStyle': 'normal',
+            'fontWeight': 'normal',
+            'linePadding': '0c',
+            'multiRowAlign': 'auto',
+            'textAlign': 'start',
+            'textDecoration': 'none',
+            'wrapOption': 'wrap'
+        }
+        for attr_name, default_value in simple_attr_defaults.items():
+            setattr(
+                instance,
+                attr_name,
+                cls.compute_simple_attribute(
+                    attr_name=attr_name,
+                    default_value=default_value,
+                    specified_style=specified_style
+                )
+            )
+
+        for attr_name, default_value in inherited_attr_defaults.items():
+            setattr(
+                instance,
+                attr_name,
+                cls.compute_inherited_attribute(
+                    attr_name=attr_name,
+                    default_value=default_value,
+                    specified_style=specified_style,
+                    parent_computed_style=parent_computed_style,
+                    region_computed_style=region_computed_style
+                )
+            )
 
         return instance
 

@@ -92,8 +92,6 @@ Feature: Merge styles from different Part 3 documents into a single EBU-TT-D doc
 #   | 32 15             | 1c                |                  | 64 30             | 2c                |                  | 32 15                  | 100%            |  
 #   | 32 15             | 1c 2c             | 1c               | 32 15             | 2c 1c             | 1c               | 32 15                  | 100%            |  
 #   | 32 15             | 1c 2c             | 1c               | 32 15             | 2c 1c             | 1c               | 32 15                  | 100%            |  
-#   | 64 30             | 1c                | 2c               | 32 15             | 1c                |                  | 64 30                  | 100%            |  
-
-  #TODO: compute fontSize with combinations of cell and pixels units and include extent in the examples 
+#   | 64 30             | 1c                | 2c               | 32 15             | 1c                |                  | 64 30                  | 100%            |
 
   #TODO: create separate styles when the computed styles are different
