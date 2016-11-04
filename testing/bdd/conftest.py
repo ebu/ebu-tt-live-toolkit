@@ -94,7 +94,17 @@ def valid_computed_end_time(computed_end, gen_document):
 
 
 computed_style_attribute_casting = {
-    'tts:fontSize': CellFontSizeType
+    'tts:fontSize': CellFontSizeType,
+    'tts:direction': str,
+    'tts:color': str,
+    'tts:fontFamily': str,
+    'tts:fontStyle': str,
+    'tts:fontWeight': str,
+    'ebutts:linePadding': str,
+    'ebutts:multiRowAlign': str,
+    'tts:textAlign': str,
+    'tts:textDecoration': str,
+    'tts:wrapOption': str
 }
 
 

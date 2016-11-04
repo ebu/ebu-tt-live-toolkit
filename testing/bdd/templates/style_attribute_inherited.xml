@@ -31,8 +31,8 @@
     </tt:layout>
   </tt:head>
   <tt:body begin="00:00:00.500" dur="00:00:05">
-    <tt:div region="R1" style="S2">
-      <tt:p xml:id="ID005" style="S3">
+    <tt:div region="R1" style="S2" xml:id="div1">
+      <tt:p xml:id="p1" style="S3">
         <tt:span begin="00:00:01" end="00:00:02" style="S4" xml:id="span1">Some example text...</tt:span>
       </tt:p>
     </tt:div>
