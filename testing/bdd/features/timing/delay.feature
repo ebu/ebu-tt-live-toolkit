@@ -14,4 +14,4 @@ Feature: Delay of a document sequence
 
   Examples:
   | avail_time | delay      | delayed_avail_time |
-  | 00:00:10.0 | 00:00:2.0  | 00:00:12.0
+  | 00:00:10.0 | 00:00:2.0  | 00:00:12.0         |
