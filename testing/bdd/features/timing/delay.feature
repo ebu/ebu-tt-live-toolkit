@@ -7,8 +7,9 @@ Feature: Delay of a document sequence
 
   Scenario: Implicitly timed document
     Given an xml file <xml_file>
+    And the document is generated
     And it has availability time <avail_time>
-    When the delay is <delay>
+    When the delay node delays it by <delay>
     Then the delay node outputs the document at <delayed_avail_time>
 
   Examples:
