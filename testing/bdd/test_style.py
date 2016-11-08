@@ -7,8 +7,7 @@ from datetime import timedelta
 
 
 scenarios('features/styles/ebuttd_fontsize_conversion.feature')
-scenarios('features/styles/fontSize.feature')
-scenarios('features/styles/inherited_attributes.feature')
+scenarios('features/styles/style_attribute_inherited.feature')
 
 
 @when('it has a cell resolution of <cell_resolution>')

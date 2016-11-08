@@ -95,7 +95,7 @@ def valid_computed_end_time(computed_end, gen_document):
 
 computed_style_attribute_casting = {
     'tts:fontSize': CellFontSizeType,
-    'tts:direction': str,
+    'tts:direction': str,  # String is good enough PyXB is smart and figures out the types for us
     'tts:color': str,
     'tts:fontFamily': str,
     'tts:fontStyle': str,
@@ -112,7 +112,10 @@ computed_style_attribute_casting = {
 def then_computed_style_value_is(style_attribute, elem_id, computed_value, test_context):
     document = test_context['document']
     elem = document.get_element_by_id(elem_id)
-    assert elem.computed_style.get_attribute_value(style_attribute) == computed_style_attribute_casting[style_attribute](computed_value)
+    if computed_value == '':
+        assert elem.computed_style.get_attribute_value(style_attribute) is None
+    else:
+        assert elem.computed_style.get_attribute_value(style_attribute) == computed_style_attribute_casting[style_attribute](computed_value)
 
 
 @given('it has availability time <avail_time>')

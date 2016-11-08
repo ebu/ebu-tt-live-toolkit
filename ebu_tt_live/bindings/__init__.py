@@ -74,6 +74,26 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     _styling_lock = None
     # ordered styles cached
     _ordered_styles = None
+    # This mapping is meant to simplify things. In case anything needs special calculation that value should be
+    # lifted out to its own function.
+    _simple_attr_defaults = {
+        'backgroundColor': 'transparent',
+        'padding': '0px',
+        'unicodeBidi': 'normal'
+    }
+    _inherited_attr_defaults = {
+        'color': None,  # See: https://www.w3.org/TR/ttaf1-dfxp/#style-attribute-color
+        'direction': 'ltr',
+        'fontFamily': 'default',
+        'fontStyle': 'normal',
+        'fontWeight': 'normal',
+        'linePadding': '0c',
+        'multiRowAlign': 'auto',
+        'textAlign': 'start',
+        'textDecoration': 'none',
+        'wrapOption': 'wrap'
+    }
+    _default_attrs = None
 
     def __repr__(self):
         return u'<style ID: {id} at {addr}>'.format(
@@ -172,6 +192,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             self.padding = other.padding
         if self.linePadding is None and other.linePadding is not None:
             self.linePadding = other.linePadding
+        if self.multiRowAlign is None and other.multiRowAlign is not None:
+            self.multiRowAlign = other.multiRowAlign
         return self
 
     @classmethod
@@ -244,27 +266,58 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
 
         return result_font_size
 
+    @property
+    def default_attrs(self):
+        """
+        This property function gives back a set in which we find the unspecified style attributes.
+
+        :return: set for attribute names that were inheriting the default in the computed style. Important at
+            inheritance override
+        """
+        if self._default_attrs is None:
+            self._default_attrs = set()
+        return self._default_attrs
+
+    def set_default_value(self, attr_name):
+        # We must cater for the case when default computed values would override specified region style values
+        # With fontSize the defaults are vital for computing relative values. At override the next element down the
+        # line would not be able to tell if the parent computed an actually intended value or just the
+        # inheritance of the default value.
+        if attr_name in self._simple_attr_defaults:
+            default_value = self._simple_attr_defaults[attr_name]
+        elif attr_name in self._inherited_attr_defaults:
+            default_value = self._inherited_attr_defaults[attr_name]
+        else:
+            raise LookupError()
+        # This is the extra step: register default value usage
+        self.default_attrs.add(attr_name)
+        setattr(
+            self,
+            attr_name,
+            default_value
+        )
+
     @classmethod
     def compute_inherited_attribute(
-            cls, attr_name, default_value, specified_style, parent_computed_style, region_computed_style
+            cls, attr_name, specified_style, parent_computed_style, region_computed_style
     ):
         fallback_order = [specified_style, parent_computed_style, region_computed_style]
         for item in fallback_order:
-            if item is not None:
+            if item is not None and attr_name not in item.default_attrs:
                 attr_value = getattr(item, attr_name)
                 if attr_value is not None:
                     return attr_value
-        return default_value
+        return None
 
     @classmethod
     def compute_simple_attribute(
-            cls, attr_name, default_value, specified_style
+            cls, attr_name, specified_style
     ):
         if specified_style is not None:
             attr_value = getattr(specified_style, attr_name)
             if attr_value is not None:
                 return attr_value
-        return default_value
+        return None
 
     @classmethod
     def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset):
@@ -284,10 +337,6 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                 return selected_value
         return 'normal'
 
-    @property
-    def deferred_font_size(self):
-        return self._deferred_font_size
-
     @classmethod
     def compute_style(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer_font_size):
         """
@@ -299,7 +348,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         :param dataset: Semantic dataset needed for conversion context
         :return:
         """
-        instance = cls()
+        computed = cls()
         # Here we need to check for multiple things for each style attribute:
         # 1: If specified
         # 2: If specified value is relative
@@ -307,64 +356,50 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         # 4: If no parent style attr but there is region style attr
         # 5: If none of the above assume the default
 
-        instance.fontSize = cls.compute_font_size(
+        computed.fontSize = cls.compute_font_size(
             specified_style=specified_style,
             parent_computed_style=parent_computed_style,
             region_computed_style=region_computed_style,
             dataset=dataset,
             defer=defer_font_size
         )
-        instance.lineHeight = cls.compute_line_height(
+        computed.lineHeight = cls.compute_line_height(
             specified_style=specified_style,
             parent_computed_style=parent_computed_style,
             region_computed_style=region_computed_style,
             dataset=dataset
         )
-        # This mapping is meant to simplify things. In case anything needs special calculation that value should be
-        # lifted out to its own function.
-        simple_attr_defaults = {
-            'backgroundColor': 'transparent',
-            'padding': '0px',
-            'unicodeBidi': 'normal'
-        }
 
-        inherited_attr_defaults = {
-            'color': None,  # See: https://www.w3.org/TR/ttaf1-dfxp/#style-attribute-color
-            'direction': 'ltr',
-            'fontFamily': 'default',
-            'fontStyle': 'normal',
-            'fontWeight': 'normal',
-            'linePadding': '0c',
-            'multiRowAlign': 'auto',
-            'textAlign': 'start',
-            'textDecoration': 'none',
-            'wrapOption': 'wrap'
-        }
-        for attr_name, default_value in simple_attr_defaults.items():
+        for attr_name in cls._simple_attr_defaults.keys():
+            comp_attr_value = cls.compute_simple_attribute(
+                attr_name=attr_name,
+                specified_style=specified_style
+            )
+            if comp_attr_value is None:
+                computed.set_default_value(attr_name)
             setattr(
-                instance,
+                computed,
                 attr_name,
-                cls.compute_simple_attribute(
-                    attr_name=attr_name,
-                    default_value=default_value,
-                    specified_style=specified_style
-                )
+                comp_attr_value
             )
 
-        for attr_name, default_value in inherited_attr_defaults.items():
-            setattr(
-                instance,
-                attr_name,
-                cls.compute_inherited_attribute(
-                    attr_name=attr_name,
-                    default_value=default_value,
-                    specified_style=specified_style,
-                    parent_computed_style=parent_computed_style,
-                    region_computed_style=region_computed_style
-                )
+        for attr_name in cls._inherited_attr_defaults.keys():
+            comp_attr_value = cls.compute_inherited_attribute(
+                attr_name=attr_name,
+                specified_style=specified_style,
+                parent_computed_style=parent_computed_style,
+                region_computed_style=region_computed_style
             )
+            if comp_attr_value is None:
+                computed.set_default_value(attr_name)
+            else:
+                setattr(
+                    computed,
+                    attr_name,
+                    comp_attr_value
+                )
 
-        return instance
+        return computed
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
