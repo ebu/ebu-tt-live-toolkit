@@ -104,7 +104,10 @@ computed_style_attribute_casting = {
     'ebutts:multiRowAlign': str,
     'tts:textAlign': str,
     'tts:textDecoration': str,
-    'tts:wrapOption': str
+    'tts:wrapOption': str,
+    'tts:backgroundColor': str,
+    'tts:padding': str,
+    'tts:unicodeBidi': str
 }
 
 

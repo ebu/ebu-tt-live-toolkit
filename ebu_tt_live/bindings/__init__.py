@@ -377,11 +377,12 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             )
             if comp_attr_value is None:
                 computed.set_default_value(attr_name)
-            setattr(
-                computed,
-                attr_name,
-                comp_attr_value
-            )
+            else:
+                setattr(
+                    computed,
+                    attr_name,
+                    comp_attr_value
+                )
 
         for attr_name in cls._inherited_attr_defaults.keys():
             comp_attr_value = cls.compute_inherited_attribute(

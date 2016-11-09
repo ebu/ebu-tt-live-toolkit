@@ -7,6 +7,7 @@ from datetime import timedelta
 
 
 scenarios('features/styles/ebuttd_fontsize_conversion.feature')
+scenarios('features/styles/style_attribute_simple.feature')
 scenarios('features/styles/style_attribute_inherited.feature')
 
 
