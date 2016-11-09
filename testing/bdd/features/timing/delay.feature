@@ -1,4 +1,4 @@
-@timing
+@timing @delay
 Feature: Delay of a document sequence
 
   Examples:
