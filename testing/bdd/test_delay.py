@@ -1,6 +1,6 @@
 from ebu_tt_live.node.delay import FixedDelayNode
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
+from mock import MagicMock
 from pytest_bdd import scenarios, when, then
 
 scenarios('features/timing/delay.feature')
@@ -11,11 +11,11 @@ def when_delay(delay, test_context, document):
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
-    consumer_impl = TwistedConsumerImpl()
+    carriage = MagicMock()
 
     delay_node = FixedDelayNode(
         node_id='simple-delay-node',
-        carriage_impl=consumer_impl,
+        carriage_impl=carriage,
         reference_clock=reference_clock,
         fixed_delay=delay,
         document_sequence='delayed_sequence',
