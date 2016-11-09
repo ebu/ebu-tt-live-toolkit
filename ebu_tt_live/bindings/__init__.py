@@ -413,7 +413,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         if self not in dataset['affected_elements']:
             raise OutsideSegmentError()
 
-
+# For the requirements of the StyledElementMixin
+style_type._compatible_style_type = style_type
 raw.style._SetSupersedingClass(style_type)
 
 
@@ -422,8 +423,8 @@ class LiveStyledElementMixin(StyledElementMixin):
     _compatible_style_type = style_type
 
 
-# EBU TT Live classes
-# ===================
+# EBU TT Live element types
+# =========================
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):

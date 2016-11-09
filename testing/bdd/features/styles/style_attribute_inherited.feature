@@ -6,8 +6,8 @@ Feature: Compute style attribute on a single EBU-TT Live element
   | style_attribute_inherited.xml | 32 15           | 320px 150px |
 
 
-  # Inheritence: region (S1) > div (S2) > p (S3) > span (S4)
-  Scenario: Font size inheritance
+  # Inheritance: region (S1) > div (S2) > p (S3) > span (S4)
+  Scenario: Inheritable style attributes
     Given an xml file <xml_file>
     When it has a cell resolution of <cell_resolution>
     And it has extent of <extent>
@@ -42,16 +42,3 @@ Feature: Compute style attribute on a single EBU-TT Live element
     |           |          |                |          | tts:wrapOption       | span1   | wrap           |
 
 
-# default_value |
-# ltr           |
-#               |
-# default       |
-# normal        |
-# normal        |
-# 0c            |
-# auto          |
-# start         |
-# none          |
-# wrap          |
-
-# fontStyle=oblique not allowed?
