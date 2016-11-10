@@ -1,5 +1,6 @@
 from ebu_tt_live.node.delay import FixedDelayNode
 from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from mock import MagicMock
 from pytest_bdd import scenarios, when, then
 
@@ -13,11 +14,13 @@ def when_delay(delay, test_context, gen_document):
     reference_clock.clock_mode = 'local'
     carriage = MagicMock()
 
+    delay_float = LimitedClockTimingType(delay).timedelta.total_seconds()
+
     delay_node = FixedDelayNode(
         node_id='simple-delay-node',
         carriage_impl=carriage,
         reference_clock=reference_clock,
-        fixed_delay=delay,
+        fixed_delay=delay_float,
         document_sequence='delayed_sequence',
     )
     delay_node.process_document(gen_document)
