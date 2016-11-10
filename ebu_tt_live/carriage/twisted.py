@@ -27,7 +27,7 @@ class TwistedProducerImpl(ProducerCarriageImpl):
     def emit_document(self, document, delay=None, **kwargs):
 
         if delay:
-            reactor.callLater(self._fixed_delay, self._carriage_impl.emit_document, document)
+            reactor.callLater(delay, self._twisted_producer.emit_data, document.sequence_identifier, document.get_xml())
 
         self._twisted_producer.emit_data(document.sequence_identifier, document.get_xml())
 
