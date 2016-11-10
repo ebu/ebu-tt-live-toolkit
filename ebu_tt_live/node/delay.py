@@ -33,9 +33,7 @@ class FixedDelayNode(Node):
 
         # document is implicitly timed: pause a while, re-emit later
         else:
-
-            reactor.callLater(self._fixed_delay, self._carriage_impl.emit_document, document)
-            reactor.run()
+            self._carriage_impl.emit_document(document, self._fixed_delay)
 
 
 def update_children_timing(element, timebase, delay_int):

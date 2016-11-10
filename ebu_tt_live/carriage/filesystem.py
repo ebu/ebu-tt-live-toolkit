@@ -91,7 +91,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             except EndOfData:
                 break
 
-    def emit_document(self, document):
+    def emit_document(self, document, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -189,7 +189,7 @@ class SimpleFolderExport(ProducerCarriageImpl):
         self._file_name_pattern = file_name_pattern
         self._counter = 0
 
-    def emit_document(self, document):
+    def emit_document(self, document, **kwargs):
         self._counter += 1
         filename = self._file_name_pattern.format(self._counter)
         with open(os.path.join(self._dir_path, filename), 'w') as destfile:

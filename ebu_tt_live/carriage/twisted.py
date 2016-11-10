@@ -4,6 +4,9 @@ from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from ebu_tt_live.errors import XMLParsingFailed
 from ebu_tt_live.documents import EBUTT3Document
+
+from twisted.internet import reactor
+
 import logging
 
 
@@ -21,7 +24,11 @@ class TwistedProducerImpl(ProducerCarriageImpl):
         # None, since this is a producer module. It will produce a new document.
         self._node.process_document(document=None)
 
-    def emit_document(self, document):
+    def emit_document(self, document, delay=None, **kwargs):
+
+        if delay:
+            reactor.callLater(self._fixed_delay, self._carriage_impl.emit_document, document)
+
         self._twisted_producer.emit_data(document.sequence_identifier, document.get_xml())
 
 
