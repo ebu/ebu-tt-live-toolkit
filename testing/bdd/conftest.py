@@ -3,7 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence, EBUTTDDocument
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.media import MediaClock
-from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType, CellFontSizeType
+from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType, CellFontSizeType, lineHeightType
 from datetime import timedelta
 import pytest
 import os
@@ -107,7 +107,8 @@ computed_style_attribute_casting = {
     'tts:wrapOption': str,
     'tts:backgroundColor': str,
     'tts:padding': str,
-    'tts:unicodeBidi': str
+    'tts:unicodeBidi': str,
+    'tts:lineHeight': lineHeightType.Factory
 }
 
 

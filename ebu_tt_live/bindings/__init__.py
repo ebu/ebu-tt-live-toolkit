@@ -278,17 +278,18 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             self._default_attrs = set()
         return self._default_attrs
 
-    def set_default_value(self, attr_name):
+    def set_default_value(self, attr_name, default_value=None):
         # We must cater for the case when default computed values would override specified region style values
         # With fontSize the defaults are vital for computing relative values. At override the next element down the
         # line would not be able to tell if the parent computed an actually intended value or just the
         # inheritance of the default value.
-        if attr_name in self._simple_attr_defaults:
-            default_value = self._simple_attr_defaults[attr_name]
-        elif attr_name in self._inherited_attr_defaults:
-            default_value = self._inherited_attr_defaults[attr_name]
-        else:
-            raise LookupError()
+        if default_value is None:
+            if attr_name in self._simple_attr_defaults:
+                default_value = self._simple_attr_defaults[attr_name]
+            elif attr_name in self._inherited_attr_defaults:
+                default_value = self._inherited_attr_defaults[attr_name]
+            else:
+                raise LookupError()
         # This is the extra step: register default value usage
         self.default_attrs.add(attr_name)
         setattr(
@@ -320,12 +321,12 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         return None
 
     @classmethod
-    def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset):
+    def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset, font_size):
         fallback_order = [specified_style, parent_computed_style, region_computed_style]
         for item in fallback_order:
-            if item is not None and item.lineHeight is not None:
+            if item is not None and item.lineHeight is not None and 'lineHeight' not in item.default_attrs:
                 selected_value = item.lineHeight
-                # TODO: What is supposed to be the computed value type of lineheight???
+                # NOTE: the return value should be cell based except when 'normal' is used
                 if isinstance(selected_value, ebuttdt.PixelLineHeightType):
                     selected_value = ebuttdt.CellLineHeightType(
                         *ebuttdt.pixels_to_cells(
@@ -334,8 +335,12 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                             dataset['tt_element'].cellResolution
                         )
                     )
+                elif isinstance(selected_value, ebuttdt.PercentageLineHeightType) and isinstance(font_size, ebuttdt.cellFontSizeType):
+                    # We only need to deal with this case if fontSize was not deferred
+                    selected_value *= font_size
+
                 return selected_value
-        return 'normal'
+        return None
 
     @classmethod
     def compute_style(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer_font_size):
@@ -363,12 +368,18 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             dataset=dataset,
             defer=defer_font_size
         )
-        computed.lineHeight = cls.compute_line_height(
+        computed_line_height = cls.compute_line_height(
             specified_style=specified_style,
             parent_computed_style=parent_computed_style,
             region_computed_style=region_computed_style,
-            dataset=dataset
+            dataset=dataset,
+            font_size=computed.fontSize
         )
+
+        if computed_line_height is None:
+            computed.set_default_value('lineHeight', default_value='normal')
+        else:
+            computed.lineHeight = computed_line_height
 
         for attr_name in cls._simple_attr_defaults.keys():
             comp_attr_value = cls.compute_simple_attribute(

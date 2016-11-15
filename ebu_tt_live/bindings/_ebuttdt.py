@@ -688,6 +688,18 @@ class PercentageLineHeightType(TwoDimSizingMixin, ebuttdt_raw.percentageLineHeig
     _groups_regex = re.compile('(?P<first>\d*\.?\d+)%')
     _1dim_format = '{}%'
 
+    def do_mul(self, other):
+        if isinstance(other, CellFontSizeType):
+            return CellLineHeightType(self.vertical * other.vertical / 100)
+        else:
+            return NotImplemented
+
+    def __mul__(self, other):
+        return self.do_mul(other)
+
+    def __rmul__(self, other):
+        return self.do_mul(other)
+
 
 ebuttdt_raw.percentageLineHeightType._SetSupersedingClass(PercentageLineHeightType)
 

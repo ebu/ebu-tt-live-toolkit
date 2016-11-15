@@ -1,6 +1,10 @@
 @styles @document @fontSize
 Feature: Compute fontSize on a single EBU-TT Live element
 
+  # fontSize behaves in a special way compared to the other style attributes as it
+  # not only inherits, in the case of percentage values it also cascades on computed fontSize
+  # values defined in the parent elements of the element in question.
+
   Examples:
   | xml_file                      | elem_id | style_attribute |  
   | style_attribute_inherited.xml | span1   | tts:fontSize    |  

@@ -9,6 +9,7 @@ from datetime import timedelta
 scenarios('features/styles/ebuttd_fontsize_conversion.feature')
 scenarios('features/styles/style_attribute_simple.feature')
 scenarios('features/styles/style_attribute_inherited.feature')
+scenarios('features/styles/lineHeight.feature')
 
 
 @when('it has a cell resolution of <cell_resolution>')
@@ -43,6 +44,30 @@ def when_s3_attr_value(template_dict, style_attribute, S3_value):
 def when_s4_attr_value(template_dict, style_attribute, S4_value):
     template_dict['S4_value'] = S4_value
     template_dict['style_attribute'] = style_attribute
+
+
+@when('S1 contains <style_attribute2> value <S1_value2>')
+def when_s1_attr2_value(template_dict, style_attribute2, S1_value2):
+    template_dict['S1_value2'] = S1_value2
+    template_dict['style_attribute2'] = style_attribute2
+
+
+@when('S2 contains <style_attribute2> value <S2_value2>')
+def when_s2_attr2_value(template_dict, style_attribute2, S2_value2):
+    template_dict['S2_value2'] = S2_value2
+    template_dict['style_attribute2'] = style_attribute2
+
+
+@when('S3 contains <style_attribute2> value <S3_value2>')
+def when_s3_attr2_value(template_dict, style_attribute2, S3_value2):
+    template_dict['S3_value2'] = S3_value2
+    template_dict['style_attribute2'] = style_attribute2
+
+
+@when('S4 contains <style_attribute2> value <S4_value2>')
+def when_s4_attr2_value(template_dict, style_attribute2, S4_value2):
+    template_dict['S4_value2'] = S4_value2
+    template_dict['style_attribute2'] = style_attribute2
 
 
 @when('it contains style S5 with <style_attribute> value <S5_value>')
