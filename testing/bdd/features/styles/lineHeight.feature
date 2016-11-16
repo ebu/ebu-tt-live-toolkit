@@ -41,3 +41,4 @@ Feature: lineHeight relative to fontSize
     | 1c       | 2c        | 100%     | 3c        |          |           |          |           | p1      | 3c             |  # Dependence of fontSize
     | 1c       | 2c        | 100%     | 30px      |          |           |          |           | p1      | 3c             |  # Dependence of fontSize
     | 100%     | 2c        |          | 3c        |          |           |          |           | p1      | 2c             |  # Dependence of fontSize in the same context
+    | normal   | 1c        | 100%     | 2c        | 150%     |           | 50%      | 4c        | p1      | 3c             | # lineHeight and fontSize on span are ignored, p fontSize inherited 
