@@ -5,6 +5,7 @@ Feature: Delay of a document sequence
   | xml_file      |
   | delayNode.xml |
 
+  @skip
   Scenario: Implicitly timed document
     Given an xml file <xml_file>
     And the document is generated
@@ -15,3 +16,14 @@ Feature: Delay of a document sequence
   Examples:
   | avail_time | delay      | delayed_avail_time |
   | 00:00:10.0 | 00:00:02.0 | 00:00:12.0         |
+
+  Scenario: Explicitly timed document
+    Given an xml file <xml_file>
+    And the document is generated
+    And it has body begin time <body_begin>
+    When the delay node delays it by <delay>
+    Then the updated body begin time is <updated_body_begin>
+
+  Examples:
+  | delay    | body_begin   | updated_body_begin |
+  | 00:00:02 | 00:00:00.500 | 00:00:02.500       |
