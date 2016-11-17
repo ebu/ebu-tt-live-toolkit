@@ -9,7 +9,33 @@ scenarios('features/timing/delay.feature')
 
 @given('it has body begin time <body_begin>')
 def given_body_begin(body_begin, test_context, gen_document):
+    if body_begin == '':
+        body_begin = None
     gen_document.binding.body.begin = body_begin
+    test_context['doc'] = gen_document
+
+
+@given('it has body end time <body_end>')
+def given_body_end(body_end, test_context, gen_document):
+    if body_end == '':
+        body_end = None
+    gen_document.binding.body.end = body_end
+    test_context['doc'] = gen_document
+
+
+@given('it has div begin time <div_begin>')
+def given_div_begin(div_begin, test_context, gen_document):
+    if div_begin == '':
+        div_begin = None
+    gen_document.binding.body.orderedContent()[0].value.begin = div_begin
+    test_context['doc'] = gen_document
+
+
+@given('it has p begin time <p_begin>')
+def given_p_begin(p_begin, test_context, gen_document):
+    if p_begin == '':
+        p_begin = None
+    gen_document.binding.body.orderedContent()[0].value.orderedContent()[0].value.begin = p_begin
     test_context['doc'] = gen_document
 
 
@@ -44,4 +70,27 @@ def then_availability_time(delayed_avail_time, test_context):
 
 @then('the updated body begin time is <updated_body_begin>')
 def then_updated_body_begin_time(test_context, updated_body_begin):
+    if updated_body_begin == '':
+        updated_body_begin = None
     assert test_context['doc'].binding.body.begin == updated_body_begin
+
+
+@then('the updated body end time is <updated_body_end>')
+def then_updated_body_end_time(test_context, updated_body_end):
+    if updated_body_end == '':
+        updated_body_end = None
+    assert test_context['doc'].binding.body.end == updated_body_end
+
+
+@then('the updated div begin time is <updated_div_begin>')
+def then_updated_body_begin_time(test_context, updated_div_begin):
+    if updated_div_begin == '':
+        updated_div_begin = None
+    assert test_context['doc'].binding.body.orderedContent()[0].value.begin == updated_div_begin
+
+
+@then('the updated p begin time is <updated_p_begin>')
+def then_updated_p_begin_time(test_context, updated_p_begin):
+    if updated_p_begin == '':
+        updated_p_begin = None
+    assert test_context['doc'].binding.body.orderedContent()[0].value.orderedContent()[0].value.begin == updated_p_begin
