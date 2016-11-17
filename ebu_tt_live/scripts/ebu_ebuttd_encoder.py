@@ -8,7 +8,7 @@ from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.utc import UTCClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport, \
     RotatingFolderExport
 from ebu_tt_live import bindings
@@ -52,7 +52,6 @@ parser.add_argument('-ss', '--segmentation-starts', dest='segmentation_starts',
 parser.add_argument('-utc', '--utc-reference-clock', dest='utc_clock', action='store_true', default=False)
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
-parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
 parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
 parser.add_argument('--discard', dest='discard', help='Discard already converted documents', action='store_true', default=False)
 parser.add_argument('--timeshift', help='timeshift buffer in length. Only works with the folder export', type=float,
@@ -85,10 +84,7 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        if args.correct:
-            consumer_impl = TwistedCorrectorConsumerImpl()
-        else:
-            consumer_impl = TwistedConsumerImpl()
+        consumer_impl = TwistedConsumerImpl()
 
     if args.output_format == 'xml':
         if args.timeshift > 0.0:

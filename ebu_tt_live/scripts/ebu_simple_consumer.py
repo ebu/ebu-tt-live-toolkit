@@ -5,7 +5,7 @@ from .common import create_loggers
 from ebu_tt_live.node import SimpleConsumer
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
 from twisted.internet import reactor
 
@@ -30,7 +30,6 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
                     )
-parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
 parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
 
 
