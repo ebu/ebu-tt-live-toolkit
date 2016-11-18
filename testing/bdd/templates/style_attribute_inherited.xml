@@ -28,7 +28,7 @@
       <tt:style {% if S4_value and S4_value != "*?Empty?*" %}{{ style_attribute }}="{{ S4_value }}" {% endif %}xml:id="S4"/>
     </tt:styling>
     <tt:layout>
-      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c" xml:id="R1"/>
+      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c"  {% if R1_value and R1_value != "*?Empty?*" %}{{ style_attribute }}="{{ R1_value }}" {% endif %}xml:id="R1"/>
     </tt:layout>
   </tt:head>
   <tt:body begin="00:00:00.500" dur="00:00:05">

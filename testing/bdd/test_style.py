@@ -46,6 +46,12 @@ def when_s4_attr_value(template_dict, style_attribute, S4_value):
     template_dict['style_attribute'] = style_attribute
 
 
+@when('R1 contains <style_attribute> value <R1_value>')
+def when_r1_attr_value(template_dict, style_attribute, R1_value):
+    template_dict['R1_value'] = R1_value
+    template_dict['style_attribute'] = style_attribute
+
+
 @when('S1 contains <style_attribute2> value <S1_value2>')
 def when_s1_attr2_value(template_dict, style_attribute2, S1_value2):
     template_dict['S1_value2'] = S1_value2

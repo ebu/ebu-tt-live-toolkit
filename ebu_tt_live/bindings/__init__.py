@@ -1047,7 +1047,8 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
             padding=self.padding,
             writingMode=self.writingMode,
             showBackground=self.showBackground,
-            overflow=self.overflow
+            overflow=self.overflow,
+            _strict_keywords=False
         )
 
         return copied_region
@@ -1056,7 +1057,17 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset,
+            style_type=self._compatible_style_type,
+            parent_binding=parent_binding,
+            extra_referenced_styles=[
+                self._compatible_style_type(
+                    padding=self.padding,
+                    _strict_keywords=False
+                )
+            ]
+        )
 
     def _semantic_before_copy(self, dataset, element_content=None):
         if self not in dataset['affected_elements']:

@@ -40,13 +40,27 @@ class StyledElementMixin(object):
     _specified_style = None
     _computed_style = None
 
-    def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding, defer_font_size=False):
+    def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding, defer_font_size=False,
+                                            extra_referenced_styles=None):
+        """
+        This function identifies the styling dependdncy chain for the styled element in question.
+        :param dataset: Semantic dataset
+        :param style_type: the style_type to be used in the process (there are different style types for EBU-TT D and
+               live).
+        :param parent_binding: The immediate parent of the styled element in the document structure
+        :param defer_font_size: If True then fontsize can stay percentage in case it could not be calculated
+        :param extra_referenced_styles: Used by region to inject its extra style attributes
+        :return:
+        """
         self._specified_style = None
         self._computed_style = None
         self._parent_computed_style = None
         referenced_styles = []
         inherited_styles = []
         region_styles = []
+        if extra_referenced_styles is None:
+            extra_referenced_styles = []
+
         if self.style is not None:
             # Styles cascade
             for style_id in self.style:
@@ -91,7 +105,8 @@ class StyledElementMixin(object):
             region_computed_style = None
 
         # Let's resolve the specified styles
-        self._specified_style = self._compatible_style_type.resolve_styles(referenced_styles)
+        # Make sure the extra style attributes supersede the rest of the referenced styles
+        self._specified_style = self._compatible_style_type.resolve_styles(extra_referenced_styles + referenced_styles)
 
         # Let's generate the computed style of the element
         self._computed_style = self._compatible_style_type.compute_style(

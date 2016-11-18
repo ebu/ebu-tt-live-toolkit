@@ -9,7 +9,7 @@ Welcome to EBU-TT-Live Toolkit's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: -1
 
    overview
    ebu_tt_live
