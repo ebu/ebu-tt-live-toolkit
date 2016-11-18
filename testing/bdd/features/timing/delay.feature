@@ -6,7 +6,7 @@ Feature: Delay of a document sequence
   | delayNode.xml |
 
   @skip
-  Scenario: Implicitly timed document
+  Scenario: Implicitly timed document delay
     Given an xml file <xml_file>
     And the document is generated
     And it has availability time <avail_time>
@@ -16,6 +16,26 @@ Feature: Delay of a document sequence
   Examples:
   | avail_time | delay      | delayed_avail_time |
   | 00:00:10.0 | 00:00:02.0 | 00:00:12.0         |
+  | 00:00:10.0 | 00:00:00.0 | 00:00:10.0         |
+  # Negative value should really throw an exception
+  | 00:00:10.0 | -00:00:00  | 00:00:10.0         |  
+
+
+  #TBC: this is a change to the spec (passive delay node)
+  Scenario: Implicitly timed document unchanged sequence identifier 
+    Given an xml file <xml_file>
+    And the document is generated
+    And sequence identifier <sequence_id_1>
+    When the delay node delays it by <delay>
+    Then the delayed document has <sequence_id_2>
+
+  Examples:
+  | sequence_id_1 | delay      | sequence_id_2 |  
+  | 1             | 00:00:02.0 | 1             |  
+  | xxx           | 00:00:00   | xxx           |  
+  | 99999999999   | 99:00:00   | 99999999999   |  
+
+
 
   Scenario: Explicitly timed document
     Given an xml file <xml_file>
