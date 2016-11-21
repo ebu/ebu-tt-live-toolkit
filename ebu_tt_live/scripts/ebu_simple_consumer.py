@@ -49,10 +49,7 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        if args.correct:
-            consumer_impl = TwistedCorrectorConsumerImpl()
-        else:
-            consumer_impl = TwistedConsumerImpl()
+        consumer_impl = TwistedConsumerImpl()
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
