@@ -10,7 +10,16 @@ from ebu_tt_live.example_data import get_example_data
 from ebu_tt_live import documents, clocks
 
 
-class LocalMachineClock(RequiredConfig):
+class ConfigurableComponent(object):
+
+    @classmethod
+    def configure(cls, config, local_config):
+        instance = cls()
+        instance.config = local_config
+        return instance
+
+
+class LocalMachineClock(RequiredConfig, ConfigurableComponent):
     required_config = Namespace()
 
     @classmethod
@@ -23,7 +32,7 @@ def clock_for_type(clock_type):
         return LocalMachineClock
 
 
-class FileOutput(RequiredConfig):
+class FileOutput(RequiredConfig, ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option('folder', default='./export')
 
@@ -34,7 +43,7 @@ class WebsocketBase(RequiredConfig):
     required_config.add_option('channel', default='TestSequence1')
 
 
-class WebsocketOutput(WebsocketBase):
+class WebsocketOutput(WebsocketBase, ConfigurableComponent):
 
     @classmethod
     def create_from_config(cls, local_config):
@@ -46,13 +55,11 @@ class WebsocketOutput(WebsocketBase):
         factory.listen()
 
 
-
-
-class WebsocketInput(WebsocketBase):
+class WebsocketInput(WebsocketBase, ConfigurableComponent):
     pass
 
 
-class NodeBase(RequiredConfig):
+class NodeBase(RequiredConfig, ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option('id', default='base_node')
 
@@ -123,8 +130,9 @@ def main():
     )
     config = cm.get_config()
 
-    node = config.node.type.create_from_config(config.node)
+    #node = config.node.type.create_from_config(config.node)
 
+    node = config.node.type.configure(config, config.node)
     print node
 
 
