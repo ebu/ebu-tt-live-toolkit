@@ -86,52 +86,57 @@ class RotatingFileBuffer(RingBufferWithCallback):
     _deletion_thread = None
     _deletion_queue = None
 
-    def __init__(self, maxlen):
+    def __init__(self, maxlen, async=True):
         super(RotatingFileBuffer, self).__init__(maxlen=maxlen, callback=self.delete_file)
         # In this case threads make sense since it is I/O we are going to be waiting for and that is releasing the GIL.
         # Deletion is the means for us to send down files for deletion to the other thread(maybe process later)....
         self._deletion_queue = Queue.Queue()
-        self._deletion_thread = threading.Thread(
-            target=self._delete_thread_loop,
-            kwargs={'q': self._deletion_queue}
-        )
-        # Ensuring the thread will not leave us hanging
-        self._deletion_thread.daemon = True
-        self._deletion_thread.start()
+        if async is True:
+            self._deletion_thread = threading.Thread(
+                target=self._delete_thread_loop,
+                kwargs={'q': self._deletion_queue}
+            )
+            # Ensuring the thread will not leave us hanging
+            self._deletion_thread.daemon = True
+            self._deletion_thread.start()
+
+    @classmethod
+    def _do_consume(cls, q, files_waiting, default_wait):
+        if files_waiting:
+            try:
+                # We got work to retry so we only try a little bit...
+                files_waiting.append(q.get(timeout=default_wait))
+            except Queue.Empty:
+                pass
+        else:
+            # No pending files in our buffer we can wait for the next item
+            try:
+                files_waiting.append(q.get())
+            except Queue.Empty:
+                pass
+
+        failed_files = []
+        # Now we can try to see if we have anything to delete
+        while files_waiting:
+            item = files_waiting.pop()
+            full_path = os.path.abspath(item)
+            if os.path.exists(item):
+                # File is still there try to delete it
+                # If not we do nothing. The loop discards the name
+                try:
+                    os.remove(full_path)
+                except IOError:
+                    # Horrible! Quick, put it back... NEXT
+                    failed_files.append(item)
+
+        return failed_files
 
     @classmethod
     def _delete_thread_loop(cls, q):
         files_waiting = []
         default_wait = 0.2
         while True:
-            if files_waiting:
-                try:
-                    # We got work to retry so we only try a little bit...
-                    files_waiting.append(q.get(timeout=default_wait))
-                except Queue.Empty:
-                    pass
-            else:
-                # No pending files in our buffer we can wait for the next item
-                try:
-                    files_waiting.append(q.get())
-                except Queue.Empty:
-                    pass
-
-            failed_files = []
-            # Now we can try to see if we have anything to delete
-            while files_waiting:
-                item = files_waiting.pop()
-                full_path = os.path.abspath(item)
-                if os.path.exists(item):
-                    # File is still there try to delete it
-                    # If not we do nothing. The loop discards the name
-                    try:
-                        os.remove(full_path)
-                    except IOError:
-                        # Horrible! Quick, put it back... NEXT
-                        failed_files.append(item)
-
-            files_waiting = failed_files
+            cls._do_consume(q=q, files_waiting=files_waiting, default_wait=default_wait)
 
     def delete_file(self, item):
         """
@@ -140,3 +145,12 @@ class RotatingFileBuffer(RingBufferWithCallback):
         :return:
         """
         self._deletion_queue.put(item)
+        if self._deletion_thread is None:
+            files_waiting = []
+            default_wait = 0.1
+            while files_waiting or not self._deletion_queue.empty():
+                files_waiting = self._do_consume(
+                    q=self._deletion_queue,
+                    files_waiting=files_waiting,
+                    default_wait=default_wait
+                )

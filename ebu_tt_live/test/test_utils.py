@@ -1,7 +1,9 @@
 
 from unittest import TestCase
 from mock import MagicMock
+import tempfile
 from ebu_tt_live.utils import RingBufferWithCallback, RotatingFileBuffer
+import os
 
 
 class TestRingBuffer(TestCase):
@@ -34,3 +36,67 @@ class TestRingBuffer(TestCase):
         self.test_add_four_items()
         self.instance.append(5)
         self.callback.assert_called_with(2)
+
+
+class TestRotatingFileBuffer(TestCase):
+
+    def setUp(self):
+        self.instance = RotatingFileBuffer(maxlen=3, async=False)
+        self.files_created = []
+
+    def tearDown(self):
+        for item in self.files_created:
+            if os.path.exists(item):
+                os.remove(item)
+
+    def _create_a_file(self, number):
+        created_file = tempfile.NamedTemporaryFile(
+            prefix='ebu_tt_live_utils_test',
+            suffix='{}.tmp'.format(number),
+            delete=False
+        )
+        created_file.file.write('TestFile {}'.format(number))
+        created_file.file.close()
+        file_name = created_file.name
+        # Adding it to the cleanup
+        self.files_created.append(file_name)
+        # OK we closed the file let's make sure it is still on the system
+        self._assert_exists(file_name)
+        return file_name
+
+    def _assert_exists(self, file_name):
+        self.assertTrue(os.path.exists(file_name))
+
+    def _assert_not_exists(self, file_name):
+        self.assertFalse(os.path.exists(file_name))
+
+    def test_one_file(self):
+        file1 = self._create_a_file(1)
+        self.instance.append(file1)
+        self._assert_exists(file1)
+
+    def test_three_files(self):
+        file1 = self._create_a_file(1)
+        file2 = self._create_a_file(2)
+        file3 = self._create_a_file(3)
+        self.instance.append(file1)
+        self.instance.append(file2)
+        self.instance.append(file3)
+        self._assert_exists(file1)
+        self._assert_exists(file2)
+        self._assert_exists(file3)
+
+    def test_four_files(self):
+        file1 = self._create_a_file(1)
+        file2 = self._create_a_file(2)
+        file3 = self._create_a_file(3)
+        file4 = self._create_a_file(4)
+        self.instance.append(file1)
+        self.instance.append(file2)
+        self.instance.append(file3)
+        self.instance.append(file4)
+
+        self._assert_not_exists(file1)
+        self._assert_exists(file2)
+        self._assert_exists(file3)
+        self._assert_exists(file4)
