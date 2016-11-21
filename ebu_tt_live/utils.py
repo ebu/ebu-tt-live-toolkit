@@ -3,6 +3,7 @@ import collections
 import threading
 import Queue
 import os
+import time
 
 
 class ComparableMixin(object):
@@ -77,6 +78,27 @@ class RingBufferWithCallback(collections.deque):
         super(RingBufferWithCallback, self).append(item)
 
 
+class StoppableThread(threading.Thread):
+    """
+    Thread class with a stop() method. The thread itself has to check
+    regularly for the stopped() condition.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(StoppableThread, self).__init__(*args, **kwargs)
+        self._stop = threading.Event()
+
+    def stop(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
+
+
+class RotatingFileBufferStopped(Exception):
+    pass
+
+
 class RotatingFileBuffer(RingBufferWithCallback):
     """
     This class holds the given number of file names and when they are pushed out of the buffer it deletes
@@ -92,7 +114,7 @@ class RotatingFileBuffer(RingBufferWithCallback):
         # Deletion is the means for us to send down files for deletion to the other thread(maybe process later)....
         self._deletion_queue = Queue.Queue()
         if async is True:
-            self._deletion_thread = threading.Thread(
+            self._deletion_thread = StoppableThread(
                 target=self._delete_thread_loop,
                 kwargs={'q': self._deletion_queue}
             )
@@ -101,20 +123,7 @@ class RotatingFileBuffer(RingBufferWithCallback):
             self._deletion_thread.start()
 
     @classmethod
-    def _do_consume(cls, q, files_waiting, default_wait):
-        if files_waiting:
-            try:
-                # We got work to retry so we only try a little bit...
-                files_waiting.append(q.get(timeout=default_wait))
-            except Queue.Empty:
-                pass
-        else:
-            # No pending files in our buffer we can wait for the next item
-            try:
-                files_waiting.append(q.get())
-            except Queue.Empty:
-                pass
-
+    def _do_delete(cls, files_waiting):
         failed_files = []
         # Now we can try to see if we have anything to delete
         while files_waiting:
@@ -132,11 +141,25 @@ class RotatingFileBuffer(RingBufferWithCallback):
         return failed_files
 
     @classmethod
+    def _do_consume(cls, q, files_waiting, default_wait):
+        try:
+            files_waiting.append(q.get(timeout=default_wait))
+        except Queue.Empty:
+            pass
+
+        failed_files = cls._do_delete(files_waiting)
+        return failed_files
+
+    @classmethod
     def _delete_thread_loop(cls, q):
         files_waiting = []
         default_wait = 0.2
-        while True:
-            cls._do_consume(q=q, files_waiting=files_waiting, default_wait=default_wait)
+        while not threading.current_thread().stopped() or not q.empty():
+            files_waiting = cls._do_consume(q=q, files_waiting=files_waiting, default_wait=default_wait)
+            time.sleep(0.1)
+        while files_waiting:
+            files_waiting = cls._do_delete(files_waiting=files_waiting)
+            time.sleep(0.1)
 
     def delete_file(self, item):
         """
@@ -154,3 +177,14 @@ class RotatingFileBuffer(RingBufferWithCallback):
                     files_waiting=files_waiting,
                     default_wait=default_wait
                 )
+
+    def append(self, item):
+        """
+        This override makes sure that we don't add to an asynchronously managed buffer that is about to be shut down.
+        :param item: The file name
+        :return:
+        """
+        if self._deletion_thread is not None:
+            if self._deletion_thread.stopped():
+                raise RotatingFileBufferStopped('File deletion thread is stopped!')
+        super(RotatingFileBuffer, self).append(item)

@@ -2,8 +2,9 @@
 from unittest import TestCase
 from mock import MagicMock
 import tempfile
-from ebu_tt_live.utils import RingBufferWithCallback, RotatingFileBuffer
+from ebu_tt_live.utils import RingBufferWithCallback, RotatingFileBuffer, RotatingFileBufferStopped
 import os
+import time
 
 
 class TestRingBuffer(TestCase):
@@ -38,10 +39,9 @@ class TestRingBuffer(TestCase):
         self.callback.assert_called_with(2)
 
 
-class TestRotatingFileBuffer(TestCase):
+class RFBCommon(TestCase):
 
     def setUp(self):
-        self.instance = RotatingFileBuffer(maxlen=3, async=False)
         self.files_created = []
 
     def tearDown(self):
@@ -69,6 +69,13 @@ class TestRotatingFileBuffer(TestCase):
 
     def _assert_not_exists(self, file_name):
         self.assertFalse(os.path.exists(file_name))
+
+
+class TestRotatingFileBufferSync(RFBCommon):
+
+    def setUp(self):
+        super(TestRotatingFileBufferSync, self).setUp()
+        self.instance = RotatingFileBuffer(maxlen=3, async=False)
 
     def test_one_file(self):
         file1 = self._create_a_file(1)
@@ -100,3 +107,47 @@ class TestRotatingFileBuffer(TestCase):
         self._assert_exists(file2)
         self._assert_exists(file3)
         self._assert_exists(file4)
+
+
+class TestRotatingFileBufferAsync(RFBCommon):
+
+    def setUp(self):
+        super(TestRotatingFileBufferAsync, self).setUp()
+        self.instance = RotatingFileBuffer(maxlen=3)
+
+    def _stop_thread(self):
+        if not self.instance._deletion_thread.stopped():
+            self.instance._deletion_thread.stop()
+            self.instance._deletion_thread.join()
+
+    def test_one_file(self):
+        file1 = self._create_a_file(1)
+        self.instance.append(file1)
+        self._stop_thread()
+        self._assert_exists(file1)
+
+    def test_four_files(self):
+        file1 = self._create_a_file(1)
+        file2 = self._create_a_file(2)
+        file3 = self._create_a_file(3)
+        file4 = self._create_a_file(4)
+        self.instance.append(file1)
+        self.instance.append(file2)
+        self.instance.append(file3)
+        self.instance.append(file4)
+        self._stop_thread()
+        self._assert_not_exists(file1)
+        self._assert_exists(file2)
+        self._assert_exists(file3)
+        self._assert_exists(file4)
+
+    def test_late_insertion(self):
+        file1 = self._create_a_file(1)
+        file2 = self._create_a_file(2)
+        self.instance.append(file1)
+        self._stop_thread()
+        self.assertRaises(RotatingFileBufferStopped, self.instance.append, file2)
+
+    def tearDown(self):
+        self._stop_thread()
+        super(TestRotatingFileBufferAsync, self).tearDown()
