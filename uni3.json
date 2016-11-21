@@ -1,0 +1,10 @@
+{
+  "node": {
+    "type": "SimpleConsumer",
+    "input": {
+      "type": "WebsocketInput",
+      "uri": "http://localhost:9003/ws",
+      "channel": "TestSequence2"
+    }
+  }
+}

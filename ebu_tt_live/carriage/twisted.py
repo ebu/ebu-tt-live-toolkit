@@ -14,6 +14,15 @@ log = logging.getLogger(__name__)
 class TwistedProducerImpl(ProducerCarriageImpl):
 
     _twisted_producer = None
+    _twisted_channel = None
+
+    @property
+    def twisted_channel(self):
+        return self._twisted_channel
+
+    @twisted_channel.setter
+    def twisted_channel(self, value):
+        self._twisted_channel = value
 
     def register_twisted_producer(self, producer):
         self._twisted_producer = producer
@@ -23,7 +32,7 @@ class TwistedProducerImpl(ProducerCarriageImpl):
         self._node.process_document(document=None)
 
     def emit_document(self, document):
-        self._twisted_producer.emit_data(document.sequence_identifier, document.get_xml())
+        self._twisted_producer.emit_data(self.twisted_channel or document.sequence_identifier, document.get_xml())
 
 
 class TwistedConsumerImpl(ConsumerCarriageImpl):
