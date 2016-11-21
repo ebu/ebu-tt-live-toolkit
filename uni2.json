@@ -5,7 +5,7 @@
     "sequence_identifier": "TestSequence2",
     "output": {
       "type": "WebsocketOutput",
-      "uri": "http://localhost:9003/ws",
+      "uri": "ws://localhost:9003",
       "channel": "TestSequence2"
     }
   }

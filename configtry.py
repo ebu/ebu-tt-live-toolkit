@@ -30,7 +30,7 @@ class FileOutput(RequiredConfig):
 
 class WebsocketBase(RequiredConfig):
     required_config = Namespace()
-    required_config.add_option('uri', default='http://localhost:9001/ws')
+    required_config.add_option('uri', default='ws://localhost:9001')
     required_config.add_option('channel', default='TestSequence1')
 
 
