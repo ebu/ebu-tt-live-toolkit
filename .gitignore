@@ -123,3 +123,5 @@ docs/build/*
 # Mac OS X files
 .DS_Store
 
+# Demo stuff
+demo/
