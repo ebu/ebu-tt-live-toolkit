@@ -34,7 +34,8 @@ setup(
         "twisted",
         "autobahn",
         "nltk",
-        "sortedcontainers"
+        "sortedcontainers",
+        "configman"
     ],
     license="BSD3",
     packages=packages,

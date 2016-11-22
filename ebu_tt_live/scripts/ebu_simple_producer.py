@@ -2,7 +2,8 @@
 from itertools import cycle
 from twisted.internet import task, reactor
 from argparse import ArgumentParser
-from .common import create_loggers, tokenize_english_document
+from .common import create_loggers
+from ebu_tt_live.utils import tokenize_english_document
 
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.example_data import get_example_data
