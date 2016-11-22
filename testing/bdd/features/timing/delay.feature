@@ -24,6 +24,7 @@ Feature: Delay of a document sequence
 
 
   #TBC: this is a change to the spec (passive delay node)
+  @skip
   Scenario: Implicitly timed document unchanged sequence identifier 
     Given an xml file <xml_file>
     And the document is generated
@@ -60,9 +61,17 @@ Feature: Delay of a document sequence
 
 
     Examples:
-    | body_begin | body_end     | div_begin | div_end  | p_begin  | p_end    | delay    | updated_body_begin | updated_body_end | updated_div_begin | updated_div_end | updated_p_begin | updated_p_end |  
-    | 00:00:05   | 00:00:06     |           |          |          |          | 00:00:10 | 00:00:15           | 00:00:16         |                   |                 |                 |               |  
+    | body_begin | body_end     | div_begin | div_end  | p_begin  | p_end    | delay    | updated_body_begin | updated_body_end | updated_div_begin | updated_div_end | updated_p_begin | updated_p_end |
+    | 00:00:05   |              |           |          |          |          | 00:00:10 | 00:00:15           |                  |                   |                 |                 |               |
+    |            | 00:00:05     |           |          |          |          | 00:00:10 |                    | 00:00:15         |                   |                 |                 |               |
+    | 00:00:05   | 00:00:06     |           |          |          |          | 00:00:10 | 00:00:15           | 00:00:16         |                   |                 |                 |               |
+    |            |              | 00:00:05  |          |          |          | 00:00:10 |                    |                  | 00:00:15          |                 |                 |               |
+    |            |              |           | 00:00:05 |          |          | 00:00:10 |                    |                  |                   | 00:00:15        |                 |               |
+    |            |              | 00:00:05  | 00:00:08 |          |          | 00:00:10 |                    |                  | 00:00:15          | 00:00:18        |                 |               |
+    |            |              |           |          | 00:00:05 |          | 00:00:10 |                    |                  |                   |                 | 00:00:15        |               |
+    |            |              |           |          |          | 00:00:05 | 00:00:10 |                    |                  |                   |                 |                 | 00:00:15      |
+    |            |              |           |          | 00:00:05 | 00:00:08 | 00:00:10 |                    |                  |                   |                 | 00:00:15        | 00:00:18      |
     | 00:00:10   | 00:00:10.500 |           |          | 00:00:03 | 00:00:06 | 01:00:00 | 01:00:10           | 01:00:10.500     |                   |                 | 00:00:03        | 00:00:06      |  
     |            |              | 00:00:10  | 00:00:20 | 00:00:05 | 00:00:07 | 00:00:01 |                    |                  | 00:00:11          | 00:00:21        | 00:00:05        | 00:00:07      |  
-    |            |              |           |          | 01:00:00 | 01:00:01 | 00:00:01 |                    |                  |                   |                 | 01:00:01        | 01:00:02      |  
-    |            |              |           | 00:00:20 |          | 00:00:10 | 00:00:15 |                    |                  |                   | 00:00:35        |                 | 00:00:10      |  
+    |            |              |           | 00:00:20 |          | 00:00:10 | 00:00:15 |                    |                  |                   | 00:00:35        |                 | 00:00:25      |
+    |            |              | 00:00:20  |          |          | 00:00:10 | 00:00:15 |                    |                  | 00:00:35          |                 |                 | 00:00:10      |
