@@ -204,6 +204,10 @@ class SimpleFolderExport(ProducerCarriageImpl):
 
 
 class RotatingFolderExport(SimpleFolderExport):
+    """
+    This carriage mechanism only keeps the last files that fit in its circular buffer. If a new file is written the
+    oldest one is discarded. The size of the buffer can be specified. This is useful for the timeshift behaviour.
+    """
 
     _circular_buf = None
 

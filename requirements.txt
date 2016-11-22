@@ -7,6 +7,7 @@ recommonmark
 sphinx-rtd-theme
 pytest-bdd
 pytest-cov
+pytest-mock
 coverage
 pytest-runner
 pytest

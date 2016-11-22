@@ -4,6 +4,7 @@ branch = True
 omit =
     */tests/*
     */test/*
+    */bindings/raw/*
 
 [report]
 # Regexes for lines to exclude from consideration

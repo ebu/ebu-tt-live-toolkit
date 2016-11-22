@@ -216,7 +216,7 @@ class EBUTT3EBUTTDConverter(object):
             style=style_in.style,  # there is no ordering requirement in styling so too soon to deconflict here
             direction=style_in.direction,
             fontFamily=style_in.fontFamily,
-            fontSize=None,  # It is far easier to regenerate fontSizes at the moment than introspecting the cases
+            fontSize=None,  # This will be regenerated in separate style. This is necessary due to % fontSize conversions
             lineHeight=None,  # lineHeight also receives the fontSize treatment
             textAlign=style_in.textAlign,
             color=color,

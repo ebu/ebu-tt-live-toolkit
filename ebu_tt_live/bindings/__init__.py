@@ -1120,6 +1120,8 @@ class d_tt_type(raw.d_tt_type):
             parent=parent,
             element_name=element_name
         )
+        # Nasty workaround for the namespace collision EBU-TT-D and EBU-TT Live are causing by both defining the same
+        # tt element in the ttml namespace
         if bds.defaultNamespace() != Namespace:
             xml_dom.documentElement.tagName = 'tt:tt'
         else:

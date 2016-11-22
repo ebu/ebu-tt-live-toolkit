@@ -7,7 +7,7 @@ To run the scripts, you will need to first set up the environment and build the 
 
 Not all components are implemented yet - see https://github.com/ebu/ebu-tt-live-toolkit/wiki/Components for a list of all components. This page will be updated as more scripts are added. 
 
-The components mimic the nodes and carriage mechanisms defined in the specification. Producer components create documents; consumer components consumer them. Each script combines a carriage mechanism implementation with a processing node to create code that can operate as a node.
+The components mimic the nodes and carriage mechanisms defined in the specification. Producer components create documents; consumer components consume them. Each script combines a carriage mechanism implementation with a processing node to create code that can operate as a node.
 
 .. toctree::
     nodes_and_carriage_mechanisms

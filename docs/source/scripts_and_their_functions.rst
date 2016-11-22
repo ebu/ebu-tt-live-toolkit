@@ -25,3 +25,10 @@ This is very similar to the Simple Consumer. It also performs validation but it 
 User Input Forwarder
 --------------------
 This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` argument like this: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file. The User Input Forwarder can also be used as an incoming connection point for WebSocket connections from sources other than the User Input Producer.
+
+EBU-TT-D Encoder
+----------------
+This script is an extension of simple consumer and is responsible for resegmenting and converting the incoming
+EBU-TT Live documents into EBU-TT-D documents that can be later used to be embedded in video streams such as DASH.
+The script launches with the ``ebu-ebuttd-encoder`` command. There are switches to control the mediatime conversion
+reference point and the segmentation interval. Please run ``ebu-ebuttd-encoder --help`` to find our more.

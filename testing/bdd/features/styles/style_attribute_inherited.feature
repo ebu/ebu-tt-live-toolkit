@@ -30,8 +30,8 @@ Feature: Compute style attribute on a single EBU-TT Live element
     |           |          |                |          | tts:fontStyle        | span1   | normal         |
     |           | bold     | normal         | bold     | tts:fontWeight       | span1   | bold           |
     |           |          |                |          | tts:fontWeight       | span1   | normal         |
-    | 0.5c      | 0c       | 0.5c           |          | ebutts:linePadding   | span1   | 0.5c           |
-    |           |          |                |          | ebutts:linePadding   | span1   | 0c             |
+    | 0.5c      | 0c       | 0.5c           |          | ebutts:linePadding   | p1      | 0.5c           |
+    |           |          |                |          | ebutts:linePadding   | p1      | 0c             |
     | center    |          | end            |          | ebutts:multiRowAlign | p1      | end            |
     |           |          |                |          | ebutts:multiRowAlign | p1      | auto           |
     | center    | start    | center         |          | tts:textAlign        | p1      | center         |
