@@ -46,17 +46,17 @@ Feature: Delay of a document sequence
     And the document is generated
     And it has body begin time <body_begin>
     And it has body end time <body_end>
-    And body contains div with begin time <div_begin>
-    And div has end time <div_end>
-    And div conatins p with begin time <p_begin>  
-    And and p has end time <p_end>  
+    And it has div begin time <div_begin>
+    And it has div end time <div_end>
+    And it has p begin time <p_begin>  
+    And it has p end time <p_end>  
     When the delay node delays it by <delay>
     Then the document has body begin time <updated_body_begin>
     And it has body end time <updated_body_end>
-    And body contains div with begin time <updated_div_begin>
-    And div has end time <updated_div_end>
-    And div conatins p with begin time <updated_p_begin>  
-    And and p has end time <updated_p_end>  
+    And it has div begin time <updated_div_begin>
+    And it has div end time <updated_div_end>
+    And it has p begin time <updated_p_begin>  
+    And it has p end time <updated_p_end>  
 
 
     Examples:
