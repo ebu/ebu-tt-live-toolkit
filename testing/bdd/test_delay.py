@@ -31,11 +31,27 @@ def given_div_begin(div_begin, test_context, gen_document):
     test_context['doc'] = gen_document
 
 
+@given('it has div end time <div_end>')
+def given_div_end(div_end, test_context, gen_document):
+    if div_end == '':
+        div_end = None
+    gen_document.binding.body.orderedContent()[0].value.end = div_end
+    test_context['doc'] = gen_document
+
+
 @given('it has p begin time <p_begin>')
 def given_p_begin(p_begin, test_context, gen_document):
     if p_begin == '':
         p_begin = None
     gen_document.binding.body.orderedContent()[0].value.orderedContent()[0].value.begin = p_begin
+    test_context['doc'] = gen_document
+
+
+@given('it has p end time <p_end>')
+def given_p_end(p_end, test_context, gen_document):
+    if p_end == '':
+        p_end = None
+    gen_document.binding.body.orderedContent()[0].value.orderedContent()[0].value.end = p_end
     test_context['doc'] = gen_document
 
 
@@ -83,10 +99,17 @@ def then_updated_body_end_time(test_context, updated_body_end):
 
 
 @then('the updated div begin time is <updated_div_begin>')
-def then_updated_body_begin_time(test_context, updated_div_begin):
+def then_updated_div_begin_time(test_context, updated_div_begin):
     if updated_div_begin == '':
         updated_div_begin = None
     assert test_context['doc'].binding.body.orderedContent()[0].value.begin == updated_div_begin
+
+
+@then('the updated div end time is <updated_div_end>')
+def then_updated_div_end_time(test_context, updated_div_end):
+    if updated_div_end == '':
+        updated_div_end = None
+    assert test_context['doc'].binding.body.orderedContent()[0].value.end == updated_div_end
 
 
 @then('the updated p begin time is <updated_p_begin>')
@@ -94,3 +117,10 @@ def then_updated_p_begin_time(test_context, updated_p_begin):
     if updated_p_begin == '':
         updated_p_begin = None
     assert test_context['doc'].binding.body.orderedContent()[0].value.orderedContent()[0].value.begin == updated_p_begin
+
+
+@then('the updated p end time is <updated_p_end>')
+def then_updated_p_end_time(test_context, updated_p_end):
+    if updated_p_end == '':
+        updated_p_end = None
+    assert test_context['doc'].binding.body.orderedContent()[0].value.orderedContent()[0].value.end == updated_p_end

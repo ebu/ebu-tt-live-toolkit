@@ -51,12 +51,12 @@ Feature: Delay of a document sequence
     And it has p begin time <p_begin>  
     And it has p end time <p_end>  
     When the delay node delays it by <delay>
-    Then the document has body begin time <updated_body_begin>
-    And it has body end time <updated_body_end>
-    And it has div begin time <updated_div_begin>
-    And it has div end time <updated_div_end>
-    And it has p begin time <updated_p_begin>  
-    And it has p end time <updated_p_end>  
+    Then the updated body begin time is <updated_body_begin>
+    And the updated body end time is <updated_body_end>
+    And the updated div begin time is <updated_div_begin>
+    And the updated div end time is <updated_div_end>
+    And the updated p begin time is <updated_p_begin>
+    And the updated p end time is <updated_p_end>
 
 
     Examples:
