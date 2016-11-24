@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <tt:tt
-        ebuttp:sequenceIdentifier="1"
+  ebuttp:sequenceIdentifier="delayTest"
         ebuttp:sequenceNumber="1"
-        ttp:clockMode="local"
         ttp:timeBase="clock"
+        ttp:clockMode="local"
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"
@@ -19,12 +19,82 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body>
-    <tt:div>
-      <tt:p xml:id="ID005">
-        <tt:span>Some example text...</tt:span>
-        <tt:br/>
-        <tt:span>And another line</tt:span>
+  <tt:body
+{% if body_begin %}
+  {% if body_begin == "*?Empty?*" %}
+      begin=""
+  {% else %}
+      begin="{{ body_begin }}"
+  {% endif %}
+{% endif %}
+{% if body_end %}
+  {% if body_end == "*?Empty?*" %}
+      end=""
+  {% else %}
+      end="{{ body_end }}"
+  {% endif%}
+{% endif %}
+{% if body_dur %}
+  {% if body_dur == "*?Empty?*" %}
+      dur=""
+  {% else %}
+      dur="{{ body_dur }}"
+  {% endif %}
+{% endif %}
+    >
+
+    <tt:div
+{% if div_begin %}
+  {% if div_begin == "*?Empty?*" %}
+        begin=""
+  {% else %}
+        begin="{{ div_begin }}"
+  {% endif %}
+{% endif %}
+{% if div_end %}
+  {% if div_end == "*?Empty?*" %}
+        end=""
+  {% else %}
+        end="{{ div_end }}"
+  {% endif%}
+{% endif %}
+      >
+
+      <tt:p
+{% if p_begin %}
+  {% if p_begin == "*?Empty?*" %}
+        begin=""
+  {% else %}
+        begin="{{ p_begin }}"
+  {% endif %}
+{% endif %}
+{% if p_end %}
+  {% if p_end == "*?Empty?*" %}
+        end=""
+  {% else %}
+        end="{{ p_end }}"
+  {% endif%}
+{% endif %}
+        xml:id="ID005">
+
+        <tt:span
+{% if span_begin %}
+  {% if span_begin == "*?Empty?*" %}
+                begin=""
+  {% else %}
+                begin="{{ span_begin }}"
+  {% endif %}
+{% endif %}
+{% if span_end %}
+  {% if span_end == "*?Empty?*" %}
+                end=""
+  {% else %}
+                end="{{ span_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text...
+            </tt:span>
       </tt:p>
     </tt:div>
   </tt:body>

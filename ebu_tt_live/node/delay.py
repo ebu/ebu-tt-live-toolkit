@@ -29,6 +29,7 @@ class FixedDelayNode(Node):
         if is_explicitly_timed(document.binding):
 
             update_children_timing(document.binding, document.time_base, self._fixed_delay)
+            document.validate()
             self._carriage_impl.emit_document(document)
 
         # document is implicitly timed: pause a while, re-emit later
