@@ -1,8 +1,8 @@
 {
   "node": {
-    "type": "SimpleConsumer",
+    "type": "simple-consumer",
     "input": {
-      "type": "WebsocketInput",
+      "type": "websocket-output",
       "uri": "http://localhost:9003/ws",
       "channel": "TestSequence2"
     }

@@ -1,5 +1,6 @@
 from .common import ConfigurableComponent, Namespace, converters
-from .clocks import clock_for_type
+from .clocks import clock_by_type
+from .carriage import carriage_by_type
 from ebu_tt_live import documents
 from ebu_tt_live.example_data import get_example_data
 from ebu_tt_live import node as processing_node
@@ -16,7 +17,7 @@ class SimpleConsumer(NodeBase):
     required_config = Namespace()
     required_config.add_option('id', default='simple-consumer')
     required_config.input = input_section = Namespace()
-    input_section.add_option('type', default='WebsocketInput', from_string_converter=converters.class_converter)
+    input_section.add_option('type', default='websocket-input', from_string_converter=carriage_by_type)
 
 
 class SimpleProducer(NodeBase):
@@ -25,9 +26,9 @@ class SimpleProducer(NodeBase):
     required_config.add_option('show_time', default=False)
     required_config.add_option('sequence_identifier', default='TestSequence1')
     required_config.output = output_section = Namespace()
-    output_section.add_option('type', default='WebsocketOutput', from_string_converter=converters.class_converter)
+    output_section.add_option('type', default='websocket-output', from_string_converter=carriage_by_type)
     required_config.clock = clock_section = Namespace()
-    clock_section.add_option('type', default='local', from_string_converter=clock_for_type)
+    clock_section.add_option('type', default='local', from_string_converter=clock_by_type)
 
     @classmethod
     def configure(cls, config, local_config):

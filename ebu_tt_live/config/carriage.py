@@ -3,6 +3,15 @@ from ebu_tt_live.carriage.twisted import TwistedProducerImpl, TwistedConsumerImp
 from ebu_tt_live.twisted import websocket
 
 
+def carriage_by_type(carriage_type):
+    if carriage_type == 'websocket-input':
+        return WebsocketInput
+    elif carriage_type == 'websocket-output':
+        return WebsocketOutput
+    else:
+        raise Exception('No such component: {}'.format(carriage_type))
+
+
 # File-based carriage mechanism configurators
 # ===========================================
 class FileOutput(ConfigurableComponent):
@@ -28,6 +37,7 @@ class WebsocketOutput(WebsocketBase):
         factory = websocket.BroadcastServerFactory(local_config.uri)
         factory.protocol = websocket.StreamingServerProtocol
         factory.listen()
+        return out_carriage
 
 
 class WebsocketInput(WebsocketBase):

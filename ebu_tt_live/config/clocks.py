@@ -9,6 +9,6 @@ class LocalMachineClock(ConfigurableComponent):
         return clocks.local.LocalMachineClock()
 
 
-def clock_for_type(clock_type):
+def clock_by_type(clock_type):
     if clock_type == 'local':
         return LocalMachineClock

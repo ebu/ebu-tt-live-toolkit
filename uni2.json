@@ -1,10 +1,10 @@
 {
   "node": {
-    "type": "SimpleProducer",
+    "type": "simple-producer",
     "show_time": true,
     "sequence_identifier": "TestSequence2",
     "output": {
-      "type": "WebsocketOutput",
+      "type": "websocket-output",
       "uri": "ws://localhost:9003",
       "channel": "TestSequence2"
     }
