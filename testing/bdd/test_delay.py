@@ -83,9 +83,10 @@ def then_availability_time(delayed_avail_time, test_context):
 
 @then('the updated body begin time is <updated_body_begin>')
 def then_updated_body_begin_time(test_context, updated_body_begin):
-    if updated_body_begin == '':
-        updated_body_begin = None
-    assert test_context['doc'].binding.body.computed_begin_time == LimitedClockTimingType(updated_body_begin).timedelta
+    if updated_body_begin != '':
+        assert test_context['doc'].binding.body.computed_begin_time == LimitedClockTimingType(updated_body_begin).timedelta
+    else:
+        assert test_context['doc'].binding.body.computed_begin_time is None
 
 
 @then('the updated body end time is <updated_body_end>')
@@ -98,27 +99,31 @@ def then_updated_body_end_time(test_context, updated_body_end):
 
 @then('the updated div begin time is <updated_div_begin>')
 def then_updated_div_begin_time(test_context, updated_div_begin):
-    if updated_div_begin == '':
-        updated_div_begin = None
-    assert test_context['doc'].binding.body.div[0].computed_begin_time == LimitedClockTimingType(updated_div_begin).timedelta
+    if updated_div_begin != '':
+        assert test_context['doc'].binding.body.div[0].computed_begin_time == LimitedClockTimingType(updated_div_begin).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].computed_begin_time is None
 
 
 @then('the updated div end time is <updated_div_end>')
 def then_updated_div_end_time(test_context, updated_div_end):
-    if updated_div_end == '':
-        updated_div_end = None
-    assert test_context['doc'].binding.body.div[0].computed_end_time == LimitedClockTimingType(updated_div_end).timedelta
+    if updated_div_end != '':
+        assert test_context['doc'].binding.body.div[0].computed_end_time == LimitedClockTimingType(updated_div_end).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].computed_end_time is None
 
 
 @then('the updated p begin time is <updated_p_begin>')
 def then_updated_p_begin_time(test_context, updated_p_begin):
-    if updated_p_begin == '':
-        updated_p_begin = None
-    assert test_context['doc'].binding.body.orderedContent()[0].value.orderedContent()[0].value.begin == updated_p_begin
+    if updated_p_begin != '':
+        assert test_context['doc'].binding.body.div[0].p[0].computed_begin_time == LimitedClockTimingType(updated_p_begin).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].computed_begin_time is None
 
 
 @then('the updated p end time is <updated_p_end>')
 def then_updated_p_end_time(test_context, updated_p_end):
-    if updated_p_end == '':
-        updated_p_end = None
-    assert test_context['doc'].binding.body.orderedContent()[0].value.orderedContent()[0].value.end == updated_p_end
+    if updated_p_end != '':
+        assert test_context['doc'].binding.body.div[0].p[0].computed_end_time == LimitedClockTimingType(updated_p_end).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].computed_end_time is None
