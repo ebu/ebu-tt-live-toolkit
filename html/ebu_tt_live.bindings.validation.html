@@ -1,0 +1,904 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>validation package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="bindings Package" href="ebu_tt_live.bindings.html"/>
+        <link rel="next" title="carriage Package" href="ebu_tt_live.carriage.html"/>
+        <link rel="prev" title="raw Package" href="ebu_tt_live.bindings.raw.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#layout-of-the-source-files">Layout of the source files</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#id1"><code class="docutils literal"><span class="pre">bindings</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttdt"><code class="docutils literal"><span class="pre">_ebuttdt</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttm"><code class="docutils literal"><span class="pre">_ebuttm</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttp"><code class="docutils literal"><span class="pre">_ebuttp</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebutts"><code class="docutils literal"><span class="pre">_ebutts</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttm"><code class="docutils literal"><span class="pre">_ttm</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttp"><code class="docutils literal"><span class="pre">_ttp</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._tts"><code class="docutils literal"><span class="pre">_tts</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings.pyxb_utils"><code class="docutils literal"><span class="pre">pyxb_utils</span></code> Module</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="ebu_tt_live.bindings.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.bindings.html">bindings Package</a> &raquo;</li>
+      
+    <li>validation package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/ebu_tt_live.bindings.validation.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="validation-package">
+<h1>validation package<a class="headerlink" href="#validation-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2><code class="xref py py-mod docutils literal"><span class="pre">validation</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ebu_tt_live.bindings.validation"></span></div>
+<div class="section" id="module-ebu_tt_live.bindings.validation.base">
+<span id="base-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">base</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.validation.base" title="Permalink to this headline">¶</a></h2>
+<p>This file contains all the pyxb helpers needed for enabling a concise semantic validation approach.</p>
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.base.IDMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.base.</code><code class="descname">IDMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#IDMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Making sure the IDs are collected and maintained appropriately</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.base.IDMixin._re_ebu_id_deconflict">
+<code class="descname">_re_ebu_id_deconflict</code><em class="property"> = &lt;_sre.SRE_Pattern object&gt;</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin._re_ebu_id_deconflict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.IDMixin._semantic_register_id">
+<code class="descname">_semantic_register_id</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#IDMixin._semantic_register_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin._semantic_register_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.base.IDMixin._tp_ebu_id_deconflict">
+<code class="descname">_tp_ebu_id_deconflict</code><em class="property"> = 'SEQ{sequence_number}.{original_id}'</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin._tp_ebu_id_deconflict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.IDMixin.deconflict_id">
+<code class="descname">deconflict_id</code><span class="sig-paren">(</span><em>seq_num</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#IDMixin.deconflict_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin.deconflict_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.base.</code><code class="descname">SemanticDocumentMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticDocumentMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation">
+<code class="descname">_semantic_before_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticDocumentMixin._semantic_before_validation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._validator_class">
+<code class="descname">_validator_class</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._validator_class" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding">
+<code class="descname">validateBinding</code><span class="sig-paren">(</span><em>**extra_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticDocumentMixin.validateBinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the binding content matches its content model.</p>
+<p>&#64;return: C{True} if validation was not performed due to settings.
+&#64;return: Complex result dictionary with success and semantic_dataset keys.
+&#64;raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...
+&#64;raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.base.</code><code class="descname">SemanticValidationMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This mixin contains the necessary boilerplate to enable semantic validation as well as enabling _setAttribute hooks
+to help populate the context object with useful data.</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._attr_en_post">
+<code class="descname">_attr_en_post</code><em class="property"> = {}</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._attr_en_post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._attr_en_pre">
+<code class="descname">_attr_en_pre</code><em class="property"> = {}</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._attr_en_pre" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._do_link_copy_with_copied_parent">
+<code class="descname">_do_link_copy_with_copied_parent</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em>, <em>parent_binding</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._do_link_copy_with_copied_parent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._do_link_copy_with_copied_parent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._find_deconflicted_elem_by_id">
+<code class="descname">_find_deconflicted_elem_by_id</code><span class="sig-paren">(</span><em>elem_id</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._find_deconflicted_elem_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._find_deconflicted_elem_by_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_subtree_copy">
+<code class="descname">_semantic_after_subtree_copy</code><span class="sig-paren">(</span><em>copied_instance</em>, <em>dataset</em>, <em>element_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_after_subtree_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_subtree_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is helpful hook function at the copying operation
+:param dataset:
+:param element_content:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal">
+<code class="descname">_semantic_after_traversal</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content=None</em>, <em>parent_binding=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_after_traversal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Semantic validation postprocess hook.
+:param dataset: semantic context object
+:param element_content: the element itself</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_attributes_missing">
+<code class="descname">_semantic_attributes_missing</code><span class="sig-paren">(</span><em>attr_names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_attributes_missing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_attributes_missing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Making sure that attributes specified in attr_names have no value defined on the binding.
+:param attr_names: The attributes that were defined on the element.
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_attributes_present">
+<code class="descname">_semantic_attributes_present</code><span class="sig-paren">(</span><em>attr_names</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_attributes_present"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_attributes_present" title="Permalink to this definition">¶</a></dt>
+<dd><p>Making sure that attributes specified in attr_names have a value defined on the binding
+:param attr_names: The missing attributes that were not defined.
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_copy">
+<code class="descname">_semantic_before_copy</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_before_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Meant for checks before attempting to copy an element
+:param dataset:
+:param element_content:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_subtree_copy">
+<code class="descname">_semantic_before_subtree_copy</code><span class="sig-paren">(</span><em>copied_instance</em>, <em>dataset</em>, <em>element_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_before_subtree_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_subtree_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is helpful hook function at the copying operation
+:param dataset:
+:param element_content:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal">
+<code class="descname">_semantic_before_traversal</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content=None</em>, <em>parent_binding=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_before_traversal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Semantic validation preprocess hook.
+:param dataset: semantic context object
+:param element_content: the element itself</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_copy">
+<code class="descname">_semantic_copy</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>This copy function is more powerful as it accepts an extra copying context where a smarter copy can be made.
+It can be customised by classes. The default is the shallow copy.
+:param dataset:
+:return: cloned element</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_deconflicted_ids">
+<code class="descname">_semantic_deconflicted_ids</code><span class="sig-paren">(</span><em>attr_name</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._semantic_deconflicted_ids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_deconflicted_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Looks up its referenced styles/region in the conversion mapping and returns the new idref string
+:param datset:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._setAttribute">
+<code class="descname">_setAttribute</code><span class="sig-paren">(</span><em>attr_en</em>, <em>value_lex</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin._setAttribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._setAttribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin.get_attribute_value">
+<code class="descname">get_attribute_value</code><span class="sig-paren">(</span><em>att_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin.get_attribute_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin.get_attribute_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function is a handy extension that allows us to easily look up attribute values regardless whether they
+are local or namespaced attribute names. I did not find its equivalent in PyXB.
+:param att_name:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.base.SemanticValidationMixin.merge">
+<code class="descname">merge</code><span class="sig-paren">(</span><em>other_elem</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticValidationMixin.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try and merge the contents of 2 elements of the same type.
+:param other_elem:
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.bindings.validation.validator">
+<span id="validator-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">validator</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.validation.validator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.validator.</code><code class="descname">SemanticValidator</code><span class="sig-paren">(</span><em>root_element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation" title="ebu_tt_live.bindings.pyxb_utils.RecursiveOperation"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.RecursiveOperation</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator._after_element">
+<code class="descname">_after_element</code><span class="sig-paren">(</span><em>value</em>, <em>element=None</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator._after_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator._after_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator._before_element">
+<code class="descname">_before_element</code><span class="sig-paren">(</span><em>value</em>, <em>element=None</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator._before_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator._before_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator._process_element">
+<code class="descname">_process_element</code><span class="sig-paren">(</span><em>value</em>, <em>element=None</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator._process_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator._process_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator._process_non_element">
+<code class="descname">_process_non_element</code><span class="sig-paren">(</span><em>value</em>, <em>non_element</em>, <em>parent_binding=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator._process_non_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator._process_non_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator._semantic_dataset">
+<code class="descname">_semantic_dataset</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator._semantic_dataset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator._semantic_validation_filter">
+<code class="descname">_semantic_validation_filter</code><span class="sig-paren">(</span><em>value</em>, <em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator._semantic_validation_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator._semantic_validation_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.validator.SemanticValidator.proceed">
+<code class="descname">proceed</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/validator.html#SemanticValidator.proceed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.validator.SemanticValidator.proceed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.bindings.validation.timing">
+<span id="timing-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">timing</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.validation.timing" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.timing.</code><code class="descname">BodyTimingValidationMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin</span></code></a></p>
+<p>The body element seems to be exception from too many rules and makes one common validator pretty difficult
+to manage. This subclass is meant to call all the extensions/limitations for the body element that does not apply
+to timed containers in general in the EBU-TT-Live spec.</p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._post_cleanup_variables">
+<code class="descname">_post_cleanup_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin._post_cleanup_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._post_cleanup_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._post_pop_end">
+<code class="descname">_post_pop_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin._post_pop_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._post_pop_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_begin">
+<code class="descname">_pre_calculate_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin._pre_calculate_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_end">
+<code class="descname">_pre_calculate_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin._pre_calculate_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_init_variables">
+<code class="descname">_pre_init_variables</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin._pre_init_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_init_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._semantic_timebase_validation">
+<code class="descname">_semantic_timebase_validation</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#BodyTimingValidationMixin._semantic_timebase_validation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._semantic_timebase_validation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.timing.</code><code class="descname">TimingValidationMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This mixin is meant to be applied to timed elements (body, div, p, span) and provides parser hooks for timing
+attributes as well as a generic semantic validation for timing attributes in the document&#8217;s timeBase.</p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._assert_in_segment">
+<code class="descname">_assert_in_segment</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._assert_in_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._assert_in_segment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._computed_begin_time">
+<code class="descname">_computed_begin_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._computed_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._computed_end_time">
+<code class="descname">_computed_end_time</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._computed_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._is_timed_leaf">
+<code class="descname">_is_timed_leaf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._is_timed_leaf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._is_timed_leaf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_calculate_begin">
+<code class="descname">_post_calculate_begin</code><span class="sig-paren">(</span><em>children</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._post_calculate_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_calculate_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>The computed begin time shall be moved down to match that of the earliest child begin time in case the container
+does not specify a begin time itself. NOTE: This does not modify the syncbase.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>children</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_cleanup_variables">
+<code class="descname">_post_cleanup_variables</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._post_cleanup_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_cleanup_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_pop_begin">
+<code class="descname">_post_pop_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._post_pop_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_pop_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_pop_end">
+<code class="descname">_post_pop_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._post_pop_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_pop_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_timing_set_attribute">
+<code class="descname">_post_timing_set_attribute</code><span class="sig-paren">(</span><em>attr_use</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._post_timing_set_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_timing_set_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_assign_begin">
+<code class="descname">_pre_assign_begin</code><span class="sig-paren">(</span><em>proposed_begin</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._pre_assign_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_assign_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_assign_end">
+<code class="descname">_pre_assign_end</code><span class="sig-paren">(</span><em>proposed_end</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._pre_assign_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_assign_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_begin">
+<code class="descname">_pre_calculate_begin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._pre_calculate_begin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_begin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_end">
+<code class="descname">_pre_calculate_end</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._pre_calculate_end"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_end" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_init_variables">
+<code class="descname">_pre_init_variables</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._pre_init_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_init_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_timing_set_attribute">
+<code class="descname">_pre_timing_set_attribute</code><span class="sig-paren">(</span><em>attr_en</em>, <em>attr_use</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._pre_timing_set_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_timing_set_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_copy_apply_leaf_timing">
+<code class="descname">_semantic_copy_apply_leaf_timing</code><span class="sig-paren">(</span><em>copied_instance</em>, <em>dataset</em>, <em>element_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._semantic_copy_apply_leaf_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_copy_apply_leaf_timing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_manage_timeline">
+<code class="descname">_semantic_manage_timeline</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._semantic_manage_timeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_manage_timeline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing">
+<code class="descname">_semantic_postprocess_timing</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._semantic_postprocess_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing" title="Permalink to this definition">¶</a></dt>
+<dd><p>As the validator traverses in a Depth First Search this is the hook function to call on the way UP</p>
+<dl class="docutils">
+<dt>Steps to take:</dt>
+<dd><ul class="first last simple">
+<li>Fill in end times if element doesn&#8217;t define end time</li>
+<li>Try using computed_end_time information from its children</li>
+<li>If no children are found look at parents end time constraints.</li>
+<li>Finalize computed_begin_time if begin is not specified using computed_begin_time of children.</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dataset</strong> &#8211; Semantic dataset from semantic validation framework</li>
+<li><strong>element_content</strong> &#8211; PyXB&#8217;s binding placeholder for this binding instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing">
+<code class="descname">_semantic_preprocess_timing</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._semantic_preprocess_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing" title="Permalink to this definition">¶</a></dt>
+<dd><p>As the validator traverses in a Depth First Search this is the hook function to call on the way DOWN.</p>
+<dl class="docutils">
+<dt>Steps to take:</dt>
+<dd><ul class="first last simple">
+<li>Initialize temporary variables</li>
+<li>Calculate end timing if element defines an end time</li>
+<li>Calculate begin time and syncbase for children</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dataset</strong> &#8211; Semantic dataset from semantic validation framework</li>
+<li><strong>element_content</strong> &#8211; PyXB&#8217;s binding placeholder for this binding instance</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_timebase_validation">
+<code class="descname">_semantic_timebase_validation</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._semantic_timebase_validation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_timebase_validation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin.computed_begin_time">
+<code class="descname">computed_begin_time</code><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin.computed_begin_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin.computed_end_time">
+<code class="descname">computed_end_time</code><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin.computed_end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin.is_in_segment">
+<code class="descname">is_in_segment</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin.is_in_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin.is_in_segment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.bindings.validation.presentation">
+<span id="presentation-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">presentation</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.validation.presentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.presentation.</code><code class="descname">RegionedElementMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#RegionedElementMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Makes sure we always know where we are. Detects double region assignment which is a warning.</p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_copy_verify_referenced_region">
+<code class="descname">_semantic_copy_verify_referenced_region</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#RegionedElementMixin._semantic_copy_verify_referenced_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_copy_verify_referenced_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_set_region">
+<code class="descname">_semantic_set_region</code><span class="sig-paren">(</span><em>dataset</em>, <em>region_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#RegionedElementMixin._semantic_set_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_set_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_unset_region">
+<code class="descname">_semantic_unset_region</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#RegionedElementMixin._semantic_unset_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_unset_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._validated_region">
+<code class="descname">_validated_region</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._validated_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.presentation.</code><code class="descname">SizingValidationMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#SizingValidationMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This is meant to validate that the sizing types correspond to the tt element and head region definitions.
+It is meant to be used by the containing element and its attributes as well so the class interoperates with itself.</p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin._semantic_check_sizing_type">
+<code class="descname">_semantic_check_sizing_type</code><span class="sig-paren">(</span><em>value</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#SizingValidationMixin._semantic_check_sizing_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin._semantic_check_sizing_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The sizing attribute is checked by the element for a value and attribute validation is ran as required.
+:param value: The sizing value to be checked
+:param dataset: The semantic dataset</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin._semantic_validate_sizing_context">
+<code class="descname">_semantic_validate_sizing_context</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#SizingValidationMixin._semantic_validate_sizing_context"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin._semantic_validate_sizing_context" title="Permalink to this definition">¶</a></dt>
+<dd><p>The attribute can check if it is valid in the context provided by dataset
+:param dataset: The semantic dataset
+:raises SimpleTypeValueError</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.presentation.</code><code class="descname">StyledElementMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#StyledElementMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This functionality applies to all styled boxes to help computing styling related information</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._compatible_style_type">
+<code class="descname">_compatible_style_type</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._compatible_style_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._computed_style">
+<code class="descname">_computed_style</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._computed_style" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._inherited_region">
+<code class="descname">_inherited_region</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._inherited_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._inherited_styles">
+<code class="descname">_inherited_styles</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._inherited_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._referenced_styles">
+<code class="descname">_referenced_styles</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._referenced_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._region_styles">
+<code class="descname">_region_styles</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._region_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_collect_applicable_styles">
+<code class="descname">_semantic_collect_applicable_styles</code><span class="sig-paren">(</span><em>dataset</em>, <em>style_type</em>, <em>parent_binding</em>, <em>defer_font_size=False</em>, <em>extra_referenced_styles=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#StyledElementMixin._semantic_collect_applicable_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_collect_applicable_styles" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function identifies the styling dependdncy chain for the styled element in question.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>dataset</strong> &#8211; Semantic dataset</li>
+<li><strong>style_type</strong> &#8211; the style_type to be used in the process (there are different style types for EBU-TT D and</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>live).
+:param parent_binding: The immediate parent of the styled element in the document structure
+:param defer_font_size: If True then fontsize can stay percentage in case it could not be calculated
+:param extra_referenced_styles: Used by region to inject its extra style attributes
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_copy_verify_referenced_styles">
+<code class="descname">_semantic_copy_verify_referenced_styles</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#StyledElementMixin._semantic_copy_verify_referenced_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_copy_verify_referenced_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_pop_styles">
+<code class="descname">_semantic_pop_styles</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#StyledElementMixin._semantic_pop_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_pop_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_push_styles">
+<code class="descname">_semantic_push_styles</code><span class="sig-paren">(</span><em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#StyledElementMixin._semantic_push_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_push_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._specified_style">
+<code class="descname">_specified_style</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._specified_style" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._validated_styles">
+<code class="descname">_validated_styles</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._validated_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin.computed_style">
+<code class="descname">computed_style</code><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin.computed_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize
+in any styled element container. Without it conversion from absolute values to relative would not be possible.
+This is a requirement for the EBU-TT-D conversion where only percentages are allowed in sizing attributes.
+To support converting the pixel/celll values that don&#8217;t cascade to percentages that do the simplest
+approach is to compute the style in whatever crazy constellation of units it may be provided in and generate
+percentage based styles for p and span elements taking into account their relative cascading nature. Yes if
+this confused you please refer to the documentation of EBU-TT-D, EBU-TT-Live, TTML and whatever else TTML might
+refer to in terms of these style attributes.
+:return:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin.inherited_region">
+<code class="descname">inherited_region</code><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin.inherited_region" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin.specified_style">
+<code class="descname">specified_style</code><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin.specified_style" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the resolution of the Style attributes that are directly linked to this element even via implicit
+inheritance of the style attributes
+:return:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin.validated_styles">
+<code class="descname">validated_styles</code><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin.validated_styles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.bindings.validation.content">
+<span id="content-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">content</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.validation.content" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.content.ContentContainerMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.content.</code><code class="descname">ContentContainerMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#ContentContainerMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.ContentContainerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.content.ContentContainerMixin._assert_empty_container">
+<code class="descname">_assert_empty_container</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#ContentContainerMixin._assert_empty_container"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.ContentContainerMixin._assert_empty_container" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.content.ContentContainerMixin.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#ContentContainerMixin.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.ContentContainerMixin.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>This check is made necessary by some splitting edge cases of content. To make empty containers are not included
+one should check if there really was anything useful in the container. This function is meant to be
+implemented by the subclasses of this class to make sure the container checks for the right constraints.
+:return:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.validation.content.SubtitleContentContainer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.content.</code><code class="descname">SubtitleContentContainer</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#SubtitleContentContainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.SubtitleContentContainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings.validation.content.ContentContainerMixin" title="ebu_tt_live.bindings.validation.content.ContentContainerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.ContentContainerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.bindings.validation.base.IDMixin" title="ebu_tt_live.bindings.validation.base.IDMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.content.SubtitleContentContainer.contains_subtitles">
+<code class="descname">contains_subtitles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#SubtitleContentContainer.contains_subtitles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.SubtitleContentContainer.contains_subtitles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.content.SubtitleContentContainer.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#SubtitleContentContainer.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.SubtitleContentContainer.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.carriage.html" class="btn btn-neutral float-right" title="carriage Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ebu_tt_live.bindings.raw.html" class="btn btn-neutral" title="raw Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.bindings.validation.presentation &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../../search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../../index.html"/>
+        <link rel="up" title="ebu_tt_live.bindings" href="../../bindings.html"/> 
+
+  
+  <script src="../../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../../bindings.html">ebu_tt_live.bindings</a> &raquo;</li>
+      
+    <li>ebu_tt_live.bindings.validation.presentation</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.bindings.validation.presentation</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">SemanticValidationError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_SEMANTIC_STYLE_MISSING</span><span class="p">,</span> <span class="n">ERR_SEMANTIC_VALIDATION_EXPECTED</span><span class="p">,</span> \
+    <span class="n">ERR_SEMANTIC_REGION_MISSING</span>
+
+
+<div class="viewcode-block" id="SizingValidationMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin">[docs]</a><span class="k">class</span> <span class="nc">SizingValidationMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is meant to validate that the sizing types correspond to the tt element and head region definitions.</span>
+<span class="sd">    It is meant to be used by the containing element and its attributes as well so the class interoperates with itself.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SizingValidationMixin._semantic_check_sizing_type"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin._semantic_check_sizing_type">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_check_sizing_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The sizing attribute is checked by the element for a value and attribute validation is ran as required.</span>
+<span class="sd">        :param value: The sizing value to be checked</span>
+<span class="sd">        :param dataset: The semantic dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">SizingValidationMixin</span><span class="p">):</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">_semantic_validate_sizing_context</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SizingValidationMixin._semantic_validate_sizing_context"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin._semantic_validate_sizing_context">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_validate_sizing_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The attribute can check if it is valid in the context provided by dataset</span>
+<span class="sd">        :param dataset: The semantic dataset</span>
+<span class="sd">        :raises SimpleTypeValueError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="StyledElementMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin">[docs]</a><span class="k">class</span> <span class="nc">StyledElementMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This functionality applies to all styled boxes to help computing styling related information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_compatible_style_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_referenced_styles</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_inherited_styles</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_region_styles</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_validated_styles</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_inherited_region</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_specified_style</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_computed_style</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="StyledElementMixin._semantic_collect_applicable_styles"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_collect_applicable_styles">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_collect_applicable_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">style_type</span><span class="p">,</span> <span class="n">parent_binding</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                            <span class="n">extra_referenced_styles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function identifies the styling dependdncy chain for the styled element in question.</span>
+
+<span class="sd">        :param dataset: Semantic dataset</span>
+<span class="sd">        :param style_type: the style_type to be used in the process (there are different style types for EBU-TT D and</span>
+<span class="sd">        live).</span>
+<span class="sd">        :param parent_binding: The immediate parent of the styled element in the document structure</span>
+<span class="sd">        :param defer_font_size: If True then fontsize can stay percentage in case it could not be calculated</span>
+<span class="sd">        :param extra_referenced_styles: Used by region to inject its extra style attributes</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_specified_style</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_style</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent_computed_style</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">referenced_styles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">inherited_styles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">region_styles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">extra_referenced_styles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">extra_referenced_styles</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Styles cascade</span>
+            <span class="k">for</span> <span class="n">style_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">style</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">style</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_element_by_id</span><span class="p">(</span><span class="n">elem_id</span><span class="o">=</span><span class="n">style_id</span><span class="p">,</span> <span class="n">elem_type</span><span class="o">=</span><span class="n">style_type</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">style_binding</span> <span class="ow">in</span> <span class="n">style</span><span class="o">.</span><span class="n">ordered_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">style_binding</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">referenced_styles</span><span class="p">:</span>
+                            <span class="n">referenced_styles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">style_binding</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span><span class="n">ERR_SEMANTIC_STYLE_MISSING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="n">style_id</span><span class="p">))</span>
+
+            <span class="c1"># Push this validated set onto the stack for children to use</span>
+
+        <span class="k">for</span> <span class="n">style_list</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;styles_stack&#39;</span><span class="p">]:</span>
+            <span class="c1"># Traverse all the styles encountered at our parent elements</span>
+            <span class="k">for</span> <span class="n">inh_style</span> <span class="ow">in</span> <span class="n">style_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">inh_style</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">referenced_styles</span> <span class="ow">and</span> <span class="n">inh_style</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inherited_styles</span><span class="p">:</span>
+                    <span class="n">inherited_styles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inh_style</span><span class="p">)</span>
+
+        <span class="n">region</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inherited_region</span> <span class="o">=</span> <span class="n">region</span>
+
+        <span class="k">if</span> <span class="n">region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># At last apply any region styles we may find</span>
+            <span class="k">for</span> <span class="n">region_style</span> <span class="ow">in</span> <span class="n">region</span><span class="o">.</span><span class="n">validated_styles</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">region_style</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">referenced_styles</span> <span class="ow">and</span> <span class="n">region_style</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inherited_styles</span><span class="p">:</span>
+                    <span class="n">region_styles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region_style</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_referenced_styles</span> <span class="o">=</span> <span class="n">referenced_styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_inherited_styles</span> <span class="o">=</span> <span class="n">inherited_styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_region_styles</span> <span class="o">=</span> <span class="n">region_styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validated_styles</span> <span class="o">=</span> <span class="n">referenced_styles</span> <span class="o">+</span> <span class="n">inherited_styles</span> <span class="o">+</span> <span class="n">region_styles</span>
+
+        <span class="k">if</span> <span class="n">parent_binding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">parent_binding</span><span class="p">,</span> <span class="s1">&#39;computed_style&#39;</span><span class="p">):</span>
+            <span class="n">parent_computed_style</span> <span class="o">=</span> <span class="n">parent_binding</span><span class="o">.</span><span class="n">computed_style</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parent_computed_style</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="s1">&#39;computed_style&#39;</span><span class="p">):</span>
+            <span class="n">region_computed_style</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">computed_style</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">region_computed_style</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Let&#39;s resolve the specified styles</span>
+        <span class="c1"># Make sure the extra style attributes supersede the rest of the referenced styles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_specified_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compatible_style_type</span><span class="o">.</span><span class="n">resolve_styles</span><span class="p">(</span><span class="n">extra_referenced_styles</span> <span class="o">+</span> <span class="n">referenced_styles</span><span class="p">)</span>
+
+        <span class="c1"># Let&#39;s generate the computed style of the element</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_style</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compatible_style_type</span><span class="o">.</span><span class="n">compute_style</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_specified_style</span><span class="p">,</span>
+            <span class="n">parent_computed_style</span><span class="p">,</span>
+            <span class="n">region_computed_style</span><span class="p">,</span>
+            <span class="n">dataset</span><span class="p">,</span>
+            <span class="n">defer_font_size</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="StyledElementMixin._semantic_push_styles"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_push_styles">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_push_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;styles_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_referenced_styles</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StyledElementMixin._semantic_pop_styles"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_pop_styles">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_pop_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;styles_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">specified_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is the resolution of the Style attributes that are directly linked to this element even via implicit</span>
+<span class="sd">        inheritance of the style attributes</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specified_style</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">computed_style</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize</span>
+<span class="sd">        in any styled element container. Without it conversion from absolute values to relative would not be possible.</span>
+<span class="sd">        This is a requirement for the EBU-TT-D conversion where only percentages are allowed in sizing attributes.</span>
+<span class="sd">        To support converting the pixel/celll values that don&#39;t cascade to percentages that do the simplest</span>
+<span class="sd">        approach is to compute the style in whatever crazy constellation of units it may be provided in and generate</span>
+<span class="sd">        percentage based styles for p and span elements taking into account their relative cascading nature. Yes if</span>
+<span class="sd">        this confused you please refer to the documentation of EBU-TT-D, EBU-TT-Live, TTML and whatever else TTML might</span>
+<span class="sd">        refer to in terms of these style attributes.</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computed_style</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">validated_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validated_styles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span><span class="n">ERR_SEMANTIC_VALIDATION_EXPECTED</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validated_styles</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">inherited_region</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inherited_region</span>
+
+<div class="viewcode-block" id="StyledElementMixin._semantic_copy_verify_referenced_styles"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_copy_verify_referenced_styles">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="n">orphans</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;orphaned_elements&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">validated_styles</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">orphans</span><span class="p">:</span>
+                <span class="n">orphans</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RegionedElementMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin">[docs]</a><span class="k">class</span> <span class="nc">RegionedElementMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Makes sure we always know where we are. Detects double region assignment which is a warning.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_validated_region</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="RegionedElementMixin._semantic_set_region"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_set_region">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_set_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">region_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">region</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_element_by_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">region_type</span><span class="p">)</span>
+                <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_validated_region</span> <span class="o">=</span> <span class="n">region</span>
+            <span class="k">except</span> <span class="ne">LookupError</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span><span class="n">ERR_SEMANTIC_REGION_MISSING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span>
+                <span class="p">))</span></div>
+
+<div class="viewcode-block" id="RegionedElementMixin._semantic_unset_region"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_unset_region">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_unset_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;region&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="RegionedElementMixin._semantic_copy_verify_referenced_region"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin._semantic_copy_verify_referenced_region">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_copy_verify_referenced_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
+        <span class="n">orphans</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;orphaned_elements&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validated_region</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validated_region</span> <span class="ow">in</span> <span class="n">orphans</span><span class="p">:</span>
+                <span class="n">orphans</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_validated_region</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

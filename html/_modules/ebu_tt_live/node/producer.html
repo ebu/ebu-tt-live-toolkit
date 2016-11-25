@@ -134,7 +134,7 @@
 <span></span>
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">div_type</span><span class="p">,</span> <span class="n">br_type</span><span class="p">,</span> <span class="n">p_type</span><span class="p">,</span> <span class="n">style_type</span><span class="p">,</span> <span class="n">styling</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">region_type</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">div_type</span><span class="p">,</span> <span class="n">br_type</span><span class="p">,</span> <span class="n">p_type</span><span class="p">,</span> <span class="n">style_type</span><span class="p">,</span> <span class="n">styling</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">region_type</span><span class="p">,</span> <span class="n">span_type</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="k">import</span> <span class="n">LimitedClockTimingType</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">END_OF_DATA</span>
@@ -161,10 +161,16 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_interleave_line_breaks</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_interleave_line_breaks</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">end_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-            <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">span_type</span><span class="p">(</span>
+                    <span class="n">item</span><span class="p">,</span>
+                    <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
+                    <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
             <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">br_type</span><span class="p">())</span>
         <span class="c1"># We don&#39;t require the last linebreak so remove it.</span>
         <span class="n">end_list</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
@@ -173,9 +179,8 @@
     <span class="k">def</span> <span class="nf">_create_fragment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">div_type</span><span class="p">(</span>
             <span class="n">p_type</span><span class="p">(</span>
-                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_interleave_line_breaks</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span>
+                <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_interleave_line_breaks</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">),</span>
                 <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ID</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-                <span class="n">style</span><span class="o">=</span><span class="n">style</span><span class="p">,</span>
                 <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
             <span class="p">),</span>
             <span class="n">region</span><span class="o">=</span><span class="s1">&#39;bottomRegion&#39;</span>

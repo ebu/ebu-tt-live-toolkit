@@ -86,18 +86,12 @@
             
                 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of the EBU-TT live toolkit.</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#simple-producer">Simple Producer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#simple-consumer">Simple consumer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#user-input-producer">User Input Producer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#user-input-consumer">User Input Consumer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#user-input-forwarder">User Input Forwarder</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
-<li class="toctree-l3"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
-<li class="toctree-l3"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
@@ -150,32 +144,20 @@
 <p>This page is a short introduction to using those scripts that demonstrate toolkit components. For more details and information about other scripts, follow the links below.</p>
 <p>To run the scripts, you will need to first set up the environment and build the code. Please follow the instructions in <a class="reference external" href="https://github.com/ebu/ebu-tt-live-toolkit/blob/master/README.md">https://github.com/ebu/ebu-tt-live-toolkit/blob/master/README.md</a>.</p>
 <p>Not all components are implemented yet - see <a class="reference external" href="https://github.com/ebu/ebu-tt-live-toolkit/wiki/Components">https://github.com/ebu/ebu-tt-live-toolkit/wiki/Components</a> for a list of all components. This page will be updated as more scripts are added.</p>
-<p>The components mimic the nodes and carriage mechanisms defined in the specification. Producer components create documents; consumer components consumer them. Each script combines a carriage mechanism implementation with a processing node to create code that can operate as a node.</p>
-<div class="section" id="simple-producer">
-<h2>Simple Producer<a class="headerlink" href="#simple-producer" title="Permalink to this headline">¶</a></h2>
-<p>This is a command line script. It loads static text from a file (<code class="docutils literal"><span class="pre">ebu-tt-live-toolkit/ebu_tt_live/example_data/simple_producer.txt</span></code>) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command <code class="docutils literal"><span class="pre">ebu-simple-producer</span></code> without any arguments.</p>
-<p>The default carriage mechanism is WebSocket, so you will need to listen to <code class="docutils literal"><span class="pre">ws://127.0.0.1:9000</span></code>. Conveniently, we&#8217;ve created an HTML page that does just that. After you launch <code class="docutils literal"><span class="pre">ebu-simple-producer</span></code>, open <code class="docutils literal"><span class="pre">test.html</span></code> in your browser. The &#8216;Broadcast message&#8217; field should be populated with the correct address (<code class="docutils literal"><span class="pre">ws://localhost:9000</span></code>). Click &#8216;Connect&#8217; and then &#8216;Subscribe&#8217;. You can also change the identifier for the sequence. The documents should appear in the window below.</p>
-<p>Alternatively, the Simple Producer can use the file system as the carriage mechanism. Start it with the folder argument, like this: <code class="docutils literal"><span class="pre">ebu-simple-producer</span> <span class="pre">--folder-export</span> <span class="pre">myFolder</span></code>. This saves the documents in <code class="docutils literal"><span class="pre">myFolder</span></code> together with a manifest file that can be used by the Simple Consumer (below). See <a class="reference external" href="filesystem_carriage_mechanism.html">filesystem_carriage_mechanism.html</a> for more details about the file system carriage mechanism.</p>
-</div>
-<div class="section" id="simple-consumer">
-<h2>Simple consumer<a class="headerlink" href="#simple-consumer" title="Permalink to this headline">¶</a></h2>
-<p>This script reads and validates documents in a sequence. It performs both semantic and syntactic validation of the XML. By default, it uses WebSocket and listens to <code class="docutils literal"><span class="pre">ws://localhost:9000</span></code>, but you can also point it to the file system. If you saved the documents in a folder (using the folder export argument of the Simple Producer), you can start it with the location of the manifest file, like so: <code class="docutils literal"><span class="pre">ebu-simple-consumer</span> <span class="pre">--manifest-path</span> <span class="pre">myFolder/manifest_sequence_identifier.txt</span></code>.</p>
-</div>
-<div class="section" id="user-input-producer">
-<h2>User Input Producer<a class="headerlink" href="#user-input-producer" title="Permalink to this headline">¶</a></h2>
-<p>This is a web page that adds a user interface and various configurations to the Simple Producer. It needs to connect to either the User Input Consumer or a User Input Forwarder. First, start <code class="docutils literal"><span class="pre">ebu-user-input-consumer</span></code> or <code class="docutils literal"><span class="pre">ebu-user-input-forwarder</span></code> from the command line. Then, in your browser, open <code class="docutils literal"><span class="pre">ebu_tt_live/ui/user_input_producer/user_input_producer.html</span></code> and click &#8216;Connect&#8217;. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where <code class="docutils literal"><span class="pre">ebu-user-input-consumer</span></code> is listening. See detailed instructions here: <a class="reference external" href="user_input_producer.html">user_input_producer.html</a>.</p>
-</div>
-<div class="section" id="user-input-consumer">
-<h2>User Input Consumer<a class="headerlink" href="#user-input-consumer" title="Permalink to this headline">¶</a></h2>
-<p>This is very similar to the Simple Consumer. It also performs validation but it does not have a manifest option. It provides a WebSocket connection point for the User Input Producer. You&#8217;ll need to start either this or the User Input Forwarder before connecting the User Input Producer (but not both).</p>
-</div>
-<div class="section" id="user-input-forwarder">
-<h2>User Input Forwarder<a class="headerlink" href="#user-input-forwarder" title="Permalink to this headline">¶</a></h2>
-<p>This script mimics a distribution node. It listens to documents coming from the User Input Producer on <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code> and forwards them to any consumer listening on <code class="docutils literal"><span class="pre">ws://127.0.0.1:9000</span></code>. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the <code class="docutils literal"><span class="pre">--folder-export</span></code> argument like this: <code class="docutils literal"><span class="pre">ebu-user-input-forwarder</span> <span class="pre">--folder-export</span> <span class="pre">myFolder</span></code>. Then launch the User Input Producer and connect. The sequence will be saved to <code class="docutils literal"><span class="pre">myFolder</span></code> along with the manifest file. The User Input Forwarder can also be used as an incoming connection point for WebSocket connections from sources other than the User Input Producer.</p>
+<p>The components mimic the nodes and carriage mechanisms defined in the specification. Producer components create documents; consumer components consume them. Each script combines a carriage mechanism implementation with a processing node to create code that can operate as a node.</p>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="filesystem_carriage_mechanism.html">Filesystem Carriage Mechanism</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#simple-producer">Simple Producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#simple-consumer">Simple consumer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#user-input-producer">User Input Producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#user-input-consumer">User Input Consumer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#user-input-forwarder">User Input Forwarder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#ebu-tt-d-encoder">EBU-TT-D Encoder</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">Document and sequence validation</a><ul>
@@ -194,7 +176,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
 </ul>
-</div>
 </div>
 </div>
 

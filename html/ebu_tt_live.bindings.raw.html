@@ -35,7 +35,7 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="bindings Package" href="ebu_tt_live.bindings.html"/>
-        <link rel="next" title="carriage Package" href="ebu_tt_live.carriage.html"/>
+        <link rel="next" title="validation package" href="ebu_tt_live.bindings.validation.html"/>
         <link rel="prev" title="bindings Package" href="ebu_tt_live.bindings.html"/> 
 
   
@@ -88,9 +88,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#layout-of-the-source-files">Layout of the source files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#id1"><code class="docutils literal"><span class="pre">bindings</span></code> Package</a></li>
@@ -101,7 +99,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttm"><code class="docutils literal"><span class="pre">_ttm</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttp"><code class="docutils literal"><span class="pre">_ttp</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._tts"><code class="docutils literal"><span class="pre">_tts</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings.validation"><code class="docutils literal"><span class="pre">validation</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings.pyxb_utils"><code class="docutils literal"><span class="pre">pyxb_utils</span></code> Module</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="ebu_tt_live.bindings.html#subpackages">Subpackages</a></li>
 </ul>
@@ -116,6 +113,9 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -1619,13 +1619,6 @@ the document was obtained.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="ebu_tt_live.bindings.raw._ebuttdt.STD_ANON_">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">STD_ANON_</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#STD_ANON_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.STD_ANON_" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
-<p>An atomic simple type.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.authoringDelayType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">authoringDelayType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#authoringDelayType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.authoringDelayType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
@@ -1649,6 +1642,13 @@ the document was obtained.</p>
 <dl class="class">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.cellLengthType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">cellLengthType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#cellLengthType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.cellLengthType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
+<p>An atomic simple type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ebuttdt.cellLineHeightType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">cellLineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#cellLineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.cellLineHeightType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
 <p>An atomic simple type.</p>
 </dd></dl>
@@ -1870,7 +1870,7 @@ the document was obtained.</p>
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.lineHeightType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">lineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#lineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.lineHeightType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.STD_union</span></code></p>
-<p>Simple type that is a union of STD_ANON, <a href="#id2"><span class="problematic" id="id3">STD_ANON_</span></a>.</p>
+<p>Simple type that is a union of percentageLineHeightType, cellLineHeightType, pixelLineHeightType, STD_ANON.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.lineHeightType.normal">
 <code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.lineHeightType.normal" title="Permalink to this definition">¶</a></dt>
@@ -2023,6 +2023,13 @@ the document was obtained.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ebuttdt.percentageLineHeightType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">percentageLineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#percentageLineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.percentageLineHeightType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
+<p>An atomic simple type.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.percentageOriginType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">percentageOriginType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#percentageOriginType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.percentageOriginType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.token</span></code></p>
@@ -2046,6 +2053,13 @@ the document was obtained.</p>
 <dl class="class">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">pixelLengthType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#pixelLengthType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
+<p>An atomic simple type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ebuttdt.pixelLineHeightType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttdt.</code><code class="descname">pixelLineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttdt.html#pixelLineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.pixelLineHeightType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
 <p>An atomic simple type.</p>
 </dd></dl>
@@ -3704,7 +3718,7 @@ the document was obtained.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ebu_tt_live.carriage.html" class="btn btn-neutral float-right" title="carriage Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ebu_tt_live.bindings.validation.html" class="btn btn-neutral float-right" title="validation package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ebu_tt_live.bindings.html" class="btn btn-neutral" title="bindings Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

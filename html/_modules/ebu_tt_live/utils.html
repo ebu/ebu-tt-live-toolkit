@@ -132,6 +132,13 @@
             
   <h1>Source code for ebu_tt_live.utils</h1><div class="highlight"><pre>
 <span></span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">Queue</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+
 <div class="viewcode-block" id="ComparableMixin"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.ComparableMixin">[docs]</a><span class="k">class</span> <span class="nc">ComparableMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This mixin is meant to make implementing the comparison interface easier without having to clutter up</span>
@@ -182,6 +189,138 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="RingBufferWithCallback"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RingBufferWithCallback">[docs]</a><span class="k">class</span> <span class="nc">RingBufferWithCallback</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class calls a callback when an item is falling out of the buffer due to removal.</span>
+<span class="sd">    On manual removal it does not. That is the user&#39;s responsibility.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_callback</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="p">(),</span> <span class="n">maxlen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="ow">and</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Callback: </span><span class="si">{}</span><span class="s1"> is not callable&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">callback</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span> <span class="o">=</span> <span class="n">callback</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RingBufferWithCallback.append"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RingBufferWithCallback.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="StoppableThread"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread">[docs]</a><span class="k">class</span> <span class="nc">StoppableThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Thread class with a stop() method. The thread itself has to check</span>
+<span class="sd">    regularly for the stopped() condition.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StoppableThread</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+
+<div class="viewcode-block" id="StoppableThread.stop"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="StoppableThread.stopped"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread.stopped">[docs]</a>    <span class="k">def</span> <span class="nf">stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="o">.</span><span class="n">isSet</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="RotatingFileBufferStopped"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBufferStopped">[docs]</a><span class="k">class</span> <span class="nc">RotatingFileBufferStopped</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="RotatingFileBuffer"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBuffer">[docs]</a><span class="k">class</span> <span class="nc">RotatingFileBuffer</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class holds the given number of file names and when they are pushed out of the buffer it deletes</span>
+<span class="sd">    them asynchronously. Preferably just the names and not open file handles.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_deletion_thread</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_deletion_queue</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">,</span> <span class="k">async</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFileBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">maxlen</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delete_file</span><span class="p">)</span>
+        <span class="c1"># In this case threads make sense since it is I/O we are going to be waiting for and that is releasing the GIL.</span>
+        <span class="c1"># Deletion is the means for us to send down files for deletion to the other thread(maybe process later)....</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+        <span class="k">if</span> <span class="k">async</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span> <span class="o">=</span> <span class="n">StoppableThread</span><span class="p">(</span>
+                <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_delete_thread_loop</span><span class="p">,</span>
+                <span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_queue</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="c1"># Ensuring the thread will not leave us hanging</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_do_delete</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">files_waiting</span><span class="p">):</span>
+        <span class="n">failed_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Now we can try to see if we have anything to delete</span>
+        <span class="k">while</span> <span class="n">files_waiting</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">files_waiting</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">item</span><span class="p">):</span>
+                <span class="c1"># File is still there try to delete it</span>
+                <span class="c1"># If not we do nothing. The loop discards the name</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+                    <span class="c1"># Horrible! Quick, put it back... NEXT</span>
+                    <span class="n">failed_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">failed_files</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_do_consume</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">files_waiting</span><span class="p">,</span> <span class="n">default_wait</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">files_waiting</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">default_wait</span><span class="p">))</span>
+        <span class="k">except</span> <span class="n">Queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">failed_files</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_do_delete</span><span class="p">(</span><span class="n">files_waiting</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">failed_files</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_delete_thread_loop</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+        <span class="n">files_waiting</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">default_wait</span> <span class="o">=</span> <span class="mf">0.2</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">stopped</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="n">files_waiting</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_do_consume</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="n">q</span><span class="p">,</span> <span class="n">files_waiting</span><span class="o">=</span><span class="n">files_waiting</span><span class="p">,</span> <span class="n">default_wait</span><span class="o">=</span><span class="n">default_wait</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">files_waiting</span><span class="p">:</span>
+            <span class="n">files_waiting</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">_do_delete</span><span class="p">(</span><span class="n">files_waiting</span><span class="o">=</span><span class="n">files_waiting</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RotatingFileBuffer.delete_file"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBuffer.delete_file">[docs]</a>    <span class="k">def</span> <span class="nf">delete_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function hands the file down to our worker thread to deal with it.</span>
+<span class="sd">        :param item:</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">files_waiting</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">default_wait</span> <span class="o">=</span> <span class="mf">0.1</span>
+            <span class="k">while</span> <span class="n">files_waiting</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_queue</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+                <span class="n">files_waiting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_consume</span><span class="p">(</span>
+                    <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_deletion_queue</span><span class="p">,</span>
+                    <span class="n">files_waiting</span><span class="o">=</span><span class="n">files_waiting</span><span class="p">,</span>
+                    <span class="n">default_wait</span><span class="o">=</span><span class="n">default_wait</span>
+                <span class="p">)</span></div>
+
+<div class="viewcode-block" id="RotatingFileBuffer.append"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBuffer.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This override makes sure that we don&#39;t add to an asynchronously managed buffer that is about to be shut down.</span>
+<span class="sd">        :param item: The file name</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span><span class="o">.</span><span class="n">stopped</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">RotatingFileBufferStopped</span><span class="p">(</span><span class="s1">&#39;File deletion thread is stopped!&#39;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFileBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

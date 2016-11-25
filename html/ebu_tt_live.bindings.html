@@ -88,9 +88,7 @@
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#layout-of-the-source-files">Layout of the source files</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">bindings Package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">bindings</span></code> Package</a></li>
@@ -101,7 +99,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.bindings._ttm"><code class="docutils literal"><span class="pre">_ttm</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.bindings._ttp"><code class="docutils literal"><span class="pre">_ttp</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.bindings._tts"><code class="docutils literal"><span class="pre">_tts</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.bindings.validation"><code class="docutils literal"><span class="pre">validation</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.bindings.pyxb_utils"><code class="docutils literal"><span class="pre">pyxb_utils</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 </ul>
@@ -116,6 +113,9 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -185,18 +185,13 @@
 <dl class="class">
 <dt id="ebu_tt_live.bindings.LiveStyledElementMixin">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">LiveStyledElementMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#LiveStyledElementMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.LiveStyledElementMixin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code></p>
-<dl class="classmethod">
-<dt id="ebu_tt_live.bindings.LiveStyledElementMixin.assign_style_type">
-<em class="property">classmethod </em><code class="descname">assign_style_type</code><span class="sig-paren">(</span><em>style_type_in</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#LiveStyledElementMixin.assign_style_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.LiveStyledElementMixin.assign_style_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin" title="ebu_tt_live.bindings.validation.presentation.StyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings.body_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">body_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#body_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.body_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.body_type" title="ebu_tt_live.bindings.raw.body_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.body_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings.LiveStyledElementMixin" title="ebu_tt_live.bindings.LiveStyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.LiveStyledElementMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin" title="ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.body_type" title="ebu_tt_live.bindings.raw.body_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.body_type</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.body_type.merge">
 <code class="descname">merge</code><span class="sig-paren">(</span><em>other_elem</em>, <em>dataset=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#body_type.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.body_type.merge" title="Permalink to this definition">¶</a></dt>
@@ -207,7 +202,7 @@
 <dl class="class">
 <dt id="ebu_tt_live.bindings.br_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">br_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#br_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.br_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.br_type" title="ebu_tt_live.bindings.raw.br_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.br_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.br_type" title="ebu_tt_live.bindings.raw.br_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.br_type</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
@@ -273,7 +268,7 @@
 <dl class="class">
 <dt id="ebu_tt_live.bindings.div_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">div_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#div_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.div_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.ContentContainerMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.RegionedElementMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.div_type" title="ebu_tt_live.bindings.raw.div_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.div_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.content.ContentContainerMixin" title="ebu_tt_live.bindings.validation.content.ContentContainerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.ContentContainerMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.IDMixin" title="ebu_tt_live.bindings.validation.base.IDMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin" title="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.RegionedElementMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.bindings.LiveStyledElementMixin" title="ebu_tt_live.bindings.LiveStyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.LiveStyledElementMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.div_type" title="ebu_tt_live.bindings.raw.div_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.div_type</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.div_type.is_empty">
 <code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#div_type.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.div_type.is_empty" title="Permalink to this definition">¶</a></dt>
@@ -284,7 +279,7 @@
 <dl class="class">
 <dt id="ebu_tt_live.bindings.head_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">head_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#head_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.head_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.head_type" title="ebu_tt_live.bindings.raw.head_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.head_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.head_type" title="ebu_tt_live.bindings.raw.head_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.head_type</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.head_type.merge">
 <code class="descname">merge</code><span class="sig-paren">(</span><em>other_elem</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#head_type.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.head_type.merge" title="Permalink to this definition">¶</a></dt>
@@ -295,7 +290,7 @@
 <dl class="class">
 <dt id="ebu_tt_live.bindings.layout">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">layout</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#layout"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.layout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.layout" title="ebu_tt_live.bindings.raw.layout"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.layout</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.layout" title="ebu_tt_live.bindings.raw.layout"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.layout</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.layout.merge">
 <code class="descname">merge</code><span class="sig-paren">(</span><em>other_elem</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#layout.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.layout.merge" title="Permalink to this definition">¶</a></dt>
@@ -306,34 +301,75 @@
 <dl class="class">
 <dt id="ebu_tt_live.bindings.p_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">p_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#p_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.p_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.RegionedElementMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.SubtitleContentContainer</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.p_type" title="ebu_tt_live.bindings.raw.p_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.p_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.RegionedElementMixin" title="ebu_tt_live.bindings.validation.presentation.RegionedElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.RegionedElementMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.bindings.LiveStyledElementMixin" title="ebu_tt_live.bindings.LiveStyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.LiveStyledElementMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.content.SubtitleContentContainer" title="ebu_tt_live.bindings.validation.content.SubtitleContentContainer"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.SubtitleContentContainer</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.p_type" title="ebu_tt_live.bindings.raw.p_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.p_type</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings.region_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">region_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#region_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.region_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.region" title="ebu_tt_live.bindings.raw.region"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.region</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.IDMixin" title="ebu_tt_live.bindings.validation.base.IDMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.bindings.LiveStyledElementMixin" title="ebu_tt_live.bindings.LiveStyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.LiveStyledElementMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.region" title="ebu_tt_live.bindings.raw.region"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.region</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings.span_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">span_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#span_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.span_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.SubtitleContentContainer</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.span_type" title="ebu_tt_live.bindings.raw.span_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.span_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings.LiveStyledElementMixin" title="ebu_tt_live.bindings.LiveStyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.LiveStyledElementMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.content.SubtitleContentContainer" title="ebu_tt_live.bindings.validation.content.SubtitleContentContainer"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.content.SubtitleContentContainer</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.span_type" title="ebu_tt_live.bindings.raw.span_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.span_type</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings.style_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">style_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.style" title="ebu_tt_live.bindings.raw.style"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.style</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.StyledElementMixin" title="ebu_tt_live.bindings.validation.presentation.StyledElementMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.StyledElementMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.IDMixin" title="ebu_tt_live.bindings.validation.base.IDMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.IDMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.style" title="ebu_tt_live.bindings.raw.style"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.style</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings.style_type.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
-<dt id="ebu_tt_live.bindings.style_type.calculate_effective_style">
-<em class="property">classmethod </em><code class="descname">calculate_effective_style</code><span class="sig-paren">(</span><em>referenced_styles</em>, <em>inherited_styles</em>, <em>region_styles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.calculate_effective_style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.calculate_effective_style" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.style_type.compute_font_size">
+<em class="property">classmethod </em><code class="descname">compute_font_size</code><span class="sig-paren">(</span><em>specified_style</em>, <em>parent_computed_style</em>, <em>region_computed_style</em>, <em>dataset</em>, <em>defer=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.compute_font_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.compute_font_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings.style_type.compute_inherited_attribute">
+<em class="property">classmethod </em><code class="descname">compute_inherited_attribute</code><span class="sig-paren">(</span><em>attr_name</em>, <em>specified_style</em>, <em>parent_computed_style</em>, <em>region_computed_style</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.compute_inherited_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.compute_inherited_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings.style_type.compute_line_height">
+<em class="property">classmethod </em><code class="descname">compute_line_height</code><span class="sig-paren">(</span><em>specified_style</em>, <em>parent_computed_style</em>, <em>region_computed_style</em>, <em>dataset</em>, <em>font_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.compute_line_height"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.compute_line_height" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings.style_type.compute_simple_attribute">
+<em class="property">classmethod </em><code class="descname">compute_simple_attribute</code><span class="sig-paren">(</span><em>attr_name</em>, <em>specified_style</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.compute_simple_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.compute_simple_attribute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings.style_type.compute_style">
+<em class="property">classmethod </em><code class="descname">compute_style</code><span class="sig-paren">(</span><em>specified_style</em>, <em>parent_computed_style</em>, <em>region_computed_style</em>, <em>dataset</em>, <em>defer_font_size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.compute_style"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.compute_style" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function holds the styling semantics of containers considering direct reference, inheritance and
 containment variables
-:param referenced_styles: Directly referenced resolved styles
-:param inherited_styles: Inherited styling information from parent container
-:param region_styles: Default region styling information
+:param specified_style: Directly referenced resolved styles
+:param parent_computed_style: Inherited styling information from parent container
+:param region_computed_style: Default region styling information
+:param dataset: Semantic dataset needed for conversion context
 :return:</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.style_type.default_attrs">
+<code class="descname">default_attrs</code><a class="headerlink" href="#ebu_tt_live.bindings.style_type.default_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>This property function gives back a set in which we find the unspecified style attributes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set for attribute names that were inheriting the default in the computed style. Important at
+inheritance override</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -346,6 +382,19 @@ may not have been found yet!
 :return: a list of styles applicable in order</p>
 </dd></dl>
 
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings.style_type.resolve_styles">
+<em class="property">classmethod </em><code class="descname">resolve_styles</code><span class="sig-paren">(</span><em>referenced_styles</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.resolve_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.resolve_styles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolve the style attributes in inheritance chain
+:param referenced_styles:
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.style_type.set_default_value">
+<code class="descname">set_default_value</code><span class="sig-paren">(</span><em>attr_name</em>, <em>default_value=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#style_type.set_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.style_type.set_default_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.style_type.validated_styles">
 <code class="descname">validated_styles</code><a class="headerlink" href="#ebu_tt_live.bindings.style_type.validated_styles" title="Permalink to this definition">¶</a></dt>
@@ -356,7 +405,7 @@ may not have been found yet!
 <dl class="class">
 <dt id="ebu_tt_live.bindings.styling">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">styling</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#styling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.styling" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.styling" title="ebu_tt_live.bindings.raw.styling"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.styling</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.styling" title="ebu_tt_live.bindings.raw.styling"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.styling</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.styling.merge">
 <code class="descname">merge</code><span class="sig-paren">(</span><em>other_elem</em>, <em>dataset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#styling.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.styling.merge" title="Permalink to this definition">¶</a></dt>
@@ -367,7 +416,7 @@ may not have been found yet!
 <dl class="class">
 <dt id="ebu_tt_live.bindings.tt_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.</code><code class="descname">tt_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#tt_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.tt_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.tt_type" title="ebu_tt_live.bindings.raw.tt_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.tt_type</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin" title="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw.tt_type" title="ebu_tt_live.bindings.raw.tt_type"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw.tt_type</span></code></a></p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.tt_type.get_element_by_id">
 <code class="descname">get_element_by_id</code><span class="sig-paren">(</span><em>elem_id</em>, <em>elem_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings.html#tt_type.get_element_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.tt_type.get_element_by_id" title="Permalink to this definition">¶</a></dt>
@@ -403,15 +452,45 @@ may not have been found yet!
 <div class="section" id="module-ebu_tt_live.bindings._ebuttdt">
 <span id="ebuttdt-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">_ebuttdt</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings._ebuttdt" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.CellExtentType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">CellExtentType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#CellExtentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.CellExtentType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.cellExtentType" title="ebu_tt_live.bindings.raw._ebuttdt.cellExtentType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.cellExtentType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.CellFontSizeType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">CellFontSizeType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#CellFontSizeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.CellFontSizeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.cellFontSizeType" title="ebu_tt_live.bindings.raw._ebuttdt.cellFontSizeType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.cellFontSizeType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.CellLengthType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">CellLengthType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#CellLengthType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.CellLengthType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.cellLengthType" title="ebu_tt_live.bindings.raw._ebuttdt.cellLengthType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.cellLengthType</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.CellLineHeightType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">CellLineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#CellLineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.CellLineHeightType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.cellLineHeightType" title="ebu_tt_live.bindings.raw._ebuttdt.cellLineHeightType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.cellLineHeightType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.CellOriginType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">CellOriginType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#CellOriginType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.CellOriginType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.cellOriginType" title="ebu_tt_live.bindings.raw._ebuttdt.cellOriginType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.cellOriginType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.CellResolutionType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">CellResolutionType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#CellResolutionType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.CellResolutionType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.cellResolutionType" title="ebu_tt_live.bindings.raw._ebuttdt.cellResolutionType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.cellResolutionType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.FullClockTimingType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">FullClockTimingType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#FullClockTimingType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.FullClockTimingType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt._TimedeltaBindingMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.fullClockTimingType" title="ebu_tt_live.bindings.raw._ebuttdt.fullClockTimingType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.fullClockTimingType</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt._TimedeltaBindingMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.fullClockTimingType" title="ebu_tt_live.bindings.raw._ebuttdt.fullClockTimingType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.fullClockTimingType</span></code></a></p>
 <p>Extending the string type with conversions to and from timedelta</p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.bindings._ebuttdt.FullClockTimingType.as_timedelta">
@@ -460,33 +539,73 @@ may not have been found yet!
 </dd></dl>
 
 <dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.PercentageExtentType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PercentageExtentType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageExtentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageExtentType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.percentageExtentType" title="ebu_tt_live.bindings.raw._ebuttdt.percentageExtentType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.percentageExtentType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.PercentageFontSizeType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PercentageFontSizeType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageFontSizeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageFontSizeType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.percentageFontSizeType" title="ebu_tt_live.bindings.raw._ebuttdt.percentageFontSizeType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.percentageFontSizeType</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings._ebuttdt.PercentageFontSizeType.do_mul">
+<code class="descname">do_mul</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageFontSizeType.do_mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageFontSizeType.do_mul" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.PercentageLengthType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PercentageLengthType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageLengthType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageLengthType" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.percentageLengthType" title="ebu_tt_live.bindings.raw._ebuttdt.percentageLengthType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.percentageLengthType</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.PercentageLineHeightType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PercentageLineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageLineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageLineHeightType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.percentageLineHeightType" title="ebu_tt_live.bindings.raw._ebuttdt.percentageLineHeightType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.percentageLineHeightType</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.bindings._ebuttdt.PercentageLineHeightType.do_mul">
+<code class="descname">do_mul</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageLineHeightType.do_mul"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageLineHeightType.do_mul" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.PercentageOriginType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PercentageOriginType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PercentageOriginType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PercentageOriginType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.percentageOriginType" title="ebu_tt_live.bindings.raw._ebuttdt.percentageOriginType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.percentageOriginType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.PixelExtentType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PixelExtentType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PixelExtentType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PixelExtentType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelExtentType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelExtentType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelExtentType</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelExtentType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelExtentType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelExtentType</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.PixelFontSizeType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PixelFontSizeType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PixelFontSizeType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PixelFontSizeType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelFontSizeType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelFontSizeType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelFontSizeType</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelFontSizeType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelFontSizeType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelFontSizeType</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.PixelLengthType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PixelLengthType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PixelLengthType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PixelLengthType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelLengthType</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.PixelLineHeightType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PixelLineHeightType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PixelLineHeightType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PixelLineHeightType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelLineHeightType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelLineHeightType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelLineHeightType</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
 <dt id="ebu_tt_live.bindings._ebuttdt.PixelOriginType">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">PixelOriginType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#PixelOriginType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.PixelOriginType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelOriginType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelOriginType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelOriginType</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.presentation.SizingValidationMixin" title="ebu_tt_live.bindings.validation.presentation.SizingValidationMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.presentation.SizingValidationMixin</span></code></a>, <a class="reference internal" href="ebu_tt_live.bindings.raw.html#ebu_tt_live.bindings.raw._ebuttdt.pixelOriginType" title="ebu_tt_live.bindings.raw._ebuttdt.pixelOriginType"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.raw._ebuttdt.pixelOriginType</span></code></a></p>
 </dd></dl>
 
 <dl class="class">
@@ -531,6 +650,52 @@ Consistency is ensured to the millisecond. Below that the number will be trimmed
 
 </dd></dl>
 
+<dl class="class">
+<dt id="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">TwoDimSizingMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#TwoDimSizingMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.as_tuple">
+<em class="property">classmethod </em><code class="descname">as_tuple</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#TwoDimSizingMixin.as_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.as_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.from_tuple">
+<em class="property">classmethod </em><code class="descname">from_tuple</code><span class="sig-paren">(</span><em>instance</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#TwoDimSizingMixin.from_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.from_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.horizontal">
+<code class="descname">horizontal</code><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.horizontal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.vertical">
+<code class="descname">vertical</code><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.vertical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.bindings._ebuttdt.cells_to_pixels">
+<code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">cells_to_pixels</code><span class="sig-paren">(</span><em>cells_in</em>, <em>root_extent</em>, <em>cell_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#cells_to_pixels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.cells_to_pixels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.bindings._ebuttdt.convert_cell_region_to_percentage">
+<code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">convert_cell_region_to_percentage</code><span class="sig-paren">(</span><em>cells_in</em>, <em>cell_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#convert_cell_region_to_percentage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.convert_cell_region_to_percentage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.bindings._ebuttdt.named_color_to_rgba">
+<code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">named_color_to_rgba</code><span class="sig-paren">(</span><em>named_color</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#named_color_to_rgba"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.named_color_to_rgba" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.bindings._ebuttdt.pixels_to_cells">
+<code class="descclassname">ebu_tt_live.bindings._ebuttdt.</code><code class="descname">pixels_to_cells</code><span class="sig-paren">(</span><em>pixels_in</em>, <em>root_extent</em>, <em>cell_resolution</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/_ebuttdt.html#pixels_to_cells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings._ebuttdt.pixels_to_cells" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 <div class="section" id="module-ebu_tt_live.bindings._ebuttm">
 <span id="ebuttm-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">_ebuttm</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings._ebuttm" title="Permalink to this headline">¶</a></h2>
@@ -549,9 +714,6 @@ Consistency is ensured to the millisecond. Below that the number will be trimmed
 </div>
 <div class="section" id="module-ebu_tt_live.bindings._tts">
 <span id="tts-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">_tts</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings._tts" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-ebu_tt_live.bindings.validation">
-<span id="validation-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">validation</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.validation" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-ebu_tt_live.bindings.pyxb_utils">
 <span id="pyxb-utils-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">pyxb_utils</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.pyxb_utils" title="Permalink to this headline">¶</a></h2>
@@ -617,6 +779,15 @@ document is parsed. This prevents unwanted correlation between documents.</p>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ttm"><code class="docutils literal"><span class="pre">_ttm</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ttp"><code class="docutils literal"><span class="pre">_ttp</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._tts"><code class="docutils literal"><span class="pre">_tts</span></code> Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.bindings.validation.html">validation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#id1"><code class="docutils literal"><span class="pre">validation</span></code> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.validator"><code class="docutils literal"><span class="pre">validator</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.timing"><code class="docutils literal"><span class="pre">timing</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.presentation"><code class="docutils literal"><span class="pre">presentation</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.content"><code class="docutils literal"><span class="pre">content</span></code> Module</a></li>
 </ul>
 </li>
 </ul>

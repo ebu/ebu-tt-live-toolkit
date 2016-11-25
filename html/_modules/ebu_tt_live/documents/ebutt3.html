@@ -850,12 +850,20 @@
         <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">affected_documents</span><span class="p">:</span>
             <span class="n">doc_ending</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">resolved_end_time</span>
             <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">doc_ending</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">doc_ending</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">doc_ending</span><span class="p">:</span>
                     <span class="n">doc_ending</span> <span class="o">=</span> <span class="n">end</span>
             <span class="c1"># Check only til resolved end, otherwise there will be unwanted parallel elements</span>
-            <span class="n">doc_segment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">extract_segment</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">doc_ending</span><span class="p">,</span> <span class="n">deconflict_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-            <span class="n">document_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_segment</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">doc_segment</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">extract_segment</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">doc_ending</span><span class="p">,</span> <span class="n">deconflict_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">document_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_segment</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s1">&#39;Error extracting document segment from </span><span class="si">{}</span><span class="s1">__</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">doc</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">sequence_number</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+                
             <span class="n">begin</span> <span class="o">=</span> <span class="n">doc_ending</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">document_segments</span><span class="p">:</span>

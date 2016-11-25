@@ -136,6 +136,7 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">CreateFromDocument</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span><span class="p">,</span> <span class="n">XMLParsingFailed</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_DECODING_XML_FAILED</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">RotatingFileBuffer</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -322,11 +323,36 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="n">file_name_pattern</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="SimpleFolderExport.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_do_write_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">destfile</span><span class="p">:</span>
-            <span class="n">destfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div></div>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">destfile</span><span class="p">:</span>
+            <span class="n">destfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span>
+            <span class="n">destfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">filepath</span>
+
+<div class="viewcode-block" id="SimpleFolderExport.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_do_write_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RotatingFolderExport"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.RotatingFolderExport">[docs]</a><span class="k">class</span> <span class="nc">RotatingFolderExport</span><span class="p">(</span><span class="n">SimpleFolderExport</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This carriage mechanism only keeps the last files that fit in its circular buffer. If a new file is written the</span>
+<span class="sd">    oldest one is discarded. The size of the buffer can be specified. This is useful for use-cases when the entire</span>
+<span class="sd">    sequence of files is not meant to be kept, only just the right amount to cover the needs of broadcast requirement</span>
+<span class="sd">    such as timeshift, which allows the viewer to rewind the TV show within a specific limited time range.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_circular_buf</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name_pattern</span><span class="p">,</span> <span class="n">circular_buf_size</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFolderExport</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name_pattern</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf</span> <span class="o">=</span> <span class="n">RotatingFileBuffer</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">circular_buf_size</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RotatingFolderExport.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.RotatingFolderExport.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_write_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
