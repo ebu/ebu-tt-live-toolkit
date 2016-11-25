@@ -15,7 +15,9 @@
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:ebutts="urn:ebu:tt:style"
         xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
         xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
         xmlns:xml="http://www.w3.org/XML/1998/namespace">
   <tt:head>
@@ -23,22 +25,24 @@
       <ebuttm:documentMetadata/>
     </tt:metadata>
     <tt:styling>
-      <tt:style xml:id="ID001"/>
+      <tt:style xml:id="ID001" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)"  ebutts:linePadding="0.5c" tts:fontFamily="sansSerif" />
     </tt:styling>
-    <tt:layout/>
+    <tt:layout>
+      <tt:region xml:id="bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" tts:displayAlign="after" tts:writingMode="lrtb" tts:overflow="visible" />
+    </tt:layout>
   </tt:head>
   <tt:body
   {% if body_begin %}
-    tt:begin="{{ body_begin }}"
+    begin="{{ body_begin }}"
   {% endif %}
   {% if body_end %}
-    tt:end="{{ body_end }}"
+    end="{{ body_end }}"
   {% endif %}
   {% if dur %}
-    tt:dur="{{ dur }}"
+    dur="{{ dur }}"
   {% endif %}
   >
-    <tt:div>
+    <tt:div region="bottomRegion" style="ID001">
       <tt:p xml:id="ID002">{{body_content}}</tt:p>
     </tt:div>
   </tt:body>

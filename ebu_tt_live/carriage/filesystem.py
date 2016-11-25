@@ -3,6 +3,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from ebu_tt_live.utils import RotatingFileBuffer
 from datetime import timedelta
 import logging
 import os
@@ -189,8 +190,33 @@ class SimpleFolderExport(ProducerCarriageImpl):
         self._file_name_pattern = file_name_pattern
         self._counter = 0
 
-    def emit_document(self, document):
+    def _do_write_document(self, document):
         self._counter += 1
         filename = self._file_name_pattern.format(self._counter)
-        with open(os.path.join(self._dir_path, filename), 'w') as destfile:
+        filepath = os.path.join(self._dir_path, filename)
+        with open(filepath, 'w') as destfile:
             destfile.write(document.get_xml())
+            destfile.flush()
+        return filepath
+
+    def emit_document(self, document):
+        self._do_write_document(document)
+
+
+class RotatingFolderExport(SimpleFolderExport):
+    """
+    This carriage mechanism only keeps the last files that fit in its circular buffer. If a new file is written the
+    oldest one is discarded. The size of the buffer can be specified. This is useful for use-cases when the entire
+    sequence of files is not meant to be kept, only just the right amount to cover the needs of broadcast requirement
+    such as timeshift, which allows the viewer to rewind the TV show within a specific limited time range.
+    """
+
+    _circular_buf = None
+
+    def __init__(self, dir_path, file_name_pattern, circular_buf_size):
+        super(RotatingFolderExport, self).__init__(dir_path, file_name_pattern)
+        self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
+
+    def emit_document(self, document):
+        file_name = self._do_write_document(document)
+        self._circular_buf.append(file_name)

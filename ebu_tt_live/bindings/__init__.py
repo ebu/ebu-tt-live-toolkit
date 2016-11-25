@@ -68,15 +68,375 @@ def CreateFromDOM(*args, **kwargs):
 # ================================================
 
 
-class LiveStyledElementMixin(StyledElementMixin):
+class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.style):
+
+    # This helps us detecting infinite loops.
+    _styling_lock = None
+    # ordered styles cached
+    _ordered_styles = None
+    # This mapping is meant to simplify things. In case anything needs special calculation that value should be
+    # lifted out to its own function.
+    _simple_attr_defaults = {
+        'backgroundColor': 'transparent',
+        'padding': '0px',
+        'unicodeBidi': 'normal'
+    }
+    _inherited_attr_defaults = {
+        'color': None,  # See: https://www.w3.org/TR/ttaf1-dfxp/#style-attribute-color
+        'direction': 'ltr',
+        'fontFamily': 'default',
+        'fontStyle': 'normal',
+        'fontWeight': 'normal',
+        'linePadding': '0c',
+        'multiRowAlign': 'auto',
+        'textAlign': 'start',
+        'textDecoration': 'none',
+        'wrapOption': 'wrap'
+    }
+    _default_attrs = None
+
+    def __repr__(self):
+        return u'<style ID: {id} at {addr}>'.format(
+            id=self.id,
+            addr=hex(id(self))
+        )
+
+    def _semantic_copy(self, dataset):
+        copied_style = style_type(
+            id=self.id,
+            style=self.style,  # there is no ordering requirement in styling so too soon to deconflict here
+            direction=self.direction,
+            fontFamily=self.fontFamily,
+            fontSize=self.fontSize,
+            lineHeight=self.lineHeight,
+            textAlign=self.textAlign,
+            color=self.color,
+            backgroundColor=self.backgroundColor,
+            fontStyle=self.fontStyle,
+            fontWeight=self.fontWeight,
+            textDecoration=self.textDecoration,
+            unicodeBidi=self.unicodeBidi,
+            wrapOption=self.wrapOption,
+            padding=self.padding,
+            linePadding=self.linePadding,
+            _strict_keywords=False
+        )
+        return copied_style
+
+    @property
+    def validated_styles(self):
+        # The style element itself is not meant to implement this.
+        raise NotImplementedError()
+
+    def ordered_styles(self, dataset):
+        """
+        This function figures out the chain of styles.
+        WARNING: Do not call this before the semantic validation of tt/head/styling is finished. Otherwise your style
+        may not have been found yet!
+        :param dataset: Semantic dataset
+        :return: a list of styles applicable in order
+        """
+
+        if self._styling_lock.locked():
+            raise SemanticValidationError(ERR_SEMANTIC_STYLE_CIRCLE.format(
+                style=self.id
+            ))
+
+        with self._styling_lock:
+            if self._ordered_styles is not None:
+                return self._ordered_styles
+            ordered_styles = [self]
+            if self.style is not None:
+                for style_id in self.style:
+                    try:
+                        style_elem = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
+                        cascading_styles = style_elem.ordered_styles(dataset=dataset)
+                        for style_elem in cascading_styles:
+                            if style_elem in ordered_styles:
+                                continue
+                            ordered_styles.append(style_elem)
+                    except LookupError:
+                        raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(
+                            style=style_id
+                        ))
+
+            self._ordered_styles = ordered_styles
+            return ordered_styles
+
+    def add(self, other):
+        if self.direction is None and other.direction is not None:
+            self.direction = other.direction
+        if self.fontFamily is None and other.fontFamily is not None:
+            self.fontFamily = other.fontFamily
+        if self.fontSize is None and other.fontSize is not None:
+            self.fontSize = other.fontSize
+        if self.lineHeight is None and other.lineHeight is not None:
+            self.lineHeight = other.lineHeight
+        if self.textAlign is None and other.textAlign is not None:
+            self.textAlign = other.textAlign
+        if self.color is None and other.color is not None:
+            self.color = other.color
+        if self.backgroundColor is None and other.backgroundColor is not None:
+            self.backgroundColor = other.backgroundColor
+        if self.fontStyle is None and other.fontStyle is not None:
+            self.fontStyle = other.fontStyle
+        if self.fontWeight is None and other.fontWeight is not None:
+            self.fontWeight = other.fontWeight
+        if self.textDecoration is None and other.textDecoration is not None:
+            self.textDecoration = other.textDecoration
+        if self.unicodeBidi is None and other.unicodeBidi is not None:
+            self.unicodeBidi = other.unicodeBidi
+        if self.wrapOption is None and other.wrapOption is not None:
+            self.wrapOption = other.wrapOption
+        if self.padding is None and other.padding is not None:
+            self.padding = other.padding
+        if self.linePadding is None and other.linePadding is not None:
+            self.linePadding = other.linePadding
+        if self.multiRowAlign is None and other.multiRowAlign is not None:
+            self.multiRowAlign = other.multiRowAlign
+        return self
 
     @classmethod
-    def assign_style_type(cls, style_type_in):
-        cls._compatible_style_type = style_type_in
+    def resolve_styles(cls, referenced_styles):
+        """
+        Resolve the style attributes in inheritance chain
+        :param referenced_styles:
+        :return:
+        """
+        instance = cls()
+        for item in referenced_styles:
+            instance.add(item)
+        return instance
+
+    @classmethod
+    def compute_font_size(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer=False):
+        spec_font_size = specified_style.fontSize
+        default_font_size = ebuttdt.CellFontSizeType('1c')
+        result_font_size = None
+        if spec_font_size is not None:
+            # Check relativeness
+            if isinstance(spec_font_size, ebuttdt.PercentageFontSizeType):
+                if parent_computed_style is not None and parent_computed_style.fontSize is not None:
+                    result_font_size = parent_computed_style.fontSize * spec_font_size
+                elif region_computed_style is not None and region_computed_style.fontSize is not None:
+                    result_font_size = region_computed_style.fontSize * spec_font_size
+                else:
+                    if region_computed_style is None and defer is True:
+                        # This is an edge-case. body or div can have styles attached with fontSize but may still have no
+                        # region assigned so if they are percentage based the calculation needs to be deferred.
+                        # In this case and in this case only we save percentage in the computed fontSize value
+                        result_font_size = spec_font_size
+                    else:
+                        # This means the default font size needs to be modulated by the percentage
+                        result_font_size = default_font_size * spec_font_size
+
+                if isinstance(result_font_size, ebuttdt.PercentageFontSizeType) and defer is False:
+                    # We cannot defer any longer so now it is time to resolve it.
+                    result_font_size *= default_font_size
+            else:
+                # TODO: control the type here
+                result_font_size = spec_font_size
+        else:
+            if region_computed_style is not None and region_computed_style.fontSize is not None:
+                result_font_size = region_computed_style.fontSize
+            if parent_computed_style is not None and parent_computed_style.fontSize is not None:
+                if isinstance(parent_computed_style.fontSize, ebuttdt.PercentageFontSizeType):
+                    if result_font_size is not None:
+                        # There is a region we can proceed
+                        result_font_size *= parent_computed_style.fontSize
+                    else:
+                        result_font_size = parent_computed_style.fontSize
+                else:
+                    result_font_size = parent_computed_style.fontSize
+                if defer is False:
+                    if isinstance(result_font_size, ebuttdt.PercentageFontSizeType):
+                        result_font_size *= default_font_size
+
+        if result_font_size is not None:
+            if isinstance(result_font_size, ebuttdt.pixelFontSizeType):
+                result_font_size = ebuttdt.CellFontSizeType(
+                    *ebuttdt.pixels_to_cells(
+                        result_font_size,
+                        dataset['tt_element'].extent,
+                        dataset['tt_element'].cellResolution
+                    )
+                )
+        elif defer is not True:
+            result_font_size = default_font_size
+
+        return result_font_size
+
+    @property
+    def default_attrs(self):
+        """
+        This property function gives back a set in which we find the unspecified style attributes.
+
+        :return: set for attribute names that were inheriting the default in the computed style. Important at
+            inheritance override
+        """
+        if self._default_attrs is None:
+            self._default_attrs = set()
+        return self._default_attrs
+
+    def set_default_value(self, attr_name, default_value=None):
+        # We must cater for the case when default computed values would override specified region style values
+        # With fontSize the defaults are vital for computing relative values. At override the next element down the
+        # line would not be able to tell if the parent computed an actually intended value or just the
+        # inheritance of the default value.
+        if default_value is None:
+            if attr_name in self._simple_attr_defaults:
+                default_value = self._simple_attr_defaults[attr_name]
+            elif attr_name in self._inherited_attr_defaults:
+                default_value = self._inherited_attr_defaults[attr_name]
+            else:
+                raise LookupError()
+        # This is the extra step: register default value usage
+        self.default_attrs.add(attr_name)
+        setattr(
+            self,
+            attr_name,
+            default_value
+        )
+
+    @classmethod
+    def compute_inherited_attribute(
+            cls, attr_name, specified_style, parent_computed_style, region_computed_style
+    ):
+        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        for item in fallback_order:
+            if item is not None and attr_name not in item.default_attrs:
+                attr_value = getattr(item, attr_name)
+                if attr_value is not None:
+                    return attr_value
+        return None
+
+    @classmethod
+    def compute_simple_attribute(
+            cls, attr_name, specified_style
+    ):
+        if specified_style is not None:
+            attr_value = getattr(specified_style, attr_name)
+            if attr_value is not None:
+                return attr_value
+        return None
+
+    @classmethod
+    def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset, font_size):
+        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        for item in fallback_order:
+            if item is not None and item.lineHeight is not None and 'lineHeight' not in item.default_attrs:
+                selected_value = item.lineHeight
+                # NOTE: the return value should be cell based except when 'normal' is used
+                if isinstance(selected_value, ebuttdt.PixelLineHeightType):
+                    selected_value = ebuttdt.CellLineHeightType(
+                        *ebuttdt.pixels_to_cells(
+                            selected_value,
+                            dataset['tt_element'].extent,
+                            dataset['tt_element'].cellResolution
+                        )
+                    )
+                elif isinstance(selected_value, ebuttdt.PercentageLineHeightType) and isinstance(font_size, ebuttdt.cellFontSizeType):
+                    # We only need to deal with this case if fontSize was not deferred
+                    selected_value *= font_size
+
+                return selected_value
+        return None
+
+    @classmethod
+    def compute_style(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer_font_size):
+        """
+        This function holds the styling semantics of containers considering direct reference, inheritance and
+        containment variables
+        :param specified_style: Directly referenced resolved styles
+        :param parent_computed_style: Inherited styling information from parent container
+        :param region_computed_style: Default region styling information
+        :param dataset: Semantic dataset needed for conversion context
+        :return:
+        """
+        computed = cls()
+        # Here we need to check for multiple things for each style attribute:
+        # 1: If specified
+        # 2: If specified value is relative
+        # 3: If not specified and there is parent style attr
+        # 4: If no parent style attr but there is region style attr
+        # 5: If none of the above assume the default
+
+        computed.fontSize = cls.compute_font_size(
+            specified_style=specified_style,
+            parent_computed_style=parent_computed_style,
+            region_computed_style=region_computed_style,
+            dataset=dataset,
+            defer=defer_font_size
+        )
+        computed_line_height = cls.compute_line_height(
+            specified_style=specified_style,
+            parent_computed_style=parent_computed_style,
+            region_computed_style=region_computed_style,
+            dataset=dataset,
+            font_size=computed.fontSize
+        )
+
+        if computed_line_height is None:
+            computed.set_default_value('lineHeight', default_value='normal')
+        else:
+            computed.lineHeight = computed_line_height
+
+        for attr_name in cls._simple_attr_defaults.keys():
+            comp_attr_value = cls.compute_simple_attribute(
+                attr_name=attr_name,
+                specified_style=specified_style
+            )
+            if comp_attr_value is None:
+                computed.set_default_value(attr_name)
+            else:
+                setattr(
+                    computed,
+                    attr_name,
+                    comp_attr_value
+                )
+
+        for attr_name in cls._inherited_attr_defaults.keys():
+            comp_attr_value = cls.compute_inherited_attribute(
+                attr_name=attr_name,
+                specified_style=specified_style,
+                parent_computed_style=parent_computed_style,
+                region_computed_style=region_computed_style
+            )
+            if comp_attr_value is None:
+                computed.set_default_value(attr_name)
+            else:
+                setattr(
+                    computed,
+                    attr_name,
+                    comp_attr_value
+                )
+
+        return computed
+
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_register_id(dataset=dataset)
+        self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
+        self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
+        # Init recursion loop detection lock
+        self._styling_lock = threading.Lock()
+        self._ordered_styles = None
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        if self not in dataset['affected_elements']:
+            raise OutsideSegmentError()
+
+# For the requirements of the StyledElementMixin
+style_type._compatible_style_type = style_type
+raw.style._SetSupersedingClass(style_type)
 
 
-# EBU TT Live classes
-# ===================
+class LiveStyledElementMixin(StyledElementMixin):
+
+    _compatible_style_type = style_type
+
+
+# EBU TT Live element types
+# =========================
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
@@ -236,8 +596,15 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # The following edge case is ruined by the XSD associating the same extent type to this extent element.
         if self.extent is not None and not isinstance(self.extent, ebuttdt.pixelExtentType):
             raise SimpleTypeValueError(type(self.extent), self.extent)
+        # This little gem is correcting a bug in PyXB and defult attribute values being instantiated to the old type
+        # and not the customized one
+        # e.g: instead of ebuttdt.CellResolutionType it creates raw._ebuttdt.cellResolutionType, which is a bug
+        # NOTE: As a side effect however this monkey patch will cause cellResolution to be defined on all generated
+        # documents' tt element.
+        if isinstance(self.cellResolution, ebuttdt.cellResolutionType):
+            self.cellResolution = ebuttdt.CellResolutionType(self.cellResolution)
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
         # attributes.
         dataset['timing_begin_stack'] = []
@@ -258,7 +625,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         else:
             self.__semantic_test_time_base_clock_attrs_absent()
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         # Save this for id lookup.
         self._elements_by_id = dataset['elements_by_id']
 
@@ -308,7 +675,7 @@ raw.head_type._SetSupersedingClass(head_type)
 # ============
 
 
-class p_type(RegionedElementMixin, SubtitleContentContainer, raw.p_type):
+class p_type(RegionedElementMixin, LiveStyledElementMixin, SubtitleContentContainer, raw.p_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -345,15 +712,15 @@ class p_type(RegionedElementMixin, SubtitleContentContainer, raw.p_type):
         )
         return copied_p
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
@@ -379,7 +746,7 @@ class p_type(RegionedElementMixin, SubtitleContentContainer, raw.p_type):
 raw.p_type._SetSupersedingClass(p_type)
 
 
-class span_type(SubtitleContentContainer, raw.span_type):
+class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
@@ -414,14 +781,14 @@ class span_type(SubtitleContentContainer, raw.span_type):
         )
         return copied_span
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
@@ -453,7 +820,7 @@ class br_type(SemanticValidationMixin, raw.br_type):
 raw.br_type._SetSupersedingClass(br_type)
 
 
-class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, StyledElementMixin, TimingValidationMixin,
+class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):
 
     _attr_en_pre = {
@@ -487,15 +854,17 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, StyledEleme
         )
         return copied_div
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
+        )
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
 
@@ -522,7 +891,7 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, StyledEleme
 raw.div_type._SetSupersedingClass(div_type)
 
 
-class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
+class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValidationMixin, raw.body_type):
 
     _attr_en_pre = {
         (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): BodyTimingValidationMixin._pre_timing_set_attribute,
@@ -603,13 +972,15 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
 
         return merged_body
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
         self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
+        )
         self._semantic_push_styles(dataset=dataset)
 
-    def _semantic_after_traversal(self, dataset, element_content=None):
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
@@ -623,109 +994,6 @@ class body_type(StyledElementMixin, BodyTimingValidationMixin, SemanticValidatio
 
 
 raw.body_type._SetSupersedingClass(body_type)
-
-
-class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticValidationMixin, raw.style):
-
-    # This helps us detecting infinite loops.
-    _styling_lock = None
-    # ordered styles cached
-    _ordered_styles = None
-
-    def __repr__(self):
-        return u'<style ID: {id} at {addr}>'.format(
-            id=self.id,
-            addr=hex(id(self))
-        )
-
-    def _semantic_copy(self, dataset):
-        copied_style = style_type(
-            id=self.id,
-            style=self.style,  # there is no ordering requirement in styling so too soon to deconflict here
-            direction=self.direction,
-            fontFamily=self.fontFamily,
-            fontSize=self.fontSize,
-            lineHeight=self.lineHeight,
-            textAlign=self.textAlign,
-            color=self.color,
-            backgroundColor=self.backgroundColor,
-            fontStyle=self.fontStyle,
-            fontWeight=self.fontWeight,
-            textDecoration=self.textDecoration,
-            unicodeBidi=self.unicodeBidi,
-            wrapOption=self.wrapOption,
-            padding=self.padding,
-            linePadding=self.linePadding,
-            _strict_keywords=False
-        )
-        return copied_style
-
-    @property
-    def validated_styles(self):
-        # The style element itself is not meant to implement this.
-        raise NotImplementedError()
-
-    def ordered_styles(self, dataset):
-        """
-        This function figures out the chain of styles.
-        WARNING: Do not call this before the semantic validation of tt/head/styling is finished. Otherwise your style
-        may not have been found yet!
-        :param dataset: Semantic dataset
-        :return: a list of styles applicable in order
-        """
-
-        if self._styling_lock.locked():
-            raise SemanticValidationError(ERR_SEMANTIC_STYLE_CIRCLE.format(
-                style=self.id
-            ))
-
-        with self._styling_lock:
-            if self._ordered_styles is not None:
-                return self._ordered_styles
-            ordered_styles = [self]
-            if self.style is not None:
-                for style_id in self.style:
-                    try:
-                        style_elem = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
-                        cascading_styles = style_elem.ordered_styles(dataset=dataset)
-                        for style_elem in cascading_styles:
-                            if style_elem in ordered_styles:
-                                continue
-                            ordered_styles.append(style_elem)
-                    except LookupError:
-                        raise SemanticValidationError(ERR_SEMANTIC_STYLE_MISSING.format(
-                            style=style_id
-                        ))
-
-            self._ordered_styles = ordered_styles
-            return ordered_styles
-
-    @classmethod
-    def calculate_effective_style(cls, referenced_styles, inherited_styles, region_styles):
-        """
-        This function holds the styling semantics of containers considering direct reference, inheritance and
-        containment variables
-        :param referenced_styles: Directly referenced resolved styles
-        :param inherited_styles: Inherited styling information from parent container
-        :param region_styles: Default region styling information
-        :return:
-        """
-        return cls()
-
-    def _semantic_before_traversal(self, dataset, element_content=None):
-        self._semantic_register_id(dataset=dataset)
-        self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
-        self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
-        # Init recursion loop detection lock
-        self._styling_lock = threading.Lock()
-        self._ordered_styles = None
-
-    def _semantic_before_copy(self, dataset, element_content=None):
-        if self not in dataset['affected_elements']:
-            raise OutsideSegmentError()
-
-
-raw.style._SetSupersedingClass(style_type)
 
 
 class styling(SemanticValidationMixin, raw.styling):
@@ -767,7 +1035,7 @@ class styling(SemanticValidationMixin, raw.styling):
 raw.styling._SetSupersedingClass(styling)
 
 
-class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
+class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, SemanticValidationMixin, raw.region):
 
     def _semantic_copy(self, dataset):
         copied_region = region_type(
@@ -779,16 +1047,27 @@ class region_type(IDMixin, StyledElementMixin, SizingValidationMixin, SemanticVa
             padding=self.padding,
             writingMode=self.writingMode,
             showBackground=self.showBackground,
-            overflow=self.overflow
+            overflow=self.overflow,
+            _strict_keywords=False
         )
 
         return copied_region
 
-    def _semantic_before_traversal(self, dataset, element_content=None):
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset,
+            style_type=self._compatible_style_type,
+            parent_binding=parent_binding,
+            extra_referenced_styles=[
+                self._compatible_style_type(
+                    padding=self.padding,
+                    _strict_keywords=False
+                )
+            ]
+        )
 
     def _semantic_before_copy(self, dataset, element_content=None):
         if self not in dataset['affected_elements']:
@@ -835,12 +1114,18 @@ class d_tt_type(raw.d_tt_type):
             )
 
     def toDOM(self, bds=None, parent=None, element_name=None):
+        bds = self.__check_bds(bds)
         xml_dom = super(d_tt_type, self).toDOM(
-            bds=self.__check_bds(bds),
+            bds=bds,
             parent=parent,
             element_name=element_name
         )
-        xml_dom.documentElement.tagName = 'tt:tt'
+        # Nasty workaround for the namespace collision EBU-TT-D and EBU-TT Live are causing by both defining the same
+        # tt element in the ttml namespace
+        if bds.defaultNamespace() != Namespace:
+            xml_dom.documentElement.tagName = 'tt:tt'
+        else:
+            xml_dom.documentElement.tagName = 'tt'
         return xml_dom
 
     def toxml(self, encoding=None, bds=None, root_only=False, element_name=None):

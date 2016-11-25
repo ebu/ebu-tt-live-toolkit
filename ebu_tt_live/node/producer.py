@@ -1,7 +1,7 @@
 
 from .base import Node
 from datetime import timedelta
-from ebu_tt_live.bindings import div_type, br_type, p_type, style_type, styling, layout, region_type
+from ebu_tt_live.bindings import div_type, br_type, p_type, style_type, styling, layout, region_type, span_type
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.strings import END_OF_DATA
@@ -28,10 +28,16 @@ class SimpleProducer(Node):
         return self._document_sequence
 
     @staticmethod
-    def _interleave_line_breaks(items):
+    def _interleave_line_breaks(items, style=None):
         end_list = []
         for item in items:
-            end_list.append(item)
+            end_list.append(
+                span_type(
+                    item,
+                    style=style,
+                    _strict_keywords=False
+                )
+            )
             end_list.append(br_type())
         # We don't require the last linebreak so remove it.
         end_list.pop()
@@ -40,9 +46,8 @@ class SimpleProducer(Node):
     def _create_fragment(self, lines, style=None):
         return div_type(
             p_type(
-                *self._interleave_line_breaks(lines),
+                *self._interleave_line_breaks(lines, style=style),
                 id='ID{:03d}'.format(1),
-                style=style,
                 _strict_keywords=False
             ),
             region='bottomRegion'

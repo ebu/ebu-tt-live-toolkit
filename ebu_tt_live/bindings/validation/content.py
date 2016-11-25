@@ -2,7 +2,6 @@
 from .timing import TimingValidationMixin
 from .base import SemanticValidationMixin, IDMixin
 from ebu_tt_live.errors import DiscardElement
-from presentation import StyledElementMixin
 from pyxb.binding.basis import NonElementContent
 
 
@@ -23,7 +22,7 @@ class ContentContainerMixin(object):
 
 
 class SubtitleContentContainer(
-        ContentContainerMixin, IDMixin, StyledElementMixin, TimingValidationMixin, SemanticValidationMixin):
+        ContentContainerMixin, IDMixin, TimingValidationMixin, SemanticValidationMixin):
 
     def contains_subtitles(self):
         if len(self.br):

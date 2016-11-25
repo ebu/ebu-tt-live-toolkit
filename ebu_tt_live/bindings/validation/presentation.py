@@ -33,13 +33,35 @@ class StyledElementMixin(object):
     """
     _compatible_style_type = None
     _referenced_styles = None
+    _inherited_styles = None
+    _region_styles = None
     _validated_styles = None
     _inherited_region = None
+    _specified_style = None
+    _computed_style = None
 
-    def _semantic_collect_applicable_styles(self, dataset, style_type):
+    def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding, defer_font_size=False,
+                                            extra_referenced_styles=None):
+        """
+        This function identifies the styling dependdncy chain for the styled element in question.
+
+        :param dataset: Semantic dataset
+        :param style_type: the style_type to be used in the process (there are different style types for EBU-TT D and
+        live).
+        :param parent_binding: The immediate parent of the styled element in the document structure
+        :param defer_font_size: If True then fontsize can stay percentage in case it could not be calculated
+        :param extra_referenced_styles: Used by region to inject its extra style attributes
+        :return:
+        """
+        self._specified_style = None
+        self._computed_style = None
+        self._parent_computed_style = None
         referenced_styles = []
         inherited_styles = []
         region_styles = []
+        if extra_referenced_styles is None:
+            extra_referenced_styles = []
+
         if self.style is not None:
             # Styles cascade
             for style_id in self.style:
@@ -69,7 +91,32 @@ class StyledElementMixin(object):
                     region_styles.append(region_style)
 
         self._referenced_styles = referenced_styles
+        self._inherited_styles = inherited_styles
+        self._region_styles = region_styles
         self._validated_styles = referenced_styles + inherited_styles + region_styles
+
+        if parent_binding is not None and hasattr(parent_binding, 'computed_style'):
+            parent_computed_style = parent_binding.computed_style
+        else:
+            parent_computed_style = None
+
+        if region is not None and hasattr(region, 'computed_style'):
+            region_computed_style = region.computed_style
+        else:
+            region_computed_style = None
+
+        # Let's resolve the specified styles
+        # Make sure the extra style attributes supersede the rest of the referenced styles
+        self._specified_style = self._compatible_style_type.resolve_styles(extra_referenced_styles + referenced_styles)
+
+        # Let's generate the computed style of the element
+        self._computed_style = self._compatible_style_type.compute_style(
+            self._specified_style,
+            parent_computed_style,
+            region_computed_style,
+            dataset,
+            defer_font_size
+        )
 
     def _semantic_push_styles(self, dataset):
         dataset['styles_stack'].append(self._referenced_styles)
@@ -77,13 +124,29 @@ class StyledElementMixin(object):
     def _semantic_pop_styles(self, dataset):
         dataset['styles_stack'].pop()
 
-    def effective_style(self):
+    @property
+    def specified_style(self):
+        """
+        This is the resolution of the Style attributes that are directly linked to this element even via implicit
+        inheritance of the style attributes
+        :return:
+        """
+        return self._specified_style
+
+    @property
+    def computed_style(self):
         """
         In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize
         in any styled element container. Without it conversion from absolute values to relative would not be possible.
+        This is a requirement for the EBU-TT-D conversion where only percentages are allowed in sizing attributes.
+        To support converting the pixel/celll values that don't cascade to percentages that do the simplest
+        approach is to compute the style in whatever crazy constellation of units it may be provided in and generate
+        percentage based styles for p and span elements taking into account their relative cascading nature. Yes if
+        this confused you please refer to the documentation of EBU-TT-D, EBU-TT-Live, TTML and whatever else TTML might
+        refer to in terms of these style attributes.
         :return:
         """
-        return self._compatible_style_type.calculate_effective_style
+        return self._computed_style
 
     @property
     def validated_styles(self):
