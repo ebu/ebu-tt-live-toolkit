@@ -28,8 +28,10 @@ class TwistedBackend(BackendBase):
 
     def start(self):
         from twisted.internet import reactor
-        for item in self.components_to_start:
-            item.start()
+        for item in ConfigurableComponent.all_configurators:
+            # Start all the components
+            if item != self:
+                item.start()
         reactor.run()
 
 

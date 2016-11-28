@@ -35,12 +35,10 @@ class WebsocketOutput(WebsocketBase):
         super(WebsocketOutput, self).__init__(config, local_config)
         self.component = TwistedProducerImpl()
         self.component.twisted_channel = local_config.channel
-        from .backend import current_backend
-        current_backend.register_component_start(self)
 
     def start(self):
         from ebu_tt_live.twisted import websocket, TwistedPullProducer, task
-        
+
         factory = websocket.BroadcastServerFactory(self.config.uri)
         factory.protocol = websocket.StreamingServerProtocol
 
