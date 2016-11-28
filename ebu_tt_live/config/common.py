@@ -5,8 +5,7 @@ class ConfigurableComponent(RequiredConfig):
 
     required_config = Namespace()
 
-    @classmethod
-    def configure(cls, config, local_config):
-        instance = cls()
-        instance.config = local_config
-        return instance
+    component = None  # To store the component itself inside its configurator
+
+    def __init__(self, config, local_config):
+        self.config = local_config

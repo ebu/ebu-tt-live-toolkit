@@ -1,6 +1,5 @@
 from .common import ConfigurableComponent, Namespace
 from ebu_tt_live.carriage.twisted import TwistedProducerImpl, TwistedConsumerImpl
-from ebu_tt_live.twisted import websocket
 
 
 def carriage_by_type(carriage_type):
@@ -29,15 +28,31 @@ class WebsocketBase(ConfigurableComponent):
 
 class WebsocketOutput(WebsocketBase):
 
-    @classmethod
-    def configure(cls, config, local_config):
-        out_carriage = TwistedProducerImpl()
-        out_carriage.twisted_channel = local_config.channel
+    _pull_producer = None
+    _looping_call = None
 
-        factory = websocket.BroadcastServerFactory(local_config.uri)
+    def __init__(self, config, local_config):
+        super(WebsocketOutput, self).__init__(config, local_config)
+        self.component = TwistedProducerImpl()
+        self.component.twisted_channel = local_config.channel
+        from .backend import current_backend
+        current_backend.register_component_start(self)
+
+    def start(self):
+        from ebu_tt_live.twisted import websocket, TwistedPullProducer, task
+        
+        factory = websocket.BroadcastServerFactory(self.config.uri)
         factory.protocol = websocket.StreamingServerProtocol
+
+        self._pull_producer = TwistedPullProducer(
+            consumer=factory,
+            custom_producer=self.component
+        )
+
+        self._looping_call = task.LoopingCall(factory.pull)
+
+        self._looping_call.start(2.0)
         factory.listen()
-        return out_carriage
 
 
 class WebsocketInput(WebsocketBase):
