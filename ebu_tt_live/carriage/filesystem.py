@@ -92,16 +92,16 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             except EndOfData:
                 break
 
-    def emit_document(self, document):
+    def emit_data(self, data):
         if self._manifest_path is None:
-            manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
+            manifest_filename = "manifest_" + data.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
-        filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
+        filename = '{}_{}.xml'.format(data.sequence_identifier, data.sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
-            f.write(document.get_xml())
+            f.write(data.get_xml())
         # To be able to format the output we need a datetime.time object and
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
@@ -199,8 +199,8 @@ class SimpleFolderExport(ProducerCarriageImpl):
             destfile.flush()
         return filepath
 
-    def emit_document(self, document):
-        self._do_write_document(document)
+    def emit_data(self, data):
+        self._do_write_document(data)
 
 
 class RotatingFolderExport(SimpleFolderExport):
@@ -217,6 +217,6 @@ class RotatingFolderExport(SimpleFolderExport):
         super(RotatingFolderExport, self).__init__(dir_path, file_name_pattern)
         self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
 
-    def emit_document(self, document):
-        file_name = self._do_write_document(document)
+    def emit_data(self, data):
+        file_name = self._do_write_document(data)
         self._circular_buf.append(file_name)

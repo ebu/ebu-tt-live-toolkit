@@ -55,7 +55,7 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register(node)
         fs_carriage.resume_producing()
-        fs_carriage.emit_document(document)
+        fs_carriage.emit_data(document)
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
         manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')

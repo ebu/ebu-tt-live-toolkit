@@ -17,3 +17,50 @@ controllable by file, environment and command line arguments. This gives great f
 the individual modules can be self-contained as much as possible yet it is possible to have system-wide configuration
 parameters, such as a HTTP proxy.
 """
+
+
+__all__ = [
+    'common', 'backend', 'node'
+]
+
+from . import common
+from . import backend
+from . import node
+import configman
+
+
+current_app = None
+
+
+def create_app(**kwargs):
+    global current_app
+    current_app = AppConfig(**kwargs)
+
+
+class AppConfig(configman.RequiredConfig):
+
+    _config = None
+    _backend = None
+    _nodes = None
+
+    def __init__(self, **kwargs):
+        default_config = {
+            'definition_source':  [
+                node.UniversalNode.get_required_config(),
+                backend.UniversalBackend.get_required_config()
+            ],
+            'values_source_list': [
+                configman.ConfigFileFutureProxy,
+                configman.command_line
+            ]
+        }
+        default_config.update(kwargs)
+        config = configman.configuration(**default_config)
+        self.config = config
+
+        global current_app
+        current_app = instance
+
+    required_config = configman.Namespace()
+    required_config.backend = backend.UniversalBackend
+    required_config.add_aggregation('nodes')

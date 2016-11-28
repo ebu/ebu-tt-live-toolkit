@@ -128,5 +128,5 @@ class EBUTTDEncoder(SimpleConsumer):
         else:
             ebuttd_doc = self._default_ebuttd_doc
         self.increment_last_segment_end(self._segment_length)
-        self._outbound_carriage_impl.emit_document(ebuttd_doc)
+        self._outbound_carriage_impl.emit_data(ebuttd_doc)
         return self.last_segment_end

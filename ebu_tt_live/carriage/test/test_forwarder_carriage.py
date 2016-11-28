@@ -19,8 +19,8 @@ class TestForwarderCarriageImpl(TestCase):
     def test_emit_document(self):
         forwarder_impl = ForwarderCarriageImpl(self.consumer_impl, self.producer_impl)
         document = MagicMock()
-        forwarder_impl.emit_document(document)
-        self.producer_impl.emit_document.assert_called_with(document)
+        forwarder_impl.emit_data(document)
+        self.producer_impl.emit_data.assert_called_with(document)
 
     def test_on_new_data(self):
         forwarder_impl = ForwarderCarriageImpl(self.consumer_impl, self.producer_impl)

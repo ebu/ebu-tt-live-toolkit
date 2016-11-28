@@ -15,8 +15,8 @@ class ForwarderCarriageImpl(CombinedCarriageImpl):
         self._consumer_carriage.register(node)
         self._producer_carriage.register(node)
 
-    def emit_document(self, document):
-        self._producer_carriage.emit_document(document)
+    def emit_data(self, data):
+        self._producer_carriage.emit_data(data)
 
     def on_new_data(self, data):
         self._consumer_carriage.on_new_data(data)

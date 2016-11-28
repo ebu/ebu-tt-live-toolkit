@@ -99,4 +99,4 @@ class SimpleProducer(Node):
 
         document.validate()
 
-        self._carriage_impl.emit_document(document)
+        self._carriage_impl.emit_data(document)

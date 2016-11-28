@@ -10,16 +10,20 @@ class CarriageImpl(object):
     def register(self, node):
         self._node = node
 
+    @property
+    def node(self):
+        return self._node
+
 
 class ProducerCarriageImpl(CarriageImpl):
     """
     Node that emits documents to an output interface, usually some network socket.
     """
 
-    def emit_document(self, document):
+    def emit_data(self, data):
         """
         Implement protocol specific postprocessing here.
-        :param document:
+        :param data:
         :return:
         """
         raise NotImplementedError()

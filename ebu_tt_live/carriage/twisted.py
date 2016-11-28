@@ -31,8 +31,8 @@ class TwistedProducerImpl(ProducerCarriageImpl):
         # None, since this is a producer module. It will produce a new document.
         self._node.process_document(document=None)
 
-    def emit_document(self, document):
-        self._twisted_producer.emit_data(self.twisted_channel or document.sequence_identifier, document.get_xml())
+    def emit_data(self, data):
+        self._twisted_producer.emit_data(self.twisted_channel or data.sequence_identifier, data.get_xml())
 
 
 class TwistedConsumerImpl(ConsumerCarriageImpl):
