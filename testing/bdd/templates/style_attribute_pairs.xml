@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="testSequence001"
+       ebuttp:sequenceNumber="1"
+       ttp:clockMode="local"
+{% if cell_resolution and cell_resolution != "*?Empty?*" %}
+       ttp:cellResolution="{{ cell_resolution }}"
+{% endif %}
+{% if extent and extent != "*?Empty?*" %}
+       tts:extent="{{ extent }}"
+{% endif %}
+       ttp:timeBase="clock"
+       xml:lang="en-GB"
+       xmlns:ebuttm="urn:ebu:tt:metadata"
+       xmlns:ebuttp="urn:ebu:tt:parameters"
+       xmlns:ebutts="urn:ebu:tt:style"
+       xmlns:tt="http://www.w3.org/ns/ttml"
+       xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+       xmlns:tts="http://www.w3.org/ns/ttml#styling"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style {% if S1_value and S1_value != "*?Empty?*" %}{{ style_attribute }}="{{ S1_value }}" {% endif %}{% if S1_value2 and S1_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S1_value2 }}" {% endif %}xml:id="S1"/>
+      <tt:style {% if S2_value and S2_value != "*?Empty?*" %}{{ style_attribute }}="{{ S2_value }}" {% endif %}{% if S2_value2 and S2_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S2_value2 }}" {% endif %}xml:id="S2"/>
+      <tt:style {% if S3_value and S3_value != "*?Empty?*" %}{{ style_attribute }}="{{ S3_value }}" {% endif %}{% if S3_value2 and S3_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S3_value2 }}" {% endif %}xml:id="S3"/>
+      <tt:style {% if S4_value and S4_value != "*?Empty?*" %}{{ style_attribute }}="{{ S4_value }}" {% endif %}{% if S4_value2 and S4_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S4_value2 }}" {% endif %}xml:id="S4"/>
+    </tt:styling>
+    <tt:layout>
+      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c" xml:id="R1"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body begin="00:00:00.500" dur="00:00:05">
+    <tt:div region="R1" style="S2" xml:id="div1">
+      <tt:p xml:id="p1" style="S3">
+        <tt:span begin="00:00:01" end="00:00:02" style="S4" xml:id="span1">Some example text...</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

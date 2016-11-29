@@ -78,18 +78,28 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:enumeration value="bold"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="cellLineHeightType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d*\.?\d+(c)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="percentageLineHeightType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d*\.?\d+(%)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="pixelLineHeightType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d*\.?\d+(px)"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="lineHeightType">
-		<xs:union>
+		<xs:union memberTypes="ebuttdt:percentageLineHeightType ebuttdt:cellLineHeightType ebuttdt:pixelLineHeightType">
 			<xs:simpleType>
 				<xs:restriction base="xs:token">
 					<xs:enumeration value="normal"/>
 				</xs:restriction>
 			</xs:simpleType>
-		<xs:simpleType>
-			<xs:restriction base="xs:string">
-				<xs:pattern value="\d*\.?\d+(px|c|%)"/>
-			</xs:restriction>
-		</xs:simpleType>
 		</xs:union>
 	</xs:simpleType>
 	<xs:simpleType name="colorType">

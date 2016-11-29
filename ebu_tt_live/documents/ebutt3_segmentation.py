@@ -152,6 +152,11 @@ class EBUTT3Segmenter(RecursiveOperation):
             if isinstance(item, region_type):
                 self._segment.head.layout.region.remove(self._semantic_dataset['instance_mapping'][item])
 
+        if len(self._segment.head.styling.style) == 0:
+            self._segment.head.styling = None
+        if len(self._segment.head.layout.region) == 0:
+            self._segment.head.layout.region = None
+
     def compute_document_segment(self):
         # Init
         # Make sure it is validated

@@ -528,7 +528,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             # This loop goes forward looking at offending events
             if isinstance(item, TimingEventEnd):
                 ends_after = item
-                if ends_after.element != begins_before.element:
+                if begins_before and ends_after.element != begins_before.element and ends_after.when != begins_before.when:
                     raise ValueError(ERR_DOCUMENT_SEQUENCE_INCONSISTENCY)
 
             elif isinstance(item, TimingEventBegin):
@@ -717,12 +717,20 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         for doc in affected_documents:
             doc_ending = doc.resolved_end_time
             if end is not None:
-                if end < doc_ending:
+                if doc_ending is None or end < doc_ending:
                     doc_ending = end
             # Check only til resolved end, otherwise there will be unwanted parallel elements
-            doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
-
-            document_segments.append(doc_segment)
+            try:
+                doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
+                document_segments.append(doc_segment)
+            except Exception as err:
+                log.error(
+                    'Error extracting document segment from {}__{}'.format(
+                        doc.sequence_identifier, doc.sequence_number
+                    )
+                )
+                log.error(err)
+                
             begin = doc_ending
 
         if not document_segments:

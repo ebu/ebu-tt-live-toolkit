@@ -17,7 +17,7 @@ def ebutt3_to_ebuttd(ebutt3_in, media_clock):
     :return:
     """
     converter = EBUTT3EBUTTDConverter(media_clock=media_clock)
-    ebuttd_bindings = converter.convert_element(ebutt3_in.binding, dataset={})
+    ebuttd_bindings = converter.convert_document(ebutt3_in.binding)
     ebuttd_document = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
     ebuttd_document.validate()
     return ebuttd_document

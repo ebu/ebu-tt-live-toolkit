@@ -4,9 +4,10 @@ from raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
 from decimal import Decimal
 import re, logging
-from pyxb.exceptions_ import SimpleTypeValueError
+from pyxb.exceptions_ import SimpleTypeValueError, SimpleFacetValueError
 from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
-from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE
+from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE, ERR_1DIM_ONLY, \
+    ERR_2DIM_ONLY
 from .pyxb_utils import get_xml_parsing_context
 from .validation.base import SemanticValidationMixin
 from .validation.presentation import SizingValidationMixin
@@ -92,6 +93,132 @@ class _TimedeltaBindingMixin(object):
     @property
     def timedelta(self):
         return self.as_timedelta(self)
+
+
+def cells_to_pixels(cells_in, root_extent, cell_resolution):
+    if not isinstance(root_extent, PixelExtentType):
+        raise Exception()
+    if cells_in.horizontal is not None:
+        # 2dimensional
+        return cells_in.horizontal * root_extent.horizontal / cell_resolution.horizontal, \
+               cells_in.vertical * root_extent.vertical / cell_resolution.vertical
+    else:
+        return cells_in.vertical * root_extent.vertical / cell_resolution.vertical,
+
+
+def pixels_to_cells(pixels_in, root_extent, cell_resolution):
+    if not isinstance(root_extent, PixelExtentType):
+        raise Exception()
+    if pixels_in.horizontal is not None:
+        return pixels_in.horizontal * cell_resolution.horizontal / root_extent.horizontal, \
+               pixels_in.vertical * cell_resolution.vertical / root_extent.vertical
+    else:
+        return pixels_in.vertical * cell_resolution.vertical / root_extent.vertical,
+
+
+def named_color_to_rgba(named_color):
+    color_map = {
+        "transparent": "00000000",
+        "black": "000000ff",
+        "silver": "c0c0c0ff",
+        "gray": "808080ff",
+        "white": "ffffffff",
+        "maroon": "800000ff",
+        "red": "ff0000ff",
+        "purple": "800080ff",
+        "fuchsia": "ff00ffff",
+        "magenta": "ff00ffff",
+        "green": "008000ff",
+        "lime": "00ff00ff",
+        "olive": "808000ff",
+        "yellow": "ffff00ff",
+        "navy": "000080ff",
+        "blue": "0000ffff",
+        "teal": "008080ff",
+        "aqua": "00ffffff",
+        "cyan": "00ffffff"
+    }
+    return '#{}'.format(color_map[named_color])
+
+
+def convert_cell_region_to_percentage(cells_in, cell_resolution):
+    return '{}% {}%'.format(
+        (float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100,
+        (float(cells_in.vertical) / float(cell_resolution.vertical)) * 100
+    )
+
+
+class TwoDimSizingMixin(object):
+
+    _groups_regex = None
+    _1dim_format = None
+    _2dim_format = None
+
+    @classmethod
+    def as_tuple(cls, instance):
+        if cls._2dim_format is None:
+            first, second = cls._groups_regex.match(instance).groups()[0], None
+        else:
+            first, second = cls._groups_regex.match(instance).groups()
+        if second is not None:
+            second = float(second)
+        return float(first), second
+
+    @classmethod
+    def from_tuple(cls, instance):
+        if len(instance) > 1:
+            if cls._2dim_format is None:
+                raise SimpleTypeValueError(cls, ERR_1DIM_ONLY.format(
+                    type=cls
+                ))
+            return cls._2dim_format.format(*instance)
+        else:
+            if cls._1dim_format is None:
+                raise SimpleTypeValueError(cls, ERR_2DIM_ONLY.format(
+                    type=cls
+                ))
+            return cls._1dim_format.format(*instance)
+
+    @property
+    def horizontal(self):
+        # TODO: Caching of tuple
+        tup_value = self.as_tuple(self)
+        if tup_value[1] is not None:
+            return tup_value[0]
+        else:
+            return None
+
+    @property
+    def vertical(self):
+        tup_value = self.as_tuple(self)
+        if tup_value[1] is not None:
+            return tup_value[1]
+        else:
+            return tup_value[0]
+
+    @classmethod
+    def _ConvertArguments_vx(cls, args, kw):
+        result = []
+        current_pair = []
+        for item in args:
+            if isinstance(item, int) or isinstance(item, float):
+                current_pair.append(item)
+                if len(current_pair) > 1:
+                    result.append(cls.from_tuple(tuple(current_pair)))
+                    current_pair = []
+            else:
+                result.append(item)
+        if len(current_pair) > 0:
+            result.append(cls.from_tuple(tuple(current_pair)))
+        return tuple(result)
+
+    def __eq__(self, other):
+        if type(self) == type(other) and self.horizontal == other.horizontal and self.vertical == other.vertical:
+            return True
+        elif isinstance(other, basestring):
+            return str(self) == str(other)
+        else:
+            return NotImplemented
 
 
 class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
@@ -306,29 +433,39 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
 ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
 
 
-class PixelFontSizeType(SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
+class PixelOriginType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelOriginType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:px))')
+    _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
         extent = dataset['tt_element'].extent
         if extent is None:
             raise ExtentMissingError(self)
-
-
-ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
-
-
-class PixelOriginType(SizingValidationMixin, ebuttdt_raw.pixelOriginType):
-
-    def _semantic_validate_sizing_context(self, dataset):
-        extent = dataset['tt_element'].extent
-        if extent is None:
-            raise ExtentMissingError(self)
-
 
 ebuttdt_raw.pixelOriginType._SetSupersedingClass(PixelOriginType)
 
 
-class PixelExtentType(SizingValidationMixin, ebuttdt_raw.pixelExtentType):
+class CellOriginType(TwoDimSizingMixin, ebuttdt_raw.cellOriginType):
+
+    _groups_regex = re.compile(r'(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _2dim_format = '{}c {}c'
+
+ebuttdt_raw.cellOriginType._SetSupersedingClass(CellOriginType)
+
+
+class PercentageOriginType(TwoDimSizingMixin, ebuttdt_raw.percentageOriginType):
+
+    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:%))')
+    _2dim_format = '{}% {}%'
+
+ebuttdt_raw.percentageOriginType._SetSupersedingClass(PercentageOriginType)
+
+
+class PixelExtentType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelExtentType):
+
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+]?(?P<second>\d*\.?\d+)(?:px))')
+    _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
         extent = dataset['tt_element'].extent
@@ -337,6 +474,22 @@ class PixelExtentType(SizingValidationMixin, ebuttdt_raw.pixelExtentType):
 
 
 ebuttdt_raw.pixelExtentType._SetSupersedingClass(PixelExtentType)
+
+
+class CellExtentType(TwoDimSizingMixin, ebuttdt_raw.cellExtentType):
+
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+]?(?P<second>\d*\.?\d+)(?:c))')
+    _2dim_format = '{}c {}c'
+
+ebuttdt_raw.cellExtentType._SetSupersedingClass(CellExtentType)
+
+
+class PercentageExtentType(TwoDimSizingMixin, ebuttdt_raw.percentageExtentType):
+
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+]?(?P<second>\d*\.?\d+)(?:%))')
+    _2dim_format = '{}% {}%'
+
+ebuttdt_raw.percentageExtentType._SetSupersedingClass(PercentageExtentType)
 
 
 class PixelLengthType(SizingValidationMixin, ebuttdt_raw.pixelLengthType):
@@ -362,3 +515,167 @@ class CellLengthType(ebuttdt_raw.cellLengthType):
 
 
 ebuttdt_raw.cellLengthType._SetSupersedingClass(CellLengthType)
+
+
+class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
+
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:px))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:px)))?')
+
+    _1dim_format = '{}px'
+    _2dim_format = '{}px {}px'
+
+    def _semantic_validate_sizing_context(self, dataset):
+        extent = dataset['tt_element'].extent
+        if extent is None:
+            raise ExtentMissingError(self)
+
+ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
+
+
+class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
+
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:c))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:c)))?')
+
+    _1dim_format = '{}c'
+    _2dim_format = '{}c {}c'
+
+    def _do_div(self, other):
+        """
+        :param other: CellFontSizeType
+        :return:
+        """
+        if isinstance(other, CellFontSizeType):
+            result_list = []
+            if self.horizontal is not None and other.horizontal is not None:
+                result_list.append((float(self.horizontal) / float(other.horizontal)) * 100)
+            elif self.horizontal is None and other.horizontal is not None:
+                result_list.append((float(self.vertical) / float(other.horizontal)) * 100)
+            elif self.horizontal is not None and other.horizontal is None:
+                result_list.append((float(self.horizontal) / float(other.vertical)) * 100)
+            result_list.append((float(self.vertical) / float(other.vertical)) * 100)
+            return PercentageFontSizeType(*result_list)
+        else:
+            return NotImplemented
+
+    def __div__(self, other):
+        return self._do_div(other)
+
+    def _do_eq(self, other):
+        if isinstance(other, CellFontSizeType):
+            if self.horizontal is None and other.horizontal is None:
+                return self.vertical == other.vertical
+            elif self.horizontal is None:
+                return self.vertical == other.vertical and \
+                       self.vertical == other.horizontal
+            elif other.horizontal is None:
+                return self.vertical == other.vertical and \
+                       self.horizontal == other.vertical
+            else:
+                return self.vertical == other.vertical and \
+                       self.horizontal == other.horizontal
+        elif isinstance(other, basestring):
+            return str(self) == str(other)
+        else:
+            return NotImplemented
+
+    def __eq__(self, other):
+        return self._do_eq(other)
+
+
+ebuttdt_raw.cellFontSizeType._SetSupersedingClass(CellFontSizeType)
+
+
+class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeType):
+
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:%))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:%)))?')
+
+    _1dim_format = '{}%'
+    _2dim_format = '{}% {}%'
+
+    def do_mul(self, other):
+        if isinstance(other, CellFontSizeType):
+            result_type = CellFontSizeType
+        elif isinstance(other, PixelFontSizeType):
+            result_type = PixelFontSizeType
+        elif isinstance(other, PercentageFontSizeType):
+            result_type = PercentageFontSizeType
+        else:
+            return NotImplemented
+
+        if self.horizontal is not None:
+            if other.horizontal is not None:
+                return result_type(
+                    other.horizontal * self.horizontal / 100,
+                    other.vertical * self.vertical / 100
+                )
+            else:
+                # This uses TTML's assumption of 1c => 1c 1c
+                return result_type(
+                    other.vertical * self.horizontal / 100,
+                    other.vertical * self.vertical / 100
+                )
+        else:
+            if other.horizontal is not None:
+                return result_type(
+                    other.horizontal * self.vertical / 100,
+                    other.vertical * self.vertical / 100
+                )
+            else:
+                return result_type(
+                    other.vertical * self.vertical / 100
+                )
+
+    def __mul__(self, other):
+        return self.do_mul(other)
+
+    def __rmul__(self, other):
+        return self.do_mul(other)
+
+ebuttdt_raw.percentageFontSizeType._SetSupersedingClass(PercentageFontSizeType)
+
+
+class CellResolutionType(TwoDimSizingMixin ,ebuttdt_raw.cellResolutionType):
+
+    _groups_regex = re.compile('(?P<first>[0]*[1-9][0-9]*)\s(?P<second>[0]*[1-9][0-9]*)')
+    _2dim_format = '{} {}'
+    
+ebuttdt_raw.cellResolutionType._SetSupersedingClass(CellResolutionType)
+
+
+class CellLineHeightType(TwoDimSizingMixin, ebuttdt_raw.cellLineHeightType):
+
+    _groups_regex = re.compile('(?P<first>\d*\.?\d+)c')
+    _1dim_format = '{}c'
+
+
+ebuttdt_raw.cellLineHeightType._SetSupersedingClass(CellLineHeightType)
+
+
+class PercentageLineHeightType(TwoDimSizingMixin, ebuttdt_raw.percentageLineHeightType):
+
+    _groups_regex = re.compile('(?P<first>\d*\.?\d+)%')
+    _1dim_format = '{}%'
+
+    def do_mul(self, other):
+        if isinstance(other, CellFontSizeType):
+            return CellLineHeightType(self.vertical * other.vertical / 100)
+        else:
+            return NotImplemented
+
+    def __mul__(self, other):
+        return self.do_mul(other)
+
+    def __rmul__(self, other):
+        return self.do_mul(other)
+
+
+ebuttdt_raw.percentageLineHeightType._SetSupersedingClass(PercentageLineHeightType)
+
+
+class PixelLineHeightType(TwoDimSizingMixin, ebuttdt_raw.pixelLineHeightType):
+
+    _groups_regex = re.compile('(?P<first>\d*\.?\d+)px')
+    _1dim_format = '{}px'
+
+
+ebuttdt_raw.pixelLineHeightType._SetSupersedingClass(PixelLineHeightType)

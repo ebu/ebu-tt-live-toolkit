@@ -25,3 +25,6 @@ test:
 
 docs:
 	python setup.py build_sphinx
+
+bindings:
+	pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd

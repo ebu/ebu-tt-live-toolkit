@@ -23,14 +23,14 @@ class SemanticValidator(RecursiveOperation):
             return False
 
     def _before_element(self, value, element=None, parent_binding=None, **kwargs):
-        value._semantic_before_traversal(dataset=self._semantic_dataset, element_content=element)
+        value._semantic_before_traversal(dataset=self._semantic_dataset, element_content=element, parent_binding=parent_binding)
         pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
         return None
 
     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
-        value._semantic_after_traversal(dataset=self._semantic_dataset, element_content=element)
+        value._semantic_after_traversal(dataset=self._semantic_dataset, element_content=element, parent_binding=parent_binding)
 
     def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
         return None

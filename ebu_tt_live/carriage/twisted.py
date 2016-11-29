@@ -1,6 +1,6 @@
 
 from .base import ProducerCarriageImpl, ConsumerCarriageImpl
-from ebu_tt_live.bindings import CreateFromDocument
+from ebu_tt_live.bindings import CreateFromDocument, CreateFromDOM
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from ebu_tt_live.errors import XMLParsingFailed
 from ebu_tt_live.documents import EBUTT3Document
@@ -8,6 +8,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from twisted.internet import reactor
 
 import logging
+from xml.dom import minidom
 
 
 log = logging.getLogger(__name__)
