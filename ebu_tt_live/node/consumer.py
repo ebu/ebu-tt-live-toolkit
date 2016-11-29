@@ -1,5 +1,5 @@
 
-from .base import Node
+from .base import AbstractConsumerNode, IProducerNode
 from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTTDDocument
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.strings import DOC_RECEIVED
@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
 
-class SimpleConsumer(Node):
+class SimpleConsumer(AbstractConsumerNode):
 
     _reference_clock = None
     _sequence = None
@@ -42,6 +42,10 @@ class SimpleConsumer(Node):
         self._sequence.add_document(document)
 
     @property
+    def expects(self):
+        return EBUTTDDocument
+
+    @property
     def reference_clock(self):
         return self._reference_clock
 
@@ -50,7 +54,7 @@ class SimpleConsumer(Node):
         self._reference_clock = value
 
 
-class EBUTTDEncoder(SimpleConsumer):
+class EBUTTDEncoder(IProducerNode, SimpleConsumer):
 
     _last_segment_end = None
     _segment_length = None

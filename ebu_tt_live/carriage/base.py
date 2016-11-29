@@ -1,14 +1,14 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-import six
 
 # Interfaces
 # ==========
 
 
-class ICarriageMechanism(six.with_metaclass(ABCMeta)):
+class ICarriageMechanism(object):
     """
     Basic interface for the carrige mechanisms
     """
+    __metaclass__ = ABCMeta
 
     @abstractmethod
     def register_node(self, node):
@@ -26,10 +26,11 @@ class ICarriageMechanism(six.with_metaclass(ABCMeta)):
         """
 
 
-class IProducerCarriage(six.with_metaclass(ABCMeta)):
+class IProducerCarriage(ICarriageMechanism):
     """
     Node that emits documents to an output interface, usually some network socket.
     """
+    __metaclass__ = ABCMeta
 
     @abstractmethod
     def emit_data(self, data, **kwargs):
@@ -48,10 +49,11 @@ class IProducerCarriage(six.with_metaclass(ABCMeta)):
         """
 
 
-class IConsumerCarriage(six.with_metaclass(ABCMeta)):
+class IConsumerCarriage(ICarriageMechanism):
     """
     Node that receives documents and processes them.
     """
+    __metaclass__ = ABCMeta
 
     @abstractmethod
     def on_new_data(self, data, **kwargs):
@@ -91,5 +93,5 @@ class AbstractConsumerCarriage(IConsumerCarriage, __AbstractCarriage):
     pass
 
 
-class AbstractCombinedCarriage(AbstractConsumerCarriage, AbstractProducerCarriage, __AbstractCarriage):
+class AbstractCombinedCarriage(AbstractConsumerCarriage, AbstractProducerCarriage):
     pass

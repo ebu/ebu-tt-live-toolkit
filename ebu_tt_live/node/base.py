@@ -1,17 +1,17 @@
 from abc import ABCMeta, abstractmethod, abstractproperty
-import six
 
 # Interfaces
 # ==========
 
 
-class INode(six.with_metaclass(ABCMeta)):
+class INode(object):
     """
     This is the foundation of all nodes that take part in the processing of subtitle documents.
     The Node should deal with subtitles in a high level interface,
     which is an instance of :class:`<ebu_tt_live.documents.SubtitleDocument>`. That is the interface which should
     be used to communicate with the carriage machanism. See :class:`<ebu_tt_live.carriage.ICarriage>`
     """
+    __metaclass__ = ABCMeta
 
     @abstractmethod
     def process_document(self, document, **kwargs):
@@ -25,8 +25,27 @@ class INode(six.with_metaclass(ABCMeta)):
         raise NotImplementedError()
 
 
-class Node(six.with_metaclass(ABCMeta)):
+class IProducerNode(INode):
+    __metaclass__ = ABCMeta
 
+    @abstractproperty
+    def provides(self):
+        """
+        :return: Interface of the data the producer produces
+        """
+
+
+class IConsumerNode(INode):
+    __metaclass__ = ABCMeta
+
+    @abstractproperty
+    def expects(self):
+        """
+        :return: Interface of the data the consumer consumes
+        """
+
+
+class __AbstractNode(INode):
 
     _node_id = None
     _carriage_impl = None
@@ -51,12 +70,14 @@ class Node(six.with_metaclass(ABCMeta)):
     def node_id(self, value):
         self._node_id = value
 
-    def process_document(self, document, **kwargs):
-        """
-        The central hook that is meant to implement the main functionality of the node.
-        A node must implement this method.
-        :param **kwargs: Extra parameters
-        :param document: Can be XML, Document object...etc. depending on the carriage implementation
-        :return:
-        """
-        raise NotImplementedError()
+
+class AbstractProducerNode(IProducerNode, __AbstractNode):
+    pass
+
+
+class AbstractConsumerNode(IConsumerNode, __AbstractNode):
+    pass
+
+
+class AbstractCombinedNode(AbstractProducerNode, AbstractConsumerNode):
+    pass

@@ -1,13 +1,14 @@
 
-from .base import Node
+from .base import AbstractProducerNode
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type, style_type, styling, layout, region_type, span_type
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.strings import END_OF_DATA
 
 
-class SimpleProducer(Node):
+class SimpleProducer(AbstractProducerNode):
 
     _document_sequence = None
     _input_blocks = None
@@ -18,6 +19,10 @@ class SimpleProducer(Node):
         self._document_sequence = document_sequence
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
+
+    @property
+    def provides(self):
+        return EBUTT3Document
 
     @property
     def reference_clock(self):
