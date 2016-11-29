@@ -35,7 +35,8 @@ setup(
         "autobahn",
         "nltk",
         "sortedcontainers",
-        "configman"
+        "configman",
+        "six"
     ],
     license="BSD3",
     packages=packages,

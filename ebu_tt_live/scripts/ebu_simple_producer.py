@@ -13,6 +13,7 @@ from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingSe
     TwistedPullProducer
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.twisted import TwistedProducerImpl
+from ebu_tt_live.carriage import stream_converters
 
 
 parser = ArgumentParser()
@@ -62,6 +63,11 @@ def main():
         prod_impl = FilesystemProducerImpl(parsed_args.folder_export)
     else:
         prod_impl = TwistedProducerImpl()
+
+    # Chaining a converter
+    prod_impl = stream_converters.EBUTT3DocumenttoXMLStream(
+        carriage_impl=prod_impl
+    )
 
     simple_producer = SimpleProducer(
         node_id='simple-producer',

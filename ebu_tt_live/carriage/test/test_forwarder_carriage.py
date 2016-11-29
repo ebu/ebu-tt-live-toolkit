@@ -12,7 +12,7 @@ class TestForwarderCarriageImpl(TestCase):
 
     def test_register(self):
         forwarder_impl = ForwarderCarriageImpl(self.consumer_impl, self.producer_impl)
-        forwarder_impl.register(self.node)
+        forwarder_impl.register_node(self.node)
         self.consumer_impl.register.assert_called_with(self.node)
         self.producer_impl.register.assert_called_with(self.node)
 

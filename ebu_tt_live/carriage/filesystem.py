@@ -1,4 +1,4 @@
-from .base import ProducerCarriageImpl, ConsumerCarriageImpl
+from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
@@ -37,7 +37,7 @@ def timestr_manifest_to_timedelta(timestr, time_base):
         raise ValueError()
 
 
-class FilesystemProducerImpl(ProducerCarriageImpl):
+class FilesystemProducerImpl(AbstractProducerCarriage):
     """
     This class implements a carriage mechanism to output produced documents
     to the file system. Its constructor takes a mandatory argument : the path to
@@ -92,7 +92,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             except EndOfData:
                 break
 
-    def emit_data(self, data):
+    def emit_data(self, data, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + data.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -113,13 +113,13 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             f.write(new_manifest_line)
 
 
-class FilesystemConsumerImpl(ConsumerCarriageImpl):
+class FilesystemConsumerImpl(AbstractConsumerCarriage):
     """
     This class is responsible for setting the document object from the xml and set its availability time.
     The document is then sent to the node.
     """
 
-    def on_new_data(self, data):
+    def on_new_data(self, data, **kwargs):
         document = None
         availability_time_str, xml_content = data
         try:
@@ -177,7 +177,7 @@ class FilesystemReader(object):
                     self._custom_consumer.on_new_data(data)
 
 
-class SimpleFolderExport(ProducerCarriageImpl):
+class SimpleFolderExport(AbstractProducerCarriage):
 
     _dir_path = None
     _file_name_pattern = None
@@ -199,7 +199,7 @@ class SimpleFolderExport(ProducerCarriageImpl):
             destfile.flush()
         return filepath
 
-    def emit_data(self, data):
+    def emit_data(self, data, **kwargs):
         self._do_write_document(data)
 
 
@@ -217,6 +217,6 @@ class RotatingFolderExport(SimpleFolderExport):
         super(RotatingFolderExport, self).__init__(dir_path, file_name_pattern)
         self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
 
-    def emit_data(self, data):
+    def emit_data(self, data, **kwargs):
         file_name = self._do_write_document(data)
         self._circular_buf.append(file_name)

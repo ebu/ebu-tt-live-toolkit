@@ -53,7 +53,7 @@ class SimpleProducer(Node):
             region='bottomRegion'
         )
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
 
         activation_time = self._reference_clock.get_time() + timedelta(seconds=1)
 

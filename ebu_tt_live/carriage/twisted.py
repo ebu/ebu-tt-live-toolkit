@@ -1,5 +1,5 @@
 
-from .base import ProducerCarriageImpl, ConsumerCarriageImpl
+from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 from ebu_tt_live.bindings import CreateFromDocument, CreateFromDOM
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from ebu_tt_live.errors import XMLParsingFailed
@@ -11,7 +11,7 @@ from xml.dom import minidom
 log = logging.getLogger(__name__)
 
 
-class TwistedProducerImpl(ProducerCarriageImpl):
+class TwistedProducerImpl(AbstractProducerCarriage):
 
     _twisted_producer = None
     _twisted_channel = None
@@ -31,13 +31,13 @@ class TwistedProducerImpl(ProducerCarriageImpl):
         # None, since this is a producer module. It will produce a new document.
         self._node.process_document(document=None)
 
-    def emit_data(self, data):
-        self._twisted_producer.emit_data(self.twisted_channel or data.sequence_identifier, data.get_xml())
+    def emit_data(self, data, sequence_identifier='default', **kwargs):
+        self._twisted_producer.emit_data(self.twisted_channel or sequence_identifier, data)
 
 
-class TwistedConsumerImpl(ConsumerCarriageImpl):
+class TwistedConsumerImpl(AbstractConsumerCarriage):
 
-    def on_new_data(self, data):
+    def on_new_data(self, data, **kwargs):
         document = None
         try:
             document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(data))

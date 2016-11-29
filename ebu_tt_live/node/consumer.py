@@ -21,7 +21,7 @@ class SimpleConsumer(Node):
         super(SimpleConsumer, self).__init__(node_id, carriage_impl)
         self._reference_clock = reference_clock
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
         if self._sequence is None:
             # Create sequence from document
             log.info('Creating document sequence from first document {}'.format(
@@ -100,7 +100,7 @@ class EBUTTDEncoder(SimpleConsumer):
         self._last_segment_end += increment_by
         return self._last_segment_end
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
         sequence_missing = self._sequence is None
         super(EBUTTDEncoder, self).process_document(document)
         # segmentation, conversion... here

@@ -26,7 +26,7 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         node.process_document = MagicMock(side_effect=EndOfData())
         node.document_sequence.sequence_identifier = "testSeq"
-        fs_carriage.register(node)
+        fs_carriage.register_node(node)
         fs_carriage.resume_producing()
         assert node.process_document.called
 
@@ -38,7 +38,7 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         node.process_document = MagicMock(side_effect=EndOfData())
         node.document_sequence.sequence_identifier = "testSeq"
-        fs_carriage.register(node)
+        fs_carriage.register_node(node)
         fs_carriage.resume_producing()
         assert node.process_document.called
         self.assertEqual(node.document_sequence.last_sequence_number, 177)
@@ -53,7 +53,7 @@ class TestFilesystemProducerImpl(TestCase):
         node.document_sequence.sequence_identifier = "testSeq"
         node.reference_clock.time_base = "clock"
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
-        fs_carriage.register(node)
+        fs_carriage.register_node(node)
         fs_carriage.resume_producing()
         fs_carriage.emit_data(document)
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
@@ -77,7 +77,7 @@ class TestFilesystemConsumerImpl(TestCase):
             test_xml = test_xml_file.read()
         data = ["18:42:42.42", test_xml]
         fs_consumer_impl = FilesystemConsumerImpl()
-        fs_consumer_impl.register(node)
+        fs_consumer_impl.register_node(node)
         fs_consumer_impl.on_new_data(data)
         assert node.process_document.called
 
@@ -86,7 +86,7 @@ class TestFilesystemConsumerImpl(TestCase):
         node.process_document = MagicMock(return_value=None)
         data = ["18:42:42.42", "test"]
         fs_consumer_impl = FilesystemConsumerImpl()
-        fs_consumer_impl.register(node)
+        fs_consumer_impl.register_node(node)
         self.assertRaises(XMLParsingFailed, lambda: fs_consumer_impl.on_new_data(data))
         assert not node.process_document.called
 

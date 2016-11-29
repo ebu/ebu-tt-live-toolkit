@@ -13,11 +13,8 @@ class DistributingNode(Node):
         super(DistributingNode, self).__init__(node_id, carriage_impl)
         self._reference_clock = reference_clock
 
-    def process_document(self, document):
-        log.info(document)
-        log.info(" " + str(document.sequence_identifier) + "_" + str(document.sequence_number))
-        log.info(document.get_xml())
-        self._carriage_impl.emit_document(document)
+    def process_document(self, document, **kwargs):
+        self._carriage_impl.emit_document(document, **kwargs)
 
     @property
     def reference_clock(self):

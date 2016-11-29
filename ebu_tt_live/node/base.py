@@ -1,11 +1,32 @@
+from abc import ABCMeta, abstractmethod, abstractproperty
+import six
 
-class Node(object):
+# Interfaces
+# ==========
+
+
+class INode(six.with_metaclass(ABCMeta)):
     """
     This is the foundation of all nodes that take part in the processing of subtitle documents.
     The Node should deal with subtitles in a high level interface,
     which is an instance of :class:`<ebu_tt_live.documents.SubtitleDocument>`. That is the interface which should
-    be used to communicate with the carriage machanism. See :class:`<CarriageImpl>`
+    be used to communicate with the carriage machanism. See :class:`<ebu_tt_live.carriage.ICarriage>`
     """
+
+    @abstractmethod
+    def process_document(self, document, **kwargs):
+        """
+        The central hook that is meant to implement the main functionality of the node.
+        A node must implement this method.
+        :param **kwargs: Extra parameters
+        :param document: Can be XML, Document object...etc. depending on the carriage implementation
+        :return:
+        """
+        raise NotImplementedError()
+
+
+class Node(six.with_metaclass(ABCMeta)):
+
 
     _node_id = None
     _carriage_impl = None
@@ -30,10 +51,11 @@ class Node(object):
     def node_id(self, value):
         self._node_id = value
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
         """
         The central hook that is meant to implement the main functionality of the node.
         A node must implement this method.
+        :param **kwargs: Extra parameters
         :param document: Can be XML, Document object...etc. depending on the carriage implementation
         :return:
         """
