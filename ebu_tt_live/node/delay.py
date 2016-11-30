@@ -1,19 +1,17 @@
 
-from twisted.internet import reactor
-
 from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
 
 
-class FixedDelayNode(Node):
+class RetimingDelayNode(Node):
 
     _reference_clock = None
     _document_sequence = None
     _fixed_delay = None
 
     def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
-        super(FixedDelayNode, self).__init__(node_id, carriage_impl)
+        super(RetimingDelayNode, self).__init__(node_id, carriage_impl)
         self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
         self._document_sequence = document_sequence
@@ -25,16 +23,31 @@ class FixedDelayNode(Node):
 
         # TODO: add an ebuttm:trace element to the document metadata
 
-        # document is explicitly timed: modify the document
-        if is_explicitly_timed(document.binding):
+        update_children_timing(document.binding, document.time_base, self._fixed_delay)
+        document.validate()
+        self._carriage_impl.emit_document(document)
 
-            update_children_timing(document.binding, document.time_base, self._fixed_delay)
-            document.validate()
-            self._carriage_impl.emit_document(document)
 
-        # document is implicitly timed: pause a while, re-emit later
-        else:
-            self._carriage_impl.emit_document(document, delay=self._fixed_delay)
+class BufferDelayNode(Node):
+
+    _reference_clock = None
+    _document_sequence = None
+    _fixed_delay = None
+
+    def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
+        super(BufferDelayNode, self).__init__(node_id, carriage_impl)
+        self._reference_clock = reference_clock
+        self._fixed_delay = fixed_delay
+        self._document_sequence = document_sequence
+
+    def process_document(self, document):
+
+        # change the sequence identifier
+        document.sequence_identifier = self._document_sequence
+
+        # TODO: add an ebuttm:trace element to the document metadata
+
+        self._carriage_impl.emit_document(document, delay=self._fixed_delay)
 
 
 def update_children_timing(element, timebase, delay_int):

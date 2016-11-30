@@ -1,4 +1,4 @@
-from ebu_tt_live.node.delay import FixedDelayNode
+from ebu_tt_live.node.delay import RetimingDelayNode
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from mock import MagicMock
@@ -61,7 +61,7 @@ def when_delay(delay, test_context, gen_document):
 
     delay_float = LimitedClockTimingType(delay).timedelta.total_seconds()
 
-    delay_node = FixedDelayNode(
+    delay_node = RetimingDelayNode(
         node_id='simple-delay-node',
         carriage_impl=carriage,
         reference_clock=reference_clock,

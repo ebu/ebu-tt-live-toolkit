@@ -1,8 +1,8 @@
 from unittest import TestCase
-from ebu_tt_live.node.delay import FixedDelayNode
+from ebu_tt_live.node.delay import RetimingDelayNode
 
 
-class TestFixedDelayNode(TestCase):
+class TestRetimingDelayNode(TestCase):
 
     def test_process_document(self):
 
