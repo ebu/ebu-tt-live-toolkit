@@ -21,7 +21,7 @@ class RetimingDelayNode(Node):
         # change the sequence identifier
         document.sequence_identifier = self._document_sequence
 
-        # TODO: add an ebuttm:trace element to the document metadata
+        # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
         update_children_timing(document.binding, document.time_base, self._fixed_delay)
         document.validate()
@@ -41,11 +41,6 @@ class BufferDelayNode(Node):
         self._document_sequence = document_sequence
 
     def process_document(self, document):
-
-        # change the sequence identifier
-        document.sequence_identifier = self._document_sequence
-
-        # TODO: add an ebuttm:trace element to the document metadata
 
         self._carriage_impl.emit_document(document, delay=self._fixed_delay)
 
