@@ -42,7 +42,7 @@ Feature: Delay of a document sequence
 
 
   # Times are inherited so to delay an element we only need to delay its syncbase  
-  Scenario: Explicitly timed document delay
+  Scenario: Explicitly timed document delay, computed times
     Given an xml file <xml_file>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
@@ -55,17 +55,60 @@ Feature: Delay of a document sequence
     And it has span end time <span_end>
     And the document is generated
     When the delay node delays it by <delay>
-    Then the updated body begin time is <updated_body_begin>
-    And the updated body end time is <updated_body_end>
-    And the updated div begin time is <updated_div_begin>
-    And the updated div end time is <updated_div_end>
-    And the updated p begin time is <updated_p_begin>
-    And the updated p end time is <updated_p_end>
+    Then the updated body computed begin time is <updated_body_begin>
+    And the updated body computed end time is <updated_body_end>
+    And the updated div computed begin time is <updated_div_begin>
+    And the updated div computed end time is <updated_div_end>
+    And the updated p computed begin time is <updated_p_begin>
+    And the updated p computed end time is <updated_p_end>
 
 
     Examples:
     | body_begin | body_end     | div_begin | div_end  | p_begin  | p_end    | delay    | updated_body_begin | updated_body_end | updated_div_begin | updated_div_end | updated_p_begin | updated_p_end | span_begin | span_end | body_dur |
     | 00:00:05   |              |           |          |          |          | 00:00:10 | 00:00:15           |                  | 00:00:15          |                 | 00:00:15        |               |            |          |          |
+  # |            | 00:00:05     |           |          |          |          | 00:00:10 |                    | 00:00:15         |                   |                 |                 |               |            |          |          |
+    | 00:00:05   | 00:00:06     |           |          |          |          | 00:00:10 | 00:00:15           | 00:00:16         | 00:00:15          | 00:00:16        | 00:00:15        | 00:00:16      |            |          |          |
+    | 00:00:05   | 00:00:20     |           |          |          |          | 00:00:00 | 00:00:05           | 00:00:20         | 00:00:05          | 00:00:20        | 00:00:05        | 00:00:20      |            |          |          |
+    |            |              | 00:00:05  |          |          |          | 00:00:10 | 00:00:15           |                  | 00:00:15          |                 | 00:00:15        |               |            |          |          |
+  # |            |              |           | 00:00:05 |          |          | 00:00:10 |                    |                  |                   | 00:00:15        |                 |               |            |          |          |
+    |            |              | 00:00:05  | 00:00:08 |          |          | 00:00:10 | 00:00:15           | 00:00:18         | 00:00:15          | 00:00:18        | 00:00:15        | 00:00:18      |            |          |          |
+    |            |              |           |          | 00:00:05 |          | 00:00:10 | 00:00:15           |                  | 00:00:15          |                 | 00:00:15        |               |            |          |          |
+  # |            |              |           |          |          | 00:00:05 | 00:00:10 |                    |                  |                   |                 |                 | 00:00:15      |            |          |          |
+    |            |              |           |          | 00:00:05 | 00:00:08 | 00:00:10 | 00:00:15           | 00:00:18         | 00:00:15          | 00:00:18        | 00:00:15        | 00:00:18      |            |          |          |
+    | 00:00:05   | 00:00:20     | 00:00:03  |          |          |          | 00:00:05 | 00:00:10           | 00:00:25         | 00:00:13          | 00:00:25        | 00:00:13        | 00:00:25      |            |          |          |
+    | 00:00:05   | 00:00:20     | 00:00:03  |          | 00:00:04 |          | 00:00:05 | 00:00:10           | 00:00:25         | 00:00:13          | 00:00:25        | 00:00:17        | 00:00:25      |            |          |          |
+    | 00:00:10   | 00:00:10.500 |           |          | 00:00:03 | 00:00:06 | 01:00:00 | 01:00:10           | 01:00:10.500     | 01:00:13          | 01:00:10.500    | 01:00:13        | 01:00:10.500  |            |          |          |
+    |            |              | 00:00:10  | 00:00:20 | 00:00:05 | 00:00:07 | 00:00:01 | 00:00:11           | 00:00:21         | 00:00:11          | 00:00:21        | 00:00:16        | 00:00:18      |            |          |          |
+  # |            |              |           | 00:00:20 |          | 00:00:10 | 00:00:15 |                    |                  |                   | 00:00:35        |                 | 00:00:25      |            |          |          |
+  # |            |              | 00:00:20  |          |          | 00:00:10 | 00:00:15 | 00:00:35           |                  | 00:00:35          |                 | 00:00:35        | 00:00:10      |            |          |          |
+
+
+  #@skip
+  Scenario: Explicitly timed document delay, specified times
+    Given an xml file <xml_file>
+    And it has body begin time <body_begin>
+    And it has body end time <body_end>
+    And it has body duration <body_dur>
+    And it has div begin time <div_begin>
+    And it has div end time <div_end>
+    And it has p begin time <p_begin>
+    And it has p end time <p_end>
+    And it has span begin time <span_begin>
+    And it has span end time <span_end>
+    And the document is generated
+    When the delay node delays it by <delay>
+    Then the updated body specified begin time is <updated_body_begin>
+    And the updated body specified end time is <updated_body_end>
+    And the updated div specified begin time is <updated_div_begin>
+    And the updated div specified end time is <updated_div_end>
+    And the updated p specified begin time is <updated_p_begin>
+    And the updated p specified end time is <updated_p_end>
+
+
+    Examples:
+    | body_begin | body_end     | div_begin | div_end  | p_begin  | p_end    | delay    | updated_body_begin | updated_body_end | updated_div_begin | updated_div_end | updated_p_begin | updated_p_end | span_begin | span_end | body_dur |
+    | 00:00:05   |              |           |          |          |          | 00:00:10 | 00:00:15           |                  | 00:00:15          |                 | 00:00:15        |               |            |          |          |
+  @skip
   # |            | 00:00:05     |           |          |          |          | 00:00:10 |                    | 00:00:15         |                   |                 |                 |               |            |          |          |
     | 00:00:05   | 00:00:06     |           |          |          |          | 00:00:10 | 00:00:15           | 00:00:16         | 00:00:15          | 00:00:16        | 00:00:15        | 00:00:16      |            |          |          |
     | 00:00:05   | 00:00:20     |           |          |          |          | 00:00:00 | 00:00:05           | 00:00:20         | 00:00:05          | 00:00:20        | 00:00:05        | 00:00:20      |            |          |          |
