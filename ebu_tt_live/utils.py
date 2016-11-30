@@ -1,4 +1,4 @@
-
+import abc
 import collections
 import threading
 import Queue
@@ -246,3 +246,75 @@ def tokenize_english_document(input_text):
                 end_list.append(lines)
 
     return end_list
+
+
+def _assert_asm_is_defined(value, member_name, class_name):
+    if value in (None, NotImplemented):
+        raise TypeError(
+            'Abstract static member: \`{}.{}\` does not match the criteria'.format(
+                class_name,
+                member_name
+            )
+        )
+
+
+class AbstractStaticMember(object):
+    """
+    This allows me to require the subclasses to define some attributes using a customizeable
+    validator. The idea is that all static members should be initialized to a value by the time
+    abstract functions have all been implemented.
+    """
+
+    _validation_func = None
+
+    def __init__(self, validation_func=None):
+        if validation_func is None:
+            self._validation_func = _assert_asm_is_defined
+        else:
+            self._validation_func = validation_func
+
+    def validate(self, value, member_name, class_name):
+        self._validation_func(value, member_name, class_name)
+
+
+class AutoRegisteringABCMeta(abc.ABCMeta):
+    """
+    This metaclass gets us automatic class registration and cooperates with AbstractStaticMember.
+    If none of the 2 features are needed it just provides the basic abc.ABCMeta functionality.
+    For the auto registration an abstract class needs to implement the auto_register_impl classmethod.
+    """
+
+    def __new__(mcls, name, bases, namespace):
+        cls = super(AutoRegisteringABCMeta, mcls).__new__(mcls, name, bases, namespace)
+        abstract_members = set(name
+                        for name, value in namespace.items()
+                        if isinstance(value, AbstractStaticMember))
+
+        abstracts = getattr(cls, "__abstractmethods__", set())
+
+        if not abstracts:
+            # This means the class is not abstract so we should not have any abstract static members
+            validated_members = set()
+            for base in bases:
+                if isinstance(base, mcls):
+                    for base_member in getattr(base, '_abc_static_members', set()):
+                        if base_member in validated_members:
+                            continue
+                        value = getattr(cls, base_member, NotImplemented)
+                        if isinstance(value, AbstractStaticMember) or value is NotImplemented:
+                            abstract_members.add(base_member)
+                        else:
+                            getattr(base, base_member).validate(value, base_member, name)
+                            validated_members.add(base_member)
+
+                    base.auto_register_impl(cls)
+
+            if abstract_members:
+                raise TypeError('{} must implement abstract static members: [{}]'.format(
+                    name,
+                    ', '.join(abstract_members)
+                ))
+        if namespace.get('auto_register_impl') is None:
+            cls.auto_register_impl = classmethod(lambda x: None)
+        cls._abc_static_members = frozenset(abstract_members)
+        return cls

@@ -1,8 +1,73 @@
 import os
+import six
+import weakref
+import gc
 from unittest import TestCase
 from ebu_tt_live import documents
 from ebu_tt_live.adapters.base import IDocumentDataAdapter
 from ebu_tt_live.adapters import document_data
+
+
+class DummyDataTypeA(object):
+    pass
+
+
+class DummyDataTypeB(object):
+    pass
+
+
+class TestIDocumentDataAdapter(TestCase):
+
+    def test_create(self):
+        self.assertRaises(TypeError, IDocumentDataAdapter)
+
+    def _get_simple_adapter(self):
+        class SimpleTestAdapter(IDocumentDataAdapter):
+            _expects = DummyDataTypeA
+            _provides = DummyDataTypeB
+
+            def convert_data(inner, data, **kwargs):
+                return data, kwargs
+
+        return SimpleTestAdapter
+
+    def test_simple_subclass(self):
+        impl_class = self._get_simple_adapter()
+
+        wref = weakref.ref(impl_class)
+
+        self.assertEquals(
+            impl_class,
+            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB)
+        )
+        gc.collect()
+        # It should not be garbage collected
+        self.assertEquals(
+            impl_class,
+            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB)
+        )
+
+        del impl_class
+        gc.collect()
+        # When the class goes out of scope it is supposed to be removed from the mapping.
+        self.assertIsNone(wref())
+        self.assertRaises(ValueError, document_data.get_document_data_adapter, DummyDataTypeA, DummyDataTypeB)
+
+        # Let's add it in again
+        impl_class = self._get_simple_adapter()
+        wref = weakref.ref(impl_class)
+
+        # Check if it got back in the mapping
+        self.assertEquals(
+            impl_class,
+            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB)
+        )
+
+        del impl_class
+        gc.collect()
+        # Verify full cleanup again
+        self.assertIsNone(wref())
+        self.assertRaises(ValueError, document_data.get_document_data_adapter, DummyDataTypeA, DummyDataTypeB)
 
 
 class TestXMLtoEBUTT3Adapter(TestCase):
@@ -58,7 +123,7 @@ class TestXMLtoEBUTTDAdapter(TestCase):
 
 
 class TestEBUTT3toXMLAdapter(TestXMLtoEBUTT3Adapter):
-    _output_type = basestring
+    _output_type = six.string_types
     _adapter_class = document_data.EBUTT3toXMLAdapter
     _expected_keys = [
         'sequence_identifier',

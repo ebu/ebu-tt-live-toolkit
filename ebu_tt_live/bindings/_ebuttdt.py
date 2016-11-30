@@ -4,6 +4,7 @@ from raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
 from decimal import Decimal
 import re, logging
+import six
 from pyxb.exceptions_ import SimpleTypeValueError, SimpleFacetValueError
 from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
 from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE, ERR_1DIM_ONLY, \
@@ -215,7 +216,7 @@ class TwoDimSizingMixin(object):
     def __eq__(self, other):
         if type(self) == type(other) and self.horizontal == other.horizontal and self.vertical == other.vertical:
             return True
-        elif isinstance(other, basestring):
+        elif isinstance(other, six.string_types):
             return str(self) == str(other)
         else:
             return NotImplemented
@@ -573,7 +574,7 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
             else:
                 return self.vertical == other.vertical and \
                        self.horizontal == other.horizontal
-        elif isinstance(other, basestring):
+        elif isinstance(other, six.string_types):
             return str(self) == str(other)
         else:
             return NotImplemented

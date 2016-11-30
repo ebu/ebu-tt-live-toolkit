@@ -2,12 +2,15 @@
 from .base import IDocumentDataAdapter
 from ebu_tt_live.documents import EBUTT3EBUTTDConverter, EBUTTDDocument, EBUTT3Document
 from ebu_tt_live.clocks.media import MediaClock
+import six
 
 
 class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     """
     This converter converts the raw XML documents to the EBUTT3Document type.
     """
+    _expects = six.string_types
+    _provides = EBUTT3Document
 
     def convert_data(self, data, **kwargs):
         return EBUTT3Document.create_from_xml(data), kwargs
@@ -17,6 +20,8 @@ class XMLtoEBUTTDAdapter(IDocumentDataAdapter):
     """
     This converter converts the raw XML documents to the EBUTTDDocument type.
     """
+    _expects = six.string_types
+    _provides = EBUTTDDocument
 
     def convert_data(self, data, **kwargs):
         return EBUTTDDocument.create_from_xml(data), kwargs
@@ -26,12 +31,20 @@ class EBUTTDtoXMLAdapter(IDocumentDataAdapter):
     """
     This converter serializes Document objects to XML
     """
+    _expects = EBUTTDDocument
+    _provides = six.string_types
 
     def convert_data(self, data, **kwargs):
         return data.get_xml(), kwargs
 
 
 class EBUTT3toXMLAdapter(IDocumentDataAdapter):
+    """
+    This converter deserializes the EBUTT3Document object into xml.
+    """
+
+    _expects = EBUTT3Document
+    _provides = six.string_types
 
     def convert_data(self, data, **kwargs):
         kwargs.update({
@@ -47,6 +60,8 @@ class EBUTT3toEBUTTDAdapter(IDocumentDataAdapter):
     """
     This converter converts between the EBUTT3Document and the EBUTTDDocument types.
     """
+    _expects = EBUTT3Document
+    _provides = EBUTTDDocument
 
     _converter = None
 
@@ -57,3 +72,13 @@ class EBUTT3toEBUTTDAdapter(IDocumentDataAdapter):
 
     def convert_data(self, data, **kwargs):
         return EBUTTDDocument.create_from_raw_binding(self._converter.convert_document(data)), kwargs
+
+
+def get_document_data_adapter(expects, provides):
+    """
+    Find a matching conversion between 2 document data interfaces.
+    :param expects: Data in
+    :param provides: Expected interface the data needs to be converted to.
+    :return:
+    """
+    return IDocumentDataAdapter.get_registered_impl(expects=expects, provides=provides)

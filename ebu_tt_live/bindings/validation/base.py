@@ -4,6 +4,7 @@ This file contains all the pyxb helpers needed for enabling a concise semantic v
 import copy
 import logging
 import re
+import six
 
 from pyxb.namespace import ExpandedName
 
@@ -137,7 +138,7 @@ class SemanticValidationMixin(object):
         if old_elem_ids is None:
             return None
 
-        if isinstance(old_elem_ids, basestring):
+        if isinstance(old_elem_ids, six.string_types):
             new_elem = self._find_deconflicted_elem_by_id(elem_id=old_elem_ids, dataset=dataset)
             return new_elem.id
         else:
