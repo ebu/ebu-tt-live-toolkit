@@ -1,26 +1,12 @@
-import types
 import logging
 import weakref
 from abc import abstractmethod, abstractproperty
-from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember
+from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, validate_types_only
 
 log = logging.getLogger(__name__)
 
 # Interfaces
 # ==========
-
-
-def _types_only(value, member_name, class_name):
-    if not isinstance(value, tuple):
-        value = (value,)
-    for item in value:
-        if not isinstance(item, (type, types.ClassType)):
-            raise TypeError(
-                'Abstract static member: \'{}.{}\' is not a types or class'.format(
-                    class_name,
-                    member_name
-                )
-            )
 
 
 class IDocumentDataAdapter(object):
@@ -30,8 +16,8 @@ class IDocumentDataAdapter(object):
     __metaclass__ = AutoRegisteringABCMeta
 
     __impl_registry = {}
-    _expects = AbstractStaticMember(_types_only)
-    _provides = AbstractStaticMember(_types_only)
+    _expects = AbstractStaticMember(validate_types_only)
+    _provides = AbstractStaticMember(validate_types_only)
 
     @classmethod
     def auto_register_impl(cls, impl_class):

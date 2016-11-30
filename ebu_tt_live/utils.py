@@ -4,6 +4,7 @@ import threading
 import Queue
 import os
 import time
+import types
 
 from nltk import BlanklineTokenizer, PunktSentenceTokenizer, WhitespaceTokenizer
 
@@ -258,6 +259,19 @@ def _assert_asm_is_defined(value, member_name, class_name):
         )
 
 
+def validate_types_only(value, member_name, class_name):
+    if not isinstance(value, tuple):
+        value = (value,)
+    for item in value:
+        if not isinstance(item, (type, types.ClassType)):
+            raise TypeError(
+                'Abstract static member: \'{}.{}\' is not a type or class'.format(
+                    class_name,
+                    member_name
+                )
+            )
+
+
 class AbstractStaticMember(object):
     """
     This allows me to require the subclasses to define some attributes using a customizeable
@@ -315,6 +329,6 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
                     ', '.join(abstract_members)
                 ))
         if namespace.get('auto_register_impl') is None:
-            cls.auto_register_impl = classmethod(lambda x: None)
+            cls.auto_register_impl = classmethod(lambda x, y: None)
         cls._abc_static_members = frozenset(abstract_members)
         return cls

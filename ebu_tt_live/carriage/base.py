@@ -1,4 +1,5 @@
-from abc import ABCMeta, abstractmethod, abstractproperty
+from abc import abstractmethod, abstractproperty
+from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, validate_types_only
 
 # Interfaces
 # ==========
@@ -8,7 +9,7 @@ class ICarriageMechanism(object):
     """
     Basic interface for the carrige mechanisms
     """
-    __metaclass__ = ABCMeta
+    __metaclass__ = AutoRegisteringABCMeta
 
     @abstractmethod
     def register_node(self, node):
@@ -30,7 +31,8 @@ class IProducerCarriage(ICarriageMechanism):
     """
     Node that emits documents to an output interface, usually some network socket.
     """
-    __metaclass__ = ABCMeta
+
+    _expects = AbstractStaticMember(validate_types_only)
 
     @abstractmethod
     def emit_data(self, data, **kwargs):
@@ -53,7 +55,8 @@ class IConsumerCarriage(ICarriageMechanism):
     """
     Node that receives documents and processes them.
     """
-    __metaclass__ = ABCMeta
+
+    _provides = AbstractStaticMember(validate_types_only)
 
     @abstractmethod
     def on_new_data(self, data, **kwargs):
