@@ -1,6 +1,6 @@
 import logging
 import weakref
-from abc import abstractmethod, abstractproperty
+from abc import abstractmethod
 from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, validate_types_only
 
 log = logging.getLogger(__name__)

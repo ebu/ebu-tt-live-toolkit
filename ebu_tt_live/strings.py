@@ -2,6 +2,9 @@
 from gettext import gettext
 
 # ERRORS
+ERR_INCOMPATIBLE_COMPONENT = gettext('Incompatible component: {component} Expected interface: {expected_interface}')
+ERR_INCOMPATIBLE_DATA_PROVIDED = gettext('{component} provides incompatible data type: {provides} Expected type: {expects}')
+ERR_INCOMPATIBLE_DATA_EXPECTED = gettext('{component} expects incompatible data type: {expects} Provided type: {provides}')
 ERR_CONV_NO_INPUT = gettext('The converter has no input set')
 ERR_TIME_WRONG_FORMAT = gettext('Wrong time format. datetime.timedelta is expected')
 ERR_TIME_FORMAT_OVERFLOW = gettext('Time value is out of format range')

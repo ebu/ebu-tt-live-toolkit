@@ -66,6 +66,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
     _dirpath = None
     _manifest_content = None
     _manifest_time_format = None
+    _expects = EBUTT3Document
 
     def __init__(self, dirpath):
         self._dirpath = dirpath
@@ -74,7 +75,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         self._manifest_content = ''
 
     def resume_producing(self):
-        manifest_filename = "manifest_" + self._node.document_sequence.sequence_identifier + ".txt"
+        manifest_filename = "manifest_" + self.producer_node.document_sequence.sequence_identifier + ".txt"
         self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         if os.path.exists(self._manifest_path):
             with open(self._manifest_path, 'r') as f:
@@ -85,10 +86,10 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                 # sequenceIdentifier_sequenceNumber.xml
                 _, last_filename = last_line.split(',')
                 last_sequence_number, _ = last_filename.split('_')[1].split('.')
-                self._node.document_sequence.last_sequence_number = int(last_sequence_number)
+                self.producer_node.document_sequence.last_sequence_number = int(last_sequence_number)
         while True:
             try:
-                self._node.process_document(document=None)
+                self.producer_node.resume_producing()
             except EndOfData:
                 break
 
@@ -105,9 +106,9 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         # To be able to format the output we need a datetime.time object and
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
-        time = self._node.reference_clock.get_time()
-        time_base = self._node.reference_clock.time_base
-        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(time, time_base), filename)
+        time_base = data.time_base
+        availability_time = data.availability_time
+        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
             f.write(new_manifest_line)

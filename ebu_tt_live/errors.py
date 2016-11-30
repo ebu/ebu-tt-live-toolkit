@@ -1,8 +1,14 @@
 
-from pyxb.utils import six
-from pyxb.exceptions_ import ValidationError
-
 from .strings import ERR_DOCUMENT_EXTENT_MISSING
+
+
+class ComponentCompatError(TypeError):
+    pass
+
+
+class DataCompatError(TypeError):
+    pass
+
 
 class DocumentNotLoadedError(Exception):
     pass

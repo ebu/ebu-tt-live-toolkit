@@ -9,21 +9,19 @@ log = logging.getLogger(__name__)
 class DistributingNode(AbstractCombinedNode):
 
     _reference_clock = None
+    _expects = EBUTT3Document
+    _provides = EBUTT3Document
 
-    def __init__(self, node_id, carriage_impl, reference_clock):
-        super(DistributingNode, self).__init__(node_id, carriage_impl)
+    def __init__(self, node_id, reference_clock, producer_carriage=None, consumer_carriage=None):
+        super(DistributingNode, self).__init__(
+            node_id=node_id,
+            consumer_carriage=consumer_carriage,
+            producer_carriage=producer_carriage
+        )
         self._reference_clock = reference_clock
 
     def process_document(self, document, **kwargs):
-        self._carriage_impl.emit_document(document, **kwargs)
-
-    @property
-    def expects(self):
-        return EBUTT3Document
-
-    @property
-    def provides(self):
-        return EBUTT3Document
+        self.producer_carriage.emit_data(document, **kwargs)
 
     @property
     def reference_clock(self):

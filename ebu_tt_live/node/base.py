@@ -1,59 +1,15 @@
-from abc import ABCMeta, abstractmethod, abstractproperty
-
-# Interfaces
-# ==========
-
-
-class INode(object):
-    """
-    This is the foundation of all nodes that take part in the processing of subtitle documents.
-    The Node should deal with subtitles in a high level interface,
-    which is an instance of :class:`<ebu_tt_live.documents.SubtitleDocument>`. That is the interface which should
-    be used to communicate with the carriage machanism. See :class:`<ebu_tt_live.carriage.ICarriage>`
-    """
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
-    def process_document(self, document, **kwargs):
-        """
-        The central hook that is meant to implement the main functionality of the node.
-        A node must implement this method.
-        :param **kwargs: Extra parameters
-        :param document: Can be XML, Document object...etc. depending on the carriage implementation
-        :return:
-        """
-        raise NotImplementedError()
-
-
-class IProducerNode(INode):
-    __metaclass__ = ABCMeta
-
-    @abstractproperty
-    def provides(self):
-        """
-        :return: Interface of the data the producer produces
-        """
-
-
-class IConsumerNode(INode):
-    __metaclass__ = ABCMeta
-
-    @abstractproperty
-    def expects(self):
-        """
-        :return: Interface of the data the consumer consumes
-        """
+from .interface import INode, IConsumerNode, IProducerNode
+from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
+from ebu_tt_live.errors import ComponentCompatError, DataCompatError
+from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
 
 
 class __AbstractNode(INode):
 
     _node_id = None
-    _carriage_impl = None
 
-    def __init__(self, node_id, carriage_impl):
+    def __init__(self, node_id, **kwargs):
         self._node_id = node_id
-        self._carriage_impl = carriage_impl
-        self._carriage_impl.register(node=self)
 
     def __repr__(self):
         return '<{name}, ID:{id} at {address} >'.format(
@@ -72,12 +28,79 @@ class __AbstractNode(INode):
 
 
 class AbstractProducerNode(IProducerNode, __AbstractNode):
-    pass
+
+    _producer_carriage = None
+
+    def __init__(self, node_id, producer_carriage=None, **kwargs):
+        super(AbstractProducerNode, self).__init__(node_id=node_id, **kwargs)
+        if producer_carriage is not None:
+            self.register_producer_carriage(producer_carriage)
+
+    def register_producer_carriage(self, producer_carriage):
+        if not isinstance(producer_carriage, IProducerCarriage):
+            raise ComponentCompatError(
+                ERR_INCOMPATIBLE_COMPONENT.format(
+                    component=producer_carriage,
+                    expected_interface=IProducerCarriage
+                )
+            )
+        if self.provides() != producer_carriage.expects():
+            raise DataCompatError(
+                ERR_INCOMPATIBLE_DATA_EXPECTED.format(
+                    component=producer_carriage,
+                    expects=producer_carriage.expects(),
+                    provides=self.provides()
+                )
+            )
+        self._producer_carriage = producer_carriage
+        self._producer_carriage.register_producer_node(node=self)
+
+    @property
+    def producer_carriage(self):
+        return self._producer_carriage
+
+    def resume_producing(self):
+        self.process_document(document=None)
 
 
 class AbstractConsumerNode(IConsumerNode, __AbstractNode):
-    pass
+
+    _consumer_carriage = None
+
+    def __init__(self, node_id, consumer_carriage=None, **kwargs):
+        super(AbstractConsumerNode, self).__init__(node_id=node_id, **kwargs)
+        if consumer_carriage is not None:
+            self.register_consumer_carriage(consumer_carriage)
+
+    def register_consumer_carriage(self, consumer_carriage):
+        if not isinstance(consumer_carriage, IConsumerCarriage):
+            raise ComponentCompatError(
+                ERR_INCOMPATIBLE_COMPONENT.format(
+                    component=consumer_carriage,
+                    expected_interface=IConsumerCarriage
+                )
+            )
+        if self.expects() != consumer_carriage.provides():
+            raise DataCompatError(
+                ERR_INCOMPATIBLE_DATA_EXPECTED.format(
+                    component=consumer_carriage,
+                    expects=consumer_carriage.provides(),
+                    provides=self.expects()
+                )
+            )
+        self._consumer_carriage = consumer_carriage
+        self._consumer_carriage.register_consumer_node(node=self)
+
+    @property
+    def consumer_carriage(self):
+        return self._consumer_carriage
 
 
-class AbstractCombinedNode(AbstractProducerNode, AbstractConsumerNode):
-    pass
+class AbstractCombinedNode(AbstractConsumerNode, AbstractProducerNode):
+
+    def __init__(self, node_id, producer_carriage=None, consumer_carriage=None):
+        super(AbstractCombinedNode, self).__init__(
+            node_id=node_id,
+            producer_carriage=producer_carriage,
+            consumer_carriage=consumer_carriage
+        )

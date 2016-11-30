@@ -104,4 +104,4 @@ class SimpleProducer(AbstractProducerNode):
 
         document.validate()
 
-        self._carriage_impl.emit_data(document)
+        self.producer_carriage.emit_data(document)

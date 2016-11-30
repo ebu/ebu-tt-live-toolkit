@@ -331,4 +331,11 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
         if namespace.get('auto_register_impl') is None:
             cls.auto_register_impl = classmethod(lambda x, y: None)
         cls._abc_static_members = frozenset(abstract_members)
+        cls._abc_interface = '__metaclass__' in namespace.keys()
         return cls
+
+    def __call__(cls, *args, **kwargs):
+        if cls._abc_interface is True:
+            raise TypeError('Can\'t instantiate {} is an abstract base class.'.format(cls))
+        instance = super(AutoRegisteringABCMeta, cls).__call__(*args, **kwargs)
+        return instance

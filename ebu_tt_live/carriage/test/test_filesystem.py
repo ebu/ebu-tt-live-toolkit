@@ -2,6 +2,8 @@ from unittest import TestCase
 from mock import patch, MagicMock
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, timestr_manifest_to_timedelta, timedelta_to_str_manifest
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
+from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
 from datetime import timedelta
 import os
 import tempfile
@@ -52,8 +54,9 @@ class TestFilesystemProducerImpl(TestCase):
         node.process_document = MagicMock(side_effect=EndOfData())
         node.document_sequence.sequence_identifier = "testSeq"
         node.reference_clock.time_base = "clock"
+        node.provides.return_value = EBUTT3Document
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
-        fs_carriage.register_node(node)
+        fs_carriage.register_producer_node(node)
         fs_carriage.resume_producing()
         fs_carriage.emit_data(document)
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
