@@ -1,6 +1,6 @@
 import logging
 import weakref
-from abc import abstractmethod
+from abc import abstractmethod, abstractproperty
 from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, validate_types_only
 
 log = logging.getLogger(__name__)
@@ -81,3 +81,29 @@ class IDocumentDataAdapter(object):
         :return:
         """
         raise NotImplementedError()
+
+
+class INodeCarriageAdapter(object):
+    """
+    This adapter wraps the DocumentDataAdapter conversion logic and shows a dual interface. It responsibility is
+    to facilitate direct communication between incompatible carriage mechanisms and processing nodes.
+    This is a tricky business because this class does not have a hardcoded expects-provides interface contract.
+    It works it out as it goes forward from the parameters.
+    """
+    __metaclass__ = AutoRegisteringABCMeta
+
+    @abstractproperty
+    def data_adapters(self):
+        """
+        Data conversion adapters
+        :return: list of DocumentDataAdapter instances
+        """
+
+    @abstractmethod
+    def convert_data(self, data, **kwargs):
+        """
+        This executes a conversion by looping through the data adapters.
+        :param data: Input data format
+        :param kwargs: Extra parameters
+        :return: Output data format
+        """

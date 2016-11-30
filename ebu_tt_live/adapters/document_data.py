@@ -79,6 +79,6 @@ def get_document_data_adapter(expects, provides):
     Find a matching conversion between 2 document data interfaces.
     :param expects: Data in
     :param provides: Expected interface the data needs to be converted to.
-    :return:
+    :return: An adapter instance ready to go.
     """
-    return IDocumentDataAdapter.get_registered_impl(expects=expects, provides=provides)
+    return IDocumentDataAdapter.get_registered_impl(expects=expects, provides=provides)()

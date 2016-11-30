@@ -71,7 +71,7 @@ class IConsumerCarriage(ICarriageMechanism):
     @classmethod
     def provides(cls):
         """
-        Data type expected
+        Data type provided
         :return:
         """
         if isinstance(cls._provides, AbstractStaticMember):

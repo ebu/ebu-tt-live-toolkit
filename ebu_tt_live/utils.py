@@ -272,6 +272,21 @@ def validate_types_only(value, member_name, class_name):
             )
 
 
+class AnyType(object):
+    "A helper object that compares equal to everything."
+
+    def __eq__(self, other):
+        return True
+
+    def __ne__(self, other):
+        return False
+
+    def __repr__(self):
+        return '<ANY>'
+
+ANY = AnyType()
+
+
 class AbstractStaticMember(object):
     """
     This allows me to require the subclasses to define some attributes using a customizeable

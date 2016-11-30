@@ -5,7 +5,7 @@ from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from ebu_tt_live.errors import XMLParsingFailed
 from ebu_tt_live.documents import EBUTT3Document
 import logging
-from xml.dom import minidom
+import six
 
 
 log = logging.getLogger(__name__)
@@ -15,6 +15,7 @@ class TwistedProducerImpl(AbstractProducerCarriage):
 
     _twisted_producer = None
     _twisted_channel = None
+    _expects = six.string_types
 
     @property
     def twisted_channel(self):
@@ -29,13 +30,15 @@ class TwistedProducerImpl(AbstractProducerCarriage):
 
     def resume_producing(self):
         # None, since this is a producer module. It will produce a new document.
-        self._node.process_document(document=None)
+        self.producer_node.resume_producing()
 
     def emit_data(self, data, sequence_identifier='default', **kwargs):
         self._twisted_producer.emit_data(self.twisted_channel or sequence_identifier, data)
 
 
 class TwistedConsumerImpl(AbstractConsumerCarriage):
+
+    _provides = six.string_types
 
     def on_new_data(self, data, **kwargs):
         document = None

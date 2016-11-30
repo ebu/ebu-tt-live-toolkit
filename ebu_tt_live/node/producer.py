@@ -13,16 +13,13 @@ class SimpleProducer(AbstractProducerNode):
     _document_sequence = None
     _input_blocks = None
     _reference_clock = None
+    _provides = EBUTT3Document
 
-    def __init__(self, node_id, carriage_impl, document_sequence, input_blocks):
-        super(SimpleProducer, self).__init__(node_id, carriage_impl)
+    def __init__(self, node_id, producer_carriage, document_sequence, input_blocks):
+        super(SimpleProducer, self).__init__(node_id=node_id, producer_carriage=producer_carriage)
         self._document_sequence = document_sequence
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
-
-    @property
-    def provides(self):
-        return EBUTT3Document
 
     @property
     def reference_clock(self):
@@ -104,4 +101,4 @@ class SimpleProducer(AbstractProducerNode):
 
         document.validate()
 
-        self.producer_carriage.emit_data(document)
+        self.producer_carriage.emit_data(document, **kwargs)
