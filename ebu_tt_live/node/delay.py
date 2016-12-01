@@ -62,7 +62,6 @@ def update_children_timing(element, timebase, delay_int):
                 elif timebase == 'media':
                     delay = FullClockTimingType(timedelta(seconds=delay_int))
                     child.value.end = FullClockTimingType(child.value.end.timedelta + delay.timedelta)
-                    # TODO: smpte
 
             if hasattr(child.value, 'begin') and child.value.begin != None:
 
@@ -72,7 +71,6 @@ def update_children_timing(element, timebase, delay_int):
                 elif timebase == 'media':
                     delay = FullClockTimingType(timedelta(seconds=delay_int))
                     child.value.begin = FullClockTimingType(child.value.begin.timedelta + delay.timedelta)
-                # TODO: permit timebase = "smpte" with clockMode="continuous"
 
             else:
                 update_children_timing(child.value, timebase, delay_int)
