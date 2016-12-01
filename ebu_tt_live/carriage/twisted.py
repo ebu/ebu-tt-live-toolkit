@@ -49,5 +49,5 @@ class TwistedConsumerImpl(AbstractConsumerCarriage):
             raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
 
         if document:
-            document.availability_time = self._node.reference_clock.get_time()
-            self._node.process_document(document)
+            document.availability_time = self.consumer_node.reference_clock.get_time()
+            self.consumer_node.process_document(document)

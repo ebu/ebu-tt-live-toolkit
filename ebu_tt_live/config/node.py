@@ -1,11 +1,12 @@
 from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
 from .clocks import clock_by_type
-from .carriage import carriage_by_type
+from .carriage import producer_carriage_by_type, consumer_carriage_by_type
 from ebu_tt_live import documents
 from ebu_tt_live.example_data import get_example_data
 import ebu_tt_live.node as processing_node
 from itertools import cycle
 from ebu_tt_live.utils import tokenize_english_document
+from .adapters import ProducerNodeCarriageAdapter
 
 
 class NodeBase(ConfigurableComponent):
@@ -17,7 +18,7 @@ class SimpleConsumer(NodeBase):
     required_config = Namespace()
     required_config.add_option('id', default='simple-consumer')
     required_config.input = input_section = Namespace()
-    input_section.add_option('type', default='websocket-input', from_string_converter=carriage_by_type)
+    input_section.add_option('type', default='websocket', from_string_converter=consumer_carriage_by_type)
 
 
 class SimpleProducer(NodeBase):
@@ -25,10 +26,14 @@ class SimpleProducer(NodeBase):
     required_config.add_option('id', default='simple-producer')
     required_config.add_option('show_time', default=False)
     required_config.add_option('sequence_identifier', default='TestSequence1')
-    required_config.output = output_section = Namespace()
-    output_section.add_option('type', default='websocket-output', from_string_converter=carriage_by_type)
-    required_config.clock = clock_section = Namespace()
-    clock_section.add_option('type', default='local', from_string_converter=clock_by_type)
+    required_config.output = Namespace()
+    required_config.output.carriage = Namespace()
+    required_config.output.carriage.add_option(
+        'type', default='websocket', from_string_converter=producer_carriage_by_type
+    )
+    required_config.output.add_option('adapters')
+    required_config.clock = Namespace()
+    required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
 
     clock = None
     output = None
@@ -41,7 +46,6 @@ class SimpleProducer(NodeBase):
             lang='en-GB',
             reference_clock=self.clock.component
         )
-        self.output = local_config.output.type(config, local_config.output)
 
         if local_config.show_time:
             subtitle_tokens = None  # Instead of text we provide the availability time as content.
@@ -54,15 +58,26 @@ class SimpleProducer(NodeBase):
             #     # This makes the source cycle infinitely.
             subtitle_tokens = cycle(tokenize_english_document(full_text))
 
+        self.output = local_config.output
+        self.output.carriage = local_config.output.carriage.type(config, local_config.output.carriage)
+
         self.component = processing_node.SimpleProducer(
             node_id='simple-producer',
             document_sequence=sequence,
-            carriage_impl=self.output.component,
+            producer_carriage=None,
             input_blocks=subtitle_tokens
         )
 
+        self.output.adapters = ProducerNodeCarriageAdapter(
+            config=config,
+            local_config=local_config.output.adapters,
+            producer=self.component,
+            carriage=self.output.carriage.component
+        )
 
-def nodes_by_name(node_name):
+
+
+def nodes_by_type(node_name):
     if node_name == 'simple-consumer':
         return SimpleConsumer
     elif node_name == 'simple-producer':
@@ -74,4 +89,4 @@ def nodes_by_name(node_name):
 class UniversalNode(RequiredConfig):
     required_config = Namespace()
     required_config.node = node = Namespace()
-    node.add_option('type', default='simple-consumer', from_string_converter=nodes_by_name)
+    node.add_option('type', default='simple-consumer', from_string_converter=nodes_by_type)

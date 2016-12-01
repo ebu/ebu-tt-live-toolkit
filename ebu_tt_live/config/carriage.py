@@ -2,11 +2,18 @@ from .common import ConfigurableComponent, Namespace
 from ebu_tt_live.carriage.twisted import TwistedProducerImpl, TwistedConsumerImpl
 
 
-def carriage_by_type(carriage_type):
-    if carriage_type == 'websocket-input':
-        return WebsocketInput
-    elif carriage_type == 'websocket-output':
+def producer_carriage_by_type(carriage_type):
+    if carriage_type == 'websocket':
         return WebsocketOutput
+    elif carriage_type == 'filesystem':
+        return FileOutput
+    else:
+        raise Exception('No such component: {}'.format(carriage_type))
+
+
+def consumer_carriage_by_type(carriage_type):
+    if carriage_type == 'websocket':
+        return WebsocketInput
     else:
         raise Exception('No such component: {}'.format(carriage_type))
 
@@ -54,6 +61,10 @@ class WebsocketOutput(WebsocketBase):
 
 
 class WebsocketInput(WebsocketBase):
-    pass
+
+    def __init__(self, config, local_config):
+        super(WebsocketInput, self).__init__(config, local_config)
+        self.component = TwistedConsumerImpl()
+        self.component.twisted_channel = local_config.channel
 
 

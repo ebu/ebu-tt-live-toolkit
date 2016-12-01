@@ -63,4 +63,4 @@ class AppConfig(configman.RequiredConfig):
 
     required_config = configman.Namespace()
     required_config.backend = backend.UniversalBackend
-    required_config.add_aggregation('nodes')
+    

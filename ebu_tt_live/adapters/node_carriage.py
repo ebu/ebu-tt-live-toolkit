@@ -18,7 +18,7 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
         return self._data_adapters
 
     def _set_data_adapters(self, value, expects, provides):
-        success = False
+        success = True
 
         if value is not None:
             data_adapters = list(value)
