@@ -4,11 +4,7 @@ from ebu_tt_live.bindings import CreateFromDocument, CreateFromDOM
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
 from ebu_tt_live.errors import XMLParsingFailed
 from ebu_tt_live.documents import EBUTT3Document
-
-from twisted.internet import reactor
-
 import logging
-from xml.dom import minidom
 
 
 log = logging.getLogger(__name__)
@@ -27,10 +23,11 @@ class TwistedProducerImpl(ProducerCarriageImpl):
 
     def emit_document(self, document, delay=None, **kwargs):
 
-        if delay:
-            reactor.callLater(delay, self._twisted_producer.emit_data, document.sequence_identifier, document.get_xml())
-
-        self._twisted_producer.emit_data(document.sequence_identifier, document.get_xml())
+        self._twisted_producer.emit_data(
+            channel=document.sequence_identifier,
+            data=document.get_xml(),
+            delay=delay
+        )
 
 
 class TwistedConsumerImpl(ConsumerCarriageImpl):
