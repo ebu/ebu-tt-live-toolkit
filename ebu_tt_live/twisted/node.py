@@ -22,7 +22,8 @@ class TwistedPullProducer(object):
     def emit_data(self, channel, data, delay=None):
         if delay is not None:
             reactor.callLater(delay, self._consumer.write, channel, data)
-        self._consumer.write(channel, data)
+        else:
+            self._consumer.write(channel, data)
 
     def resumeProducing(self):
         self._custom_producer.resume_producing()
