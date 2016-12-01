@@ -76,7 +76,6 @@ class SimpleProducer(NodeBase):
         )
 
 
-
 def nodes_by_type(node_name):
     if node_name == 'simple-consumer':
         return SimpleConsumer

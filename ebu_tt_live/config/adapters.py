@@ -15,24 +15,21 @@ def data_adapters_by_directed_conversion(data_adapter):
         return document_data.EBUTTDtoXMLAdapter
 
 
-class DocumentDataAdapter(ConfigurableComponent):
-
-    required_config = Namespace()
-
-
 def parse_adapter_list(value):
     # This is working around a bug that configman leaves the lists intact
     parsed_value = []
-    for item in value:
-        conv_type = item['type']
-        kwargs = {ckey: carg for ckey, carg in item.items() if ckey != 'type'}
-        parsed_value.append(data_adapters_by_directed_conversion(conv_type)(**kwargs))
+    if value is not None:
+        for item in value:
+            conv_type = item['type']
+            kwargs = {ckey: carg for ckey, carg in item.items() if ckey != 'type'}
+            parsed_value.append(data_adapters_by_directed_conversion(conv_type)(**kwargs))
     return parsed_value
 
 
 class ProducerNodeCarriageAdapter(ConfigurableComponent):
 
     def __init__(self, config, local_config, producer, carriage):
+        super(ProducerNodeCarriageAdapter, self).__init__(config=config, local_config=local_config)
         adapter_list = parse_adapter_list(local_config)
         self.component = node_carriage.ProducerNodeCarriageAdapter(
             producer_carriage=carriage,
@@ -43,5 +40,11 @@ class ProducerNodeCarriageAdapter(ConfigurableComponent):
 
 class ConsumerNodeCarriageAdapter(ConfigurableComponent):
 
-    def __init__(self, config, local_config):
-        print config
+    def __init__(self, config, local_config, consumer, carriage):
+        super(ConsumerNodeCarriageAdapter, self).__init__(config=config, local_config=local_config)
+        adapter_list = parse_adapter_list(local_config)
+        self.component = node_carriage.ConsumerNodeCarriageAdapter(
+            consumer_carriage=carriage,
+            consumer_node=consumer,
+            data_adapters=adapter_list
+        )

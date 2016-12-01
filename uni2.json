@@ -4,11 +4,6 @@
     "show_time": true,
     "sequence_identifier": "TestSequence2",
     "output": {
-      "adapters": [
-        {
-          "type": "ebutt3->xml"
-        }
-      ],
       "carriage": {
         "type": "websocket",
         "uri": "ws://0.0.0.0:9000",
