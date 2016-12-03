@@ -6,6 +6,7 @@ from twisted.internet import interfaces
 from zope.interface import implementer
 from logging import getLogger
 import json
+import weakref
 
 from .base import IBroadcaster
 
@@ -69,34 +70,31 @@ class UserInputServerFactory(WebSocketServerFactory):
         listenWS(self)
 
 
-class StreamingServerProtocol(WebSocketServerProtocol):
+class BroadcastServerProtocol(WebSocketServerProtocol):
 
-    _channels = None
+    _sequence_identifiers = None
 
     def onOpen(self):
-        self.factory.register(self)
-        self._channels = set()
+        slug = self.http_request_path
+        if slug.count('/') > 1:
+            self.dropConnection()
+        else:
+            self._sequence_identifier = slug.replace('/', '').strip()
+            self.factory.register(self)
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
-            try:
-                data = json.loads(payload)
-                if 'subscribe' in data:
-                    log.info('{} subscibes to {}'.format(self.peer, data['subscribe']))
-                    self._channels.add(data['subscribe'])
-                if 'unsubscribe' in data:
-                    log.info('{} unsubscribes from {}'.format(self.peer, data['unsubscribe']))
-                    self._channels.remove(data['unsubscribe'])
-            except Exception:
-                pass
+            pass
 
     def connectionLost(self, reason):
         WebSocketServerProtocol.connectionLost(self, reason)
         self.factory.unregister(self)
 
-    def sendMessageOnChannel(self, channel, payload, isBinary=False, fragmentSize=None, sync=False, doNotCompress=False):
-        if channel in self._channels:
-            super(StreamingServerProtocol, self).sendMessage(
+    def sendSequenceMessage(
+            self, sequence_identifier, payload, isBinary=False, fragmentSize=None, sync=False, doNotCompress=False
+        ):
+        if sequence_identifier == self._sequence_identifier:
+            super(BroadcastServerProtocol, self).sendMessage(
                 payload=payload,
                 isBinary=isBinary,
                 fragmentSize=fragmentSize,
@@ -109,23 +107,28 @@ class StreamingServerProtocol(WebSocketServerProtocol):
 @implementer(IBroadcaster, interfaces.IConsumer)
 class BroadcastServerFactory(WebSocketServerFactory):
     _clients = None
-    _producer = None
+    _producers = None
     _push_producer = None
 
     def __init__(self, url):
         super(BroadcastServerFactory, self).__init__(url, protocols=[13])
         self._clients = []
+        self._producers = weakref.WeakSet()
 
     def registerProducer(self, producer, streaming):
-        self._producer = producer
+        self._producers.add(producer)
         self._push_producer = streaming
 
-    def unregisterProducer(self):
-        self._producer.stopProducing()
-        self._producer = None
+    def unregisterProducer(self, producer=None):
+        if producer is None:
+            producer.stopProducing()
+            self._producers.clear()
+        if producer in self._producers:
+            producer.stopProducing()
+            self._producers.remove(producer)
 
-    def write(self, channel, data):
-        self.broadcast(channel, data)
+    def write(self, sequence_identifier, data):
+        self.broadcast(sequence_identifier, data)
 
     def register(self, client):
         if client not in self._clients:
@@ -141,11 +144,11 @@ class BroadcastServerFactory(WebSocketServerFactory):
         if self._producer:
             self._producer.resumeProducing()
 
-    def broadcast(self, channel, msg):
+    def broadcast(self, sequence_identifier, msg):
         log.info("broadcasting message...")
 
         for c in self._clients:
-            c.sendMessageOnChannel(channel, msg.encode("utf-8"), isBinary=False, doNotCompress=False, sync=False)
+            c.sendSequenceMessage(sequence_identifier, msg.encode("utf-8"), isBinary=False, doNotCompress=False, sync=False)
 
     def stopFactory(self):
         self.unregisterProducer()
@@ -154,21 +157,21 @@ class BroadcastServerFactory(WebSocketServerFactory):
         listenWS(self)
 
 
-class ClientNodeProtocol(WebSocketClientProtocol):
+class BroadcastClientProtocol(WebSocketClientProtocol):
 
     def onOpen(self):
-        for channel in self.factory.channels:
-            self.subscribeChannel(channel)
+        for sequence_identifier in self.factory.sequence_identifiers:
+            self.subscribesequence_identifier(sequence_identifier)
 
-    def subscribeChannel(self, channel):
+    def subscribesequence_identifier(self, sequence_identifier):
         data = {
-            'subscribe': channel
+            'subscribe': sequence_identifier
         }
         self.sendMessage(json.dumps(data))
 
-    def unsubscribeChannel(self, channel):
+    def unsubscribesequence_identifier(self, sequence_identifier):
         data = {
-            'unsubscribe': channel
+            'unsubscribe': sequence_identifier
         }
         self.sendMessage(json.dumps(data))
 
@@ -179,29 +182,29 @@ class ClientNodeProtocol(WebSocketClientProtocol):
 @implementer(interfaces.IPushProducer)
 class BroadcastClientFactory(WebSocketClientFactory):
 
-    _channels = None
+    _sequence_identifiers = None
     _consumer = None
     _stopped = None
 
-    def __init__(self, url, consumer, channels=None, *args, **kwargs):
+    def __init__(self, url, consumer, sequence_identifiers=None, *args, **kwargs):
         super(BroadcastClientFactory, self).__init__(url=url, *args, **kwargs)
 
-        if not channels:
-            self._channels = []
+        if not sequence_identifiers:
+            self._sequence_identifiers = []
         else:
-            self._channels = channels
+            self._sequence_identifiers = sequence_identifiers
 
         self._consumer = consumer
         self._consumer.registerProducer(self, True)
         self._stopped = True
 
     @property
-    def channels(self):
-        return self._channels
+    def sequence_identifiers(self):
+        return self._sequence_identifiers
 
-    @channels.setter
-    def channels(self, value):
-        self._channels = value
+    @sequence_identifiers.setter
+    def sequence_identifiers(self, value):
+        self._sequence_identifiers = value
 
     def dataReceived(self, data):
         self._consumer.write(data)

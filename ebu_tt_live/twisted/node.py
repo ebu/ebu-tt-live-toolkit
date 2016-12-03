@@ -7,8 +7,12 @@ import logging
 log = logging.getLogger(__name__)
 
 
-@implementer(interfaces.IPullProducer)
-class TwistedPullProducer(object):
+@implementer(interfaces.IPushProducer)
+class TwistedPushProducer(object):
+    """
+    This is a Twisted Pull producer. The concept is related to twisted and it is not the same as our producer
+    and consumer nodes.
+    """
 
     _custom_producer = None
     _consumer = None
@@ -17,13 +21,16 @@ class TwistedPullProducer(object):
         self._custom_producer = custom_producer
         self._consumer = consumer
         self._consumer.registerProducer(self, False)
-        self._custom_producer.register_twisted_producer(self)
+        self._custom_producer.register_backend_producer(self)
 
-    def emit_data(self, channel, data):
-        self._consumer.write(channel, data)
+    def emit_data(self, sequence_identifier, data):
+        self._consumer.write(sequence_identifier, data)
 
     def resumeProducing(self):
         self._custom_producer.resume_producing()
+
+    def pauseProducing(self):
+        pass
 
     def stopProducing(self):
         pass
@@ -31,7 +38,10 @@ class TwistedPullProducer(object):
 
 @implementer(interfaces.IConsumer)
 class TwistedConsumer(object):
-
+    """
+    This is a Twisted Consumer producer. The concept is related to twisted and it is not the same as our producer
+    and consumer nodes.
+    """
     _custom_consumer = None
     _producer = None
 

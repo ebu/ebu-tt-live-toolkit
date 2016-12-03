@@ -20,7 +20,7 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
     def _set_data_adapters(self, value, expects, provides):
         success = True
 
-        if value is not None:
+        if value:
             data_adapters = list(value)
         elif expects != provides:
             try:
@@ -41,6 +41,8 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
                 success = False
         elif expects == provides:
             success = True
+        else:
+            success = False
 
         if success is False:
             raise DataCompatError(

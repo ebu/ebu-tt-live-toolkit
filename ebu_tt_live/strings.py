@@ -29,8 +29,12 @@ ERR_2DIM_ONLY = gettext('{type} accepts 2 dimensional values only')
 END_OF_DATA = gettext('End of available data reached')
 
 
+ERR_CONF_ONE_BACKEND_ONLY = gettext('There is only one backend allowed. Already created: {backend1}, New: {backend2}')
+
+
 DOC_SYNTACTIC_VALIDATION_SUCCESSFUL = gettext('Syntactic validation successful')
 DOC_SEMANTIC_VALIDATION_SUCCESSFUL = gettext('Document {sequence_identifier}__{sequence_number} semantic validation successful')
+DOC_PRODUCED = gettext('Document {sequence_identifier}__{sequence_number} produced')
 DOC_DISCARDED = gettext('Document {sequence_identifier}__{sequence_number} is discarded')
 DOC_INSERTED = gettext('Document {sequence_identifier}__{sequence_number} inserted into sequence')
 DOC_TRIMMED = gettext('Document {sequence_identifier}__{sequence_number} activation change: [{resolved_begin_time}; {resolved_end_time}]')

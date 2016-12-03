@@ -12,7 +12,7 @@ from ebu_tt_live.node import SimpleProducer
 from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
     TwistedPullProducer
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
-from ebu_tt_live.carriage.twisted import TwistedProducerImpl
+from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage
 from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
 
 
@@ -33,6 +33,8 @@ def main():
 
     parsed_args = parser.parse_args()
 
+    sequence_identifier = 'TestSequence1'
+
     do_export = False
     if parsed_args.folder_export:
         do_export = True
@@ -41,7 +43,7 @@ def main():
     reference_clock.clock_mode = 'local'
 
     document_sequence = EBUTT3DocumentSequence(
-        sequence_identifier='TestSequence1',
+        sequence_identifier=sequence_identifier,
         lang='en-GB',
         reference_clock=reference_clock
     )
@@ -62,7 +64,8 @@ def main():
     if do_export:
         prod_impl = FilesystemProducerImpl(parsed_args.folder_export)
     else:
-        prod_impl = TwistedProducerImpl()
+        prod_impl = WebsocketProducerCarriage()
+        prod_impl.sequence_identifier = sequence_identifier
 
     simple_producer = SimpleProducer(
         node_id='simple-producer',

@@ -28,10 +28,11 @@ def parse_adapter_list(value):
 
 class ProducerNodeCarriageAdapter(ConfigurableComponent):
 
-    def __init__(self, config, local_config, producer, carriage):
-        super(ProducerNodeCarriageAdapter, self).__init__(config=config, local_config=local_config)
+    @classmethod
+    def configure_component(cls, config, local_config, producer=None, carriage=None, **kwargs):
+        instance = cls(config=config, local_config=local_config)
         adapter_list = parse_adapter_list(local_config)
-        self.component = node_carriage.ProducerNodeCarriageAdapter(
+        instance.component = node_carriage.ProducerNodeCarriageAdapter(
             producer_carriage=carriage,
             producer_node=producer,
             data_adapters=adapter_list
@@ -40,10 +41,11 @@ class ProducerNodeCarriageAdapter(ConfigurableComponent):
 
 class ConsumerNodeCarriageAdapter(ConfigurableComponent):
 
-    def __init__(self, config, local_config, consumer, carriage):
-        super(ConsumerNodeCarriageAdapter, self).__init__(config=config, local_config=local_config)
+    @classmethod
+    def configure_component(cls, config, local_config, consumer=None, carriage=None, **kwargs):
+        instance = cls(config=config, local_config=local_config)
         adapter_list = parse_adapter_list(local_config)
-        self.component = node_carriage.ConsumerNodeCarriageAdapter(
+        instance.component = node_carriage.ConsumerNodeCarriageAdapter(
             consumer_carriage=carriage,
             consumer_node=consumer,
             data_adapters=adapter_list

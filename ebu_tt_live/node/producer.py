@@ -1,11 +1,14 @@
-
+import logging
 from .base import AbstractProducerNode
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type, style_type, styling, layout, region_type, span_type
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
-from ebu_tt_live.strings import END_OF_DATA
+from ebu_tt_live.strings import END_OF_DATA, DOC_PRODUCED
+
+
+document_logger = logging.getLogger('document_logger')
 
 
 class SimpleProducer(AbstractProducerNode):
@@ -101,4 +104,10 @@ class SimpleProducer(AbstractProducerNode):
 
         document.validate()
 
+        document_logger.info(
+            DOC_PRODUCED.format(
+                sequence_identifier=document.sequence_identifier,
+                sequence_number=document.sequence_number
+            )
+        )
         self.producer_carriage.emit_data(document, **kwargs)

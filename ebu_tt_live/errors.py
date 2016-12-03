@@ -81,3 +81,7 @@ class DiscardElement(Exception):
     in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting
     an interval between them so the container ends up being empty and thus should be discarded.
     """
+
+
+class ConfigurationError(Exception):
+    pass

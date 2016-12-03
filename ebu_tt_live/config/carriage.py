@@ -1,6 +1,7 @@
 from .common import ConfigurableComponent, Namespace
 from ebu_tt_live.carriage.direct import DirectCarriageImpl
-from ebu_tt_live.carriage.twisted import TwistedProducerImpl, TwistedConsumerImpl
+from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage, WebsocketConsumerCarriage
+import urlparse
 
 
 def producer_carriage_by_type(carriage_type):
@@ -29,8 +30,16 @@ class DirectCommon(ConfigurableComponent):
 
     _components = {}
 
+    def __init__(self, config, local_config, **kwargs):
+        super(DirectCommon, self).__init__(
+            config=config,
+            local_config=local_config,
+            **kwargs
+        )
+        self.backend.register_component_start(self)
+
     @classmethod
-    def configure_component(cls, config, local_config):
+    def configure_component(cls, config, local_config, **kwargs):
         instance = cls(config=config, local_config=local_config)
         component = cls._components.get(local_config.id, None)
 
@@ -68,44 +77,36 @@ class FileOutput(ConfigurableComponent):
 
 # Websocket carriage mechanism configurators
 # ==========================================
+
+
+def str_to_url_converter(value):
+    parsed = urlparse.urlparse(value)
+    return parsed
+
+
+
 class WebsocketBase(ConfigurableComponent):
     required_config = Namespace()
-    required_config.add_option('uri', default='ws://localhost:9001')
-    required_config.add_option('channel', default='TestSequence1')
+    required_config.add_option('uri', default='ws://localhost:9001', from_string_converter=str_to_url_converter)
 
 
 class WebsocketOutput(WebsocketBase):
 
-    _pull_producer = None
+    _backend_producer = None
     _looping_call = None
 
     def __init__(self, config, local_config):
         super(WebsocketOutput, self).__init__(config, local_config)
-        self.component = TwistedProducerImpl()
-        self.component.twisted_channel = local_config.channel
+        self.component = WebsocketProducerCarriage()
+        self.backend.register_component_start(self)
 
     def start(self):
-        from ebu_tt_live.twisted import websocket, TwistedPullProducer, task
-
-        factory = websocket.BroadcastServerFactory(self.config.uri)
-        factory.protocol = websocket.StreamingServerProtocol
-
-        self._pull_producer = TwistedPullProducer(
-            consumer=factory,
-            custom_producer=self.component
-        )
-
-        self._looping_call = task.LoopingCall(factory.pull)
-
-        self._looping_call.start(2.0, now=False)
-        factory.listen()
+        self._backend_producer = self.backend.ws_backend_producer(uri=self.config.uri, custom_producer=self.component)
 
 
 class WebsocketInput(WebsocketBase):
 
     def __init__(self, config, local_config):
         super(WebsocketInput, self).__init__(config, local_config)
-        self.component = TwistedConsumerImpl()
+        self.component = WebsocketConsumerCarriage()
         self.component.twisted_channel = local_config.channel
-
-

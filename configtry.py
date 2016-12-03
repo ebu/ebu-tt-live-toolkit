@@ -20,8 +20,8 @@ def main():
     )
     config = cm.get_config()
 
-    backend = config.backend.type(config, config.backend)
-    uni_nodes = UniversalNodes(config, config)
+    backend = config.backend.type.configure_component(config, config.backend)
+    uni_nodes = config.nodes.type.configure_component(config, config.nodes)
     backend.start()
 
 if __name__ == '__main__':
