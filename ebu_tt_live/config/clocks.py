@@ -9,6 +9,16 @@ class LocalMachineClock(ConfigurableComponent):
         self.component = clocks.local.LocalMachineClock()
 
 
+class DummyClock(ConfigurableComponent):
+    """
+    This wrapper returns None for reference clock allowing the consumer to create a reference clock from the first
+    document received
+    """
+    component = None
+
+
 def clock_by_type(clock_type):
     if clock_type == 'local':
         return LocalMachineClock
+    elif clock_type == 'auto':
+        return DummyClock

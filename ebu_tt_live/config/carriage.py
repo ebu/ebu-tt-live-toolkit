@@ -1,4 +1,5 @@
 from .common import ConfigurableComponent, Namespace
+from ebu_tt_live.carriage.direct import DirectCarriageImpl
 from ebu_tt_live.carriage.twisted import TwistedProducerImpl, TwistedConsumerImpl
 
 
@@ -7,6 +8,8 @@ def producer_carriage_by_type(carriage_type):
         return WebsocketOutput
     elif carriage_type == 'filesystem':
         return FileOutput
+    elif carriage_type == 'direct':
+        return DirectOutput
     else:
         raise Exception('No such component: {}'.format(carriage_type))
 
@@ -14,8 +17,46 @@ def producer_carriage_by_type(carriage_type):
 def consumer_carriage_by_type(carriage_type):
     if carriage_type == 'websocket':
         return WebsocketInput
+    elif carriage_type == 'direct':
+        return DirectInput
     else:
         raise Exception('No such component: {}'.format(carriage_type))
+
+
+class DirectCommon(ConfigurableComponent):
+    required_config = Namespace()
+    required_config.add_option('id', default='default')
+
+    _components = {}
+
+    @classmethod
+    def configure_component(cls, config, local_config):
+        instance = cls(config=config, local_config=local_config)
+        component = cls._components.get(local_config.id, None)
+
+        if component is None:
+            instance.component = DirectCarriageImpl()
+            cls._components[local_config.id] = instance.component
+        else:
+            instance.component = component
+
+        return instance
+
+
+class DirectInput(DirectCommon):
+    pass
+
+
+class DirectOutput(DirectCommon):
+
+    _looping_call = None
+
+    def start(self):
+        # At the moment this is twisted specific... investigate other options.
+        from ebu_tt_live.twisted import task
+
+        self._looping_call = task.LoopingCall(self.component.resume_producing)
+        self._looping_call.start(2.0, now=False)
 
 
 # File-based carriage mechanism configurators
@@ -56,7 +97,7 @@ class WebsocketOutput(WebsocketBase):
 
         self._looping_call = task.LoopingCall(factory.pull)
 
-        self._looping_call.start(2.0)
+        self._looping_call.start(2.0, now=False)
         factory.listen()
 
 

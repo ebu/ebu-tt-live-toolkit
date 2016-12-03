@@ -6,7 +6,7 @@ from ebu_tt_live.example_data import get_example_data
 import ebu_tt_live.node as processing_node
 from itertools import cycle
 from ebu_tt_live.utils import tokenize_english_document
-from .adapters import ProducerNodeCarriageAdapter
+from .adapters import ProducerNodeCarriageAdapter, ConsumerNodeCarriageAdapter
 
 
 class NodeBase(ConfigurableComponent):
@@ -17,8 +17,36 @@ class NodeBase(ConfigurableComponent):
 class SimpleConsumer(NodeBase):
     required_config = Namespace()
     required_config.add_option('id', default='simple-consumer')
-    required_config.input = input_section = Namespace()
-    input_section.add_option('type', default='websocket', from_string_converter=consumer_carriage_by_type)
+    required_config.input = Namespace()
+    required_config.input.carriage = Namespace()
+    required_config.input.carriage.add_option(
+        'type', default='websocket', from_string_converter=consumer_carriage_by_type)
+    required_config.input.add_option('adapters')
+    required_config.clock = Namespace()
+    required_config.clock.add_option('type', default='auto', from_string_converter=clock_by_type)
+
+    _input = None
+
+    @classmethod
+    def configure_component(cls, config, local_config):
+        instance = cls(config=config, local_config=local_config)
+
+        instance._input = local_config.input
+        instance._input.carriage = local_config.input.carriage.type.configure_component(
+            config, local_config.input.carriage)
+
+        instance.component = processing_node.SimpleConsumer(
+            node_id=instance.config.id
+        )
+
+        instance._input.adapters = ConsumerNodeCarriageAdapter(
+            config=config,
+            local_config=local_config.input.adapters,
+            consumer=instance.component,
+            carriage=instance._input.carriage.component
+        )
+
+        return instance
 
 
 class SimpleProducer(NodeBase):
@@ -35,16 +63,16 @@ class SimpleProducer(NodeBase):
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
 
-    clock = None
-    output = None
+    _clock = None
+    _output = None
 
     def __init__(self, config, local_config):
         super(SimpleProducer, self).__init__(config, local_config)
-        self.clock = local_config.clock.type(config, local_config.clock)
+        self._clock = local_config.clock.type(config, local_config.clock)
         sequence = documents.EBUTT3DocumentSequence(
             sequence_identifier=local_config.sequence_identifier,
             lang='en-GB',
-            reference_clock=self.clock.component
+            reference_clock=self._clock.component
         )
 
         if local_config.show_time:
@@ -58,21 +86,22 @@ class SimpleProducer(NodeBase):
             #     # This makes the source cycle infinitely.
             subtitle_tokens = cycle(tokenize_english_document(full_text))
 
-        self.output = local_config.output
-        self.output.carriage = local_config.output.carriage.type(config, local_config.output.carriage)
+        self._output = local_config.output
+        self._output.carriage = local_config.output.carriage.type.configure_component(
+            config, local_config.output.carriage)
 
         self.component = processing_node.SimpleProducer(
-            node_id='simple-producer',
+            node_id=local_config.id,
             document_sequence=sequence,
             producer_carriage=None,
             input_blocks=subtitle_tokens
         )
 
-        self.output.adapters = ProducerNodeCarriageAdapter(
+        self._output.adapters = ProducerNodeCarriageAdapter(
             config=config,
             local_config=local_config.output.adapters,
             producer=self.component,
-            carriage=self.output.carriage.component
+            carriage=self._output.carriage.component
         )
 
 
@@ -87,5 +116,31 @@ def nodes_by_type(node_name):
 
 class UniversalNode(RequiredConfig):
     required_config = Namespace()
-    required_config.node = node = Namespace()
-    node.add_option('type', default='simple-consumer', from_string_converter=nodes_by_type)
+    required_config.add_option('type', default=None, from_string_converter=nodes_by_type)
+
+
+class UniversalNodes(RequiredConfig):
+    required_config = Namespace()
+    required_config.node1 = node1 = UniversalNode.get_required_config()
+    required_config.node2 = node2 = UniversalNode.get_required_config()
+    required_config.node3 = node3 = UniversalNode.get_required_config()
+    required_config.node4 = node4 = UniversalNode.get_required_config()
+    required_config.node5 = node5 = UniversalNode.get_required_config()
+    required_config.node6 = node6 = UniversalNode.get_required_config()
+    required_config.node7 = node7 = UniversalNode.get_required_config()
+
+    _nodes = None
+
+    def __init__(self, config, local_config):
+        self._nodes = []
+        for item in [
+            local_config.node1,
+            local_config.node2,
+            local_config.node3,
+            local_config.node4,
+            local_config.node5,
+            local_config.node6,
+            local_config.node7
+        ]:
+            if item.type is not None:
+                self._nodes.append(item.type.configure_component(config, item))

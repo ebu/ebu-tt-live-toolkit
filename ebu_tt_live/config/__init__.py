@@ -46,7 +46,7 @@ class AppConfig(configman.RequiredConfig):
     def __init__(self, **kwargs):
         default_config = {
             'definition_source':  [
-                node.UniversalNode.get_required_config(),
+                node.UniversalNodes.get_required_config(),
                 backend.UniversalBackend.get_required_config()
             ],
             'values_source_list': [
@@ -60,7 +60,3 @@ class AppConfig(configman.RequiredConfig):
 
         global current_app
         current_app = instance
-
-    required_config = configman.Namespace()
-    required_config.backend = backend.UniversalBackend
-    

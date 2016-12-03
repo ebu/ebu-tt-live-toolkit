@@ -1,6 +1,6 @@
 
 from .base import AbstractConsumerNode, IProducerNode
-from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTTDDocument
+from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTTDDocument, EBUTT3Document
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.strings import DOC_RECEIVED
 from ebu_tt_live.clocks.media import MediaClock
@@ -16,9 +16,13 @@ class SimpleConsumer(AbstractConsumerNode):
 
     _reference_clock = None
     _sequence = None
+    _expects = EBUTT3Document
 
-    def __init__(self, node_id, carriage_impl, reference_clock):
-        super(SimpleConsumer, self).__init__(node_id, carriage_impl)
+    def __init__(self, node_id, consumer_carriage=None, reference_clock=None):
+        super(SimpleConsumer, self).__init__(
+            node_id=node_id,
+            consumer_carriage=consumer_carriage
+        )
         self._reference_clock = reference_clock
 
     def process_document(self, document, **kwargs):
@@ -42,10 +46,6 @@ class SimpleConsumer(AbstractConsumerNode):
         self._sequence.add_document(document)
 
     @property
-    def expects(self):
-        return EBUTTDDocument
-
-    @property
     def reference_clock(self):
         return self._reference_clock
 
@@ -64,6 +64,8 @@ class EBUTTDEncoder(IProducerNode, SimpleConsumer):
     _segment_timer = None
     _discard = None
     _implicit_ns = False
+    _expects = EBUTT3Document
+    _provides = EBUTTDDocument
 
     def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock,
             segment_length, media_time_zero, segment_timer, discard, segmentation_starts=None,

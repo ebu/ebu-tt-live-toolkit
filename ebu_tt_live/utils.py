@@ -263,7 +263,7 @@ def validate_types_only(value, member_name, class_name):
     if not isinstance(value, tuple):
         value = (value,)
     for item in value:
-        if not isinstance(item, (type, types.ClassType)):
+        if not isinstance(item, (type, types.ClassType)) and item is not ANY:
             raise TypeError(
                 'Abstract static member: \'{}.{}\' is not a type or class'.format(
                     class_name,

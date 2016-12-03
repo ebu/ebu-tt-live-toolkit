@@ -1,6 +1,8 @@
+import logging
 from .common import ConfigurableComponent, Namespace, RequiredConfig
 
 current_backend = None
+log = logging.getLogger(__name__)
 
 
 class BackendBase(ConfigurableComponent):
@@ -31,6 +33,7 @@ class TwistedBackend(BackendBase):
         for item in ConfigurableComponent.all_configurators:
             # Start all the components
             if item != self:
+                log.info('Starting component: {}'.format(item))
                 item.start()
         reactor.run()
 

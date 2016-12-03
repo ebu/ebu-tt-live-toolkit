@@ -1,13 +1,21 @@
 {
-  "node": {
+  "node1": {
     "type": "simple-producer",
     "show_time": true,
     "sequence_identifier": "TestSequence2",
     "output": {
       "carriage": {
-        "type": "websocket",
-        "uri": "ws://0.0.0.0:9000",
-        "channel": "TestSequence2"
+        "type": "direct",
+        "id": "1"
+      }
+    }
+  },
+  "node2": {
+    "type": "simple-consumer",
+    "input": {
+      "carriage": {
+        "type": "direct",
+        "id": "1"
       }
     }
   }

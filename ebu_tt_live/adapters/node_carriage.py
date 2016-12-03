@@ -5,7 +5,7 @@ from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
 from ebu_tt_live.errors import DataCompatError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_DATA_CONVERSION
 from .document_data import get_document_data_adapter
-from ebu_tt_live.utils import AnyType
+from ebu_tt_live.utils import ANY
 
 
 
@@ -65,8 +65,8 @@ class ProducerNodeCarriageAdapter(IProducerCarriage, IProducerNode, AbstractNode
 
     _producer_node = None
     _producer_carriage = None
-    _expects = AnyType
-    _provides = AnyType
+    _expects = ANY
+    _provides = ANY
 
     def __init__(self, producer_node, producer_carriage, data_adapters=None):
         self._expects = producer_node.provides()
@@ -120,8 +120,8 @@ class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNode
 
     _consumer_carriage = None
     _consumer_node = None
-    _expects = AnyType
-    _provides = AnyType
+    _expects = ANY
+    _provides = ANY
 
     def __init__(self, consumer_node, consumer_carriage, data_adapters=None):
         self._expects = consumer_carriage.provides()
@@ -153,7 +153,7 @@ class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNode
 
     def on_new_data(self, data, **kwargs):
         # Again in this scenario this is unlikely to be called by anyone
-        self.consumer_carriage.on_new_data(data, **kwargs)
+        self.consumer_node.on_new_data(data, **kwargs)
 
     def process_document(self, document, **kwargs):
         # Conversion happens here in this traffic direction
