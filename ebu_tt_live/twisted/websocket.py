@@ -160,20 +160,7 @@ class BroadcastServerFactory(WebSocketServerFactory):
 class BroadcastClientProtocol(WebSocketClientProtocol):
 
     def onOpen(self):
-        for sequence_identifier in self.factory.sequence_identifiers:
-            self.subscribesequence_identifier(sequence_identifier)
-
-    def subscribesequence_identifier(self, sequence_identifier):
-        data = {
-            'subscribe': sequence_identifier
-        }
-        self.sendMessage(json.dumps(data))
-
-    def unsubscribesequence_identifier(self, sequence_identifier):
-        data = {
-            'unsubscribe': sequence_identifier
-        }
-        self.sendMessage(json.dumps(data))
+        pass
 
     def onMessage(self, payload, isBinary):
         self.factory.dataReceived(payload)
@@ -182,29 +169,15 @@ class BroadcastClientProtocol(WebSocketClientProtocol):
 @implementer(interfaces.IPushProducer)
 class BroadcastClientFactory(WebSocketClientFactory):
 
-    _sequence_identifiers = None
     _consumer = None
     _stopped = None
 
-    def __init__(self, url, consumer, sequence_identifiers=None, *args, **kwargs):
+    def __init__(self, url, consumer, *args, **kwargs):
         super(BroadcastClientFactory, self).__init__(url=url, *args, **kwargs)
-
-        if not sequence_identifiers:
-            self._sequence_identifiers = []
-        else:
-            self._sequence_identifiers = sequence_identifiers
 
         self._consumer = consumer
         self._consumer.registerProducer(self, True)
         self._stopped = True
-
-    @property
-    def sequence_identifiers(self):
-        return self._sequence_identifiers
-
-    @sequence_identifiers.setter
-    def sequence_identifiers(self, value):
-        self._sequence_identifiers = value
 
     def dataReceived(self, data):
         self._consumer.write(data)

@@ -50,3 +50,5 @@ class ConsumerNodeCarriageAdapter(ConfigurableComponent):
             consumer_node=consumer,
             data_adapters=adapter_list
         )
+
+        return instance

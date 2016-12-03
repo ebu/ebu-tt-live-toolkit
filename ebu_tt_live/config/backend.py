@@ -36,8 +36,8 @@ class TwistedBackend(BackendBase):
         self._websocket = websocket
         self._reactor = reactor
         self._task = task
-        self._twisted_producer_type = TwistedPushProducer
-        self._twisted_consumer_type = TwistedConsumer
+        self._ws_twisted_producer_type = TwistedPushProducer
+        self._ws_twisted_consumer_type = TwistedConsumer
         self._ws_twisted_servers = {}
         super(TwistedBackend, self).__init__(config=config, local_config=local_config)
 
@@ -58,7 +58,7 @@ class TwistedBackend(BackendBase):
         else:
             factory = self._ws_twisted_servers.get(uri)
 
-        twisted_producer = self._twisted_producer_type(
+        twisted_producer = self._ws_twisted_producer_type(
             consumer=factory,
             custom_producer=custom_producer
         )
@@ -66,7 +66,21 @@ class TwistedBackend(BackendBase):
         return twisted_producer
 
     def ws_backend_consumer(self, uri, custom_consumer):
-        return None
+        factory_args = {}
+        # if args.proxy:
+        #     proxyHost, proxyPort = args.proxy.split(':')
+        #     factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
+        factory = self._websocket.BroadcastClientFactory(
+            url=uri.geturl(),
+            consumer=self._ws_twisted_consumer_type(
+                custom_consumer=custom_consumer
+            ),
+            **factory_args
+        )
+
+        factory.protocol = self._websocket.BroadcastClientProtocol
+
+        factory.connect()
 
     def call_once(self, func, delay=0.0, result_callback=None, error_callback=None, *args, **kwargs):
         d = self._task.deferLater(self._reactor, delay=delay, callable=func, *args, **kwargs)

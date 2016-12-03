@@ -145,6 +145,12 @@ class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNode
     def register_consumer_node(self, node):
         self._consumer_node = node
 
+    def expects(self):
+        return self._expects
+
+    def provides(self):
+        return self._provides
+
     @property
     def consumer_carriage(self):
         return self._consumer_carriage

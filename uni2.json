@@ -23,6 +23,16 @@
           "uri": "ws://localhost:9000"
         }
       }
+    },
+    "node3": {
+      "id": "consumer1",
+      "type": "simple-consumer",
+      "input": {
+        "carriage": {
+          "type": "websocket",
+          "uri": "ws://localhost:9000/TestSequence2"
+        }
+      }
     }
   }
 }

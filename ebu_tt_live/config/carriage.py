@@ -106,7 +106,12 @@ class WebsocketOutput(WebsocketBase):
 
 class WebsocketInput(WebsocketBase):
 
+    _backend_consumer = None
+
     def __init__(self, config, local_config):
         super(WebsocketInput, self).__init__(config, local_config)
         self.component = WebsocketConsumerCarriage()
-        self.component.twisted_channel = local_config.channel
+        self.backend.register_component_start(self)
+
+    def start(self):
+        self._backend_consumer = self.backend.ws_backend_consumer(uri=self.config.uri, custom_consumer=self.component)
