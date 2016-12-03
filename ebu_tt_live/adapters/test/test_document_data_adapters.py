@@ -36,15 +36,15 @@ class TestIDocumentDataAdapter(TestCase):
 
         wref = weakref.ref(impl_class)
 
-        self.assertEquals(
-            impl_class,
-            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB)
+        self.assertIsInstance(
+            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB),
+            impl_class
         )
         gc.collect()
         # It should not be garbage collected
-        self.assertEquals(
-            impl_class,
-            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB)
+        self.assertIsInstance(
+            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB),
+            impl_class
         )
 
         del impl_class
@@ -58,9 +58,9 @@ class TestIDocumentDataAdapter(TestCase):
         wref = weakref.ref(impl_class)
 
         # Check if it got back in the mapping
-        self.assertEquals(
-            impl_class,
-            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB)
+        self.assertIsInstance(
+            document_data.get_document_data_adapter(DummyDataTypeA, DummyDataTypeB),
+            impl_class
         )
 
         del impl_class
