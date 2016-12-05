@@ -16,7 +16,7 @@ class ProducerCarriageImpl(CarriageImpl):
     Node that emits documents to an output interface, usually some network socket.
     """
 
-    def emit_document(self, document):
+    def emit_document(self, document, **kwargs):
         """
         Implement protocol specific postprocessing here.
         :param document:

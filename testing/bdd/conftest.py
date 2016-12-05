@@ -124,7 +124,7 @@ def then_computed_style_value_is(style_attribute, elem_id, computed_value, test_
 
 @given('it has availability time <avail_time>')
 def given_avail_time(avail_time, template_dict, gen_document):
-    gen_document.availability_time = timestr_to_timedelta(avail_time, template_dict['time_base'])
+    gen_document.availability_time = timestr_to_timedelta(avail_time, gen_document.time_base)
 
 
 @pytest.fixture

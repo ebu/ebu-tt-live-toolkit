@@ -92,7 +92,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             except EndOfData:
                 break
 
-    def emit_document(self, document):
+    def emit_document(self, document, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -190,7 +190,7 @@ class SimpleFolderExport(ProducerCarriageImpl):
         self._file_name_pattern = file_name_pattern
         self._counter = 0
 
-    def _do_write_document(self, document):
+    def _do_write_document(self, document, **kwargs):
         self._counter += 1
         filename = self._file_name_pattern.format(self._counter)
         filepath = os.path.join(self._dir_path, filename)
@@ -199,8 +199,8 @@ class SimpleFolderExport(ProducerCarriageImpl):
             destfile.flush()
         return filepath
 
-    def emit_document(self, document):
-        self._do_write_document(document)
+    def emit_document(self, document, **kwargs):
+        self._do_write_document(document, **kwargs)
 
 
 class RotatingFolderExport(SimpleFolderExport):
