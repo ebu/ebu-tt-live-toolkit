@@ -1,4 +1,5 @@
 
+from abc import abstractmethod
 from .base import INodeCarriageAdapter
 from ebu_tt_live.carriage.interface import IProducerCarriage, IConsumerCarriage
 from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
@@ -6,7 +7,6 @@ from ebu_tt_live.errors import DataCompatError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_DATA_CONVERSION
 from .document_data import get_document_data_adapter
 from ebu_tt_live.utils import ANY
-
 
 
 class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
@@ -20,7 +20,7 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
     def _set_data_adapters(self, value, expects, provides):
         success = True
 
-        if value:
+        if value is not None:
             data_adapters = list(value)
         elif expects != provides:
             try:
@@ -47,13 +47,15 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
         if success is False:
             raise DataCompatError(
                 ERR_INCOMPATIBLE_DATA_CONVERSION.format(
-                    expects=provides,
-                    provides=expects
+                    expects=expects,
+                    provides=provides,
+                    data_adapters=data_adapters
                 )
             )
 
         self._data_adapters = data_adapters
 
+    @abstractmethod
     def convert_data(self, data, **kwargs):
         in_kwargs = {}
         in_kwargs.update(kwargs)
@@ -117,6 +119,9 @@ class ProducerNodeCarriageAdapter(IProducerCarriage, IProducerNode, AbstractNode
         # a producer carriage mechanism is not supposed to call this function
         self.producer_node.process_document(document=document, **kwargs)
 
+    def convert_data(self, data, **kwargs):
+        return super(ProducerNodeCarriageAdapter, self).convert_data(data=data, **kwargs)
+
 
 class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNodeCarriageAdapter):
 
@@ -167,3 +172,6 @@ class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNode
         # Conversion happens here in this traffic direction
         conv_doc, new_kwargs = self.convert_data(document, **kwargs)
         self.consumer_node.process_document(conv_doc, **new_kwargs)
+
+    def convert_data(self, data, **kwargs):
+        return super(ConsumerNodeCarriageAdapter, self).convert_data(data=data, **kwargs)

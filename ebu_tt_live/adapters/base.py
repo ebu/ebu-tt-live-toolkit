@@ -47,7 +47,7 @@ class IDocumentDataAdapter(object):
     def get_registered_impl(cls, expects, provides):
         impl_class = cls.__impl_registry.get(expects, {}).get(provides, None)
         if impl_class is None:
-            raise ValueError('No such adapter found for ({} -> {})'.format(
+            raise ValueError('No adapter found for: {} -> {}'.format(
                 expects, provides
             ))
         return impl_class
