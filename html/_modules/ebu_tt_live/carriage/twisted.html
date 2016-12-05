@@ -138,7 +138,6 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">XMLParsingFailed</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">xml.dom</span> <span class="k">import</span> <span class="n">minidom</span>
 
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
@@ -155,8 +154,13 @@
         <span class="c1"># None, since this is a producer module. It will produce a new document.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TwistedProducerImpl.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.twisted.TwistedProducerImpl.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_twisted_producer</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span></div></div>
+<div class="viewcode-block" id="TwistedProducerImpl.emit_document"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.twisted.TwistedProducerImpl.emit_document">[docs]</a>    <span class="k">def</span> <span class="nf">emit_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_twisted_producer</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span>
+            <span class="n">channel</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">(),</span>
+            <span class="n">delay</span><span class="o">=</span><span class="n">delay</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="TwistedConsumerImpl"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.twisted.TwistedConsumerImpl">[docs]</a><span class="k">class</span> <span class="nc">TwistedConsumerImpl</span><span class="p">(</span><span class="n">ConsumerCarriageImpl</span><span class="p">):</span>
