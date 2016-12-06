@@ -110,7 +110,7 @@ class BroadcastServerFactory(WebSocketServerFactory):
     _producers = None
     _push_producer = None
 
-    def __init__(self, url):
+    def __init__(self, url=None):
         super(BroadcastServerFactory, self).__init__(url, protocols=[13])
         self._clients = []
         self._producers = weakref.WeakSet()
