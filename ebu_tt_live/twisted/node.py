@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 @implementer(interfaces.IPushProducer)
 class TwistedPushProducer(object):
     """
-    This is a Twisted Pull producer. The concept is related to twisted and it is not the same as our producer
+    This is a Twisted Push producer. The concept is related to twisted and it is not the same as our producer
     and consumer nodes.
     """
 
