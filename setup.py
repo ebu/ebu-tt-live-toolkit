@@ -52,7 +52,7 @@ setup(
             'ebu-user-input-consumer = ebu_tt_live.scripts.ebu_user_input_consumer:main',
             'ebu-user-input-forwarder = ebu_tt_live.scripts.ebu_user_input_forwarder:main',
             'ebu-ebuttd-encoder = ebu_tt_live.scripts.ebu_ebuttd_encoder:main',
-            'ebu-universal-nodes = ebu_tt_live.scripts.ebu_universal_nodes:main'
+            'ebu-run = ebu_tt_live.scripts.ebu_run:main'
         ]
     },
     **extra

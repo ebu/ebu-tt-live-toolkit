@@ -1,5 +1,5 @@
 """
-This subpackage is meant to contain configuration directives of validation and and normalization as well as defaults.
+This subpackage is meant to contain configuration directives of validation and normalization as well as defaults.
 The current plan is to use mozilla/configman package. Ultimately there is one goal there. Avoid any
 runtime errors because of a broken configuration value being used at a later stage in execution at which point due to
 not having been validated would cause the system to break. Validation and normalization eliminates this problem
@@ -18,16 +18,14 @@ the individual modules can be self-contained as much as possible yet it is possi
 parameters, such as a HTTP proxy.
 """
 
+from configman import RequiredConfig, ConfigurationManager, ConfigFileFutureProxy, \
+    command_line
+from .backend import UniversalBackend
+from .node import UniversalNodes
 
 __all__ = [
     'common', 'backend', 'node'
 ]
-
-from . import common
-from . import backend
-from . import node
-import configman
-
 
 current_app = None
 
@@ -35,28 +33,36 @@ current_app = None
 def create_app(**kwargs):
     global current_app
     current_app = AppConfig(**kwargs)
+    return current_app
 
 
-class AppConfig(configman.RequiredConfig):
+class AppConfig(RequiredConfig):
 
     _config = None
     _backend = None
     _nodes = None
 
     def __init__(self, **kwargs):
-        default_config = {
-            'definition_source':  [
-                node.UniversalNodes.get_required_config(),
-                backend.UniversalBackend.get_required_config()
+        cm = ConfigurationManager(
+            definition_source=[
+                UniversalNodes.get_required_config(),
+                UniversalBackend.get_required_config()
             ],
-            'values_source_list': [
-                configman.ConfigFileFutureProxy,
-                configman.command_line
+            values_source_list=[
+                ConfigFileFutureProxy,
+                command_line
             ]
-        }
-        default_config.update(kwargs)
-        config = configman.configuration(**default_config)
-        self.config = config
+        )
+        config = cm.get_config()
+
+        self._backend = config.backend.type.configure_component(config, config.backend)
+        self._nodes = config.nodes.type.configure_component(config, config.nodes)
+        self._config = config
 
         global current_app
-        current_app = instance
+        current_app = self
+
+    def start(self):
+
+        self._backend.start()
+

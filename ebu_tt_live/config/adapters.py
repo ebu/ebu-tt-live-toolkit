@@ -23,7 +23,7 @@ def parse_adapter_list(value):
             conv_type = item['type']
             kwargs = {ckey: carg for ckey, carg in item.items() if ckey != 'type'}
             parsed_value.append(data_adapters_by_directed_conversion(conv_type)(**kwargs))
-    return parsed_value
+    return parsed_value or None
 
 
 class ProducerNodeCarriageAdapter(ConfigurableComponent):
