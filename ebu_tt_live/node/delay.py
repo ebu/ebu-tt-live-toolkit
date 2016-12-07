@@ -23,7 +23,16 @@ class RetimingDelayNode(Node):
 
         # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
-        update_children_timing(document.binding, document.time_base, self._fixed_delay)
+        if is_explicitly_timed(document.binding):
+
+            # the document is explicitly timed, we propagate the modification on all elements
+            update_children_timing(document.binding, document.time_base, self._fixed_delay)
+
+        else:
+
+            # the document is implicitly timed, we only modify the body timing
+            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+
         document.validate()
         self._carriage_impl.emit_document(document)
 
@@ -74,6 +83,17 @@ def update_children_timing(element, timebase, delay_int):
 
             else:
                 update_children_timing(child.value, timebase, delay_int)
+
+
+def update_body_timing(body, timebase, delay_int):
+
+    if timebase == 'clock':
+        delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+        body.begin = LimitedClockTimingType(delay.timedelta)
+
+    elif timebase == 'media':
+        delay = FullClockTimingType(timedelta(seconds=delay_int))
+        body.begin = FullClockTimingType(delay.timedelta)
 
 
 def is_explicitly_timed(element):
