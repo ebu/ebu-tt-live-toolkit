@@ -52,6 +52,16 @@ def given_span_end(span_end, template_dict):
     template_dict['span_end'] = span_end
 
 
+@given('it has span2 begin time <span2_begin>')
+def given_span2_begin(span2_begin, template_dict):
+    template_dict['span2_begin'] = span2_begin
+
+
+@given('it has span2 end time <span2_end>')
+def given_span2_end(span2_end, template_dict):
+    template_dict['span2_end'] = span2_end
+
+
 @when('the delay node delays it by <delay>')
 def when_delay(delay, test_context, gen_document):
 
@@ -80,8 +90,8 @@ def then_availability_time(delayed_avail_time, test_context):
     delayed_avail_time_float = LimitedClockTimingType(delayed_avail_time).timedelta
     assert test_context['doc'].availability_time == delayed_avail_time_float
 
-# functions for computed times
 
+# functions for computed times
 
 @then('the updated body computed begin time is <updated_body_begin>')
 def then_updated_body_computed_begin_time(test_context, updated_body_begin):
@@ -130,8 +140,40 @@ def then_updated_p_computed_end_time(test_context, updated_p_end):
     else:
         assert test_context['doc'].binding.body.div[0].p[0].computed_end_time is None
 
-# functions for specified times
 
+@then('the updated span computed begin time is <updated_span_begin>')
+def then_updated_span_computed_begin_time(test_context, updated_span_begin):
+    if updated_span_begin != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].computed_begin_time == LimitedClockTimingType(updated_span_begin).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].computed_begin_time is None
+
+
+@then('the updated span computed end time is <updated_span_end>')
+def then_updated_span_computed_end_time(test_context, updated_span_end):
+    if updated_span_end != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].computed_end_time == LimitedClockTimingType(updated_span_end).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].computed_end_time is None
+
+
+@then('the updated span2 computed begin time is <updated_span2_begin>')
+def then_updated_span2_computed_begin_time(test_context, updated_span2_begin):
+    if updated_span2_begin != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].computed_begin_time == LimitedClockTimingType(updated_span2_begin).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].computed_begin_time is None
+
+
+@then('the updated span2 computed end time is <updated_span2_end>')
+def then_updated_span2_computed_end_time(test_context, updated_span2_end):
+    if updated_span2_end != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].computed_end_time == LimitedClockTimingType(updated_span2_end).timedelta
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].computed_end_time is None
+
+
+# functions for specified times
 
 @then('the updated body specified begin time is <updated_body_begin>')
 def then_updated_body_specified_begin_time(test_context, updated_body_begin):
@@ -179,3 +221,35 @@ def then_updated_p_specified_end_time(test_context, updated_p_end):
         assert test_context['doc'].binding.body.div[0].p[0].end == updated_p_end
     else:
         assert test_context['doc'].binding.body.div[0].p[0].end is None
+
+
+@then('the updated span specified begin time is <updated_span_begin>')
+def then_updated_span_specified_begin_time(test_context, updated_span_begin):
+    if updated_span_begin != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].begin == updated_span_begin
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].begin is None
+
+
+@then('the updated span specified end time is <updated_span_end>')
+def then_updated_span_specified_end_time(test_context, updated_span_end):
+    if updated_span_end != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].end == updated_span_end
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[0].end is None
+
+
+@then('the updated span2 specified begin time is <updated_span2_begin>')
+def then_updated_span2_specified_begin_time(test_context, updated_span2_begin):
+    if updated_span2_begin != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].begin == updated_span2_begin
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].begin is None
+
+
+@then('the updated span2 specified end time is <updated_span2_end>')
+def then_updated_span2_specified_end_time(test_context, updated_span2_end):
+    if updated_span2_end != '':
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].end == updated_span2_end
+    else:
+        assert test_context['doc'].binding.body.div[0].p[0].span[1].end is None
