@@ -21,97 +21,53 @@
   </tt:head>
   <tt:body
 {% if body_begin %}
-  {% if body_begin == "*?Empty?*" %}
-      begin=""
-  {% else %}
-      begin="{{ body_begin }}"
-  {% endif %}
+  begin="{{ body_begin }}"
 {% endif %}
 {% if body_end %}
-  {% if body_end == "*?Empty?*" %}
-      end=""
-  {% else %}
-      end="{{ body_end }}"
-  {% endif%}
+  end="{{ body_end }}"
 {% endif %}
 {% if body_dur %}
-  {% if body_dur == "*?Empty?*" %}
-      dur=""
-  {% else %}
-      dur="{{ body_dur }}"
-  {% endif %}
+  dur="{{ body_dur }}"
 {% endif %}
     >
 
     <tt:div
 {% if div_begin %}
-  {% if div_begin == "*?Empty?*" %}
-        begin=""
-  {% else %}
-        begin="{{ div_begin }}"
-  {% endif %}
+  begin="{{ div_begin }}"
 {% endif %}
 {% if div_end %}
-  {% if div_end == "*?Empty?*" %}
-        end=""
-  {% else %}
-        end="{{ div_end }}"
-  {% endif%}
+  end="{{ div_end }}"
 {% endif %}
       >
 
       <tt:p
 {% if p_begin %}
-  {% if p_begin == "*?Empty?*" %}
-        begin=""
-  {% else %}
-        begin="{{ p_begin }}"
-  {% endif %}
+  begin="{{ p_begin }}"
 {% endif %}
 {% if p_end %}
-  {% if p_end == "*?Empty?*" %}
-        end=""
-  {% else %}
-        end="{{ p_end }}"
-  {% endif%}
+  end="{{ p_end }}"
 {% endif %}
         xml:id="ID005">
 
         <tt:span
 {% if span_begin %}
-  {% if span_begin == "*?Empty?*" %}
-                begin=""
-  {% else %}
-                begin="{{ span_begin }}"
-  {% endif %}
+  begin="{{ span_begin }}"
 {% endif %}
 {% if span_end %}
-  {% if span_end == "*?Empty?*" %}
-                end=""
-  {% else %}
-                end="{{ span_end }}"
-  {% endif%}
+  end="{{ span_end }}"
 {% endif %}
               >
               Some example text...
             </tt:span>
         <tt:span
 {% if span2_begin %}
-  {% if span2_begin == "*?Empty?*" %}
-                begin=""
-  {% else %}
-                begin="{{ span2_begin }}"
-  {% endif %}
+  begin="{{ span2_begin }}"
 {% endif %}
 {% if span2_end %}
-  {% if span2_end == "*?Empty?*" %}
-                end=""
-  {% else %}
-                end="{{ span2_end }}"
-  {% endif%}
+  end="{{ span2_end }}"
 {% endif %}
               >
-              Some example text...
+              Some example text 2...
             </tt:span>
       </tt:p>
     </tt:div>
