@@ -57,15 +57,7 @@ class DirectInput(DirectCommon):
 
 
 class DirectOutput(DirectCommon):
-
-    _looping_call = None
-
-    def start(self):
-        # At the moment this is twisted specific... investigate other options.
-        from ebu_tt_live.twisted import task
-
-        self._looping_call = task.LoopingCall(self.component.resume_producing)
-        self._looping_call.start(2.0, now=False)
+    pass
 
 
 # File-based carriage mechanism configurators

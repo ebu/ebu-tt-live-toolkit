@@ -7,7 +7,7 @@ from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, UserInputServerProtocol, UserInputServerFactory, BroadcastServerFactory, TwistedPullProducer, StreamingServerProtocol
 from ebu_tt_live.carriage.forwarder_carriage import ForwarderCarriageImpl
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedProducerImpl
+from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage, WebsocketProducerCarriage
 from twisted.internet import reactor
 
 
@@ -34,12 +34,12 @@ def main():
     if args.folder_export:
         do_export = True
 
-    sub_consumer_impl = TwistedConsumerImpl()
+    sub_consumer_impl = WebsocketConsumerCarriage()
     sub_prod_impl = None
     if do_export:
         sub_prod_impl = FilesystemProducerImpl(args.folder_export)
     else:
-        sub_prod_impl = TwistedProducerImpl()
+        sub_prod_impl = WebsocketProducerCarriage()
     carriage_impl = ForwarderCarriageImpl(sub_consumer_impl, sub_prod_impl)
 
     reference_clock = LocalMachineClock()

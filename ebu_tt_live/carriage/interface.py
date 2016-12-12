@@ -23,6 +23,7 @@ class IProducerCarriage(ICarriageMechanism):
     def expects(cls):
         """
         Data type expected
+
         :return:
         """
         if isinstance(cls._expects, AbstractStaticMember):
@@ -33,6 +34,7 @@ class IProducerCarriage(ICarriageMechanism):
     def register_producer_node(self, node):
         """
         Register the producer node in the carriage mechanism
+
         :param node:
         :return:
         """
@@ -41,6 +43,7 @@ class IProducerCarriage(ICarriageMechanism):
     def producer_node(self):
         """
         Node accessor
+
         :return:
         """
 
@@ -48,7 +51,8 @@ class IProducerCarriage(ICarriageMechanism):
     def emit_data(self, data, **kwargs):
         """
         Implement protocol specific postprocessing here.
-        :param **kwargs: Extra parameters to send down
+
+        :param kwargs: Extra parameters to send down
         :param data:
         :return:
         """
@@ -57,6 +61,7 @@ class IProducerCarriage(ICarriageMechanism):
     def resume_producing(self):
         """
         This makes sure that the producers can be pulled. This is good for timer or manual triggering
+
         :return:
         """
 
@@ -72,6 +77,7 @@ class IConsumerCarriage(ICarriageMechanism):
     def provides(cls):
         """
         Data type provided
+
         :return:
         """
         if isinstance(cls._provides, AbstractStaticMember):
@@ -82,6 +88,7 @@ class IConsumerCarriage(ICarriageMechanism):
     def register_consumer_node(self, node):
         """
         Register the consumer node in the carriage mechanism
+
         :param node:
         :return:
         """
@@ -90,6 +97,7 @@ class IConsumerCarriage(ICarriageMechanism):
     def consumer_node(self):
         """
         Node accessor
+
         :return:
         """
 
@@ -97,6 +105,7 @@ class IConsumerCarriage(ICarriageMechanism):
     def on_new_data(self, data, **kwargs):
         """
         Implement protocol specific preprocessing here.
-        :param **kwargs: Extra parameters to send down
+
+        :param kwargs: Extra parameters to send down
         :return:
         """

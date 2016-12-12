@@ -121,7 +121,8 @@ class BroadcastServerFactory(WebSocketServerFactory):
 
     def unregisterProducer(self, producer=None):
         if producer is None:
-            producer.stopProducing()
+            for producer in self._producers:
+                producer.stopProducing()
             self._producers.clear()
         if producer in self._producers:
             producer.stopProducing()

@@ -10,6 +10,6 @@ def get_example_data(dataset_name):
     provider = get_provider('ebu_tt_live')
     manager = ResourceManager()
 
-    source = provider.get_resource_string(manager, 'example_data/'+dataset_name)
+    source = provider.get_resource_string(manager, 'examples/'+dataset_name)
 
     return source

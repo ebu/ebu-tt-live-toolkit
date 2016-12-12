@@ -6,11 +6,11 @@ from .common import create_loggers
 from ebu_tt_live.utils import tokenize_english_document
 
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.example_data import get_example_data
+from ebu_tt_live.examples import get_example_data
 from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
-from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
-    TwistedPullProducer
+from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, BroadcastServerProtocol, \
+    TwistedPushProducer
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage
 from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
@@ -85,18 +85,17 @@ def main():
     else:
         factory = wsFactory(u"ws://127.0.0.1:9000")
 
-        factory.protocol = StreamingServerProtocol
+        factory.protocol = BroadcastServerProtocol
 
         factory.listen()
 
-        # We are using a pull producer because it is the looping_task timer that triggers the production from the websocket
-        # level. Every time the factory gets a pull signal from the timer it tells the producer to generate data.
-        TwistedPullProducer(
+        TwistedPushProducer(
             consumer=factory,
             custom_producer=prod_impl
         )
 
-        looping_task = task.LoopingCall(factory.pull)
+        # Here we schedule in the simple producer to a create content responding to a periodic interval timer.
+        looping_task = task.LoopingCall(simple_producer.process_document)
 
         looping_task.start(2.0)
 

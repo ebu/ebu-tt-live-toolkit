@@ -30,7 +30,7 @@ END_OF_DATA = gettext('End of available data reached')
 
 
 ERR_CONF_ONE_BACKEND_ONLY = gettext('There is only one backend allowed. Already created: {backend1}, New: {backend2}')
-
+ERR_CONF_NO_SUCH_NODE = gettext('No such node type found: {node_type}')
 
 DOC_SYNTACTIC_VALIDATION_SUCCESSFUL = gettext('Syntactic validation successful')
 DOC_SEMANTIC_VALIDATION_SUCCESSFUL = gettext('Document {sequence_identifier}__{sequence_number} semantic validation successful')

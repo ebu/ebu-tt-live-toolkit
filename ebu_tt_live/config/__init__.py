@@ -12,7 +12,7 @@ but not knowing about the details of their configuration. Therefore in the modul
 turn however these configurator classes are here to make sure the configuration is possible via a single structured
 configuration file or environment variables or command line argument overrides.
 
-The mozilla/configman package seems to give a modular way of writing a complex configuration factory that is
+The mozilla/configman package gives a modular way of writing a complex configuration factory that is
 controllable by file, environment and command line arguments. This gives great flexibility as the configuration of
 the individual modules can be self-contained as much as possible yet it is possible to have system-wide configuration
 parameters, such as a HTTP proxy.
@@ -43,15 +43,19 @@ class AppConfig(RequiredConfig):
     _nodes = None
 
     def __init__(self, **kwargs):
-        cm = ConfigurationManager(
-            definition_source=[
+        cm_args = {
+            "definition_source": [
                 UniversalNodes.get_required_config(),
                 UniversalBackend.get_required_config()
             ],
-            values_source_list=[
+            "values_source_list": [
                 ConfigFileFutureProxy,
                 command_line
             ]
+        }
+        cm_args.update(kwargs)
+        cm = ConfigurationManager(
+            **cm_args
         )
         config = cm.get_config()
 

@@ -7,16 +7,58 @@ log = logging.getLogger(__name__)
 class BackendBase(ConfigurableComponent):
 
     _components_to_start = None
+    _all_components = None
 
     def __init__(self, config, local_config):
         super(BackendBase, self).__init__(config, local_config, backend=self)
         self._components_to_start = []
+        self._all_configurators = set()
+
+    def register_configurator(self, configurator):
+        self._all_configurators.add(configurator)
 
     def start(self):
-        raise NotImplementedError()
+        for item in self._all_configurators:
+            # Start all the components
+            if item != self and item in self._components_to_start:
+                log.info('Starting component: {}'.format(item))
+                item.start()
 
     def register_component_start(self, component):
         self._components_to_start.append(component)
+
+    def call_once(self, func, delay=0.0, result_callback=None, error_callback=None, *args, **kwargs):
+        raise NotImplementedError()
+
+    def call_periodically(self, func, interval=0.0, result_callback=None, error_callback=None, *args, **kwargs):
+        raise NotImplementedError()
+
+
+class DummyBackend(BackendBase):
+
+    _simple_calls = None
+    _periodic_calls = None
+
+    def __init__(self, config, local_config):
+        self._simple_calls = []
+        self._periodic_calls = []
+        super(DummyBackend, self).__init__(config=config, local_config=local_config)
+
+    def call_once(self, func, delay=0.0, result_callback=None, error_callback=None, *args, **kwargs):
+        self._simple_calls.append({
+            'func': func,
+            'delay': delay,
+            'result_callback': result_callback,
+            'error_callback': error_callback
+        })
+
+    def call_periodically(self, func, interval=0.0, result_callback=None, error_callback=None, *args, **kwargs):
+        self._periodic_calls.append({
+            'func': func,
+            'interval': interval,
+            'result_callback': result_callback,
+            'error_callback': error_callback
+        })
 
 
 class TwistedBackend(BackendBase):
@@ -42,11 +84,7 @@ class TwistedBackend(BackendBase):
         super(TwistedBackend, self).__init__(config=config, local_config=local_config)
 
     def start(self):
-        for item in ConfigurableComponent.all_configurators:
-            # Start all the components
-            if item != self and item in self._components_to_start:
-                log.info('Starting component: {}'.format(item))
-                item.start()
+        super(TwistedBackend, self).start()
         self._reactor.run()
 
     def ws_backend_producer(self, uri, custom_producer):
@@ -101,6 +139,8 @@ class TwistedBackend(BackendBase):
 def backend_by_type(backend_name):
     if backend_name == 'twisted':
         return TwistedBackend
+    elif backend_name == 'dummy':
+        return DummyBackend
     else:
         raise Exception('No such component: {}'.format(backend_name))
 

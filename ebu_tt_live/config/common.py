@@ -12,13 +12,11 @@ class ConfigurableComponent(RequiredConfig):
 
     config = None
     component = None  # To store the component itself inside its configurator
-    all_configurators = []  # This is used by the backend to start them all
-    _backend = None # Static variable holding the backend
+    _backend = None  # Static variable holding the backend
 
     def __init__(self, config, local_config, backend=None):
         self.config = local_config
-        # Register configurator instance
-        ConfigurableComponent.all_configurators.append(self)
+
         if backend is not None:
             if self.backend is not None:
                 raise ConfigurationError(
@@ -29,6 +27,9 @@ class ConfigurableComponent(RequiredConfig):
                 )
             else:
                 ConfigurableComponent._backend = backend
+        elif self.backend is not None:
+            # Register configurator instance
+            self.backend.register_configurator(self)
 
     @property
     def backend(self):

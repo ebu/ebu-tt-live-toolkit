@@ -2,10 +2,12 @@ from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
 from .clocks import clock_by_type
 from .carriage import producer_carriage_by_type, consumer_carriage_by_type
 from ebu_tt_live import documents
-from ebu_tt_live.example_data import get_example_data
+from ebu_tt_live.examples import get_example_data
 import ebu_tt_live.node as processing_node
 from itertools import cycle
 from ebu_tt_live.utils import tokenize_english_document
+from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import ERR_CONF_NO_SUCH_NODE
 from .adapters import ProducerNodeCarriageAdapter, ConsumerNodeCarriageAdapter
 
 
@@ -27,27 +29,52 @@ class SimpleConsumer(NodeBase):
 
     _input = None
 
-    @classmethod
-    def configure_component(cls, config, local_config, **kwargs):
-        instance = cls(config=config, local_config=local_config)
-
-        instance._input = local_config.input
-        instance._input.carriage = local_config.input.carriage.type.configure_component(
-            config, local_config.input.carriage
-        )
-
-        instance.component = processing_node.SimpleConsumer(
-            node_id=instance.config.id
-        )
-
-        instance._input.adapters = ConsumerNodeCarriageAdapter.configure_component(
+    def __init__(self, config, local_config):
+        super(SimpleConsumer, self).__init__(
             config=config,
-            local_config=local_config.input.adapters,
-            consumer=instance.component,
-            carriage=instance._input.carriage.component
+            local_config=local_config
+        )
+        self._input = self.config.input
+        self._input.carriage = self.config.input.carriage.type.configure_component(
+            config, self.config.input.carriage
         )
 
-        return instance
+        self.component = processing_node.SimpleConsumer(
+            node_id=self.config.id
+        )
+
+        self._input.adapters = ConsumerNodeCarriageAdapter.configure_component(
+            config=config,
+            local_config=self.config.input.adapters,
+            consumer=self.component,
+            carriage=self._input.carriage.component
+        )
+
+
+class Resegmenter(SimpleConsumer):
+
+    required_config = Namespace()
+    required_config.output = Namespace()
+    required_config.add_option('sequence_identifier', default='ResegmentedSequence1')
+    required_config.add_option('segment_length', default=2.0)
+    required_config.add_option('')
+    required_config.output.carriage = Namespace()
+    required_config.output.carriage.add_option(
+        'type', default='websocket', from_string_converter=producer_carriage_by_type
+    )
+    required_config.output.add_option('adapters')
+
+    _output = None
+
+    def __init__(self, config, local_config):
+        super(Resegmenter, self).__init__(
+            config=config,
+            local_config=local_config
+        )
+        self.backend.register_component_start(self)
+
+    def start(self):
+        self.backend.call_periodically()
 
 
 class SimpleProducer(NodeBase):
@@ -126,7 +153,9 @@ def nodes_by_type(node_name):
     elif node_name == 'simple-producer':
         return SimpleProducer
     else:
-        raise Exception('No such node {}'.format(node_name))
+        raise ConfigurationError(ERR_CONF_NO_SUCH_NODE.format(
+            node_type=node_name
+        ))
 
 
 class UniversalNode(RequiredConfig):

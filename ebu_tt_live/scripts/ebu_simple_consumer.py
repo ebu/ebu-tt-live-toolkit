@@ -4,9 +4,10 @@ from .common import create_loggers
 
 from ebu_tt_live.node import SimpleConsumer
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
+from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, BroadcastClientProtocol
+from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
+from ebu_tt_live.adapters.node_carriage import ConsumerNodeCarriageAdapter
 from twisted.internet import reactor
 
 
@@ -22,10 +23,7 @@ parser.add_argument('-m', '--manifest-path', dest='manifest_path',
                     )
 parser.add_argument('-u', '--websocket-url', dest='websocket_url', 
                     help='URL for the websocket address to connect to',
-                    default='ws://localhost:9000')
-parser.add_argument('-s', '--websocket-channel', dest='websocket_channel',
-                    help='Channel to connect to for websocket',
-                    default='TestSequence1')
+                    default='ws://localhost:9000/TestSequence1')
 parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
@@ -40,7 +38,6 @@ def main():
 
     manifest_path = args.manifest_path
     websocket_url = args.websocket_url
-    websocket_channel = args.websocket_channel
     consumer_impl = None
     fs_reader = None
 
@@ -49,15 +46,20 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        consumer_impl = TwistedConsumerImpl()
+        consumer_impl = WebsocketConsumerCarriage()
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
     simple_consumer = SimpleConsumer(
         node_id='simple-consumer',
-        carriage_impl=consumer_impl,
         reference_clock=reference_clock
+    )
+
+    # Chaining converter
+    ConsumerNodeCarriageAdapter(
+        consumer_node=simple_consumer,
+        consumer_carriage=consumer_impl
     )
 
     if manifest_path:
@@ -69,14 +71,13 @@ def main():
             factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
         factory = BroadcastClientFactory(
             url=websocket_url,
-            channels=[websocket_channel],
             consumer=TwistedConsumer(
                 custom_consumer=consumer_impl
             ),
             **factory_args
         )
 
-        factory.protocol = ClientNodeProtocol
+        factory.protocol = BroadcastClientProtocol
 
         factory.connect()
 
