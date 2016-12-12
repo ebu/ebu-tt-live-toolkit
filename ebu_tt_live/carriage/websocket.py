@@ -19,8 +19,8 @@ class WebsocketProducerCarriage(AbstractProducerCarriage):
         # None, since this is a producer module. It will produce a new document.
         self.producer_node.resume_producing()
 
-    def emit_data(self, data, sequence_identifier='default', **kwargs):
-        self._backend_producer.emit_data(sequence_identifier, data)
+    def emit_data(self, data, sequence_identifier='default', delay=None, **kwargs):
+        self._backend_producer.emit_data(sequence_identifier, data, delay=delay)
 
 
 class WebsocketConsumerCarriage(AbstractConsumerCarriage):

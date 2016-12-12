@@ -1,5 +1,5 @@
 
-from twisted.internet import interfaces
+from twisted.internet import interfaces, reactor
 from zope.interface import implementer
 import logging
 
@@ -23,8 +23,11 @@ class TwistedPushProducer(object):
         self._consumer.registerProducer(self, False)
         self._custom_producer.register_backend_producer(self)
 
-    def emit_data(self, sequence_identifier, data):
-        self._consumer.write(sequence_identifier, data)
+    def emit_data(self, sequence_identifier, data, delay=None):
+        if delay is not None:
+            reactor.callLater(delay, self._consumer.write, sequence_identifier, data)
+        else:
+            self._consumer.write(sequence_identifier, data)
 
     def resumeProducing(self):
         self._custom_producer.resume_producing()

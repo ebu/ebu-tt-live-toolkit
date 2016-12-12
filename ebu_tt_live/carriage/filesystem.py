@@ -191,7 +191,7 @@ class SimpleFolderExport(AbstractProducerCarriage):
         self._file_name_pattern = file_name_pattern
         self._counter = 0
 
-    def _do_write_document(self, document):
+    def _do_write_document(self, document, **kwargs):
         self._counter += 1
         filename = self._file_name_pattern.format(self._counter)
         filepath = os.path.join(self._dir_path, filename)
@@ -201,7 +201,7 @@ class SimpleFolderExport(AbstractProducerCarriage):
         return filepath
 
     def emit_data(self, data, **kwargs):
-        self._do_write_document(data)
+        self._do_write_document(data, **kwargs)
 
 
 class RotatingFolderExport(SimpleFolderExport):
