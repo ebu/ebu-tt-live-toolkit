@@ -3,7 +3,7 @@ Scripts and their functions
 
 Simple Producer
 ---------------
-This is a command line script. It loads static text from a file (``ebu-tt-live-toolkit/ebu_tt_live/example_data/simple_producer.txt``) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command ``ebu-simple-producer`` without any arguments.
+This is a command line script. It loads static text from a file (``ebu-tt-live-toolkit/ebu_tt_live/examples/simple_producer.txt``) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command ``ebu-simple-producer`` without any arguments.
 
 The default carriage mechanism is WebSocket, so you will need to listen to ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just that. After you launch ``ebu-simple-producer``, open ``test.html`` in your browser. The 'Broadcast message' field should be populated with the correct address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can also change the identifier for the sequence. The documents should appear in the window below.
 
