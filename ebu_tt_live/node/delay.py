@@ -23,15 +23,23 @@ class RetimingDelayNode(Node):
 
         # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
-        if is_explicitly_timed(document.binding):
+        # if is_explicitly_timed(document.binding):
+        #
+        #     # the document is explicitly timed, we propagate the modification on all elements
+        #     update_children_timing(document.binding, document.time_base, self._fixed_delay)
 
-            # the document is explicitly timed, we propagate the modification on all elements
-            update_children_timing(document.binding, document.time_base, self._fixed_delay)
+        # else:
+        #
+        # # the document is implicitly timed, we only modify the body timing
+        # update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+
+        if has_a_leaf_with_no_timing_path(document.binding.body):
+            print 'A LEAF HAS NO TIMING PATH'
+            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
 
         else:
-
-            # the document is implicitly timed, we only modify the body timing
-            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+            print 'EVERYTHING IS TIMED'
+            update_children_timing(document.binding, document.time_base, self._fixed_delay)
 
         document.validate()
         self._carriage_impl.emit_document(document)
@@ -113,3 +121,76 @@ def is_explicitly_timed(element):
                 res = is_explicitly_timed(child.value)
                 if res:
                     return res
+
+
+def has_a_leaf_with_no_timing_path(element):
+    """
+    Check if a document has at least one leaf that has no ancestor that has begin time or has begin time itself.
+    @param element:
+    @return:
+    """
+
+    has_untimed_leaf = False
+
+    paths = get_all_paths_rev(element)
+    print paths
+
+    for path in paths:
+        if not is_path_timed(path):
+            has_untimed_leaf = True
+
+    return has_untimed_leaf
+
+
+def is_path_timed(path):
+    """
+    Returns true if at least one element has a begin attribute.
+    @param path: a path to a leaf
+    @return:
+    """
+
+    timed = False
+
+    for elem in path:
+        if hasattr(elem, 'begin') and elem.begin != None:
+            timed = True
+
+    return timed
+
+
+def get_all_paths_rev(element, all_paths=[], children=None):
+
+    if len(all_paths) == 0:
+
+        path = list()
+        path.append(element)
+        all_paths.append(path)
+
+        if hasattr(element, 'orderedContent'):
+            children = element.orderedContent()
+            get_all_paths_rev(element, all_paths, children)
+
+    else:
+
+        if children is not None:
+
+            for child in children:
+                print "CHILD: {0}".format(child.value)
+                for elem in all_paths:
+                    if elem[-1] == element:
+                        new_path = list()
+                        new_path.append(child.value)
+                        new_path_list = elem + new_path
+                        all_paths.append(new_path_list)
+
+                if hasattr(child.value, 'orderedContent'):
+                    children_of_child = child.value.orderedContent()
+                    get_all_paths_rev(child.value, all_paths, children_of_child)
+
+    # we don't want the text elements (which are NonElementContent)
+    for path in all_paths:
+        for elem in path:
+            if type(elem) is unicode:
+                path.remove(elem)
+
+    return all_paths
