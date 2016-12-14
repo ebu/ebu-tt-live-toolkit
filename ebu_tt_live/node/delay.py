@@ -2,6 +2,8 @@
 from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
+from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
+from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
 
 from itertools import combinations
 
@@ -125,6 +127,46 @@ def is_explicitly_timed(element):
                     return res
 
 
+class UntimedPathFinder(RecursiveOperation):
+
+    _path_found = False
+    _timed_element_stack = None
+
+    def __init__(self, root_element):
+        self._timed_element_stack = []
+        super(UntimedPathFinder, self).__init__(
+            root_element,
+            filter=lambda value, element: isinstance(element, TimingValidationMixin)
+        )
+
+    def _is_begin_timed(self, element):
+        if hasattr(element, 'begin') and element.begin is not None:
+            return True
+        return False
+
+    def _before_element(self, value, element=None, parent_binding=None, **kwargs):
+        if self._path_found is True:
+            raise StopBranchIteration()
+        if self._is_begin_timed(element=element):
+            self._timed_element_stack.append(element)
+
+    def _after_element(self, value, element=None, parent_binding=None, **kwargs):
+        if self._is_begin_timed(element=element):
+            self._timed_element_stack.pop()
+
+    def _process_element(self, value, element=None, parent_binding=None, **kwargs):
+        if element.is_timed_leaf() and not len(self._timed_element_stack):
+            self._path_found = True
+            raise StopBranchIteration()
+
+    def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
+        pass
+
+    @property
+    def path_found(self):
+        return self._path_found
+
+
 def has_a_leaf_with_no_timing_path(element):
     """
     Check if a document has at least one leaf that has no ancestor that has begin time or has begin time itself.
@@ -132,82 +174,7 @@ def has_a_leaf_with_no_timing_path(element):
     @return:
     """
 
-    has_untimed_leaf = False
+    finder = UntimedPathFinder(element)
+    finder.proceed()
 
-    paths = get_all_paths_rev(element)
-    paths = remove_subpaths(paths)
-    print "PATHS: {0}".format(paths)
-
-    for path in paths:
-        if not is_path_timed(path):
-            has_untimed_leaf = True
-
-    return has_untimed_leaf
-
-
-def is_path_timed(path):
-    """
-    Returns true if at least one element has a begin attribute.
-    @param path: a path to a leaf
-    @return:
-    """
-
-    timed = False
-
-    for elem in path:
-        if hasattr(elem, 'begin') and elem.begin != None:
-            timed = True
-
-    return timed
-
-
-def get_all_paths_rev(element, all_paths=[], children=None):
-
-    if len(all_paths) == 0:
-
-        path = list()
-        path.append(element)
-        all_paths.append(path)
-
-        if hasattr(element, 'orderedContent'):
-            children = element.orderedContent()
-            get_all_paths_rev(element, all_paths, children)
-
-    else:
-
-        if children is not None:
-
-            for child in children:
-                print "CHILD: {0}".format(child.value)
-                for elem in all_paths:
-                    if elem[-1] == element:
-                        new_path = list()
-                        new_path.append(child.value)
-                        new_path_list = elem + new_path
-                        all_paths.append(new_path_list)
-
-                if hasattr(child.value, 'orderedContent'):
-                    children_of_child = child.value.orderedContent()
-                    get_all_paths_rev(child.value, all_paths, children_of_child)
-
-    # we don't want the text elements (which are NonElementContent)
-    for path in all_paths:
-        for elem in path:
-            if type(elem) is unicode:
-                path.remove(elem)
-
-    return all_paths
-
-
-def remove_subpaths(paths):
-
-    combination_list = combinations(paths, 2)
-
-    for element in combination_list:
-
-        if element[0] in paths:
-
-            if set(element[0]).issubset(element[1]):
-                paths.remove(element[0])
-
-    return paths
+    return finder.path_found

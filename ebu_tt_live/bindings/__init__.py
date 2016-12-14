@@ -729,7 +729,7 @@ class p_type(RegionedElementMixin, LiveStyledElementMixin, SubtitleContentContai
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
-    def _is_timed_leaf(self):
+    def is_timed_leaf(self):
         if len(self.span):
             return False
         else:
@@ -796,7 +796,7 @@ class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type)
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
-    def _is_timed_leaf(self):
+    def is_timed_leaf(self):
         if len(self.span):
             return False
         else:
