@@ -3,6 +3,8 @@ from .base import Node
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
 
+from itertools import combinations
+
 
 class RetimingDelayNode(Node):
 
@@ -35,7 +37,7 @@ class RetimingDelayNode(Node):
 
         if has_a_leaf_with_no_timing_path(document.binding.body):
             print 'A LEAF HAS NO TIMING PATH'
-            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+            update_body_timing(document.binding, document.time_base, self._fixed_delay)
 
         else:
             print 'EVERYTHING IS TIMED'
@@ -133,7 +135,8 @@ def has_a_leaf_with_no_timing_path(element):
     has_untimed_leaf = False
 
     paths = get_all_paths_rev(element)
-    print paths
+    paths = remove_subpaths(paths)
+    print "PATHS: {0}".format(paths)
 
     for path in paths:
         if not is_path_timed(path):
@@ -194,3 +197,17 @@ def get_all_paths_rev(element, all_paths=[], children=None):
                 path.remove(elem)
 
     return all_paths
+
+
+def remove_subpaths(paths):
+
+    combination_list = combinations(paths, 2)
+
+    for element in combination_list:
+
+        if element[0] in paths:
+
+            if set(element[0]).issubset(element[1]):
+                paths.remove(element[0])
+
+    return paths
