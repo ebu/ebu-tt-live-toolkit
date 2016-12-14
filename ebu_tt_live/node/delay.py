@@ -136,26 +136,32 @@ class UntimedPathFinder(RecursiveOperation):
         self._timed_element_stack = []
         super(UntimedPathFinder, self).__init__(
             root_element,
-            filter=lambda value, element: isinstance(element, TimingValidationMixin)
+            filter=lambda value, element: isinstance(value, TimingValidationMixin)
         )
 
-    def _is_begin_timed(self, element):
-        if hasattr(element, 'begin') and element.begin is not None:
+    def _is_begin_timed(self, value):
+        if value.begin is not None:
+            print '{} begin={}'.format(value, value.begin)
             return True
-        return False
+        else:
+            return False
 
     def _before_element(self, value, element=None, parent_binding=None, **kwargs):
         if self._path_found is True:
             raise StopBranchIteration()
-        if self._is_begin_timed(element=element):
-            self._timed_element_stack.append(element)
+        if self._is_begin_timed(value=value):
+            print 'adding {} to stack'.format(value)
+            self._timed_element_stack.append(value)
 
     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
-        if self._is_begin_timed(element=element):
-            self._timed_element_stack.pop()
+        if self._is_begin_timed(value=value):
+            bla = self._timed_element_stack.pop()
+            print 'popping {} from stack'.format(bla)
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        if element.is_timed_leaf() and not len(self._timed_element_stack):
+        print value
+        if value.is_timed_leaf() and not len(self._timed_element_stack):
+            print 'path found'
             self._path_found = True
             raise StopBranchIteration()
 
