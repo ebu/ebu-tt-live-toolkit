@@ -1,5 +1,5 @@
 
-from .base import AbstractConsumerNode, IProducerNode
+from .base import AbstractConsumerNode, AbstractProducerNode, AbstractCombinedNode
 from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTTDDocument, EBUTT3Document
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.strings import DOC_RECEIVED
@@ -18,7 +18,7 @@ class SimpleConsumer(AbstractConsumerNode):
     _sequence = None
     _expects = EBUTT3Document
 
-    def __init__(self, node_id, consumer_carriage=None, reference_clock=None):
+    def __init__(self, node_id, consumer_carriage=None, reference_clock=None, **kwargs):
         super(SimpleConsumer, self).__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage
@@ -54,28 +54,46 @@ class SimpleConsumer(AbstractConsumerNode):
         self._reference_clock = value
 
 
-class EBUTTDEncoder(IProducerNode, SimpleConsumer):
+class EBUTTDEncoderNode(AbstractCombinedNode):
 
-    _last_segment_end = None
-    _segment_length = None
     _ebuttd_converter = None
     _default_ebuttd_doc = None
-    _outbound_carriage_impl = None
-    _segment_timer = None
-    _discard = None
     _implicit_ns = False
     _expects = EBUTT3Document
     _provides = EBUTTDDocument
 
-    def __init__(self, node_id, carriage_impl, outbound_carriage_impl, reference_clock,
-            segment_length, media_time_zero, segment_timer, discard, segmentation_starts=None,
-            implicit_ns=False):
-        super(EBUTTDEncoder, self).__init__(
+    def __init__(self, node_id, producer_carriage=None, consumer_carriage=None, **kwargs):
+        super(EBUTTDEncoderNode, self).__init__(
             node_id=node_id,
-            carriage_impl=carriage_impl,
-            reference_clock=reference_clock
+            producer_carriage=producer_carriage,
+            consumer_carriage=consumer_carriage,
+            **kwargs
         )
-        self._outbound_carriage_impl = outbound_carriage_impl
+
+    def process_document(self, document, **kwargs):
+        pass
+
+
+class ReSequencer(AbstractProducerNode, SimpleConsumer):
+
+    _last_segment_end = None
+    _segment_length = None
+    _outbound_carriage_impl = None
+    _segment_timer = None
+    _discard = None
+    _expects = EBUTT3Document
+    _provides = EBUTT3Document
+
+    def __init__(self, node_id, reference_clock, segment_length, media_time_zero, segment_timer, discard,
+                 segmentation_starts=None, implicit_ns=False, consumer_carriage=None,
+                 producer_carriage=None, **kwargs):
+        super(ReSequencer, self).__init__(
+            node_id=node_id,
+            consumer_carriage=consumer_carriage,
+            producer_carriage=producer_carriage,
+            reference_clock=reference_clock,
+            **kwargs
+        )
         # We need clock factory to figure the timesync out
         self._last_segment_end = reference_clock.get_time()
         self._segment_length = timedelta(seconds=segment_length)
@@ -108,8 +126,8 @@ class EBUTTDEncoder(IProducerNode, SimpleConsumer):
 
     def process_document(self, document, **kwargs):
         sequence_missing = self._sequence is None
-        super(EBUTTDEncoder, self).process_document(document)
-        # segmentation, conversion... here
+        super(ReSequencer, self).process_document(document)
+        # segmentation here
         if sequence_missing and self._sequence is not None:
             # Ok we just got a relevant document. Let's call the function
             # that schedules the periodic segmentation.

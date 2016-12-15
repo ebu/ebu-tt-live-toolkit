@@ -9,6 +9,8 @@ def producer_carriage_by_type(carriage_type):
         return WebsocketOutput
     elif carriage_type == 'filesystem':
         return FileOutput
+    elif carriage_type == 'filesystem=simple':
+        return SimpleFileOutput
     elif carriage_type == 'direct':
         return DirectOutput
     else:
@@ -20,6 +22,8 @@ def consumer_carriage_by_type(carriage_type):
         return WebsocketInput
     elif carriage_type == 'direct':
         return DirectInput
+    elif carriage_type == 'filesystem':
+        return FileInput
     else:
         raise Exception('No such component: {}'.format(carriage_type))
 
@@ -62,9 +66,22 @@ class DirectOutput(DirectCommon):
 
 # File-based carriage mechanism configurators
 # ===========================================
-class FileOutput(ConfigurableComponent):
+class FileOutputCommon(ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option('folder', default='./export')
+
+
+class FileOutput(FileOutputCommon):
+    pass
+
+
+class SimpleFileOutput(FileOutputCommon):
+    # This does not create a manifest file
+    pass
+
+
+class FileInput(ConfigurableComponent):
+    pass
 
 
 # Websocket carriage mechanism configurators

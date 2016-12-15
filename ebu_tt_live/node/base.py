@@ -98,9 +98,10 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
 
 class AbstractCombinedNode(AbstractConsumerNode, AbstractProducerNode):
 
-    def __init__(self, node_id, producer_carriage=None, consumer_carriage=None):
+    def __init__(self, node_id, producer_carriage=None, consumer_carriage=None, **kwargs):
         super(AbstractCombinedNode, self).__init__(
             node_id=node_id,
             producer_carriage=producer_carriage,
-            consumer_carriage=consumer_carriage
+            consumer_carriage=consumer_carriage,
+            **kwargs
         )

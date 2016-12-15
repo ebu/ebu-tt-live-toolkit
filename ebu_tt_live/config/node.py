@@ -51,7 +51,7 @@ class SimpleConsumer(NodeBase):
         )
 
 
-class Resegmenter(SimpleConsumer):
+class ReSequencer(SimpleConsumer):
 
     required_config = Namespace()
     required_config.output = Namespace()
@@ -67,7 +67,7 @@ class Resegmenter(SimpleConsumer):
     _output = None
 
     def __init__(self, config, local_config):
-        super(Resegmenter, self).__init__(
+        super(ReSequencer, self).__init__(
             config=config,
             local_config=local_config
         )
