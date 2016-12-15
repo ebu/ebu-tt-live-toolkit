@@ -9,7 +9,7 @@ config Package - Component configurators
    :undoc-members:
    :show-inheritance:
 
-:mod:`backend` Package
+:mod:`backend` module
 -------------------------
 
 .. automodule:: ebu_tt_live.config.backend
@@ -17,7 +17,7 @@ config Package - Component configurators
    :undoc-members:
    :show-inheritance:
 
-:mod:`node` Package
+:mod:`node` module
 -------------------------
 
 .. automodule:: ebu_tt_live.config.node
@@ -33,7 +33,7 @@ config Package - Component configurators
    :undoc-members:
    :show-inheritance:
 
-:mod:`adapters` Package
+:mod:`adapters` module
 -------------------------
 
 .. automodule:: ebu_tt_live.config.adapters
@@ -41,7 +41,7 @@ config Package - Component configurators
    :undoc-members:
    :show-inheritance:
 
-:mod:`clocks` Package
+:mod:`clocks` module
 -------------------------
 
 .. automodule:: ebu_tt_live.config.clocks
@@ -49,7 +49,7 @@ config Package - Component configurators
    :undoc-members:
    :show-inheritance:
 
-:mod:`common` Package
+:mod:`common` module
 -------------------------
 
 .. automodule:: ebu_tt_live.config.common

@@ -21,7 +21,6 @@ packages=[
     "ebu_tt_live.examples"
 ]
 
-
 setup(
     name="ebu-tt-live",
     version="2.9",

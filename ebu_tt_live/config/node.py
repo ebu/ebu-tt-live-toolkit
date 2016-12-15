@@ -77,6 +77,16 @@ class Resegmenter(SimpleConsumer):
         self.backend.call_periodically()
 
 
+class BufferDelay(SimpleConsumer):
+    required_config = Namespace()
+    required_config.add_option('delay', default=0.0)
+
+
+class RetimingDelay(SimpleConsumer):
+    required_config = Namespace()
+    required_config.add_option('delay', default=0.0)
+
+
 class SimpleProducer(NodeBase):
     required_config = Namespace()
     required_config.add_option('id', default='simple-producer')

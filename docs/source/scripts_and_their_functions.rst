@@ -32,3 +32,11 @@ This script is an extension of simple consumer and is responsible for resegmenti
 EBU-TT Live documents into EBU-TT-D documents that can be later used to be embedded in video streams such as DASH.
 The script launches with the ``ebu-ebuttd-encoder`` command. There are switches to control the mediatime conversion
 reference point and the segmentation interval. Please run ``ebu-ebuttd-encoder --help`` to find our more.
+
+The ebu-run script
+------------------
+This script is capable of picking up a structured configuration file and use that to create the nodes and
+carriage mechanism objects that we would like to use and they can be even wired in the same configuration file
+together so in the end a complex system can be modeled using a single json file. Please refer to
+:py:mod:`ebu_tt_live.scripts.ebu_run` as well as :py:mod:`ebu_tt_live.config` to learn more about the
+way the configuration logic works.
