@@ -25,8 +25,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R16|2.3.1.1|The document resolved begin time shall be the later of (a) the document availability time, (b) the earliest computed begin time in the document and (c) any externally specified document activation begin time, such as the beginning of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
 |R17|2.3.1.2|The document resolved end time shall be the earlier of (a) the earliest document resolved begin time of all available documents in the sequence with a greater sequence number, (b) the document resolved begin time plus the value of the `dur` attribute, if present, (c) the latest computed end time in the document and (d) any externally specified document deactivation time, such as the end of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
 |R18|2.3.1.3|When no document is active a presentation processor shall NOT render any content.| |
-|R19|2.3.4|A Delay node is a processing node. Therefore the output sequence shall have a different sequence identifier from the input sequence.| |
-|R20|2.3.4|A Delay node may emit implicitly timed documents within a sequence. In this case the Delay node shall delay emission of the stream by a period equivalent to the adjustment value.| |
+|R19|2.3.4|~~A Delay node is a processing node. Therefore the output sequence shall have a different sequence identifier from the input sequence.~~| Deprecated. See retiming delay node. |
+|R20|2.3.4|~~A Delay node may emit implicitly timed documents within a sequence. In this case the Delay node shall delay emission of the stream by a period equivalent to the adjustment value.~~|Deprecated. See retiming delay node. |
 |R21|2.3.4|A Delay node shall NOT emit an output sequence with reordered subtitles.| |
 |R22|2.3.4|A Delay node shall NOT update the value of `ebuttm:authoringDelay`.| |
 |R23|2.4|The Handover Manager node shall use a 'who claimed control most recently' algorithm for selecting the sequence, based on a control token parameter within each document.| |
@@ -115,3 +115,16 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R104|3.2.2.3.3|`span` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
+
+|R108|2.3.4.1|A Delay node SHALL accpet a non-negative offset value | |
+|R109|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
+|R110|2.3.4.1|A Buffer Delay node SHALL NOT modify times within the document  | |
+|R111|2.3.4.1|A Buffer Delay node SHALL delay the emmision of documents by the offset period  | |
+|R112|2.3.4.2|A Retiming Delay node SHALL output a sequence with with an identifier different that the input.  | |
+|R113|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
+|R114|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
+|R115|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
+|R116|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
+|R117|2.3.4.2|A Retiming Delay node shall not update the value of ebuttm:authoringDelay. ||
+
+
