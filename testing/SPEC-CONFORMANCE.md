@@ -14,7 +14,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R5|2.2 |A document shall be associated with exactly one sequence.| |
 | R6|2.2 |the sequence identifier shall be present within every document|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 | R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
-| R8|2.2 |Every distinct document with the same sequence identifier shall have a different sequence number.| |
+| R8|2.2 |~~Every distinct document with the same sequence identifier shall have a different sequence number.~~|Deprecated. See R107|
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
 |R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. (Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
@@ -43,7 +43,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R34|3.2.2.1|`ebuttp:sequenceIdentifier` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R35|3.2.2.1|The sequence to which every document belongs shall be identified using the `ebuttp:sequenceIdentifier` attribute.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R36|3.2.2.1|`ebutt:sequenceNumber` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
-|R37|3.2.2.1|Every document with the same `ebuttp:sequenceIdentifier` shall be uniquely numbered using the `ebuttp:sequenceNumber` attribute.| |
+|R37|3.2.2.1|~~Every document with the same `ebuttp:sequenceIdentifier` shall be uniquely numbered using the `ebuttp:sequenceNumber` attribute.~~|Deprecated. See R107 |
 |R38|3.2.2.2|The following additional metadata elements are defined by this specification. If used these elements shall be the first children of the `ebuttm:documentMetadata` element in the order documented below, after any metadata elements defined by EBU-TT Part 1 Tech 3350.|`bdd/features/validation/documentMetadata_elements_order.feature` `(In)valid documentMetadata elements order`|
 |R39|3.2.2.2|Order of metadata elements (if present) in `ebuttm:documentMetadata` is: `ebuttm:originalSourceServiceIdentifier`, `ebuttm:intendedDestinationServiceIdentifier`, `ebuttm:documentFacet`, `ebuttm:trace`. |`bdd/features/validation/documentMetadata_elements_order.feature` `(In)valid documentMetadata elements order`|
 |R40|3.2.2.2|`ebuttm:documentFacet` : Each distinctly identified `facet` that is summarised shall have a separate `documentFacet` element.| |
@@ -115,3 +115,4 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R104|3.2.2.3.3|`span` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
+|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document. The availability time of the document shall not be changed due to such a discard.|
