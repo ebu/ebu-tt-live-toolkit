@@ -85,6 +85,9 @@ def update_children_timing(element, timebase, delay_int):
 
 def update_body_timing(body, timebase, delay_int):
 
+    if hasattr(body, 'begin'):
+        assert body.begin == None, "The body already has a begin time"
+
     # we always update the begin attribute, regardless of the presence of a begin or end attribute
     if timebase == 'clock':
         delay = LimitedClockTimingType(timedelta(seconds=delay_int))
@@ -139,7 +142,6 @@ class UntimedPathFinder(RecursiveOperation):
 
     def _is_begin_timed(self, value):
         if value.begin is not None:
-            print '{} begin={}'.format(value, value.begin)
             return True
         else:
             return False
@@ -148,18 +150,15 @@ class UntimedPathFinder(RecursiveOperation):
         if self._path_found is True:
             raise StopBranchIteration()
         if self._is_begin_timed(value=value):
-            print 'adding {} to stack'.format(value)
             self._timed_element_stack.append(value)
 
     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
         if self._is_begin_timed(value=value):
             bla = self._timed_element_stack.pop()
-            print 'popping {} from stack'.format(bla)
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
         print value
         if value.is_timed_leaf() and not len(self._timed_element_stack):
-            print 'path found'
             self._path_found = True
             raise StopBranchIteration()
 
