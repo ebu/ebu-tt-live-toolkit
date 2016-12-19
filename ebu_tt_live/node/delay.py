@@ -39,7 +39,7 @@ class RetimingDelayNode(Node):
 
         if has_a_leaf_with_no_timing_path(document.binding.body):
             print 'A LEAF HAS NO TIMING PATH'
-            update_body_timing(document.binding, document.time_base, self._fixed_delay)
+            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
 
         else:
             print 'EVERYTHING IS TIMED'
@@ -99,6 +99,8 @@ def update_children_timing(element, timebase, delay_int):
 
 def update_body_timing(body, timebase, delay_int):
 
+    # we always update the begin attribute, regardless of the presence of a begin or end attribute
+
     if timebase == 'clock':
         delay = LimitedClockTimingType(timedelta(seconds=delay_int))
         body.begin = LimitedClockTimingType(delay.timedelta)
@@ -106,6 +108,18 @@ def update_body_timing(body, timebase, delay_int):
     elif timebase == 'media':
         delay = FullClockTimingType(timedelta(seconds=delay_int))
         body.begin = FullClockTimingType(delay.timedelta)
+
+    # if the body has an end attribute, we add to it the value of the delay
+
+    if hasattr(body, 'end') and body.end != None:
+
+        if timebase == 'clock':
+            delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+            body.end = LimitedClockTimingType(body.end.timedelta + delay.timedelta)
+
+        elif timebase == 'media':
+            delay = FullClockTimingType(timedelta(seconds=delay_int))
+            body.end = FullClockTimingType(body.end.timedelta + delay.timedelta)
 
 
 def is_explicitly_timed(element):
