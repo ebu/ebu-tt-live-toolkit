@@ -117,13 +117,13 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 | | **Tech3370 Revision 1 (Dec 2016)**| | |
 
-|R108|2.3.4.1|A Delay node SHALL accept a non-negative offset value | |
-|R109|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
-|R110|2.3.4.1|A Buffer Delay node SHALL NOT modify times within the document  | |
-|R111|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  | |
-|R112|2.3.4.2|A Retiming Delay node SHALL output a sequence with with an identifier different to that of the input.  | |
-|R113|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
-|R114|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
-|R115|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
-|R116|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
+|R109|2.3.4.1|A Delay node SHALL accept a non-negative offset value | |
+|R110|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
+|R111|2.3.4.1|A Buffer Delay node SHALL NOT modify times within the document  | |
+|R112|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  | |
+|R113|2.3.4.2|A Retiming Delay node SHALL output a sequence with with an identifier different to that of the input.  | |
+|R114|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
+|R115|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
+|R116|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
+|R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
 
