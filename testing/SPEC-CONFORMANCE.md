@@ -115,6 +115,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R104|3.2.2.3.3|`span` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
+| | **Tech3370 Revision 1 (Dec 2016)**| | |
 
 |R108|2.3.4.1|A Delay node SHALL accpet a non-negative offset value | |
 |R109|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
@@ -125,6 +126,6 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R114|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
 |R115|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
 |R116|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
-|R117|2.3.4.2|A Retiming Delay node shall not update the value of ebuttm:authoringDelay. ||
+|R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
 
 
