@@ -5,8 +5,6 @@ from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimin
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
 
-from itertools import combinations
-
 
 class RetimingDelayNode(Node):
 
@@ -27,22 +25,10 @@ class RetimingDelayNode(Node):
 
         # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
-        # if is_explicitly_timed(document.binding):
-        #
-        #     # the document is explicitly timed, we propagate the modification on all elements
-        #     update_children_timing(document.binding, document.time_base, self._fixed_delay)
-
-        # else:
-        #
-        # # the document is implicitly timed, we only modify the body timing
-        # update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
-
         if has_a_leaf_with_no_timing_path(document.binding.body):
-            print 'A LEAF HAS NO TIMING PATH'
             update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
 
         else:
-            print 'EVERYTHING IS TIMED'
             update_children_timing(document.binding, document.time_base, self._fixed_delay)
 
         document.validate()
@@ -100,7 +86,6 @@ def update_children_timing(element, timebase, delay_int):
 def update_body_timing(body, timebase, delay_int):
 
     # we always update the begin attribute, regardless of the presence of a begin or end attribute
-
     if timebase == 'clock':
         delay = LimitedClockTimingType(timedelta(seconds=delay_int))
         body.begin = LimitedClockTimingType(delay.timedelta)
@@ -110,7 +95,6 @@ def update_body_timing(body, timebase, delay_int):
         body.begin = FullClockTimingType(delay.timedelta)
 
     # if the body has an end attribute, we add to it the value of the delay
-
     if hasattr(body, 'end') and body.end != None:
 
         if timebase == 'clock':
