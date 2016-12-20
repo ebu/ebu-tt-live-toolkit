@@ -20,7 +20,7 @@ Feature: Discard document with already seen pair of sequence identifier and sequ
     | n      | 1     | n           | 1          |  
     # Leading zeros and + not permitted for xs:positiveInteger so there's not much else we can test here.
 
-
+  # SPEC-CONFORMANCE: R108
   Scenario: Availability time unchanged when discarding
     Given an xml file <xml_file>
     And it has sequence identifier <seq_id>
@@ -33,7 +33,7 @@ Feature: Discard document with already seen pair of sequence identifier and sequ
     | seq_id | seq_n | prev_seq_id | prev_seq_n | prev_begin   | prev_end     | post_begin   | post_end     |  
     | n      | 1     | n           | 1          | 00:00:00.000 | 00:00:00.001 | 00:00:00.000 | 00:00:00.001 |  
 
-
+  # NOT A CONFORMANCE REQUIREMENT, CAN BE POSTPONED  
   Scenario: Issue warning for non-identical documents
     Given an xml file <xml_file>
     And it has sequence identifier <seq_id>
