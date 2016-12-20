@@ -88,7 +88,7 @@ Feature: Delay of a document sequence
     |            |              |           | 00:00:20 |          | 00:00:10 |            |          |             |           | 00:00:15 | 00:00:15           | 00:00:35         | 00:00:15          | 00:00:35        | 00:00:15        | 00:00:25      | 00:00:15           | 00:00:25         | 00:00:15            | 00:00:25          |          |
     |            |              | 00:00:20  |          |          | 00:00:10 |            |          |             |           | 00:00:15 | 00:00:35           | 00:00:45         | 00:00:35          | 00:00:45        | 00:00:35        | 00:00:45      | 00:00:35           | 00:00:45         | 00:00:35            | 00:00:45          |          |
 
-  @wtf
+
   Scenario: Explicitly timed document delay, specified times
     Given an xml file <xml_file>
     And it has body begin time <body_begin>
