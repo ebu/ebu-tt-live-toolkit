@@ -54,38 +54,19 @@ class SimpleConsumer(AbstractConsumerNode):
         self._reference_clock = value
 
 
-class EBUTTDEncoderNode(AbstractCombinedNode):
-
-    _ebuttd_converter = None
-    _default_ebuttd_doc = None
-    _implicit_ns = False
-    _expects = EBUTT3Document
-    _provides = EBUTTDDocument
-
-    def __init__(self, node_id, producer_carriage=None, consumer_carriage=None, **kwargs):
-        super(EBUTTDEncoderNode, self).__init__(
-            node_id=node_id,
-            producer_carriage=producer_carriage,
-            consumer_carriage=consumer_carriage,
-            **kwargs
-        )
-
-    def process_document(self, document, **kwargs):
-        pass
-
-
 class ReSequencer(AbstractProducerNode, SimpleConsumer):
 
     _last_segment_end = None
     _segment_length = None
-    _outbound_carriage_impl = None
     _segment_timer = None
     _discard = None
+    _segment_counter = None
+    _sequence_identifier = None
     _expects = EBUTT3Document
     _provides = EBUTT3Document
 
-    def __init__(self, node_id, reference_clock, segment_length, media_time_zero, segment_timer, discard,
-                 segmentation_starts=None, implicit_ns=False, consumer_carriage=None,
+    def __init__(self, node_id, reference_clock, segment_length, discard, sequence_identifier,
+                 segmentation_starts=None, consumer_carriage=None,
                  producer_carriage=None, **kwargs):
         super(ReSequencer, self).__init__(
             node_id=node_id,
@@ -94,20 +75,11 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
             reference_clock=reference_clock,
             **kwargs
         )
-        # We need clock factory to figure the timesync out
         self._last_segment_end = reference_clock.get_time()
         self._segment_length = timedelta(seconds=segment_length)
-        media_clock = MediaClock()
-        media_clock.adjust_time(timedelta(), media_time_zero)
-        self._ebuttd_converter = EBUTT3EBUTTDConverter(
-            media_clock=media_clock
-        )
-        self._implicit_ns = implicit_ns
-        # Setting this globally so we don't have to do it everywhere
-        EBUTTDDocument._implicit_ns = self._implicit_ns
-        self._default_ebuttd_doc = EBUTTDDocument(lang='en-GB')
-        self._default_ebuttd_doc.validate()
-        self._segment_timer = segment_timer
+        # self._segment_timer = segment_timer
+        self._segment_counter = 1
+        self._sequence_identifier = sequence_identifier
         self._discard = discard
         if segmentation_starts is not None:
             self._last_segment_end = segmentation_starts
@@ -127,15 +99,20 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
     def process_document(self, document, **kwargs):
         sequence_missing = self._sequence is None
         super(ReSequencer, self).process_document(document)
-        # segmentation here
-        if sequence_missing and self._sequence is not None:
-            # Ok we just got a relevant document. Let's call the function
-            # that schedules the periodic segmentation.
-            self._segment_timer = self._segment_timer(self)
+        # if sequence_missing and self._sequence is not None:
+        #     # Ok we just got a relevant document. Let's call the function
+        #     # that schedules the periodic segmentation.
+        #     self._segment_timer = self._segment_timer(self)
 
     def get_segment(self, begin=None, end=None):
         if self._sequence is not None:
-            segment_doc = self._sequence.extract_segment(begin=begin, end=end, discard=self._discard)
+            segment_doc = self._sequence.extract_segment(
+                begin=begin,
+                end=end,
+                discard=self._discard,
+                sequence_number=self._segment_counter
+            )
+            self._segment_counter += 1
             return segment_doc
         return None
 
@@ -146,11 +123,5 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
             end=self.last_segment_end + self._segment_length
         )
         if ebutt3_doc is not None:
-            ebuttd_bindings = self._ebuttd_converter.convert_document(ebutt3_doc.binding)
-            ebuttd_doc = EBUTTDDocument.create_from_raw_binding(ebuttd_bindings)
-            ebuttd_doc.validate()
-        else:
-            ebuttd_doc = self._default_ebuttd_doc
-        self.increment_last_segment_end(self._segment_length)
-        self._outbound_carriage_impl.emit_data(ebuttd_doc)
-        return self.last_segment_end
+            self.increment_last_segment_end(self._segment_length)
+            self.producer_carriage.emit_data(ebutt3_doc)

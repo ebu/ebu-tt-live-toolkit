@@ -29,35 +29,41 @@ class SimpleConsumer(NodeBase):
 
     _input = None
 
-    def __init__(self, config, local_config):
-        super(SimpleConsumer, self).__init__(
-            config=config,
-            local_config=local_config
-        )
-        self._input = self.config.input
-        self._input.carriage = self.config.input.carriage.type.configure_component(
-            config, self.config.input.carriage
-        )
-
+    def _create_component(self, config=None):
         self.component = processing_node.SimpleConsumer(
             node_id=self.config.id
         )
 
+    def _create_input(self, config=None):
+        self._input = self.config.input
+        self._input.carriage = self.config.input.carriage.type.configure_component(
+            config, self.config.input.carriage
+        )
         self._input.adapters = ConsumerNodeCarriageAdapter.configure_component(
-            config=config,
+            config=self.config,
             local_config=self.config.input.adapters,
             consumer=self.component,
             carriage=self._input.carriage.component
         )
 
+    def __init__(self, config, local_config):
+        super(SimpleConsumer, self).__init__(
+            config=config,
+            local_config=local_config
+        )
+
+        self._create_component(config)
+        self._create_input(config)
+
 
 class ReSequencer(SimpleConsumer):
 
     required_config = Namespace()
-    required_config.output = Namespace()
-    required_config.add_option('sequence_identifier', default='ResegmentedSequence1')
+    required_config.add_option('sequence_identifier', default='ReSequenced1')
     required_config.add_option('segment_length', default=2.0)
-    required_config.add_option('')
+    required_config.add_option('utc', default=False)
+    required_config.add_option('discard', default=True)
+    required_config.output = Namespace()
     required_config.output.carriage = Namespace()
     required_config.output.carriage.add_option(
         'type', default='websocket', from_string_converter=producer_carriage_by_type
@@ -66,15 +72,44 @@ class ReSequencer(SimpleConsumer):
 
     _output = None
 
+    def _create_component(self, config=None):
+        if self.config.utc:
+            reference_clock = clock_by_type('local')(config, None)
+        else:
+            reference_clock = clock_by_type('utc')(config, None)
+
+        self.component = processing_node.ReSequencer(
+            node_id=self.config.id,
+            reference_clock=reference_clock.component,
+            discard=self.config.discard,
+            segment_length=self.config.segment_length,
+            sequence_identifier=self.config.sequence_identifier
+        )
+
+    def _create_output(self, config=None):
+        self._output = self.config.output
+        self._output.carriage = self.config.output.carriage.type.configure_component(
+            config, self.config.output.carriage)
+
+        self._output.adapters = ProducerNodeCarriageAdapter.configure_component(
+            config=config,
+            local_config=self.config.output.adapters,
+            producer=self.component,
+            carriage=self._output.carriage.component
+        )
+
     def __init__(self, config, local_config):
         super(ReSequencer, self).__init__(
             config=config,
             local_config=local_config
         )
+
+        self._create_output(config)
+
         self.backend.register_component_start(self)
 
     def start(self):
-        self.backend.call_periodically()
+        self.backend.call_periodically(self.component.convert_next_segment, interval=self.config.segment_length)
 
 
 class BufferDelay(SimpleConsumer):
@@ -162,6 +197,8 @@ def nodes_by_type(node_name):
         return SimpleConsumer
     elif node_name == 'simple-producer':
         return SimpleProducer
+    elif node_name == 'resequencer':
+        return ReSequencer
     else:
         raise ConfigurationError(ERR_CONF_NO_SUCH_NODE.format(
             node_type=node_name

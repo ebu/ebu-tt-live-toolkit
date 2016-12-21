@@ -739,7 +739,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
 
         splicer = EBUTT3Splicer(
             sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
-            sequence_number=sequence_number is not None or 1,
+            sequence_number=sequence_number is not None and sequence_number or 1,
             document_segments=document_segments
         )
 
