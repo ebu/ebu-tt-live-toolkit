@@ -724,7 +724,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
                 document_segments.append(doc_segment)
             except Exception as err:
-                log.error(
+                log.exception(
                     'Error extracting document segment from {}__{}'.format(
                         doc.sequence_identifier, doc.sequence_number
                     )
@@ -735,18 +735,16 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
 
         if not document_segments:
             # TODO: This is good question what now? no documents found for range
-            comp_doc = self.create_compatible_document()
+            document = self.create_compatible_document()
             # comp_doc.set_begin(begin)
             # comp_doc.set_end(end)
-            return comp_doc
-
-        splicer = EBUTT3Splicer(
-            sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
-            sequence_number=sequence_number is not None and sequence_number or 1,
-            document_segments=document_segments
-        )
-
-        document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
+        else:
+            splicer = EBUTT3Splicer(
+                sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
+                sequence_number=sequence_number is not None and sequence_number or 1,
+                document_segments=document_segments
+            )
+            document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
 
         if discard is True and affected_documents:
             self.discard_before(affected_documents[-1])
