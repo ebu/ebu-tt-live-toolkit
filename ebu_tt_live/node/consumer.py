@@ -1,9 +1,7 @@
 
-from .base import AbstractConsumerNode, AbstractProducerNode, AbstractCombinedNode
-from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTTDDocument, EBUTT3Document
-from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
+from .base import AbstractConsumerNode, AbstractProducerNode
+from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTT3Document
 from ebu_tt_live.strings import DOC_RECEIVED
-from ebu_tt_live.clocks.media import MediaClock
 from datetime import timedelta
 import logging
 

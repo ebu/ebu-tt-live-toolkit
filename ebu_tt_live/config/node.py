@@ -73,7 +73,7 @@ class ReSequencer(SimpleConsumer):
     _output = None
 
     def _create_component(self, config=None):
-        if self.config.utc:
+        if self.config.utc is False:
             reference_clock = clock_by_type('local')(config, None)
         else:
             reference_clock = clock_by_type('utc')(config, None)
