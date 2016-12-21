@@ -151,25 +151,15 @@ class SimpleProducer(ProducerMixin, NodeBase):
     _clock = None
     _output = None
 
-    def __init__(self, config, local_config):
-        super(SimpleProducer, self). __init__(
-            config=config,
-            local_config=local_config
-        )
-        self.backend.register_component_start(self)
-
-    @classmethod
-    def configure_component(cls, config, local_config, **kwargs):
-        instance = cls(config=config, local_config=local_config)
-
-        instance._clock = local_config.clock.type(config, local_config.clock)
+    def _create_component(self, config=None):
+        self._clock = self.config.clock.type(config, self.config.clock)
         sequence = documents.EBUTT3DocumentSequence(
-            sequence_identifier=local_config.sequence_identifier,
+            sequence_identifier=self.config.sequence_identifier,
             lang='en-GB',
-            reference_clock=instance._clock.component
+            reference_clock=self._clock.component
         )
 
-        if local_config.show_time:
+        if self.config.show_time:
             subtitle_tokens = None  # Instead of text we provide the availability time as content.
         else:
             # Let's read our example conversation
@@ -180,25 +170,23 @@ class SimpleProducer(ProducerMixin, NodeBase):
             #     # This makes the source cycle infinitely.
             subtitle_tokens = cycle(tokenize_english_document(full_text))
 
-        instance._output = local_config.output
-        instance._output.carriage = local_config.output.carriage.type.configure_component(
-            config, local_config.output.carriage)
-
-        instance.component = processing_node.SimpleProducer(
-            node_id=local_config.id,
+        self.component = processing_node.SimpleProducer(
+            node_id=self.config.id,
             document_sequence=sequence,
             producer_carriage=None,
             input_blocks=subtitle_tokens
         )
 
-        instance._output.adapters = ProducerNodeCarriageAdapter.configure_component(
+    def __init__(self, config, local_config):
+        super(SimpleProducer, self). __init__(
             config=config,
-            local_config=local_config.output.adapters,
-            producer=instance.component,
-            carriage=instance._output.carriage.component
+            local_config=local_config
         )
 
-        return instance
+        self._create_component(config)
+        self._create_output(config)
+
+        self.backend.register_component_start(self)
 
     def start(self):
         self.backend.call_periodically(self.component.resume_producing, interval=2.0)

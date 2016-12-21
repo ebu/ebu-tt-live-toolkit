@@ -735,7 +735,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
 
         if not document_segments:
             # TODO: This is good question what now? no documents found for range
-            return None
+            comp_doc = self.create_compatible_document()
+            # comp_doc.set_begin(begin)
+            # comp_doc.set_end(end)
+            return comp_doc
 
         splicer = EBUTT3Splicer(
             sequence_identifier='{}_resegmented'.format(self.sequence_identifier),

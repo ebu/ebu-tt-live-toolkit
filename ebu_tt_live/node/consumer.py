@@ -110,7 +110,9 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
                 discard=self._discard,
                 sequence_number=self._segment_counter
             )
-            self._segment_counter += 1
+            if segment_doc is not None:
+                segment_doc.sequence_identifier = self._sequence_identifier
+                self._segment_counter += 1
             return segment_doc
         return None
 
