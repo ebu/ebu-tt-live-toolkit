@@ -62,8 +62,8 @@ def given_span2_end(span2_end, template_dict):
     template_dict['span2_end'] = span2_end
 
 
-@when('the delay node delays it by <delay>')
-def when_delay(delay, test_context, gen_document):
+@when('the retiming delay node delays it by <delay>')
+def when_retiming_delay(delay, test_context, gen_document):
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'

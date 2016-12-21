@@ -6,7 +6,7 @@ Feature: Delay of a document sequence
   | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
 
   @skip
-  Scenario: Implicitly timed document delay
+  Scenario: BufferDelayNode delays document
     Given an xml file <xml_file>
     And the document is generated
     And it has availability time <avail_time>
@@ -20,12 +20,12 @@ Feature: Delay of a document sequence
     # Negative value should really throw an exception
     | 00:00:10.0 | -00:00:00  | 00:00:10.0         |  
 
-#TODO: test that the order of documents in the input and output sequence is the same (FIFO) 
+#TODO: test that the order of documents in the input and output sequence is the same (FIFO)
 
 
   #TBC: this is a change to the spec (passive delay node)
   @skip
-  Scenario: Implicitly timed document unchanged sequence identifier 
+  Scenario: BufferDelayNode, unchanged sequence identifier
     Given an xml file <xml_file>
     And the document is generated
     And sequence identifier <sequence_id_1>
@@ -33,16 +33,16 @@ Feature: Delay of a document sequence
     Then the delayed document has <sequence_id_2>
 
     Examples:
-    | sequence_id_1 | delay      | sequence_id_2 |  
-    | 1             | 00:00:02.0 | 1             |  
-    | xxx           | 00:00:00   | xxx           |  
-    | 99999999999   | 99:00:00   | 99999999999   | 
+    | sequence_id_1 | delay      | sequence_id_2 |
+    | 1             | 00:00:02.0 | 1             |
+    | xxx           | 00:00:00   | xxx           |
+    | 99999999999   | 99:00:00   | 99999999999   |
     # No document generated for negative delay
     | 1             | -00:00:01  |               |
 
 
   # Times are inherited so to delay an element we only need to delay its syncbase  
-  Scenario: Explicitly timed document delay, computed times
+  Scenario: RetimingDelayNode delays document, computed times
     Given an xml file <xml_file>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
@@ -56,7 +56,7 @@ Feature: Delay of a document sequence
     And it has span2 begin time <span2_begin>
     And it has span2 end time <span2_end>
     And the document is generated
-    When the delay node delays it by <delay>
+    When the retiming delay node delays it by <delay>
     Then the updated body computed begin time is <updated_body_begin>
     And the updated body computed end time is <updated_body_end>
     And the updated div computed begin time is <updated_div_begin>
@@ -89,7 +89,7 @@ Feature: Delay of a document sequence
     |            |              | 00:00:20  |          |          | 00:00:10 |            |          |             |           | 00:00:15 | 00:00:35           | 00:00:45         | 00:00:35          | 00:00:45        | 00:00:35        | 00:00:45      | 00:00:35           | 00:00:45         | 00:00:35            | 00:00:45          |          |
 
 
-  Scenario: Explicitly timed document delay, specified times
+  Scenario: RetimingDelayNode delays document, specified times
     Given an xml file <xml_file>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
@@ -103,7 +103,7 @@ Feature: Delay of a document sequence
     And it has span2 begin time <span2_begin>
     And it has span2 end time <span2_end>
     And the document is generated
-    When the delay node delays it by <delay>
+    When the retiming delay node delays it by <delay>
     Then the updated body specified begin time is <updated_body_begin>
     And the updated body specified end time is <updated_body_end>
     And the updated div specified begin time is <updated_div_begin>
