@@ -1,0 +1,34 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "producer1",
+      "type": "simple-producer",
+      "show_time": true,
+      "sequence_identifier": "TestSequence1",
+      "output": {
+        "carriage": {
+          "type": "direct",
+          "id": "pipe1"
+        }
+      }
+    },
+    "node2": {
+      "id": "encoder1",
+      "type": "ebuttd-encoder",
+      "sequence_identifier": "ReSequenced1",
+      "segment_length": "5.0",
+      "input": {
+        "carriage": {
+          "type": "direct",
+          "id": "pipe1"
+        }
+      },
+      "output": {
+        "carriage": {
+          "type": "direct",
+          "id": "pipe2"
+        }
+      }
+    }
+  }
+}
