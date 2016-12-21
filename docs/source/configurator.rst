@@ -15,7 +15,7 @@ There are 2 ways the nodes and carriage mechanisms can be set up:
     required components for you. This eliminates the need for a programmer to keep repeating the configuration logic
     in their scripts where they create the components.
 
-The idea is the following: The components(nodes, carriage mechanisms, converters, resegmenters...etc.) are agnostic
+The idea is the following: The components(nodes, carriage mechanisms, converters, re-sequencers...etc.) are agnostic
 to one another as long as the carriage mechanism is capable of transporting the payload the node expects. But their
 wiring and their factories are actually the configurator classes. The configurator class defines the type and
 name of the configuration options relevant to the component and wires it with its immediate dependencies. This
