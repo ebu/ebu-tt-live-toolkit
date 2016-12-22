@@ -272,11 +272,11 @@ class TimingValidationMixin(object):
         ):
             raise OutsideSegmentError()
 
-    def _is_timed_leaf(self):
+    def is_timed_leaf(self):
         return False
 
     def _semantic_copy_apply_leaf_timing(self, copied_instance, dataset, element_content=None):
-        if not copied_instance._is_timed_leaf():
+        if not copied_instance.is_timed_leaf():
             copied_instance.begin = None
             copied_instance.end = None
             if hasattr(copied_instance, 'dur'):
