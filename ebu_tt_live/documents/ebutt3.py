@@ -7,7 +7,7 @@ from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
-    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL
+    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, ERR_SEQUENCE_FROM_DOCUMENT
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden
 from ebu_tt_live.clocks import get_clock_from_document
@@ -436,7 +436,11 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     @classmethod
     def create_from_document(cls, document, *args, **kwargs):
         if not isinstance(document, EBUTT3Document):
-            raise ValueError()
+            raise ValueError(
+                ERR_SEQUENCE_FROM_DOCUMENT.format(
+                    document=document
+                )
+            )
         return cls(
             sequence_identifier=kwargs.get('sequence_identifier', document.sequence_identifier),
             reference_clock=kwargs.get('reference_clock', get_clock_from_document(document)),
@@ -535,7 +539,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 if document.sequence_number > item.element.sequence_number:
                     raise SequenceOverridden()
                 if item.element.sequence_number > document.sequence_number:
-                    #This means our document may get trimmed into shape
+                    # This means our document may get trimmed into shape
                     if this_ends.when > item.when:
                         trims_this = item
                     break
@@ -724,12 +728,12 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 doc_segment = doc.extract_segment(begin=begin, end=doc_ending, deconflict_ids=True)
                 document_segments.append(doc_segment)
             except Exception as err:
-                log.exception(
+                log.error(
                     'Error extracting document segment from {}__{}'.format(
                         doc.sequence_identifier, doc.sequence_number
                     )
                 )
-                log.error(err)
+                log.error(repr(err))
                 
             begin = doc_ending
 

@@ -2,6 +2,7 @@ from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
 from .clocks import clock_by_type
 from .carriage import producer_carriage_by_type, consumer_carriage_by_type
 from ebu_tt_live import documents
+from ebu_tt_live import bindings
 from ebu_tt_live.examples import get_example_data
 import ebu_tt_live.node as processing_node
 from itertools import cycle
@@ -181,6 +182,7 @@ class SimpleProducer(ProducerMixin, NodeBase):
     required_config.add_option('id', default='simple-producer')
     required_config.add_option('show_time', default=False)
     required_config.add_option('sequence_identifier', default='TestSequence1')
+    required_config.add_option('interval', default=2.0)
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
 
@@ -225,11 +227,37 @@ class SimpleProducer(ProducerMixin, NodeBase):
         self.backend.register_component_start(self)
 
     def start(self):
-        self.backend.call_periodically(self.component.resume_producing, interval=2.0)
+        self.backend.call_periodically(self.component.resume_producing, interval=self.config.interval)
 
 
-class EBUTTDEncoder(NodeBase):
-    pass
+class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
+
+    required_config = Namespace()
+    required_config.add_option('id', default='ebuttd-encoder')
+    required_config.add_option('media_time_zero', default='current')
+    required_config.add_option('default_namespace', default=False)
+    required_config.clock = Namespace()
+    required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
+
+    _clock = None
+
+    def _create_component(self, config):
+        self._clock = self.config.clock.type(config, self.config.clock)
+        if self.config.media_time_zero == 'current':
+            mtz = self._clock.component.get_time()
+        else:
+            mtz = bindings.ebuttdt.LimitedClockTimingType(str(self.config.media_time_zero)).timedelta
+        self.component = processing_node.EBUTTDEncoder(
+            node_id=self.config.id,
+            media_time_zero=mtz,
+            default_ns=self.config.default_namespace
+        )
+
+    def __init__(self, config, local_config):
+        super(EBUTTDEncoder, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
 
 
 def nodes_by_type(node_name):

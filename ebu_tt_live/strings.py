@@ -22,12 +22,12 @@ ERR_SEMANTIC_REGION_MISSING = gettext('Region: {region} is not found.')
 ERR_SEMANTIC_ID_UNIQUENESS = gettext('XML ID is not unique: {id}')
 ERR_DOCUMENT_NOT_COMPATIBLE = gettext('Document is not compatible with the sequence. Conflicting attributes: {attr_names}')
 ERR_DOCUMENT_NOT_PART_OF_SEQUENCE = gettext('Document is not part of any sequence')
+ERR_SEQUENCE_FROM_DOCUMENT = gettext('Sequence cannot be created from: {document}, EBUTT3Document instance expected!')
 ERR_DOCUMENT_SEQUENCE_INCONSISTENCY = gettext('Timeline consistency problem.')
 ERR_DOCUMENT_EXTENT_MISSING = gettext('{type} cannot be instantiated from {value} because document extent is missing (from the tt element)')
 ERR_1DIM_ONLY = gettext('{type} accepts 1 dimensional values only')
 ERR_2DIM_ONLY = gettext('{type} accepts 2 dimensional values only')
 END_OF_DATA = gettext('End of available data reached')
-
 
 ERR_CONF_ONE_BACKEND_ONLY = gettext('There is only one backend allowed. Already created: {backend1}, New: {backend2}')
 ERR_CONF_NO_SUCH_NODE = gettext('No such node type found: {node_type}')

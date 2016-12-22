@@ -15,8 +15,6 @@
     "node2": {
       "id": "encoder1",
       "type": "ebuttd-encoder",
-      "sequence_identifier": "ReSequenced1",
-      "segment_length": "5.0",
       "input": {
         "carriage": {
           "type": "direct",
@@ -25,8 +23,8 @@
       },
       "output": {
         "carriage": {
-          "type": "direct",
-          "id": "pipe2"
+          "type": "websocket",
+          "uri": "ws://localhost:9004"
         }
       }
     }
