@@ -18,8 +18,6 @@ Feature: Delay of a document sequence
     | 00:00:10.0 | 00:00:02.0 | 00:00:12.0         |
     | 00:00:10.0 | 00:00:00.0 | 00:00:10.0         |
 
-#TODO: test that the order of documents in the input and output sequence is the same (FIFO)
-
 
   #TBC: this is a change to the spec (passive delay node)
   @skip
