@@ -94,6 +94,7 @@ class SimpleConsumer(ConsumerMixin, NodeBase):
 class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
 
     required_config = Namespace()
+    required_config.add_option('id', default='re-sequencer')
     required_config.add_option('sequence_identifier', default='ReSequenced1')
     required_config.add_option('segment_length', default=2.0)
     required_config.add_option('utc', default=False)
@@ -130,14 +131,49 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
         self.backend.call_periodically(self.component.convert_next_segment, interval=self.config.segment_length)
 
 
-class BufferDelay(SimpleConsumer):
+class BufferDelay(ConsumerMixin, ProducerMixin, NodeBase):
     required_config = Namespace()
+    required_config.add_option('id', default='buffer-delay')
     required_config.add_option('delay', default=0.0)
 
+    def _create_component(self, config):
+        reference_clock = clock_by_type('auto')(config, None)
+        self.component = processing_node.BufferDelayNode(
+            node_id=self.config.id,
+            document_sequence=None,
+            carriage_impl=None,
+            fixed_delay=self.config.delay,
+            reference_clock=reference_clock.component
+        )
 
-class RetimingDelay(SimpleConsumer):
+    def __init__(self, config, local_config):
+        super(BufferDelay, self).__init__(config, local_config)
+
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
+
+
+class RetimingDelay(ConsumerMixin, ProducerMixin, NodeBase):
     required_config = Namespace()
+    required_config.add_option('id', default='retiming-delay')
     required_config.add_option('delay', default=0.0)
+    required_config.add_option('sequence_identifier', default='RetimedSequence1')
+
+    def _create_component(self, config):
+        reference_clock = clock_by_type('auto')(config, None)
+        self.component = processing_node.RetimingDelayNode(
+            node_id=self.config.id,
+            document_sequence=self.config.sequence_identifier,
+            fixed_delay=self.config.delay,
+            reference_clock=reference_clock.component
+        )
+
+    def __init__(self, config, local_config):
+        super(RetimingDelay, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
 
 
 class SimpleProducer(ProducerMixin, NodeBase):

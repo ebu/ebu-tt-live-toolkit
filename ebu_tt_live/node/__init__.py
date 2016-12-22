@@ -3,3 +3,4 @@ from .base import INode, IConsumerNode, IProducerNode, AbstractConsumerNode, Abs
 from .producer import SimpleProducer
 from .consumer import SimpleConsumer, ReSequencer
 from .encoder import EBUTTDEncoder
+from .delay import BufferDelayNode, RetimingDelayNode
