@@ -17,8 +17,6 @@ Feature: Delay of a document sequence
     | avail_time | delay      | delayed_avail_time |
     | 00:00:10.0 | 00:00:02.0 | 00:00:12.0         |
     | 00:00:10.0 | 00:00:00.0 | 00:00:10.0         |
-    # Negative value should really throw an exception
-    | 00:00:10.0 | -00:00:00  | 00:00:10.0         |  
 
 #TODO: test that the order of documents in the input and output sequence is the same (FIFO)
 
@@ -37,8 +35,6 @@ Feature: Delay of a document sequence
     | 1             | 00:00:02.0 | 1             |
     | xxx           | 00:00:00   | xxx           |
     | 99999999999   | 99:00:00   | 99999999999   |
-    # No document generated for negative delay
-    | 1             | -00:00:01  |               |
 
 
   # Times are inherited so to delay an element we only need to delay its syncbase  
