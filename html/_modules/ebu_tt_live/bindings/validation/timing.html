@@ -407,11 +407,11 @@
         <span class="p">):</span>
             <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TimingValidationMixin._is_timed_leaf"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">_is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="TimingValidationMixin.is_timed_leaf"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._semantic_copy_apply_leaf_timing"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_copy_apply_leaf_timing">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_copy_apply_leaf_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">copied_instance</span><span class="o">.</span><span class="n">_is_timed_leaf</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">copied_instance</span><span class="o">.</span><span class="n">is_timed_leaf</span><span class="p">():</span>
             <span class="n">copied_instance</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">copied_instance</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">copied_instance</span><span class="p">,</span> <span class="s1">&#39;dur&#39;</span><span class="p">):</span>

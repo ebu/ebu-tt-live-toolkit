@@ -862,11 +862,11 @@
     <span class="k">def</span> <span class="nf">_semantic_before_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_in_segment</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="p_type.is_timed_leaf"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.p_type.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">copied_instance</span><span class="o">.</span><span class="n">_assert_empty_container</span><span class="p">()</span>
@@ -929,11 +929,11 @@
     <span class="k">def</span> <span class="nf">_semantic_before_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_assert_in_segment</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="span_type.is_timed_leaf"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.span_type.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">copied_instance</span><span class="o">.</span><span class="n">_assert_empty_container</span><span class="p">()</span>
