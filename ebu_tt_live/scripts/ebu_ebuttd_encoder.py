@@ -7,8 +7,8 @@ import math
 from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.utc import UTCClock
-from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
+from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, BroadcastClientProtocol
+from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport, \
     RotatingFolderExport
 from ebu_tt_live import bindings
