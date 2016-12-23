@@ -27,11 +27,10 @@ Feature: BufferDelayNode
   # Check that sequence identifier and timings are not changed by comparing the document as a whole
     Given an xml file <xml_file>
     And the document is generated 
-    And the document is hashed 
+    And the document has hashed value <hash_1>  
     When the delay node delays it
-    And the document is hashed
-    Then the hash is identical
+    Then the document has hashed value <hash_2>
 
-
-
-  
+    Examples:
+    | hash_1                           | hash_2                           |  
+    | c3f273730eada246ba9a342654f24e2a | c3f273730eada246ba9a342654f24e2a |  
