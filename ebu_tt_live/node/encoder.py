@@ -36,4 +36,4 @@ class EBUTTDEncoder(AbstractCombinedNode):
         converted_doc = EBUTTDDocument.create_from_raw_binding(
             self._ebuttd_converter.convert_document(document.binding)
         )
-        self.producer_carriage.emit_data(converted_doc)
+        self.producer_carriage.emit_data(converted_doc, sequence_identifier='default', **kwargs)
