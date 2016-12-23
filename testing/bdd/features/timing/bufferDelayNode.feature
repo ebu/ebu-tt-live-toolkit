@@ -32,7 +32,8 @@ Feature: BufferDelayNode
     And the document is generated 
     And the document is hashed 
     When the delay node delays it
-    Then the delayed document has the same hash
+    And the document is hashed
+    Then the hash is identical
 
 
 
