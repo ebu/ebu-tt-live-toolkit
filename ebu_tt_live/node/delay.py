@@ -3,6 +3,8 @@ from .base import AbstractCombinedNode
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
 from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
+from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
 
 
 class RetimingDelayNode(AbstractCombinedNode):
@@ -29,7 +31,12 @@ class RetimingDelayNode(AbstractCombinedNode):
 
         # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
-        update_children_timing(document.binding, document.time_base, self._fixed_delay)
+        if has_a_leaf_with_no_timing_path(document.binding.body):
+            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+
+        else:
+            update_children_timing(document.binding, document.time_base, self._fixed_delay)
+
         document.validate()
         self.producer_carriage.emit_data(data=document, **kwargs)
 
@@ -87,6 +94,32 @@ def update_children_timing(element, timebase, delay_int):
                 update_children_timing(child.value, timebase, delay_int)
 
 
+def update_body_timing(body, timebase, delay_int):
+
+    if hasattr(body, 'begin'):
+        assert body.begin == None, "The body already has a begin time"
+
+    # we always update the begin attribute, regardless of the presence of a begin or end attribute
+    if timebase == 'clock':
+        delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+        body.begin = LimitedClockTimingType(delay.timedelta)
+
+    elif timebase == 'media':
+        delay = FullClockTimingType(timedelta(seconds=delay_int))
+        body.begin = FullClockTimingType(delay.timedelta)
+
+    # if the body has an end attribute, we add to it the value of the delay
+    if hasattr(body, 'end') and body.end != None:
+
+        if timebase == 'clock':
+            delay = LimitedClockTimingType(timedelta(seconds=delay_int))
+            body.end = LimitedClockTimingType(body.end.timedelta + delay.timedelta)
+
+        elif timebase == 'media':
+            delay = FullClockTimingType(timedelta(seconds=delay_int))
+            body.end = FullClockTimingType(body.end.timedelta + delay.timedelta)
+
+
 def is_explicitly_timed(element):
 
     # if element has begin or end attribute
@@ -104,3 +137,58 @@ def is_explicitly_timed(element):
                 res = is_explicitly_timed(child.value)
                 if res:
                     return res
+
+
+class UntimedPathFinder(RecursiveOperation):
+
+    _path_found = False
+    _timed_element_stack = None
+
+    def __init__(self, root_element):
+        self._timed_element_stack = []
+        super(UntimedPathFinder, self).__init__(
+            root_element,
+            filter=lambda value, element: isinstance(value, TimingValidationMixin)
+        )
+
+    def _is_begin_timed(self, value):
+        if value.begin is not None:
+            return True
+        else:
+            return False
+
+    def _before_element(self, value, element=None, parent_binding=None, **kwargs):
+        if self._path_found is True:
+            raise StopBranchIteration()
+        if self._is_begin_timed(value=value):
+            self._timed_element_stack.append(value)
+
+    def _after_element(self, value, element=None, parent_binding=None, **kwargs):
+        if self._is_begin_timed(value=value):
+            bla = self._timed_element_stack.pop()
+
+    def _process_element(self, value, element=None, parent_binding=None, **kwargs):
+        print value
+        if value.is_timed_leaf() and not len(self._timed_element_stack):
+            self._path_found = True
+            raise StopBranchIteration()
+
+    def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
+        pass
+
+    @property
+    def path_found(self):
+        return self._path_found
+
+
+def has_a_leaf_with_no_timing_path(element):
+    """
+    Check if a document has at least one leaf that has no ancestor that has begin time or has begin time itself.
+    @param element:
+    @return:
+    """
+
+    finder = UntimedPathFinder(element)
+    finder.proceed()
+
+    return finder.path_found
