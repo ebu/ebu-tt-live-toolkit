@@ -18,7 +18,6 @@ Feature: BufferDelayNode
     And the document has availability time <availability_1>  
     And the document is delayed by <delay_offset>
     And the document is emitted at <emission>
-    And the document has availability time <availability_2>
     Then the delta between emission and availability_1 is greater or equal to <delay_offset>
 
 
