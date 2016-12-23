@@ -34,8 +34,10 @@ Feature: BufferDelayNode
 
     Examples:
     | emission_1 | resolved_begin_1 | delay      | emission_2   | resolved_begin_2 |  
-    # Added carriage and processing delay
-    | 00:00:00.0 | 00:00:00.050     | 00:00:02.0 | 00:00:02.050 | 00:00:02.075     |  
+    # No latency other than delay
+    | 00:00:00   | 00:00:00         | 00:00:02   | 00:00:02     | 00:00:02         |  
+    # Added carriage and processing latency
+    | 00:00:00.0 | 00:00:00.050     | 00:00:02.0 | 00:00:02.075 | 00:00:02.100     |  
 
 
   # CONFORMANCE.md #110, #111
