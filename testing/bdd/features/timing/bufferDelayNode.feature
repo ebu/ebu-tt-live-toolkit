@@ -5,8 +5,6 @@ Feature: BufferDelayNode
   | xml_file      |
   | delayNode.xml |  
 
-
-
   # CONFORMANCE.md #109, #112
   # Producer Node -> Consumer Node A -> BufferDelay Node -> Consumer Node B. 
   # Difference between resolved document begin times logged by A and B should be equal or greater to delay period.
