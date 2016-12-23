@@ -5,7 +5,7 @@ Feature: BufferDelayNode
   | xml_file      |
   | delayNode.xml |  
 
-  # CONFORMANCE.md #109, #112
+  # SPEC-CONFORMANCE.md R109, R112
   # Producer Node -> Consumer Node A -> BufferDelay Node -> Consumer Node B. 
   # Difference between resolved document begin times logged by A and B should be equal or greater to delay period.
 
@@ -25,7 +25,7 @@ Feature: BufferDelayNode
     | 00:00:00.0 | 00:00:00.050     | 00:00:02.0 | 00:00:02.075 | 00:00:02.100     |  
 
 
-  # CONFORMANCE.md #110, #111
+  # SPEC-CONFORMANCE.md R110, R111
   Scenario: BufferDelayNode does not modify the document
   # Check that sequence identifier and timings are not changed by comparing the document as a whole
     Given an xml file <xml_file>
