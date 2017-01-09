@@ -13,7 +13,7 @@ class TestBroadcastServerFactory(TestCase):
         self.proto = BroadcastServerProtocol()
         self.proto.factory = self.factory
         self.tr = proto_helpers.StringTransport()
-        self.proto.makeConnection(transport=self.tr)
+        # self.proto.makeConnection(transport=self.tr)
 
     def tearDown(self):
         pass
