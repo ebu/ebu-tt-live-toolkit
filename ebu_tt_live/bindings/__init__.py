@@ -31,7 +31,10 @@ import logging
 
 log = logging.getLogger(__name__)
 
-
+# This mapping controls the namespace aliases used in the generated XML content.
+# Not having these results in default mapping to ns1 ns2 ns3..., which should not be a problem
+# but many downstream tools may have terrible custom XML parsing typically by using regular expressions
+# to find `tt:head` for instance. So controlling these to match the spec namespaces helps interoperability.
 namespace_prefix_map = {
     'tt': raw.Namespace,
     'ebuttdt': ebuttdt.Namespace,
@@ -272,7 +275,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         This property function gives back a set in which we find the unspecified style attributes.
 
         :return: set for attribute names that were inheriting the default in the computed style. Important at
-            inheritance override
+        inheritance override
         """
         if self._default_attrs is None:
             self._default_attrs = set()
@@ -815,6 +818,9 @@ class br_type(SemanticValidationMixin, raw.br_type):
 
     def __copy__(self):
         return br_type()
+
+    def content_to_string(self, begin=None, end=None):
+        return '<br />'
 
 
 raw.br_type._SetSupersedingClass(br_type)

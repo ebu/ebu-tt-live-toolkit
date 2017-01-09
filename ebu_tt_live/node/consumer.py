@@ -16,10 +16,12 @@ class SimpleConsumer(Node):
 
     _reference_clock = None
     _sequence = None
+    _verbose = None
 
-    def __init__(self, node_id, carriage_impl, reference_clock):
+    def __init__(self, node_id, carriage_impl, reference_clock, verbose=False):
         super(SimpleConsumer, self).__init__(node_id, carriage_impl)
         self._reference_clock = reference_clock
+        self._verbose = verbose
 
     def process_document(self, document):
         if self._sequence is None:
@@ -27,7 +29,7 @@ class SimpleConsumer(Node):
             log.info('Creating document sequence from first document {}'.format(
                 document
             ))
-            self._sequence = EBUTT3DocumentSequence.create_from_document(document)
+            self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
             if self._reference_clock is None:
                 self._reference_clock = self._sequence.reference_clock
             if document.availability_time is None:

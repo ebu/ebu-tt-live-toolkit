@@ -175,8 +175,7 @@ class SemanticDocumentMixin(SemanticValidationMixin):
     def validateBinding (self, **extra_kwargs):
         """Check whether the binding content matches its content model.
 
-        @return: C{True} if validation was not performed due to settings.
-        @return: Complex result dictionary with success and semantic_dataset keys.
+        @return: C{True} if validation was not performed due to settings or complex result dictionary with success and semantic_dataset keys.
         @raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...
         @raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints
         """
