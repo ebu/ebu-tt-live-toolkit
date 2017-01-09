@@ -14,14 +14,16 @@ class SimpleConsumer(AbstractConsumerNode):
 
     _reference_clock = None
     _sequence = None
+    _verbose = None
     _expects = EBUTT3Document
 
-    def __init__(self, node_id, consumer_carriage=None, reference_clock=None, **kwargs):
+    def __init__(self, node_id, consumer_carriage=None, reference_clock=None, verbose=False, **kwargs):
         super(SimpleConsumer, self).__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage
         )
         self._reference_clock = reference_clock
+        self._verbose = verbose
 
     def process_document(self, document, **kwargs):
         if self._sequence is None:
@@ -29,7 +31,7 @@ class SimpleConsumer(AbstractConsumerNode):
             log.info('Creating document sequence from first document {}'.format(
                 document
             ))
-            self._sequence = EBUTT3DocumentSequence.create_from_document(document)
+            self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
             if self._reference_clock is None:
                 self._reference_clock = self._sequence.reference_clock
             if document.availability_time is None:
@@ -97,6 +99,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
     def process_document(self, document, **kwargs):
         sequence_missing = self._sequence is None
         super(ReSequencer, self).process_document(document)
+        # TODO: re-enable this functionality or remove it.
         # if sequence_missing and self._sequence is not None:
         #     # Ok we just got a relevant document. Let's call the function
         #     # that schedules the periodic segmentation.

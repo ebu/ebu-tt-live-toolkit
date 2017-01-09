@@ -70,6 +70,7 @@ class ConsumerMixin(RequiredConfig):
 class SimpleConsumer(ConsumerMixin, NodeBase):
     required_config = Namespace()
     required_config.add_option('id', default='simple-consumer')
+    required_config.add_option('verbose', default=False, doc='Log subtitle content on activation changes')
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='auto', from_string_converter=clock_by_type)
 
@@ -79,7 +80,8 @@ class SimpleConsumer(ConsumerMixin, NodeBase):
         reference_clock = self.config.clock.type(config, None)
         self.component = processing_node.SimpleConsumer(
             node_id=self.config.id,
-            reference_clock=reference_clock.component
+            reference_clock=reference_clock.component,
+            verbose=self.config.verbose
         )
 
     def __init__(self, config, local_config):
