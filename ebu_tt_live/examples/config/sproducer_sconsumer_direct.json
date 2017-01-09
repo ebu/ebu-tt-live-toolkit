@@ -15,7 +15,7 @@
     "node2": {
       "id": "consumer1",
       "type": "simple-consumer",
-      "verbose": true,
+      "verbose": false,
       "input": {
         "carriage": {
           "type": "direct",
