@@ -16,7 +16,7 @@ Feature: BufferDelayNode
     Given an xml file <xml_file>
     And the document is generated
     And it has availability time <avail_time>
-    And the document is delayed by <delay_offset>
+    And the buffer delay node delays it by <delay_offset>
     And the document is emitted at <emission>
     Then the delta between <emission> and <avail_time> is greater or equal to <delay_offset>
 
@@ -30,9 +30,9 @@ Feature: BufferDelayNode
   # Check that sequence identifier and timings are not changed by comparing the document as a whole
     Given an xml file <xml_file>
     And the document is generated 
-    And the document has hashed value <hash_1>  
-    When the delay node delays it
-    Then the document has hashed value <hash_2>
+    And the document has original hashed value <hash_1>
+    When the buffer delay node delays it by <delay_offset>
+    Then the document has new hashed value <hash_2>
 
     Examples:
     | hash_1                           | hash_2                           |  
