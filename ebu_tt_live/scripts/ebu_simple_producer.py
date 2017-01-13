@@ -9,8 +9,8 @@ from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.examples import get_example_data
 from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
-from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, BroadcastServerProtocol, \
-    TwistedPushProducer
+from ebu_tt_live.twisted import BroadcastServerFactory, BroadcastServerProtocol, \
+    TwistedWSPushProducer
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage
 from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
@@ -83,18 +83,21 @@ def main():
     if do_export:
         prod_impl.resume_producing()
     else:
-        factory = wsFactory(u"ws://127.0.0.1:9000")
+
+        twisted_producer = TwistedWSPushProducer(
+            custom_producer=prod_impl
+        )
+
+        factory = BroadcastServerFactory(
+            url=u"ws://127.0.0.1:9000",
+            producer=twisted_producer
+        )
 
         factory.protocol = BroadcastServerProtocol
 
         factory.listen()
 
-        TwistedPushProducer(
-            consumer=factory,
-            custom_producer=prod_impl
-        )
-
-        # Here we schedule in the simple producer to a create content responding to a periodic interval timer.
+        # Here we schedule in the simple producer to create content responding to a periodic interval timer.
         looping_task = task.LoopingCall(simple_producer.process_document)
 
         looping_task.start(2.0)

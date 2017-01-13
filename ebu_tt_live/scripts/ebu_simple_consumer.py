@@ -4,7 +4,7 @@ from .common import create_loggers
 
 from ebu_tt_live.node import SimpleConsumer
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, BroadcastClientProtocol
+from ebu_tt_live.twisted import TwistedWSConsumer, BroadcastClientFactory, BroadcastClientProtocol
 from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader
 from ebu_tt_live.adapters.node_carriage import ConsumerNodeCarriageAdapter
@@ -23,7 +23,7 @@ parser.add_argument('-m', '--manifest-path', dest='manifest_path',
                     )
 parser.add_argument('-u', '--websocket-url', dest='websocket_url', 
                     help='URL for the websocket address to connect to',
-                    default='ws://localhost:9000/TestSequence1')
+                    default='ws://localhost:9000/TestSequence1/subscribe')
 parser.add_argument('-f', '--tail-f', dest='do_tail',
                     help='Works only with -m, if set the script will wait for new lines to be added to the file once the last line is reached. Exactly like tail -f does.',
                     action="store_true", default=False
@@ -69,11 +69,14 @@ def main():
         if args.proxy:
             proxyHost, proxyPort = args.proxy.split(':')
             factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
+
+        twisted_consumer = TwistedWSConsumer(
+            custom_consumer=consumer_impl
+        )
+
         factory = BroadcastClientFactory(
             url=websocket_url,
-            consumer=TwistedConsumer(
-                custom_consumer=consumer_impl
-            ),
+            consumer=twisted_consumer,
             **factory_args
         )
 

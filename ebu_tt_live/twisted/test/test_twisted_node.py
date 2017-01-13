@@ -1,6 +1,6 @@
 
 from twisted.trial.unittest import TestCase
-from ebu_tt_live.twisted.node import TwistedPushProducer, TwistedConsumer
+from ebu_tt_live.twisted import TwistedWSPushProducer, TwistedWSConsumer
 from mock import MagicMock
 
 
@@ -10,7 +10,7 @@ class TestTwistedConsumer(TestCase):
         self._custom_consumer = MagicMock()
 
     def test_instantiate(self):
-        instance = TwistedConsumer(self._custom_consumer)
+        instance = TwistedWSConsumer(self._custom_consumer)
 
 
 class TestTwistedProducer(TestCase):
@@ -20,5 +20,5 @@ class TestTwistedProducer(TestCase):
         self._consumer = MagicMock()
 
     def test_instantiate(self):
-        instance = TwistedPushProducer(consumer=self._consumer, custom_producer=self._custom_producer)
+        instance = TwistedWSPushProducer(custom_producer=self._custom_producer)
 

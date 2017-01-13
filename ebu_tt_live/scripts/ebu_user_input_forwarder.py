@@ -6,7 +6,6 @@ from ebu_tt_live.node.distributing import DistributingNode
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, UserInputServerProtocol, UserInputServerFactory, \
     BroadcastServerFactory, TwistedPushProducer, BroadcastServerProtocol
-from ebu_tt_live.carriage.forwarder_carriage import ForwarderCarriageImpl
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage, WebsocketProducerCarriage
 from twisted.internet import reactor
@@ -41,14 +40,14 @@ def main():
         sub_prod_impl = FilesystemProducerImpl(args.folder_export)
     else:
         sub_prod_impl = WebsocketProducerCarriage()
-    carriage_impl = ForwarderCarriageImpl(sub_consumer_impl, sub_prod_impl)
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
 
     dist_node = DistributingNode(
         node_id='distributing-node',
-        carriage_impl=carriage_impl,
+        producer_carriage=sub_prod_impl,
+        consumer_carriage=sub_consumer_impl,
         reference_clock=reference_clock
     )
 
@@ -65,10 +64,10 @@ def main():
     if not do_export:
         # This factory listens for any consumer to forward documents to.
         broadcast_factory = BroadcastServerFactory("ws://127.0.0.1:9000")
-        broadcast_factory.protocol = StreamingServerProtocol
+        broadcast_factory.protocol = BroadcastServerProtocol
         broadcast_factory.listen()
 
-        TwistedPullProducer(
+        TwistedPushProducer(
             consumer=broadcast_factory,
             custom_producer=sub_prod_impl
         )
