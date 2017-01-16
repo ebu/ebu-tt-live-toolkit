@@ -21,15 +21,3 @@ def then_delta_should_be_correct(emission, avail_time, delay_offset):
 
     # BufferDelay.emission_time - BufferDelay.availability_time >= delay_offset
     pass
-
-
-# functions for scenario: BufferDelayNode does not modify the document
-
-@given('the document has original hashed value <hash_1>')
-def given_original_hash_value(hash_1):
-    pass
-
-
-@then('the document has new hashed value <hash_2>')
-def then_original_hash_value(hash_2):
-    pass

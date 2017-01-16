@@ -23,17 +23,3 @@ Feature: BufferDelayNode
     Examples:
     | emission   | avail_time  | delay_offset |
     | 00:00:05.0 | 00:00:02.0  | 00:00:01.0   |
-
-
-  # SPEC-CONFORMANCE.md R110, R111
-  Scenario: BufferDelayNode does not modify the document
-  # Check that sequence identifier and timings are not changed by comparing the document as a whole
-    Given an xml file <xml_file>
-    And the document is generated 
-    And the document has original hashed value <hash_1>
-    When the buffer delay node delays it by <delay_offset>
-    Then the document has new hashed value <hash_2>
-
-    Examples:
-    | hash_1                           | hash_2                           |  
-    | c3f273730eada246ba9a342654f24e2a | c3f273730eada246ba9a342654f24e2a |  
