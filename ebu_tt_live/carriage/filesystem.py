@@ -194,6 +194,7 @@ class SimpleFolderExport(ProducerCarriageImpl):
         self._counter += 1
         filename = self._file_name_pattern.format(self._counter)
         filepath = os.path.join(self._dir_path, filename)
+        log.info('Writing file: {}'.format(filepath))
         with open(filepath, 'w') as destfile:
             destfile.write(document.get_xml())
             destfile.flush()
