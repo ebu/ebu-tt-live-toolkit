@@ -72,14 +72,15 @@ class TwistedBackend(BackendBase):
     _ws_twisted_consumer_type = None
     _ws_twisted_producers = None
     _ws_twisted_consumers = None
+    _ws_twisted_servers = None
 
     def __init__(self, config, local_config):
-        from ebu_tt_live.twisted import websocket, reactor, task, TwistedPushProducer, TwistedConsumer
+        from ebu_tt_live.twisted import websocket, reactor, task, TwistedWSPushProducer, TwistedWSConsumer
         self._websocket = websocket
         self._reactor = reactor
         self._task = task
-        self._ws_twisted_producer_type = TwistedPushProducer
-        self._ws_twisted_consumer_type = TwistedConsumer
+        self._ws_twisted_producer_type = TwistedWSPushProducer
+        self._ws_twisted_consumer_type = TwistedWSConsumer
         self._ws_twisted_servers = {}
         super(TwistedBackend, self).__init__(config=config, local_config=local_config)
 
@@ -89,19 +90,20 @@ class TwistedBackend(BackendBase):
 
     def ws_backend_producer(self, uri, custom_producer):
         if uri not in self._ws_twisted_servers:
-            factory = self._websocket.BroadcastServerFactory(uri.geturl())
+            twisted_producer = self._ws_twisted_producer_type(
+                custom_producer=custom_producer
+            )
+            factory = self._websocket.BroadcastServerFactory(
+                uri.geturl(),
+                producer=twisted_producer
+            )
             factory.protocol = self._websocket.BroadcastServerProtocol
             self._ws_twisted_servers[uri] = factory
             factory.listen()
         else:
             factory = self._ws_twisted_servers.get(uri)
 
-        twisted_producer = self._ws_twisted_producer_type(
-            consumer=factory,
-            custom_producer=custom_producer
-        )
-
-        return twisted_producer
+        return factory.producer
 
     def ws_backend_consumer(self, uri, custom_consumer):
         factory_args = {}
