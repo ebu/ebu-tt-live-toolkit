@@ -148,38 +148,6 @@ def convert_cell_region_to_percentage(cells_in, cell_resolution):
     )
 
 
-def named_color_to_rgba(named_color):
-    color_map = {
-        "transparent": "00000000",
-        "black": "000000ff",
-        "silver": "c0c0c0ff",
-        "gray": "808080ff",
-        "white": "ffffffff",
-        "maroon": "800000ff",
-        "red": "ff0000ff",
-        "purple": "800080ff",
-        "fuchsia": "ff00ffff",
-        "magenta": "ff00ffff",
-        "green": "008000ff",
-        "lime": "00ff00ff",
-        "olive": "808000ff",
-        "yellow": "ffff00ff",
-        "navy": "000080ff",
-        "blue": "0000ffff",
-        "teal": "008080ff",
-        "aqua": "00ffffff",
-        "cyan": "00ffffff"
-    }
-    return '#{}'.format(color_map[named_color])
-
-
-def convert_cell_region_to_percentage(cells_in, cell_resolution):
-    return '{}% {}%'.format(
-        (float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100,
-        (float(cells_in.vertical) / float(cell_resolution.vertical)) * 100
-    )
-
-
 class TwoDimSizingMixin(object):
 
     _groups_regex = None
@@ -496,7 +464,7 @@ ebuttdt_raw.percentageOriginType._SetSupersedingClass(PercentageOriginType)
 
 class PixelExtentType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelExtentType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:px))')
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+]?(?P<second>\d*\.?\d+)(?:px))')
     _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
@@ -510,7 +478,7 @@ ebuttdt_raw.pixelExtentType._SetSupersedingClass(PixelExtentType)
 
 class CellExtentType(TwoDimSizingMixin, ebuttdt_raw.cellExtentType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+]?(?P<second>\d*\.?\d+)(?:c))')
     _2dim_format = '{}c {}c'
 
 ebuttdt_raw.cellExtentType._SetSupersedingClass(CellExtentType)
@@ -518,7 +486,7 @@ ebuttdt_raw.cellExtentType._SetSupersedingClass(CellExtentType)
 
 class PercentageExtentType(TwoDimSizingMixin, ebuttdt_raw.percentageExtentType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:%))')
+    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+]?(?P<second>\d*\.?\d+)(?:%))')
     _2dim_format = '{}% {}%'
 
 ebuttdt_raw.percentageExtentType._SetSupersedingClass(PercentageExtentType)
@@ -687,6 +655,18 @@ class PercentageLineHeightType(TwoDimSizingMixin, ebuttdt_raw.percentageLineHeig
 
     _groups_regex = re.compile('(?P<first>\d*\.?\d+)%')
     _1dim_format = '{}%'
+
+    def do_mul(self, other):
+        if isinstance(other, CellFontSizeType):
+            return CellLineHeightType(self.vertical * other.vertical / 100)
+        else:
+            return NotImplemented
+
+    def __mul__(self, other):
+        return self.do_mul(other)
+
+    def __rmul__(self, other):
+        return self.do_mul(other)
 
 
 ebuttdt_raw.percentageLineHeightType._SetSupersedingClass(PercentageLineHeightType)

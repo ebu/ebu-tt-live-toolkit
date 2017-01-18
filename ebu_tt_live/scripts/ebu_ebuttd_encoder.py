@@ -8,7 +8,7 @@ from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.utc import UTCClock
 from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl, TwistedCorrectorConsumerImpl
+from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport, \
     RotatingFolderExport
 from ebu_tt_live import bindings
@@ -41,18 +41,14 @@ parser.add_argument('-f', '--tail-f', dest='do_tail',
 parser.add_argument('--implicit-ns', help='Some tools hardcode tt so they can\'t understand tt:tt so global namespace disappears',
                     action='store_true', dest='implicit_ns', default=False)
 parser.add_argument('-z', '--clock-at-media-time-zero', dest='media_time_zero',
-                    help='This sets the offset value that is used to turn clock time into media time.',
+                    help='This sets the clock time that is mapped to 00:00:00 media time at conversion.',
                     default='current', metavar='HH:MM:SS.mmm')
 parser.add_argument('-zo', '--clock-at-media-time-zero-offset', dest='media_time_zero_offset',
-                    help='This sets the offset value that is used to turn clock time into media time.',
-                    default='current', metavar='HH:MM:SS.mmm')
-parser.add_argument('-ss', '--segmentation-starts', dest='segmentation_starts',
-                    help='This helps with local machine clock timing adjustment',
+                    help='Small adjustment for the -z specified (or not specified) time mapping. Can be used for seconds correction.',
                     default='current', metavar='HH:MM:SS.mmm')
 parser.add_argument('-utc', '--utc-reference-clock', dest='utc_clock', action='store_true', default=False)
 parser.add_argument('-o', '--output-folder', dest='output_folder', default='./')
 parser.add_argument('-of', '--output-format', dest='output_format', default='xml')
-parser.add_argument('--correct', dest='correct', help='Correct demo feed errors', action='store_true', default=False)
 parser.add_argument('--proxy', dest='proxy', help='HTTP Proxy server (http:// protocol not needed!)', type=str, metavar='ADDRESS:PORT')
 parser.add_argument('--discard', dest='discard', help='Discard already converted documents', action='store_true', default=False)
 parser.add_argument('--timeshift', help='timeshift buffer in length. Only works with the folder export', type=float,
@@ -85,10 +81,7 @@ def main():
         consumer_impl = FilesystemConsumerImpl()
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
-        if args.correct:
-            consumer_impl = TwistedCorrectorConsumerImpl()
-        else:
-            consumer_impl = TwistedConsumerImpl()
+        consumer_impl = TwistedConsumerImpl()
 
     if args.output_format == 'xml':
         if args.timeshift > 0.0:
@@ -112,9 +105,11 @@ def main():
     if args.media_time_zero_offset != 'current':
         media_time_zero += bindings.ebuttdt.LimitedClockTimingType(str(args.media_time_zero_offset)).timedelta
 
+    # This used to be controllable. For now we start segmentation whenever the script was started in time.
+    # This flag could be used to mitigate the encoder running too fast in the future and ahead of the time
+    # window as it is getting populated with data. This is not needed when the segmentation will be moved from a
+    # timer to a reference clock polling based triggering mechanism.
     segmentation_starts = None
-    if args.segmentation_starts != 'current':
-        segmentation_starts = bindings.ebuttdt.LimitedClockTimingType(str(args.segmentation_starts)).timedelta
 
     ebuttd_converter = EBUTTDEncoder(
         node_id='simple-consumer',

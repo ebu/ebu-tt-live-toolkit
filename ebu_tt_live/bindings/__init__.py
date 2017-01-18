@@ -74,6 +74,26 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     _styling_lock = None
     # ordered styles cached
     _ordered_styles = None
+    # This mapping is meant to simplify things. In case anything needs special calculation that value should be
+    # lifted out to its own function.
+    _simple_attr_defaults = {
+        'backgroundColor': 'transparent',
+        'padding': '0px',
+        'unicodeBidi': 'normal'
+    }
+    _inherited_attr_defaults = {
+        'color': None,  # See: https://www.w3.org/TR/ttaf1-dfxp/#style-attribute-color
+        'direction': 'ltr',
+        'fontFamily': 'default',
+        'fontStyle': 'normal',
+        'fontWeight': 'normal',
+        'linePadding': '0c',
+        'multiRowAlign': 'auto',
+        'textAlign': 'start',
+        'textDecoration': 'none',
+        'wrapOption': 'wrap'
+    }
+    _default_attrs = None
 
     def __repr__(self):
         return u'<style ID: {id} at {addr}>'.format(
@@ -172,6 +192,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
             self.padding = other.padding
         if self.linePadding is None and other.linePadding is not None:
             self.linePadding = other.linePadding
+        if self.multiRowAlign is None and other.multiRowAlign is not None:
+            self.multiRowAlign = other.multiRowAlign
         return self
 
     @classmethod
@@ -239,26 +261,72 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                         dataset['tt_element'].cellResolution
                     )
                 )
-        else:
+        elif defer is not True:
             result_font_size = default_font_size
 
         return result_font_size
 
-    @classmethod
-    def compute_line_padding(cls, specified_style, parent_computed_style, region_computed_style, dataset):
-        fallback_order = [specified_style, parent_computed_style, region_computed_style]
-        for item in fallback_order:
-            if item is not None and item.linePadding is not None:
-                return item.linePadding
-        return '0c'
+    @property
+    def default_attrs(self):
+        """
+        This property function gives back a set in which we find the unspecified style attributes.
+
+        :return: set for attribute names that were inheriting the default in the computed style. Important at
+            inheritance override
+        """
+        if self._default_attrs is None:
+            self._default_attrs = set()
+        return self._default_attrs
+
+    def set_default_value(self, attr_name, default_value=None):
+        # We must cater for the case when default computed values would override specified region style values
+        # With fontSize the defaults are vital for computing relative values. At override the next element down the
+        # line would not be able to tell if the parent computed an actually intended value or just the
+        # inheritance of the default value.
+        if default_value is None:
+            if attr_name in self._simple_attr_defaults:
+                default_value = self._simple_attr_defaults[attr_name]
+            elif attr_name in self._inherited_attr_defaults:
+                default_value = self._inherited_attr_defaults[attr_name]
+            else:
+                raise LookupError()
+        # This is the extra step: register default value usage
+        self.default_attrs.add(attr_name)
+        setattr(
+            self,
+            attr_name,
+            default_value
+        )
 
     @classmethod
-    def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset):
+    def compute_inherited_attribute(
+            cls, attr_name, specified_style, parent_computed_style, region_computed_style
+    ):
         fallback_order = [specified_style, parent_computed_style, region_computed_style]
         for item in fallback_order:
-            if item is not None and item.lineHeight is not None:
+            if item is not None and attr_name not in item.default_attrs:
+                attr_value = getattr(item, attr_name)
+                if attr_value is not None:
+                    return attr_value
+        return None
+
+    @classmethod
+    def compute_simple_attribute(
+            cls, attr_name, specified_style
+    ):
+        if specified_style is not None:
+            attr_value = getattr(specified_style, attr_name)
+            if attr_value is not None:
+                return attr_value
+        return None
+
+    @classmethod
+    def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset, font_size):
+        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        for item in fallback_order:
+            if item is not None and item.lineHeight is not None and 'lineHeight' not in item.default_attrs:
                 selected_value = item.lineHeight
-                # TODO: What is supposed to be the computed value type of lineheight???
+                # NOTE: the return value should be cell based except when 'normal' is used
                 if isinstance(selected_value, ebuttdt.PixelLineHeightType):
                     selected_value = ebuttdt.CellLineHeightType(
                         *ebuttdt.pixels_to_cells(
@@ -267,12 +335,12 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                             dataset['tt_element'].cellResolution
                         )
                     )
-                return selected_value
-        return 'normal'
+                elif isinstance(selected_value, ebuttdt.PercentageLineHeightType) and isinstance(font_size, ebuttdt.cellFontSizeType):
+                    # We only need to deal with this case if fontSize was not deferred
+                    selected_value *= font_size
 
-    @property
-    def deferred_font_size(self):
-        return self._deferred_font_size
+                return selected_value
+        return None
 
     @classmethod
     def compute_style(cls, specified_style, parent_computed_style, region_computed_style, dataset, defer_font_size):
@@ -285,7 +353,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         :param dataset: Semantic dataset needed for conversion context
         :return:
         """
-        instance = cls()
+        computed = cls()
         # Here we need to check for multiple things for each style attribute:
         # 1: If specified
         # 2: If specified value is relative
@@ -293,28 +361,57 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         # 4: If no parent style attr but there is region style attr
         # 5: If none of the above assume the default
 
-        instance.fontSize = cls.compute_font_size(
+        computed.fontSize = cls.compute_font_size(
             specified_style=specified_style,
             parent_computed_style=parent_computed_style,
             region_computed_style=region_computed_style,
             dataset=dataset,
             defer=defer_font_size
         )
-        instance.linePadding = cls.compute_line_padding(
+        computed_line_height = cls.compute_line_height(
             specified_style=specified_style,
             parent_computed_style=parent_computed_style,
             region_computed_style=region_computed_style,
-            dataset=dataset
+            dataset=dataset,
+            font_size=computed.fontSize
         )
-        instance.lineHeight = cls.compute_line_height(
-            specified_style=specified_style,
-            parent_computed_style=parent_computed_style,
-            region_computed_style=region_computed_style,
-            dataset=dataset
-        )
-        # TODO add the rest
 
-        return instance
+        if computed_line_height is None:
+            computed.set_default_value('lineHeight', default_value='normal')
+        else:
+            computed.lineHeight = computed_line_height
+
+        for attr_name in cls._simple_attr_defaults.keys():
+            comp_attr_value = cls.compute_simple_attribute(
+                attr_name=attr_name,
+                specified_style=specified_style
+            )
+            if comp_attr_value is None:
+                computed.set_default_value(attr_name)
+            else:
+                setattr(
+                    computed,
+                    attr_name,
+                    comp_attr_value
+                )
+
+        for attr_name in cls._inherited_attr_defaults.keys():
+            comp_attr_value = cls.compute_inherited_attribute(
+                attr_name=attr_name,
+                specified_style=specified_style,
+                parent_computed_style=parent_computed_style,
+                region_computed_style=region_computed_style
+            )
+            if comp_attr_value is None:
+                computed.set_default_value(attr_name)
+            else:
+                setattr(
+                    computed,
+                    attr_name,
+                    comp_attr_value
+                )
+
+        return computed
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
@@ -328,7 +425,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         if self not in dataset['affected_elements']:
             raise OutsideSegmentError()
 
-
+# For the requirements of the StyledElementMixin
+style_type._compatible_style_type = style_type
 raw.style._SetSupersedingClass(style_type)
 
 
@@ -337,8 +435,8 @@ class LiveStyledElementMixin(StyledElementMixin):
     _compatible_style_type = style_type
 
 
-# EBU TT Live classes
-# ===================
+# EBU TT Live element types
+# =========================
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
@@ -631,7 +729,7 @@ class p_type(RegionedElementMixin, LiveStyledElementMixin, SubtitleContentContai
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
-    def _is_timed_leaf(self):
+    def is_timed_leaf(self):
         if len(self.span):
             return False
         else:
@@ -698,7 +796,7 @@ class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type)
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
-    def _is_timed_leaf(self):
+    def is_timed_leaf(self):
         if len(self.span):
             return False
         else:
@@ -949,7 +1047,8 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
             padding=self.padding,
             writingMode=self.writingMode,
             showBackground=self.showBackground,
-            overflow=self.overflow
+            overflow=self.overflow,
+            _strict_keywords=False
         )
 
         return copied_region
@@ -958,7 +1057,17 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset,
+            style_type=self._compatible_style_type,
+            parent_binding=parent_binding,
+            extra_referenced_styles=[
+                self._compatible_style_type(
+                    padding=self.padding,
+                    _strict_keywords=False
+                )
+            ]
+        )
 
     def _semantic_before_copy(self, dataset, element_content=None):
         if self not in dataset['affected_elements']:
@@ -1011,6 +1120,8 @@ class d_tt_type(raw.d_tt_type):
             parent=parent,
             element_name=element_name
         )
+        # Nasty workaround for the namespace collision EBU-TT-D and EBU-TT Live are causing by both defining the same
+        # tt element in the ttml namespace
         if bds.defaultNamespace() != Namespace:
             xml_dom.documentElement.tagName = 'tt:tt'
         else:

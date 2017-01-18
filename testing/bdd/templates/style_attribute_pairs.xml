@@ -22,13 +22,13 @@
       <ebuttm:documentMetadata/>
     </tt:metadata>
     <tt:styling>
-      <tt:style {% if S1_value and S1_value != "*?Empty?*" %}{{ style_attribute }}="{{ S1_value }}" {% endif %}xml:id="S1"/>
-      <tt:style {% if S2_value and S2_value != "*?Empty?*" %}{{ style_attribute }}="{{ S2_value }}" {% endif %}xml:id="S2"/>
-      <tt:style {% if S3_value and S3_value != "*?Empty?*" %}{{ style_attribute }}="{{ S3_value }}" {% endif %}xml:id="S3"/>
-      <tt:style {% if S4_value and S4_value != "*?Empty?*" %}{{ style_attribute }}="{{ S4_value }}" {% endif %}xml:id="S4"/>
+      <tt:style {% if S1_value and S1_value != "*?Empty?*" %}{{ style_attribute }}="{{ S1_value }}" {% endif %}{% if S1_value2 and S1_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S1_value2 }}" {% endif %}xml:id="S1"/>
+      <tt:style {% if S2_value and S2_value != "*?Empty?*" %}{{ style_attribute }}="{{ S2_value }}" {% endif %}{% if S2_value2 and S2_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S2_value2 }}" {% endif %}xml:id="S2"/>
+      <tt:style {% if S3_value and S3_value != "*?Empty?*" %}{{ style_attribute }}="{{ S3_value }}" {% endif %}{% if S3_value2 and S3_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S3_value2 }}" {% endif %}xml:id="S3"/>
+      <tt:style {% if S4_value and S4_value != "*?Empty?*" %}{{ style_attribute }}="{{ S4_value }}" {% endif %}{% if S4_value2 and S4_value2 != "*?Empty?*" %}{{ style_attribute2 }}="{{ S4_value2 }}" {% endif %}xml:id="S4"/>
     </tt:styling>
     <tt:layout>
-      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c"  {% if R1_value and R1_value != "*?Empty?*" %}{{ style_attribute }}="{{ R1_value }}" {% endif %}xml:id="R1"/>
+      <tt:region style="S1" tts:origin="0c 0c" tts:extent="10c 10c" xml:id="R1"/>
     </tt:layout>
   </tt:head>
   <tt:body begin="00:00:00.500" dur="00:00:05">

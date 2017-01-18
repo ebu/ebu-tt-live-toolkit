@@ -53,4 +53,3 @@ class TestEBUTT3ToEBUTTDConverter(TestCase):
 
         document = EBUTT3Document.create_from_xml(xml_file)
         cdoc = ebutt3_to_ebuttd(document, self._media_clock)
-        print cdoc.get_xml()

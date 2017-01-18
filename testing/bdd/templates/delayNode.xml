@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<tt:tt
+  ebuttp:sequenceIdentifier="delayTest"
+        ebuttp:sequenceNumber="1"
+        ttp:timeBase="clock"
+        ttp:clockMode="local"
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+  <tt:body
+{% if body_begin %}
+  begin="{{ body_begin }}"
+{% endif %}
+{% if body_end %}
+  end="{{ body_end }}"
+{% endif %}
+{% if body_dur %}
+  dur="{{ body_dur }}"
+{% endif %}
+    >
+
+    <tt:div
+{% if div_begin %}
+  begin="{{ div_begin }}"
+{% endif %}
+{% if div_end %}
+  end="{{ div_end }}"
+{% endif %}
+      >
+
+      <tt:p
+{% if p_begin %}
+  begin="{{ p_begin }}"
+{% endif %}
+{% if p_end %}
+  end="{{ p_end }}"
+{% endif %}
+        xml:id="ID005">
+
+        <tt:span
+{% if span_begin %}
+  begin="{{ span_begin }}"
+{% endif %}
+{% if span_end %}
+  end="{{ span_end }}"
+{% endif %}
+              >
+              Some example text...
+            </tt:span>
+        <tt:span
+{% if span2_begin %}
+  begin="{{ span2_begin }}"
+{% endif %}
+{% if span2_end %}
+  end="{{ span2_end }}"
+{% endif %}
+              >
+              Some example text 2...
+            </tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
