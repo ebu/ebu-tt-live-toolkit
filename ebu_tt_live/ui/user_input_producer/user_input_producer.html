@@ -5,53 +5,62 @@
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       <script src="template/user_input_producer_template.js"></script>
       <script src="nunjucks.js"></script>
+      <link rel="stylesheet" href="../../assets/css/bootstrap.css" media="screen">
+      <link rel="stylesheet" href="../../assets/css/custom.min.css" media="screen">
+
    </head>
    <body>
-      <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
-      <div id="new-sequence-div" style="display: none">
-         <label for="new-sequence-identifier-input">Sequence Identifier : </label>
-         <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
-         <br>
-         <label for ="time-base-selector">Time base : </label>
-         <select id="time-base-selector" name="time-base-selector">
-            <option value="clock" selected="selected">Clock</option>
-            <option value="media">Media</option>
-            <option value="smpte">SMPTE</option>
-         </select>
-         <span id="clock-mode-span">
-            <label for="clock-mode-selector">Clock mode : </label>
-            <select id="clock-mode-selector" name="clock-mode-selector">
-               <option value="local" selected="selected">Local</option>
-               <option value="utc">UTC</option>
-               <option value="gps">GPS</option>
-            </select>
-         </span>
-         <br>
-         <span id="smpte-attributes-span">
-            <label for="frame-rate-input">Frame rate : </label>
-            <input type="text" id="frame-rate-input" name="frame-rate-input">
-            <br>
-            <label for="frm-numerator-input"> Frame rate multiplier numerator : </label>
-            <input type="text" id="frm-numerator-input" name="frm-numerator-input">
-            <label for="frm-denominator-input">Frame rate multiplier denominator : </label>
-            <input type="text" id="frm-denominator-input" name="frm-denominator-input">
-            <br>
-            <label for="marker-mode-selector">Marker mode : </label>
-            <select id="marker-mode-selector" name="marker-mode-selector">
-               <option value="continuous">continuous</option>
-            </select>
-            <br>
-            <label for="drop-mode-selector">Drop mode : </label>
-            <select id="drop-mode-selector" name="drop-mode-selector">
-               <option value="nonDrop">nonDrop</option>
-               <option value="dropNTSC">dropNTSC</option>
-               <option value="dropPAL">dropPAL</option>
-            </select>
-         </span>
-         <br>
-         <button type="button" name="validate-new-sequence-button" id="validate-new-sequence-button">Validate</button>
-         <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
+      <div id="header">
+         <img src="../../assets/img/ebu-logo-relaunch.png"/>
+         <h1>EBU-TT part 3 (Live) Interoperability Toolkit</h1>
+         <h3>This is the User Input Producer (UIP). It outputs a sequence of Part 3 documents.</h3>
       </div>
+      <div id="new-sequence-container" style="height:15%;">
+      <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
+         <div id="new-sequence-div" style="display: none">
+               <label for="new-sequence-identifier-input">Sequence Identifier: </label>
+               <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
+               <label for ="time-base-selector">Time base : </label>
+               <select id="time-base-selector" name="time-base-selector">
+                  <option value="clock" selected="selected">Clock</option>
+                  <option value="media">Media</option>
+                  <!-- Disabling for demo 
+                  <option value="smpte">SMPTE</option>
+                  -->
+               </select>
+               <span id="clock-mode-span">
+                  <label for="clock-mode-selector">Clock mode : </label>
+                  <select id="clock-mode-selector" name="clock-mode-selector">
+                     <option value="local" selected="selected">Local</option>
+                     <option value="utc">UTC</option>
+                     <option value="gps">GPS</option>
+                  </select>
+               </span>
+               <span id="smpte-attributes-span">
+                  <label for="frame-rate-input">Frame rate : </label>
+                  <input type="text" id="frame-rate-input" name="frame-rate-input">
+                  <br>
+                  <label for="frm-numerator-input"> Frame rate multiplier numerator : </label>
+                  <input type="text" id="frm-numerator-input" name="frm-numerator-input">
+                  <label for="frm-denominator-input">Frame rate multiplier denominator : </label>
+                  <input type="text" id="frm-denominator-input" name="frm-denominator-input">
+                  <br>
+                  <label for="marker-mode-selector">Marker mode : </label>
+                  <select id="marker-mode-selector" name="marker-mode-selector">
+                     <option value="continuous">continuous</option>
+                  </select>
+                  <br>
+                  <label for="drop-mode-selector">Drop mode : </label>
+                  <select id="drop-mode-selector" name="drop-mode-selector">
+                     <option value="nonDrop">nonDrop</option>
+                     <option value="dropNTSC">dropNTSC</option>
+                     <option value="dropPAL">dropPAL</option>
+                  </select>
+               </span>
+               <br>
+               <button type="button" name="validate-new-sequence-button" id="validate-new-sequence-button">Validate</button>
+               <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
+            </div></div>
       <span id="new-sequence-notification-span"></span>
       <br><br>
       <label for="websocket-url-input">Websocket server URL: </label>
@@ -61,9 +70,9 @@
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
       <br><br>
       <br><br>
-      <input type="radio" name="sending-type-radio-input" value="live" checked> Send document on click on "Send" button
-      <input type="radio" name="sending-type-radio-input" value="scheduled_send"> Send document on scheduled time
-      <input type="radio" name="sending-type-radio-input" value="asynchronous_send"> Send documents asynchronously
+      <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on click on "Send" button
+      <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> Send document on scheduled time
+      <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> Send documents asynchronously
       <div id="scheduled-send-setup-div">
          <label for="scheduled-send-clock-selector">Clock type : </label>
          <select id="scheduled-send-clock-selector" name="scheduled-send-clock-selector">
@@ -93,7 +102,7 @@
          <label for="dur-input">Duration : </label>
          <input type="text" id="dur-input" name="dur-input">
          <br>
-         <label for="subtitle-content-textarea">Subtitles text : </label><br>
+         <label for="subtitle-content-textarea">Subtitles text: </label><br>
          <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea>
          <br>
          <span id="scheduled-time-span">
@@ -562,14 +571,21 @@
             $("#submit-subtitle-button").click(sendDocument);
 
 
-            // keyboard shortcut: Enter, space and escape send a document, escape also clears the text box  
+            // keyboard shortcut: Enter, space and escape send a document, escape also clears the text box.
+            // Enter, space and escape send a document only in "Send button" mode.
+            // Escape always clears.   
             // does not work in Safari
             document.onkeydown = function(evt) {
                 evt = evt || window.event;
                 var keyCode = evt.keyCode;
-                if (keyCode == 13 || keyCode == 32 || keyCode == 27) {sendDocument();}
-                if (evt.keyCode == 27) {document.getElementById('subtitle-content-textarea').value = "";}
-               };
+                var isSendButton =  document.getElementById('radio_send').checked;
+                if (isSendButton){
+                  if (keyCode == 13 || keyCode == 32 || keyCode == 27) {sendDocument();}
+                } 
+                if (keyCode == 27) {
+                     document.getElementById('subtitle-content-textarea').value = "";
+                  }                  
+                };
             
 
 
