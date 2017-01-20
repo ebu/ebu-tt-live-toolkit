@@ -563,12 +563,12 @@
 
 
             // keyboard shortcut
-            // space (32) works in Chrome, esc (27) works in Firefox
-            document.addEventListener("keypress", function(event) {
-             if (event.keyCode == 32 || event.keyCode == 27) {
-              sendDocument();
-             }
-            });
+            document.onkeydown = function(evt) {
+                evt = evt || window.event;
+                if (evt.keyCode == 27 || evt.keyCode == 32) {
+                    sendDocument();
+                }
+            };
 
 
          });
