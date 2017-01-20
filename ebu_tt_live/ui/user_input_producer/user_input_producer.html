@@ -4,7 +4,7 @@
       <meta charset="UTF-8"></meta>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       <script src="template/user_input_producer_template.js"></script>
-      <script src="nunjucks.js"></script>    
+      <script src="nunjucks.js"></script>
    </head>
    <body>
       <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
@@ -560,7 +560,20 @@
             }
 
             $("#submit-subtitle-button").click(sendDocument);
+
+
+            // keyboard shortcut
+            // space (32) works in Chrome, esc (27) works in Firefox
+            document.addEventListener("keypress", function(event) {
+             if (event.keyCode == 32 || event.keyCode == 27) {
+              sendDocument();
+             }
+            });
+
+
          });
+
+
       </script>
    </body>
 </html>
