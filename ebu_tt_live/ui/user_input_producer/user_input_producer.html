@@ -71,8 +71,10 @@
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
    </div>
       <div id="send-mode-div">
-      <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on enter, space and escape
+      <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on enter, space and escape 
+      &nbsp;
       <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> Send document on scheduled time
+      &nbsp;
       <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> Send documents asynchronously
       <div id="scheduled-send-setup-div" style="margin:10px;">
          <label for="scheduled-send-clock-selector">Clock type: </label>
@@ -85,7 +87,7 @@
          <span id="running-clock"></span>
       </div>
       <div id="asynchronous-send-setup-div" style="margin:10px;">
-         <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds) : </label>
+         <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds): </label>
          <input type="text" id="asynchronous-send-interval-input" name="asynchronous-send-interval-input" value="1">
          <button type="button" id="asynchronous-send-start-button" name="asynchronous-send-start-button"> Start </button>
          <button type="button" id="asynchronous-send-stop-button" name="asynchronous-send-stop-button"> Stop </button>
@@ -93,13 +95,15 @@
       </div>
       <form action="" id="subtitle-form">
          <div id="sequence-slector-div">
-         <label for="sequence-selector">Choose document sequence : </label>
+         <label for="sequence-selector">Choose document sequence: </label>
          <select id="sequence-selector" name="sequence-selector"></select>
-         <label for="body-begin-input">Body begin time : </label>
+      </div>
+      <div id="document-timings-div">
+         <label for="body-begin-input">Body begin time: </label>
          <input type="text" id="body-begin-input" name="body-begin-input">
-         <label for="body-end-input">Body end time : </label>
+         <label for="body-end-input">Body end time: </label>
          <input type="text" id="body-end-input" name="body-end-input">
-         <label for="dur-input">Duration : </label>
+         <label for="dur-input">Duration: </label>
          <input type="text" id="dur-input" name="dur-input">
       </div>
 
