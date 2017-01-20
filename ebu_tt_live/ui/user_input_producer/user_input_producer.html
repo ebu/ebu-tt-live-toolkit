@@ -7,6 +7,7 @@
       <script src="nunjucks.js"></script>
       <link rel="stylesheet" href="../../assets/css/bootstrap.css" media="screen">
       <link rel="stylesheet" href="../../assets/css/custom.min.css" media="screen">
+      <link rel="stylesheet" href="../../assets/css/main.css" media="screen">
 
    </head>
    <body>
@@ -15,7 +16,7 @@
          <h1>EBU-TT part 3 (Live) Interoperability Toolkit</h1>
          <h3>This is the User Input Producer (UIP). It outputs a sequence of Part 3 documents.</h3>
       </div>
-      <div id="new-sequence-container" style="height:15%;">
+      <div id="new-sequence-container">
       <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
          <div id="new-sequence-div" style="display: none">
                <label for="new-sequence-identifier-input">Sequence Identifier: </label>
@@ -57,24 +58,24 @@
                      <option value="dropPAL">dropPAL</option>
                   </select>
                </span>
-               <br>
                <button type="button" name="validate-new-sequence-button" id="validate-new-sequence-button">Validate</button>
                <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
-            </div></div>
-      <span id="new-sequence-notification-span"></span>
-      <br><br>
+            </div>
+               <span id="new-sequence-notification-span"></span>
+</div>
+      <div id="websocket-url-div">
       <label for="websocket-url-input">Websocket server URL: </label>
       <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
       <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
       <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
-      <br><br>
-      <br><br>
+   </div>
+      <div id="send-mode-div">
       <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on click on "Send" button
       <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> Send document on scheduled time
       <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> Send documents asynchronously
-      <div id="scheduled-send-setup-div">
-         <label for="scheduled-send-clock-selector">Clock type : </label>
+      <div id="scheduled-send-setup-div" style="margin:10px;">
+         <label for="scheduled-send-clock-selector">Clock type: </label>
          <select id="scheduled-send-clock-selector" name="scheduled-send-clock-selector">
             <option value="local">Local (computer) clock</option>
             <option value="media">Media clock (offseted local clock)</option>
@@ -83,7 +84,7 @@
          <span id="scheduled-send-status-span"></span>
          <span id="running-clock"></span>
       </div>
-      <div id="asynchronous-send-setup-div">
+      <div id="asynchronous-send-setup-div" style="margin:10px;">
          <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds) : </label>
          <input type="text" id="asynchronous-send-interval-input" name="asynchronous-send-interval-input" value="1">
          <button type="button" id="asynchronous-send-start-button" name="asynchronous-send-start-button"> Start </button>
@@ -91,19 +92,20 @@
          <span id="asynchronous-send-status-span"></span>
       </div>
       <form action="" id="subtitle-form">
+         <div id="sequence-slector-div">
          <label for="sequence-selector">Choose document sequence : </label>
          <select id="sequence-selector" name="sequence-selector"></select>
-         <br>
-         <br>
          <label for="body-begin-input">Body begin time : </label>
          <input type="text" id="body-begin-input" name="body-begin-input">
          <label for="body-end-input">Body end time : </label>
          <input type="text" id="body-end-input" name="body-end-input">
          <label for="dur-input">Duration : </label>
          <input type="text" id="dur-input" name="dur-input">
-         <br>
+      </div>
+
+         <div id="subtitle-content-div">
          <label for="subtitle-content-textarea">Subtitles text: </label><br>
-         <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both;" cols="160" rows="25"></textarea>
+         <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both; font-size:3em;" cols="30" rows="4"></textarea>
          <br>
          <span id="scheduled-time-span">
             <label for="scheduled-time-input">Scheduled time (hh:mm:ss format) : </label>
@@ -114,6 +116,7 @@
          <br><br>
          <div id="subtitle-form-notification-div"></div>
          <button id="reset-all" name="reset-all" type="reset">Reset</button>
+      </div>
       </form>
       <script>
          $(document).ready(function(){

@@ -1,0 +1,13 @@
+
+#new-sequence-div {
+	background-color: #cccccc;
+	padding:5px;
+}
+
+#websocket-notifications-span, #new-sequence-notification-span {
+	display: inline;
+	margin: 1%;
+
+}
+
+div {margin-top: 1%;}
