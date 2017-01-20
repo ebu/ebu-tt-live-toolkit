@@ -71,7 +71,7 @@
       <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
    </div>
       <div id="send-mode-div">
-      <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on click on "Send" button
+      <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on enter, space and escape
       <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> Send document on scheduled time
       <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> Send documents asynchronously
       <div id="scheduled-send-setup-div" style="margin:10px;">
@@ -111,7 +111,9 @@
             <label for="scheduled-time-input">Scheduled time (hh:mm:ss format) : </label>
             <input type="text" id="scheduled-time-input" name="scheduled-time-input">
          </span>
+         <!-- Redundant with keyboard shorcuts, n'est pas?
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button>
+         -->
          <span id="scheduled-confirmation-span"></span>
          <br><br>
          <div id="subtitle-form-notification-div"></div>
