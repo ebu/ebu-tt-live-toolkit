@@ -4,7 +4,7 @@
       <meta charset="UTF-8"></meta>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       <script src="template/user_input_producer_template.js"></script>
-      <script src="nunjucks.js"></script>
+      <script src="nunjucks.js"></script>    
    </head>
    <body>
       <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
@@ -550,14 +550,16 @@
                }
             }
 
-            $("#submit-subtitle-button").click(function(){
+            function sendDocument() {
                var sequence_identifier = $("#sequence-selector").val();
                if (sequence_identifier == null) {
                   notifyError($("#subtitle-form-notification-div"), "The sequence identifier cannot be undefined. Please create a new sequence.", false);
                } else {
                   submitDocument();
                }
-            });
+            }
+
+            $("#submit-subtitle-button").click(sendDocument);
          });
       </script>
    </body>
