@@ -16,8 +16,21 @@
          <h1>EBU-TT part 3 (Live) Interoperability Toolkit</h1>
          <h3>This is the User Input Producer (UIP). It outputs a sequence of Part 3 documents.</h3>
       </div>
-      <div id="new-sequence-container">
-      <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
+
+      <div id="websocket-url-div" class="control-section-div">
+         <span class="control-section-header-span">Connection</span>
+         <label for="websocket-url-input">Websocket server URL: </label>
+         <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
+         <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
+         <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
+         <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
+         </div>
+      <form action="" id="subtitle-form">
+      <div id="sequence-slector-div" class="control-section-div">
+         <span class="control-section-header-span">Sequence</span>
+         <label for="sequence-selector">Choose document sequence: </label>
+         <select id="sequence-selector" name="sequence-selector"></select>
+         <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
          <div id="new-sequence-div" style="display: none">
                <label for="new-sequence-identifier-input">Sequence Identifier: </label>
                <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
@@ -62,67 +75,62 @@
                <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
             </div>
                <span id="new-sequence-notification-span"></span>
-</div>
-      <div id="websocket-url-div">
-      <label for="websocket-url-input">Websocket server URL: </label>
-      <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
-      <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
-      <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
-      <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
-   </div>
-      <div id="send-mode-div">
-      <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> Send document on enter, space and escape 
-      &nbsp;
-      <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> Send document on scheduled time
-      &nbsp;
-      <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> Send documents asynchronously
-      <div id="scheduled-send-setup-div" style="margin:10px;">
-         <label for="scheduled-send-clock-selector">Clock type: </label>
-         <select id="scheduled-send-clock-selector" name="scheduled-send-clock-selector">
-            <option value="local">Local (computer) clock</option>
-            <option value="media">Media clock (offseted local clock)</option>
-         </select>
-         <button type="button" id="synchronize-media-clock-button" name="synchronize-media-clock-button"> Synchronize </button>
-         <span id="scheduled-send-status-span"></span>
-         <span id="running-clock"></span>
-      </div>
-      <div id="asynchronous-send-setup-div" style="margin:10px;">
-         <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds): </label>
-         <input type="text" id="asynchronous-send-interval-input" name="asynchronous-send-interval-input" value="1">
-         <button type="button" id="asynchronous-send-start-button" name="asynchronous-send-start-button"> Start </button>
-         <button type="button" id="asynchronous-send-stop-button" name="asynchronous-send-stop-button"> Stop </button>
-         <span id="asynchronous-send-status-span"></span>
-      </div>
-      <form action="" id="subtitle-form">
-         <div id="sequence-slector-div">
-         <label for="sequence-selector">Choose document sequence: </label>
-         <select id="sequence-selector" name="sequence-selector"></select>
-      </div>
-      <div id="document-timings-div">
-         <label for="body-begin-input">Body begin time: </label>
-         <input type="text" id="body-begin-input" name="body-begin-input">
-         <label for="body-end-input">Body end time: </label>
-         <input type="text" id="body-end-input" name="body-end-input">
-         <label for="dur-input">Duration: </label>
-         <input type="text" id="dur-input" name="dur-input">
-      </div>
+         </div>
+      <div id="send-mode-div" class="control-section-div">
+         <span class="control-section-header-span">Send Document </span>
+         <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Now!</button>
+         <span>&nbsp;&nbsp;</span>
+         <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> on enter, space and escape 
+         &nbsp;
+         <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> on scheduled time
+         &nbsp;
+         <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> asynchronously
+         <div id="scheduled-send-setup-div" style="margin:10px;">
+            <label for="scheduled-send-clock-selector">Clock type: </label>
+            <select id="scheduled-send-clock-selector" name="scheduled-send-clock-selector">
+               <option value="local">Local (computer) clock</option>
+               <option value="media">Media clock (offseted local clock)</option>
+            </select>
+            <button type="button" id="synchronize-media-clock-button" name="synchronize-media-clock-button"> Synchronize </button>
+            <span id="scheduled-send-status-span"></span>
+            <span id="running-clock"></span>
+            <br>
+            <span id="scheduled-time-span">
+               <label for="scheduled-time-input">Scheduled time (hh:mm:ss format) : </label>
+               <input type="text" id="scheduled-time-input" name="scheduled-time-input"/>
+            </span>
+            <button type="button" name="schedule-subtitle-button" id="schedule-subtitle-button">Schedule</button>
+            <span id="scheduled-confirmation-span"></span>
+         </div>
+         <div id="asynchronous-send-setup-div" style="margin:10px;">
+            <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds): </label>
+            <input type="text" id="asynchronous-send-interval-input" name="asynchronous-send-interval-input" value="1">
+            <button type="button" id="asynchronous-send-start-button" name="asynchronous-send-start-button"> Start </button>
+            <button type="button" id="asynchronous-send-stop-button" name="asynchronous-send-stop-button"> Stop </button>
+            <span id="asynchronous-send-status-span"></span>
+         </div>
+         </div>
 
-         <div id="subtitle-content-div">
-         <label for="subtitle-content-textarea">Subtitles text: </label><br>
+         <div id="subtitle-content-div" class="control-section-div">
+         <span class="control-section-header-span">Document </span>
+         <span id="max-lines-span">Maximum lines: <input type="number" name="max-lines" id="max-lines" min="1" max="15" step="1" value="2" /></span>
+         <div id="document-content-div" style="padding-left: 10px;">
+            <div id="document-timings-div">
+               <label for="body-begin-input">Body begin time: </label>
+               <input type="text" id="body-begin-input" name="body-begin-input">
+               <label for="body-end-input">Body end time: </label>
+               <input type="text" id="body-end-input" name="body-end-input">
+               <label for="dur-input">Duration: </label>
+               <input type="text" id="dur-input" name="dur-input">
+            </div>
+         <label for="subtitle-content-textarea">Subtitle text: </label><br>
          <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both; font-size:3em;" cols="30" rows="4"></textarea>
-         <br>
-         <span id="scheduled-time-span">
-            <label for="scheduled-time-input">Scheduled time (hh:mm:ss format) : </label>
-            <input type="text" id="scheduled-time-input" name="scheduled-time-input">
-         </span>
-         <!-- Redundant with keyboard shorcuts, n'est pas?
-         <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Submit</button>
-         -->
-         <span id="scheduled-confirmation-span"></span>
-         <br><br>
+         <br/>
          <div id="subtitle-form-notification-div"></div>
-         <button id="reset-all" name="reset-all" type="reset">Reset</button>
       </div>
+      </div>
+      <br/>
+         <button id="reset-all" name="reset-all" type="reset">Reset everything, clear local storage</button>
       </form>
       <script>
          $(document).ready(function(){
@@ -189,20 +197,21 @@
                   $("#scheduled-send-setup-div").show();
                   $("#asynchronous-send-setup-div").hide();
                   $("#running-clock").show();
-                  $("#submit-subtitle-button").show();
-                  $("#submit-subtitle-button").html("Schedule");
+                  $("#submit-subtitle-button").hide();
+                  $("#schedule-subtitle-button").show();
                } else if (sending_type == "asynchronous_send") {
                   $("#scheduled-time-span").hide();
                   $("#scheduled-send-setup-div").hide();
                   $("#asynchronous-send-setup-div").show();
                   $("#submit-subtitle-button").hide();
+                  $("#schedule-subtitle-button").hide();
                   stopResetRunningClock();
                } else {
                   $("#scheduled-time-span").hide();
                   $("#scheduled-send-setup-div").hide();
                   $("#asynchronous-send-setup-div").hide();
+                  $("#schedule-subtitle-button").hide();
                   $("#submit-subtitle-button").show();
-                  $("#submit-subtitle-button").html("Send");
                   stopResetRunningClock();
                }
             }
@@ -582,21 +591,40 @@
 
             // keyboard shortcut: Enter, space and escape send a document, escape also clears the text box.
             // Enter, space and escape send a document only in "Send button" mode.
-            // Escape always clears.   
-            // does not work in Safari
-            document.onkeydown = function(evt) {
-                evt = evt || window.event;
-                var keyCode = evt.keyCode;
+            // Escape always clears. Enter removes previous lines according to the max-lines setting, after sending. 
+            // Not tested in Safari
+            $("#subtitle-content-textarea").keydown( function(evt) {
+                var keyCode = evt.which;
                 var isSendButton =  document.getElementById('radio_send').checked;
                 if (isSendButton){
                   if (keyCode == 13 || keyCode == 32 || keyCode == 27) {sendDocument();}
                 } 
                 if (keyCode == 27) {
+                  // Escape clears the text area
                      document.getElementById('subtitle-content-textarea').value = "";
+                  }
+                if (keyCode == 13) {
+                  // Enter removes first lines according to max-lines
+                  var max_lines = $("#max-lines").val();
+                  var new_text_arr = $("#subtitle-content-textarea").val().split(/\r?\n|\r/);
+                  while (new_text_arr.length >= max_lines) { new_text_arr.shift(); };
+                  $("#subtitle-content-textarea").val(new_text_arr.join('\r\n'));
                   }                  
-                };
+                });
             
+            // In the special case that max-lines is 1 clear the text area on Enter key up otherwise
+            // an extra unwanted carriage return line feed pair is added at the beginning.
+            $("#subtitle-content-textarea").keyup( function(evt) {
+               if (evt.which == 13 && $("#max-lines").val() == 1)
+                  document.getElementById('subtitle-content-textarea').value = "";
+            });
 
+            // Workaround for jquery val() stripping out carriage returns from text areas
+            $.valHooks.textarea = {
+               get: function( elem ) {
+                  return elem.value.replace( /\r?\n/g, "\r\n");
+               }
+            };
 
          });
 

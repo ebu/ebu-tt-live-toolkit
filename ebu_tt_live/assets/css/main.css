@@ -10,4 +10,19 @@
 
 }
 
+.control-section-div {
+	border: 1px solid lightgrey;
+	border-radius: 6px;
+	padding: 3px;
+}
+
+.control-section-header-span {
+	font-weight: bold;
+	padding-right: 30px;
+}
+
+#submit-subtitle-button {
+	font-weight: bold;
+}
+
 div {margin-top: 1%;}
