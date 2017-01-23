@@ -1,7 +1,7 @@
 from ebu_tt_live.node.delay import BufferDelayNode
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
-from mock import MagicMock
+from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from pytest_bdd import scenarios, given, when, then
 
 
@@ -15,7 +15,7 @@ def given_buffer_delay(delay_offset, test_context, gen_document):
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
-    carriage = MagicMock()
+    carriage = FilesystemProducerImpl('testing/tmp')
 
     delay_float = LimitedClockTimingType(delay_offset).timedelta.total_seconds()
 
@@ -33,7 +33,16 @@ def given_buffer_delay(delay_offset, test_context, gen_document):
 
 @given('the document is emitted')
 def given_document_emitted(test_context):
-    test_context['doc'].emission = ''  # TODO: fill in this value
+
+    # read the emission time from the manifest file stored in testing/tmp
+    manifest_path = 'testing/tmp/manifest_delayTest.txt'
+    emission_time = ''
+
+    with open(manifest_path, 'r') as f:
+        for last_line in f:
+            emission_time, _ = last_line.split(',')
+
+    test_context['doc'].emission = emission_time
 
 
 @then('the delta between emission and availability time is greater or equal to <delay_offset>')
