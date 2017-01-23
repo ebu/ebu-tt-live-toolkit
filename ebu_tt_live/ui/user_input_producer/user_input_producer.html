@@ -98,7 +98,7 @@
             <br>
             <span id="scheduled-time-span">
                <label for="scheduled-time-input">Scheduled time (hh:mm:ss format) : </label>
-               <input type="text" id="scheduled-time-input" name="scheduled-time-input"/>
+               <input type="text" id="scheduled-time-input" name="scheduled-time-input" class="time-input"/>
             </span>
             <button type="button" name="schedule-subtitle-button" id="schedule-subtitle-button">Schedule</button>
             <span id="scheduled-confirmation-span"></span>
@@ -118,11 +118,11 @@
          <div id="document-content-div" style="padding-left: 10px;">
             <div id="document-timings-div">
                <label for="body-begin-input">Body begin time: </label>
-               <input type="text" id="body-begin-input" name="body-begin-input">
-               <label for="body-end-input">Body end time: </label>
-               <input type="text" id="body-end-input" name="body-end-input">
-               <label for="dur-input">Duration: </label>
-               <input type="text" id="dur-input" name="dur-input">
+               <input type="text" id="body-begin-input" name="body-begin-input" class="time-input">
+               <label for="body-end-input" style="padding-left: 1em;">Body end time: </label>
+               <input type="text" id="body-end-input" name="body-end-input" class="time-input">
+               <label for="dur-input" style="padding-left: 1em;">Duration: </label>
+               <input type="text" id="dur-input" name="dur-input" class="time-input">
             </div>
          <label for="subtitle-content-textarea">Subtitle text: </label><br>
          <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both; font-size:3em;" cols="30" rows="4"></textarea>
