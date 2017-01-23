@@ -17,6 +17,9 @@ log = logging.getLogger('ebu_simple_consumer')
 parser = ArgumentParser()
 
 parser.add_argument('-c', '--config', dest='config', metavar='CONFIG')
+parser.add_argument('-u', '--websocket-url', dest='websocket_url',
+                    help='URL for the websocket address to connect to',
+                    default='ws://127.0.0.1:9001')
 parser.add_argument('--folder-export', dest='folder_export',
                     help='export xml files to given folder',
                     type=str
@@ -50,7 +53,7 @@ def main():
 
     # This factory listens for incoming documents from the user input producer.
     user_input_server_factory = UserInputServerFactory(
-        url='ws://127.0.0.1:9001',
+        url=args.websocket_url,
         consumer=TwistedConsumer(
             custom_consumer=sub_consumer_impl
         )

@@ -1,167 +1,8 @@
-"""
-This file contains all the pyxb helpers needed for enabling a concise semantic validation approach.
-"""
-
-from pyxb import ValidationConfig, GlobalValidationConfig
-from pyxb.binding.basis import _TypeBinding_mixin, simpleTypeDefinition, complexTypeDefinition, NonElementContent
-from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, \
-    DOC_SYNTACTIC_VALIDATION_SUCCESSFUL
-from ebu_tt_live.errors import SemanticValidationError, LogicError
-from .pyxb_utils import get_xml_parsing_context
 from datetime import timedelta
-import logging
 
-log = logging.getLogger(__name__)
-document_logger = logging.getLogger('document_logger')
-
-
-class SemanticValidationMixin(object):
-    """
-    This mixin contains the necessary boilerplate to enable semantic validation as well as enabling _setAttribute hooks
-    to help populate the context object with useful data.
-    """
-
-    # This dictionary exists to override attribute setters. Used in contextual parsing
-    _attr_en_pre = {}
-    _attr_en_post = {}
-
-    def _setAttribute(self, attr_en, value_lex):
-        uri_tuple = attr_en.uriTuple()
-        if uri_tuple in self._attr_en_pre:
-            self._attr_en_pre[uri_tuple](self, attr_en, value_lex)
-        au = super(SemanticValidationMixin, self)._setAttribute(attr_en, value_lex)
-        if uri_tuple in self._attr_en_post:
-            self._attr_en_post[uri_tuple](self, au)
-        return au
-
-    def _semantic_before_traversal(self, dataset, element_content=None):
-        """
-        Semantic validation preprocess hook.
-        :param dataset: semantic context object
-        :param element_content: the element itself
-        """
-        pass
-
-    def _semantic_after_traversal(self, dataset, element_content=None):
-        """
-        Semantic validation postprocess hook.
-        :param dataset: semantic context object
-        :param element_content: the element itself
-        """
-        pass
-
-    def _semantic_attributes_missing(self, attr_names):
-        """
-        Making sure that attributes specified in attr_names have no value defined on the binding.
-        :param attr_names: The attributes that were defined on the element.
-        :return:
-        """
-        result = [attr for attr in attr_names if getattr(self, attr) is None]
-        return result
-
-    def _semantic_attributes_present(self, attr_names):
-        """
-        Making sure that attributes specified in attr_names have a value defined on the binding
-        :param attr_names: The missing attributes that were not defined.
-        :return:
-        """
-        result = [attr for attr in attr_names if getattr(self, attr) is not None]
-        return result
-
-
-
-class SemanticDocumentMixin(SemanticValidationMixin):
-
-    def _semantic_before_validation(self):
-        """
-        Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.
-        """
-        pass
-
-    def _semantic_after_validation(self, **extra_kwargs):
-        """
-        After PyXB successfully validated the syntax this hook runs where the user may execute custom code.
-
-        At this point the validation of syntax has passed and the semantic validation can now begin.
-        A new traversal of the structure is needed to get the appropriate context down to individual parts of the nodes.
-        """
-        # Let's initiate DFS
-        document_logger.info(DOC_SYNTACTIC_VALIDATION_SUCCESSFUL)
-        # Create new semantic context object
-        semantic_dataset = {}
-        semantic_dataset.update(extra_kwargs)
-        # Collections of visited elements
-        pre_visited = set()
-        post_visited = set()
-        to_visit = []
-
-        # Call preprocess hooks for tt element
-        self._semantic_before_traversal(dataset=semantic_dataset)
-
-        to_visit.extend(reversed(self._validatedChildren()))
-
-        while to_visit:
-            content = to_visit.pop()
-            if content in post_visited or isinstance(content, NonElementContent):
-                # This means we visited the current element already.
-                continue
-            elif content in pre_visited:
-                # This means we visited the current element's preprocessing and now postprocessing is in order
-                log.debug('post visit step: {}'.format(content.value))
-                # Call postprocess hooks of current element
-                content.value._semantic_after_traversal(dataset=semantic_dataset, element_content=content)
-                post_visited.add(content)
-            else:
-                # This means the current element has not been processed yet. Preprocessing is in order.
-                log.debug('pre visit step: {}'.format(content.value))
-                if isinstance(content.value, SemanticValidationMixin):  # WARNING: Refactoring naming changes
-                    # Call preprocess hooks of current element
-                    content.value._semantic_before_traversal(dataset=semantic_dataset, element_content=content)
-                    pre_visited.add(content)
-                    to_visit.append(content)
-
-                if hasattr(content.value, '_validatedChildren'):
-                    ordered_children = reversed(content.value._validatedChildren())
-                    to_visit.extend(ordered_children)
-
-        # Call postprocess hooks for tt element
-        self._semantic_after_traversal(dataset=semantic_dataset)
-        document_logger.info(DOC_SEMANTIC_VALIDATION_SUCCESSFUL)
-        return semantic_dataset
-
-    def _validateBinding_vx(self, **extra_kwargs):
-        """
-        At this point we can hook into PyXB's validation flow and call our hooks:
-        _semantic_before_validation() and _semantic_after_validation()
-        """
-        # Step1: Before
-        self._semantic_before_validation()
-
-        # Step2: DFS
-        # This line is hacky as f*** and non-standard way of getting the desired behaviour but python and MRO are not
-        # always man's best friend...
-        self.__class__.__bases__[1]._validateBinding_vx(self)
-
-        # Step3: Process current object
-        semantic_dataset = self._semantic_after_validation(**extra_kwargs)
-
-        return semantic_dataset
-
-    def validateBinding (self, **extra_kwargs):
-        """Check whether the binding content matches its content model.
-
-        @return: C{True} if validation was not performed due to settings.
-        @return: Complex result dictionary with success and semantic_dataset keys.
-        @raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...
-        @raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints
-        """
-        if self._performValidation():
-            result = self._validateBinding_vx(**extra_kwargs)
-            return {
-                "success": True,
-                "semantic_dataset": result
-            }
-        return True
+from ebu_tt_live.bindings import get_xml_parsing_context
+from ebu_tt_live.errors import LogicError, SemanticValidationError, OutsideSegmentError
+from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE
 
 
 class TimingValidationMixin(object):
@@ -249,6 +90,25 @@ class TimingValidationMixin(object):
                 # This means that timing begin limit needs updating
                 self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
 
+    def _post_calculate_begin(self, children):
+        """
+        The computed begin time shall be moved down to match that of the earliest child begin time in case the container
+        does not specify a begin time itself. NOTE: This does not modify the syncbase.
+
+        :param children:
+        :return:
+        """
+
+        if not children:
+            return
+
+        children_computed_begin_times = [item.computed_begin_time for item in children]
+
+        earliest_child_computed_begin = min(children_computed_begin_times)
+        if earliest_child_computed_begin > self._computed_begin_time:
+            # Adjustment scenario
+            self._computed_begin_time = earliest_child_computed_begin
+
     def _semantic_preprocess_timing(self, dataset, element_content):
         """
         As the validator traverses in a Depth First Search this is the hook function to call on the way DOWN.
@@ -271,11 +131,15 @@ class TimingValidationMixin(object):
         self._pre_calculate_begin()
 
     def _post_pop_begin(self):
+        begin_timedelta = None
+
         if self._begin_timedelta is not None:
             # We pushed on the stack it is time to pop it. It could probably be removed
             # and replaced with self._begin_timedelta
             begin_timedelta = self._semantic_dataset['timing_begin_stack'].pop()
             self._semantic_dataset['timing_syncbase'] -= begin_timedelta
+
+        return begin_timedelta
 
     def _post_pop_end(self):
         end_timedelta = None
@@ -292,14 +156,15 @@ class TimingValidationMixin(object):
 
         Steps to take:
           - Fill in end times if element doesn't define end time
-          - Try using information from its children
-          - if no children are found look at parents end time constraints.
+          - Try using computed_end_time information from its children
+          - If no children are found look at parents end time constraints.
+          - Finalize computed_begin_time if begin is not specified using computed_begin_time of children.
 
         :param dataset: Semantic dataset from semantic validation framework
         :param element_content: PyXB's binding placeholder for this binding instance
         """
 
-        self._post_pop_begin()
+        begin_timedelta = self._post_pop_begin()
         # This end timedelta is an absolute calculated value on the timeline. Not relative.
         end_timedelta = self._post_pop_end()
 
@@ -313,6 +178,8 @@ class TimingValidationMixin(object):
             # This is just a simple sanity check. It should never be triggered.
             # Should the calculation be changed this filters out an obvious source of error.
             raise LogicError()
+
+        children = None
 
         if self.computed_end_time is None:
             # This requires calculation based on the timings in its children.
@@ -337,6 +204,16 @@ class TimingValidationMixin(object):
                 else:
                     # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
+
+        if begin_timedelta is None:
+
+            if children is None:
+                children = filter(lambda item: isinstance(item, TimingValidationMixin),
+                                  [x.value for x in self.orderedContent()])
+
+            self._post_calculate_begin(children=children)
+
+        self._post_cleanup_variables()
 
     # The mixin approach is used since there are multiple timed element types.
     # The inspected values are all attributes of the element so they do not
@@ -369,6 +246,57 @@ class TimingValidationMixin(object):
                             time_base=time_base
                         )
                     )
+
+    def _semantic_manage_timeline(self, dataset, element_content):
+        # Get the document instance
+        doc = dataset['document']
+
+        # Register on timeline
+        doc.add_to_timeline(self)
+
+    # This section covers the copying operations of timed containers.
+
+    def is_in_segment(self, begin=None, end=None):
+        if begin is not None:
+            if self.computed_end_time is not None and self.computed_end_time <= begin:
+                return False
+        if end is not None:
+            if self.computed_begin_time >= end:
+                return False
+        return True
+
+    def _assert_in_segment(self, dataset, element_content=None):
+        if not self.is_in_segment(
+            begin=dataset['segment_begin'],
+            end=dataset['segment_end']
+        ):
+            raise OutsideSegmentError()
+
+    def is_timed_leaf(self):
+        return False
+
+    def _semantic_copy_apply_leaf_timing(self, copied_instance, dataset, element_content=None):
+        if not copied_instance.is_timed_leaf():
+            copied_instance.begin = None
+            copied_instance.end = None
+            if hasattr(copied_instance, 'dur'):
+                copied_instance.dur = None
+        else:
+            tt_elem = dataset['tt_element']
+            trimmed_begin = self.computed_begin_time
+            trimmed_end = self.computed_end_time
+            segment_begin = dataset['segment_begin']
+            segment_end = dataset['segment_end']
+            if segment_begin is not None:
+                if segment_begin > trimmed_begin:
+                    trimmed_begin = segment_begin
+            if segment_end is not None:
+                if trimmed_end is None or trimmed_end > segment_end:
+                    trimmed_end = segment_end
+
+            # Create compatible timing types
+            copied_instance.begin = tt_elem.get_timing_type(trimmed_begin)
+            copied_instance.end = tt_elem.get_timing_type(trimmed_end)
 
 
 class BodyTimingValidationMixin(TimingValidationMixin):
@@ -437,27 +365,3 @@ class BodyTimingValidationMixin(TimingValidationMixin):
                             time_base=time_base
                         )
                     )
-
-
-class SizingValidationMixin(object):
-    """
-    This is meant to validate that the sizing types correspond to the tt element and head region definitions.
-    It is meant to be used by the containing element and its attributes as well so the class interoperates with itself.
-    """
-
-    def _semantic_check_sizing_type(self, value, dataset):
-        """
-        The sizing attribute is checked by the element for a value and attribute validation is ran as required.
-        :param value: The sizing value to be checked
-        :param dataset: The semantic dataset
-        """
-        if value is not None and isinstance(value, SizingValidationMixin):
-            value._semantic_validate_sizing_context(dataset=dataset)
-
-    def _semantic_validate_sizing_context(self, dataset):
-        """
-        The attribute can check if it is valid in the context provided by dataset
-        :param dataset: The semantic dataset
-        :raises SimpleTypeValueError
-        """
-        raise NotImplementedError()

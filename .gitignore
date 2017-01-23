@@ -120,5 +120,5 @@ docs/build/*
 !docs/build/index.html
 !docs/build/img
 
-# Mac OS Finder generated local file
+# Mac OS X files
 .DS_Store

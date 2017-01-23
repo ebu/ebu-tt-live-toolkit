@@ -75,13 +75,6 @@ def when_span2_end(span2_end, template_dict):
     template_dict['span2_end'] = span2_end
 
 
-@when('the document is generated')
-def when_doc_generated(test_context, template_dict, template_file):
-    xml_file = template_file.render(template_dict)
-    document = EBUTT3Document.create_from_xml(xml_file)
-    test_context['document'] = document
-
-
 @when('it is available at <availability_time>')
 def when_doc_available(test_context, availability_time):
     if availability_time:

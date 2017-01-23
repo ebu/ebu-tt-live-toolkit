@@ -3,6 +3,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
 from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from ebu_tt_live.utils import RotatingFileBuffer
 from datetime import timedelta
 import logging
 import os
@@ -91,7 +92,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             except EndOfData:
                 break
 
-    def emit_document(self, document):
+    def emit_document(self, document, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -174,3 +175,48 @@ class FilesystemReader(object):
                         xml_content = xml_file.read()
                     data = [availability_time_str, xml_content]
                     self._custom_consumer.on_new_data(data)
+
+
+class SimpleFolderExport(ProducerCarriageImpl):
+
+    _dir_path = None
+    _file_name_pattern = None
+    _counter = None
+
+    def __init__(self, dir_path, file_name_pattern):
+        if not os.path.exists(dir_path):
+            raise Exception('Directory: {} could not be found.'.format(dir_path))
+        self._dir_path = dir_path
+        self._file_name_pattern = file_name_pattern
+        self._counter = 0
+
+    def _do_write_document(self, document, **kwargs):
+        self._counter += 1
+        filename = self._file_name_pattern.format(self._counter)
+        filepath = os.path.join(self._dir_path, filename)
+        with open(filepath, 'w') as destfile:
+            destfile.write(document.get_xml())
+            destfile.flush()
+        return filepath
+
+    def emit_document(self, document, **kwargs):
+        self._do_write_document(document, **kwargs)
+
+
+class RotatingFolderExport(SimpleFolderExport):
+    """
+    This carriage mechanism only keeps the last files that fit in its circular buffer. If a new file is written the
+    oldest one is discarded. The size of the buffer can be specified. This is useful for use-cases when the entire
+    sequence of files is not meant to be kept, only just the right amount to cover the needs of broadcast requirement
+    such as timeshift, which allows the viewer to rewind the TV show within a specific limited time range.
+    """
+
+    _circular_buf = None
+
+    def __init__(self, dir_path, file_name_pattern, circular_buf_size):
+        super(RotatingFolderExport, self).__init__(dir_path, file_name_pattern)
+        self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
+
+    def emit_document(self, document):
+        file_name = self._do_write_document(document)
+        self._circular_buf.append(file_name)
