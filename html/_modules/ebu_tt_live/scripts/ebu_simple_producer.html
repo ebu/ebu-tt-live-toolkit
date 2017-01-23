@@ -205,7 +205,7 @@
     <span class="k">if</span> <span class="n">do_export</span><span class="p">:</span>
         <span class="n">prod_impl</span><span class="o">.</span><span class="n">resume_producing</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">factory</span> <span class="o">=</span> <span class="n">wsFactory</span><span class="p">(</span><span class="s2">u&quot;ws://127.0.0.1:9000&quot;</span><span class="p">)</span>
+        <span class="n">factory</span> <span class="o">=</span> <span class="n">wsFactory</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ws://127.0.0.1:9000&quot;</span><span class="p">)</span>
 
         <span class="n">factory</span><span class="o">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">StreamingServerProtocol</span>
 

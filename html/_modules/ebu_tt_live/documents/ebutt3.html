@@ -151,7 +151,7 @@
 <span class="kn">import</span> <span class="nn">gc</span>
 
 
-<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">document_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;document_logger&#39;</span><span class="p">)</span>
 
 
@@ -190,7 +190,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TimingEventBegin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimingEventBegin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">): </span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -206,7 +206,7 @@
 <span class="sd">    Element/document resolved end time.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TimingEventEnd</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">computed_end_time</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimingEventEnd</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">when</span><span class="o">=</span><span class="n">element</span><span class="o">.</span><span class="n">computed_end_time</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">): </span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -322,15 +322,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="EBUTT3Document.create_from_raw_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_raw_binding</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
-        <span class="n">instance</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+<div class="viewcode-block" id="EBUTT3Document.create_from_raw_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_raw_binding</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">binding</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">_ebutt3_content</span> <span class="o">=</span> <span class="n">binding</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">instance</span></div>
 
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="EBUTT3Document.create_from_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_xml</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">xml</span><span class="p">):</span>
-        <span class="n">instance</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span>
+<div class="viewcode-block" id="EBUTT3Document.create_from_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_xml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xml</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span>
             <span class="n">binding</span><span class="o">=</span><span class="n">bindings</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span>
                 <span class="n">xml_text</span><span class="o">=</span><span class="n">xml</span>
             <span class="p">)</span>
@@ -567,10 +567,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="EBUTT3DocumentSequence.create_from_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_document</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3DocumentSequence.create_from_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_document</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">EBUTT3Document</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">cls</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">),</span>
             <span class="n">reference_clock</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reference_clock&#39;</span><span class="p">,</span> <span class="n">get_clock_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">)),</span>
             <span class="n">lang</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">lang</span><span class="p">)</span>
