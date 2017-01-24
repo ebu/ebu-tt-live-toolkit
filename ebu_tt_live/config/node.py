@@ -271,6 +271,10 @@ def nodes_by_type(node_name):
         return ReSequencer
     elif node_name == 'ebuttd-encoder':
         return EBUTTDEncoder
+    elif node_name == 'buffer-delay':
+        return BufferDelay
+    elif node_name == 'retiming-delay':
+        return RetimingDelay
     else:
         raise ConfigurationError(ERR_CONF_NO_SUCH_NODE.format(
             node_type=node_name
