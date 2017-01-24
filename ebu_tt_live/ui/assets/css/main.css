@@ -1,0 +1,32 @@
+
+#new-sequence-div {
+	background-color: #cccccc;
+	padding:5px;
+}
+
+#websocket-notifications-span, #new-sequence-notification-span {
+	display: inline;
+	margin: 1%;
+
+}
+
+.control-section-div {
+	border: 1px solid lightgrey;
+	border-radius: 6px;
+	padding: 3px;
+}
+
+.control-section-header-span {
+	font-weight: bold;
+	padding-right: 30px;
+}
+
+#submit-subtitle-button {
+	font-weight: bold;
+}
+
+.time-input {
+	width: 10em;
+}
+
+div {margin-top: 1%;}
