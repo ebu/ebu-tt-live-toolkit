@@ -100,20 +100,19 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
     required_config.add_option('id', default='re-sequencer')
     required_config.add_option('sequence_identifier', default='ReSequenced1')
     required_config.add_option('segment_length', default=2.0)
-    required_config.add_option('utc', default=False)
+    required_config.clock = Namespace()
+    required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
     required_config.add_option('discard', default=True)
 
     _output = None
+    _clock = None
 
     def _create_component(self, config=None):
-        if self.config.utc is False:
-            reference_clock = clock_by_type('local')(config, None)
-        else:
-            reference_clock = clock_by_type('utc')(config, None)
+        self._clock = self.config.clock.type(config, self.config.clock)
 
         self.component = processing_node.ReSequencer(
             node_id=self.config.id,
-            reference_clock=reference_clock.component,
+            reference_clock=self._clock.component,
             discard=self.config.discard,
             segment_length=self.config.segment_length,
             sequence_identifier=self.config.sequence_identifier
