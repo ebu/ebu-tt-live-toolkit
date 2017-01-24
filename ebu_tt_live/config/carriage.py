@@ -91,13 +91,25 @@ class SimpleFilesystemOutput(FileOutputCommon):
         default='export-{counter}.xml',
         doc='File name pattern. It needs to contain {counter} format parameter.'
     )
+    required_config.add_option(
+        'rotating_buf',
+        default=0,
+        doc='Rotating buffer size. This will keep the last N number of files created in the folder.'
+    )
 
     def __init__(self, config, local_config):
         super(SimpleFilesystemOutput, self).__init__(config, local_config)
-        self.component = filesystem.SimpleFolderExport(
-            dir_path=config.folder,
-            file_name_pattern=config.filename_pattern
-        )
+        if config.rotating_buf:
+            self.component = filesystem.RotatingFolderExport(
+                dir_path=config.folder,
+                file_name_pattern=config.filename_pattern,
+                circular_buf_size=config.rotating_buf
+            )
+        else:
+            self.component = filesystem.SimpleFolderExport(
+                dir_path=config.folder,
+                file_name_pattern=config.filename_pattern
+            )
 
 
 class FilesystemInput(ConfigurableComponent):
