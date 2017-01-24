@@ -68,18 +68,26 @@ The more detailed options are: ::
     │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay"]
     │ ├─output : the output settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to get incoming documents
-    │ │ │ └─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket"]
+    │ │ │ └─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket" | "websocket-legacy"]
     │ │ │   ├─ id (for "direct") : id of the pipe to write to, default "default"
     │ │ │   ├─ folder (for "filesystem" and "filesystem-simple") : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
     │ │ │   ├─ rotating_buf (for "filesystem-simple") : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
     │ │ │   ├─ filename_pattern (for "filesystem-simple") : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
-    │ │ │   └─ uri (for "websocket") : URI to connect to, default "ws://localhost:9001"
+    │ │ │   ├─ uri (when "websocket-legacy") : URI to listen for connections on, default "ws://localhost:9001"
+    │ │ │   ├─ proxy (when "websocket") : HTTP proxy in format ADDR:PORT
+    │ │ │   ├─ listen (when "websocket") : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
+    │ │ │   └─ client (when "websocket") : List of /publish connections to make
+    │ │ │      └─ TODO: what goes here ????
     │ │ └─adapters : see below
     │ ├─input : the input settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to emit outgoing documents
-    │ │ │ └─type : ["direct" | "filesystem" | "websocket" (default)]
+    │ │ │ └─type : ["direct" | "filesystem" | "websocket" (default) | "websocket-legacy"]
     │ │ │   ├─ id (when "direct") : id of the pipe to read from, default "default"
-    │ │ │   ├─ uri (when "websocket") : URI to connect to, default "ws://localhost:9001"
+    │ │ │   ├─ uri (when "websocket-legacy") : URI to connect to, default "ws://localhost:9001"
+    │ │ │   ├─ proxy (when "websocket" or "websocket-legacy") : HTTP proxy in format ADDR:PORT
+    │ │ │   ├─ listen (when "websocket") : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
+    │ │ │   ├─ client (when "websocket") : List of /subscribe connections to make
+    │ │ │   │  └─ TODO: what goes here ????
     │ │ │   ├─ manifest_file (when "filesystem") : The timing manifest file for importing files
     │ │ │   └─ tail (when "filesystem") : Keep the manifest open and wait for new input much like UNIX's tail -f command
     │ │ └─adapters : see below
