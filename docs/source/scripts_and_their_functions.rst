@@ -39,4 +39,4 @@ This script is capable of picking up a structured configuration file and use tha
 carriage mechanism objects that we would like to use and they can be even wired in the same configuration file
 together so in the end a complex system can be modeled using a single json file. Please refer to
 :py:mod:`ebu_tt_live.scripts.ebu_run` as well as :py:mod:`ebu_tt_live.config` to learn more about the
-way the configuration logic works.
+way the configuration logic works. To get help on permitted options please run ``ebu-run --help``.

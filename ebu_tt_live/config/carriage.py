@@ -118,7 +118,7 @@ class FilesystemInput(ConfigurableComponent):
     required_config.add_option('manifest_file', doc='The timing manifest file for importing files')
     required_config.add_option(
         'tail',
-        doc='Keep the manifest open and wait for new input much like UNIX\'s tail command'
+        doc='Keep the manifest open and wait for new input much like UNIX\'s tail -f command'
     )
     _fs_reader = None
 
