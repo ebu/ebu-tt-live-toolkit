@@ -65,54 +65,59 @@ The more detailed options are: ::
 
     nodes
     ├─[node identifier] : add as many node identifiers as are needed
-    │ ├─type : [simple-consumer | simple-producer | resequencer | ebuttd-encoder | buffer-delay | retiming-delay]
-    │ ├─output
-    │ │ ├─carriage
-    │ │ │ └─type : [direct | filesystem | filesystem-simple | websocket]
-    │ │ │   ├─ id (when "direct") : id of the pipe to write to, default "default"
-    │ │ │   ├─ folder (when "filesystem") : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
-    │ │ │   ├─ uri (when "websocket") : URI to connect to, default "ws://localhost:9001"
-    │ │ │   ├─ rotating_buf (when "filesystem-simple") : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
-    │ │ │   ├─ filename_pattern (when "filesystem-simple") : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
-    │ │ └─adapters
-    │ ├─input
-    │ │ ├─carriage
-    │ │ │ └─type : [direct | filesystem | websocket (default)]
+    │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay"]
+    │ ├─output : the output settings for the node, if applicable
+    │ │ ├─carriage : the carriage mechanism to use to get incoming documents
+    │ │ │ └─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket"]
+    │ │ │   ├─ id (for "direct") : id of the pipe to write to, default "default"
+    │ │ │   ├─ folder (for "filesystem" and "filesystem-simple") : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
+    │ │ │   ├─ rotating_buf (for "filesystem-simple") : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
+    │ │ │   ├─ filename_pattern (for "filesystem-simple") : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
+    │ │ │   └─ uri (for "websocket") : URI to connect to, default "ws://localhost:9001"
+    │ │ └─adapters : see below
+    │ ├─input : the input settings for the node, if applicable
+    │ │ ├─carriage : the carriage mechanism to use to emit outgoing documents
+    │ │ │ └─type : ["direct" | "filesystem" | "websocket" (default)]
     │ │ │   ├─ id (when "direct") : id of the pipe to read from, default "default"
-    │ │ │   ├─ ??? folder (when "filesystem") : output folder to read from, default "./export"
     │ │ │   ├─ uri (when "websocket") : URI to connect to, default "ws://localhost:9001"
     │ │ │   ├─ manifest_file (when "filesystem") : The timing manifest file for importing files
-    │ │ │   ├─ tail (when "filesystem") : Keep the manifest open and wait for new input much like UNIX's tail -f command
-    │ │ └─adapters
+    │ │ │   └─ tail (when "filesystem") : Keep the manifest open and wait for new input much like UNIX's tail -f command
+    │ │ └─adapters : see below
     │ ├─id
     │ └─[type-dependent options - see below]
     backend
-    └─type: [twisted | dummy]    
+    └─type: ["twisted" (default) | "dummy"]    
 
 Type dependent options: ::
 
    type="simple-consumer"
    ├─verbose : whether to log subtitle content on activation changes, default False
    └─clock
-     └─type : ["auto" (default) | utc | local]
+     └─type : ["auto" (default) | "utc" | "local"]
+
    type="simple-producer"
-   ├─show_time : (false if omitted)
+   ├─show_time : (False if omitted)
    ├─sequence_identifier : sequence identifier, default "TestSequence1"
    ├─interval : period between each document in seconds, default 2
    └─clock
-     └─type : ["local" (default) | auto | clock]
+     └─type : ["local" (default) | "auto" | "clock"]
+
    type="resequencer"
    ├─sequence_identifier : sequence identifier, default "re-sequencer"
    ├─segment_length : duration of each output segment in seconds, default 2
-   ├─utc : ??? , default False
-   └─discard : whether to discard content that has been encoded, default True
-   type="ebuttd-encoder"
-   ├─media_time_zero : ["current" (default) | clock time at media time zero]
-   ├─default_namespace : ["false" (default) | ???]
+   ├─discard : whether to discard content that has been encoded, default True
    └─clock
-     └─type : ["local" (default) | auto | utc]
+     └─type : ["local" (default) | "auto" | "clock"]
+
+   type="ebuttd-encoder"
+   ├─media_time_zero : ["current" (default) | clock time at media time zero TODO: check format]
+   ├─default_namespace : ["false" (default) | "true"]
+   └─clock
+     └─type : ["local" (default) | "auto" | "utc"]
+
    type="buffer-delay"
    └─delay : delay in seconds, default 0
+
    type="retiming-delay"
    ├─delay : delay in seconds, default 0
    └─sequence_identifier : sequence identifier, default "RetimedSequence1"
