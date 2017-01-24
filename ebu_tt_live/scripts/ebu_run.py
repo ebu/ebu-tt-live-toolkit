@@ -29,7 +29,7 @@ the directly accessible config file keys using the current configuration structu
 values for the keys already having a value from the config file or from the command line.
 
 Since the components and their connections are not hard-coded the ``ebu-run`` does not have a single purpose
-limitation. The usage of a configrator facilitates the configuration mapping of a single node or an entire complex
+limitation. The usage of a configurator facilitates the configuration mapping of a single node or an entire complex
 interconnected set of nodes via various carriage mechanisms, events and timings.
 """
 
