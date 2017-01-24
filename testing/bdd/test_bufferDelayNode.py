@@ -15,7 +15,7 @@ def given_buffer_delay(delay_offset, test_context, gen_document):
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
-    carriage = FilesystemProducerImpl('testing/tmp')
+    carriage = FilesystemProducerImpl('testing/tmp', reference_clock)
 
     delay_float = LimitedClockTimingType(delay_offset).timedelta.total_seconds()
 
