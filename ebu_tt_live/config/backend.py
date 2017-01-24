@@ -70,17 +70,23 @@ class TwistedBackend(BackendBase):
 
     _ws_twisted_producer_type = None
     _ws_twisted_consumer_type = None
+    _wsl_twisted_producer_type = None
+    _wsl_twisted_consumer_type = None
     _ws_twisted_producers = None
     _ws_twisted_consumers = None
     _ws_twisted_servers = None
 
     def __init__(self, config, local_config):
-        from ebu_tt_live.twisted import websocket, reactor, task, TwistedWSPushProducer, TwistedWSConsumer
+        from ebu_tt_live.twisted import websocket, reactor, task, TwistedWSPushProducer, TwistedWSConsumer, \
+            TwistedConsumer, TwistedPullProducer
         self._websocket = websocket
         self._reactor = reactor
         self._task = task
         self._ws_twisted_producer_type = TwistedWSPushProducer
+        self._wsl_twisted_producer_type = TwistedPullProducer
         self._ws_twisted_consumer_type = TwistedWSConsumer
+        self._wsl_twisted_consumer_type = TwistedConsumer
+
         self._ws_twisted_servers = {}
         super(TwistedBackend, self).__init__(config=config, local_config=local_config)
 
@@ -105,11 +111,28 @@ class TwistedBackend(BackendBase):
 
         return factory.producer
 
-    def ws_backend_consumer(self, uri, custom_consumer):
+    def wsl_backend_producer(self, uri, custom_producer):
+        if uri not in self._ws_twisted_servers:
+            twisted_producer = self._wsl_twisted_producer_type(
+                custom_producer=custom_producer
+            )
+            factory = self._websocket.LegacyBroadcastServerFactory(
+                uri.geturl()
+            )
+            factory.protocol = self._websocket.LegacyBroadcastServerProtocol
+            factory.registerProducer(twisted_producer, streaming=True)
+            self._ws_twisted_servers[uri] = factory
+            factory.listen()
+        else:
+            factory = self._ws_twisted_servers.get(uri)
+
+        return factory.producer
+
+    def ws_backend_consumer(self, uri, custom_consumer, proxy=None):
         factory_args = {}
-        # if args.proxy:
-        #     proxyHost, proxyPort = args.proxy.split(':')
-        #     factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
+        if proxy:
+            proxyHost, proxyPort = proxy.split(':')
+            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
         factory = self._websocket.BroadcastClientFactory(
             url=uri.geturl(),
             consumer=self._ws_twisted_consumer_type(
@@ -119,6 +142,23 @@ class TwistedBackend(BackendBase):
         )
 
         factory.protocol = self._websocket.BroadcastClientProtocol
+
+        factory.connect()
+
+    def wsl_backend_consumer(self, uri, custom_consumer, proxy=None):
+        factory_args = {}
+        if proxy:
+            proxyHost, proxyPort = proxy.split(':')
+            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
+        factory = self._websocket.LegacyBroadcastClientFactory(
+            url=uri.geturl(),
+            consumer=self._wsl_twisted_consumer_type(
+                custom_consumer=custom_consumer
+            ),
+            **factory_args
+        )
+
+        factory.protocol = self._websocket.LegacyBroadcastClientProtocol
 
         factory.connect()
 

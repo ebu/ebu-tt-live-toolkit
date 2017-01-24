@@ -141,6 +141,7 @@ class TwistedWSPushProducer(object):
 
     _custom_producer = None
     _connections = None
+    _callLater = reactor.callLater
 
     def __init__(self, custom_producer):
         self._custom_producer = custom_producer
@@ -149,9 +150,11 @@ class TwistedWSPushProducer(object):
 
     def emit_data(self, sequence_identifier, data, delay=None):
         if delay is not None:
-            reactor.callLater(delay, self._do_write, sequence_identifier, data)
+            deferred = self._callLater(delay, self._do_write, sequence_identifier, data)
+            return deferred
         else:
             self._do_write(sequence_identifier, data)
+            return True
 
     def register(self, connection):
         self._connections.append(connection)
@@ -180,10 +183,9 @@ class TwistedWSPushProducer(object):
 @implementer(interfaces.IConsumer)
 class TwistedWSConsumer(object):
     """
-    This class wraps the protocol elements
+    This class wraps the protocol objects.
     """
     _custom_consumer = None
-    _producer = None
 
     def __init__(self, custom_consumer):
         self._custom_consumer = custom_consumer
@@ -198,13 +200,10 @@ class TwistedWSConsumer(object):
         self._custom_consumer.on_new_data(data)
 
     def registerProducer(self, producer, streaming):
-        self._producer = producer
-        if streaming:
-            self._producer.resumeProducing()
+        pass
 
     def unregisterProducer(self):
-        self._producer.stopProducing()
-        self._producer = None
+        pass
 
 
 class BroadcastServerProtocol(EBUWebsocketProtocolMixin, WebSocketServerProtocol):
@@ -389,14 +388,63 @@ class BroadcastClientFactory(BroadcastFactoryCommon, WebSocketClientFactory):
                 self.producer.register(client)
 
     def unregister(self, client):
-        if client.action == 'subscribe':
+        if client.action == 'subscribe' and self.consumer:
             self.consumer.unregister(client)
-        elif client.action == 'publish':
+        elif client.action == 'publish' and self.producer:
             self.producer.unregister(client)
 
     def connect(self):
         log.info('Connecting to {}'.format(self.url))
         connectWS(self)
+
+
+# Here comes the legacy ws protocol
+# =================================
+@implementer(interfaces.IPullProducer)
+class TwistedPullProducer(object):
+
+    _custom_producer = None
+    _consumer = None
+
+    def __init__(self, consumer, custom_producer):
+        self._custom_producer = custom_producer
+        self._consumer = consumer
+        self._consumer.registerProducer(self, False)
+        self._custom_producer.register_twisted_producer(self)
+
+    def emit_data(self, channel, data, delay=None):
+        if delay is not None:
+            reactor.callLater(delay, self._consumer.write, channel, data)
+        else:
+            self._consumer.write(channel, data)
+
+    def resumeProducing(self):
+        self._custom_producer.resume_producing()
+
+    def stopProducing(self):
+        pass
+
+
+@implementer(interfaces.IConsumer)
+class TwistedConsumer(object):
+
+    _custom_consumer = None
+    _producer = None
+
+    def __init__(self, custom_consumer):
+        self._custom_consumer = custom_consumer
+
+    def registerProducer(self, producer, streaming):
+        self._producer = producer
+        if streaming:
+            self._producer.resumeProducing()
+
+    def unregisterProducer(self):
+        self._producer.stopProducing()
+        self._producer = None
+
+    def write(self, data):
+        self._custom_consumer.on_new_data(data)
 
 
 class LegacyBroadcastServerProtocol(WebSocketServerProtocol):

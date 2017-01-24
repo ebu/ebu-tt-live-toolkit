@@ -8,6 +8,8 @@ import urlparse
 def producer_carriage_by_type(carriage_type):
     if carriage_type == 'websocket':
         return WebsocketOutput
+    elif carriage_type == 'websocket-legacy':
+        return WebsocketLegacyOutput
     elif carriage_type == 'filesystem':
         return FilesystemOutput
     elif carriage_type == 'filesystem-simple':
@@ -21,6 +23,8 @@ def producer_carriage_by_type(carriage_type):
 def consumer_carriage_by_type(carriage_type):
     if carriage_type == 'websocket':
         return WebsocketInput
+    elif carriage_type == 'websocket-legacy':
+        return WebsocketLegacyInput
     elif carriage_type == 'direct':
         return DirectInput
     elif carriage_type == 'filesystem':
@@ -143,34 +147,53 @@ def str_to_url_converter(value):
     return parsed
 
 
-
-class WebsocketBase(ConfigurableComponent):
+class WebsocketLegacyBase(ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option('uri', default='ws://localhost:9001', from_string_converter=str_to_url_converter)
 
 
-class WebsocketOutput(WebsocketBase):
+class WebsocketLegacyOutput(WebsocketLegacyBase):
 
     _backend_producer = None
     _looping_call = None
 
     def __init__(self, config, local_config):
-        super(WebsocketOutput, self).__init__(config, local_config)
+        super(WebsocketLegacyOutput, self).__init__(config, local_config)
         self.component = WebsocketProducerCarriage()
         self.backend.register_component_start(self)
 
     def start(self):
-        self._backend_producer = self.backend.ws_backend_producer(uri=self.config.uri, custom_producer=self.component)
+        self._backend_producer = self.backend.wsl_backend_producer(uri=self.config.uri, custom_producer=self.component)
 
 
-class WebsocketInput(WebsocketBase):
+class WebsocketLegacyInput(WebsocketLegacyBase):
 
     _backend_consumer = None
+    required_config = Namespace()
+    required_config.add_option('proxy', doc='HTTP proxy in format ADDR:PORT')
 
     def __init__(self, config, local_config):
-        super(WebsocketInput, self).__init__(config, local_config)
+        super(WebsocketLegacyInput, self).__init__(config, local_config)
         self.component = WebsocketConsumerCarriage()
         self.backend.register_component_start(self)
 
     def start(self):
-        self._backend_consumer = self.backend.ws_backend_consumer(uri=self.config.uri, custom_consumer=self.component)
+        self._backend_consumer = self.backend.wsl_backend_consumer(uri=self.config.uri, custom_consumer=self.component)
+
+
+class WebsocketBase(ConfigurableComponent):
+    required_config = Namespace()
+    required_config.add_option('listen', default='ws://localhost:9001', doc='Socket to listen on i.e: ws://ADDR:PORT', from_string_converter=str_to_url_converter)
+    required_config.add_option('client', default=[], doc='List of connections to make')
+
+
+class WebsocketOutput(WebsocketBase):
+
+    required_config = Namespace()
+    required_config.add_option('proxy', doc='HTTP proxy in format ADDR:PORT')
+
+
+class WebsocketInput(WebsocketBase):
+
+    required_config = Namespace()
+    required_config.add_option('proxy', doc='HTTP proxy in format ADDR:PORT')
