@@ -1,8 +1,6 @@
-# Handover MAYs/SHOULDs, so not in SPEC-CONFORMANCE.md
-
 #  The Handover Manager may include the parameters ebuttp:authorsGroupIdentifier, ebuttp:authorsGroupControlToken and ebuttm:authorsGroupControlRequest from the currently selected input sequence within its output sequence. 
 
-Feature: Handover Shoulds   
+Feature: Include handover paramters in output    
 
   Examples:
   | xml_file     |  
@@ -15,13 +13,15 @@ Feature: Handover Shoulds
     And it has <authorsGroupIdentifier1>
     And it has <authorsGroupControlToken1>
     And it has <authorsGroupControlRequest1>
-    When the sequence is output
-    Then a document in the sequence has <authorsGroupIdentifier2>
+    And the file is added to the sequence
+    When the file is output
+    Then the document has <authorsGroupIdentifier2>
     And it has <authorsGroupControlToken2>
     And it has <authorsGroupControlRequest2>
 
     Examples:
     | authorsGroupIdentifier1 | authorsGroupControlToken1 | authorsGroupControlRequest1 | authorsGroupIdentifier2 | authorsGroupControlToken2 | authorsGroupControlRequest2 |  
     | id1                     | 1                         | UseMe                       | id1                     | 1                         | UseMe                       |  
-    | id1                     | 1                         |                             | id1                     | 1                         |                             |  
+    # If control token value is unspecified, the handover node does not make its initial value explicit   
+    | id1                     |                           |                             | id1                     |                           |                             |  
 
