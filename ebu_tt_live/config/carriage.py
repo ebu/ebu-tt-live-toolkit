@@ -1,6 +1,7 @@
 from .common import ConfigurableComponent, Namespace
 from ebu_tt_live.carriage.direct import DirectCarriageImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage, WebsocketConsumerCarriage
+from ebu_tt_live.carriage import filesystem
 import urlparse
 
 
@@ -8,9 +9,9 @@ def producer_carriage_by_type(carriage_type):
     if carriage_type == 'websocket':
         return WebsocketOutput
     elif carriage_type == 'filesystem':
-        return FileOutput
-    elif carriage_type == 'filesystem=simple':
-        return SimpleFileOutput
+        return FilesystemOutput
+    elif carriage_type == 'filesystem-simple':
+        return SimpleFilesystemOutput
     elif carriage_type == 'direct':
         return DirectOutput
     else:
@@ -23,7 +24,7 @@ def consumer_carriage_by_type(carriage_type):
     elif carriage_type == 'direct':
         return DirectInput
     elif carriage_type == 'filesystem':
-        return FileInput
+        return FilesystemInput
     else:
         raise Exception('No such component: {}'.format(carriage_type))
 
@@ -68,26 +69,63 @@ class DirectOutput(DirectCommon):
 # ===========================================
 class FileOutputCommon(ConfigurableComponent):
     required_config = Namespace()
-    required_config.add_option('folder', default='./export')
+    required_config.add_option(
+        'folder',
+        default='./export',
+        doc='The output folder/directory. Folder is created if it does not exist. Existing files are overwritten.'
+    )
 
 
-class FileOutput(FileOutputCommon):
-    pass
+class FilesystemOutput(FileOutputCommon):
+
+    def __init__(self, config, local_config):
+        super(FilesystemOutput, self).__init__(config, local_config)
+        self.component = filesystem.FilesystemProducerImpl(dirpath=config.folder)
 
 
-class SimpleFileOutput(FileOutputCommon):
+class SimpleFilesystemOutput(FileOutputCommon):
     # This does not create a manifest file
-    pass
+    required_config = Namespace()
+    required_config.add_option(
+        'filename_pattern',
+        default='export-{counter}.xml',
+        doc='File name pattern. It needs to contain {counter} format parameter.'
+    )
+
+    def __init__(self, config, local_config):
+        super(SimpleFilesystemOutput, self).__init__(config, local_config)
+        self.component = filesystem.SimpleFolderExport(
+            dir_path=config.folder,
+            file_name_pattern=config.filename_pattern
+        )
 
 
-class FileInput(ConfigurableComponent):
-    pass
+class FilesystemInput(ConfigurableComponent):
+
+    required_config = Namespace()
+    required_config.add_option('manifest_file', doc='The timing manifest file for importing files')
+    required_config.add_option(
+        'tail',
+        doc='Keep the manifest open and wait for new input much like UNIX\'s tail command'
+    )
+    _fs_reader = None
+
+    def __init__(self, config, local_config):
+        super(FilesystemInput, self).__init__(config, local_config)
+        self.component = filesystem.FilesystemConsumerImpl()
+        self._fs_reader = filesystem.FilesystemReader(
+            manifest_path=config.manifest_file,
+            do_tail=config.tail,
+            custom_consumer=self.component
+        )
+        self.backend.register_component_start(self)
+
+    def start(self):
+        self._fs_reader.resume_reading()
 
 
 # Websocket carriage mechanism configurators
 # ==========================================
-
-
 def str_to_url_converter(value):
     parsed = urlparse.urlparse(value)
     return parsed

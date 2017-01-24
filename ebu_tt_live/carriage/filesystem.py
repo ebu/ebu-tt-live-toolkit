@@ -185,15 +185,15 @@ class SimpleFolderExport(AbstractProducerCarriage):
     _counter = None
 
     def __init__(self, dir_path, file_name_pattern):
-        if not os.path.exists(dir_path):
-            raise Exception('Directory: {} could not be found.'.format(dir_path))
         self._dir_path = dir_path
+        if not os.path.exists(dir_path):
+            os.makedirs(self._dir_path)
         self._file_name_pattern = file_name_pattern
         self._counter = 0
 
     def _do_write_document(self, document, **kwargs):
         self._counter += 1
-        filename = self._file_name_pattern.format(self._counter)
+        filename = self._file_name_pattern.format(counter=self._counter)
         filepath = os.path.join(self._dir_path, filename)
         with open(filepath, 'w') as destfile:
             destfile.write(document.get_xml())
