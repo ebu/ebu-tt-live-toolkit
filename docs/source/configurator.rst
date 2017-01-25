@@ -64,39 +64,24 @@ the carriage mechanism type: ``direct`` which simply transfers the payload data 
 The more detailed options are: ::
 
     nodes
-    ├─nodeN : a node to configure - any from node1 to node9
+    ├─[nodeN] : a node to configure - any from node1 to node9
     │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay"]
     │ ├─output : the output settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to get incoming documents
-    │ │ │ └─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket" | "websocket-legacy"]
-    │ │ │   ├─ id (for "direct") : id of the pipe to write to, default "default"
-    │ │ │   ├─ folder (for "filesystem" and "filesystem-simple") : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
-    │ │ │   ├─ rotating_buf (for "filesystem-simple") : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
-    │ │ │   ├─ filename_pattern (for "filesystem-simple") : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
-    │ │ │   ├─ uri (when "websocket-legacy") : URI to listen for connections on, default "ws://localhost:9001"
-    │ │ │   ├─ proxy (when "websocket") : HTTP proxy in format ADDR:PORT
-    │ │ │   ├─ listen (when "websocket") : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-    │ │ │   └─ client (when "websocket") : List of /publish connections to make
-    │ │ │      └─ TODO: what goes here ????
+    │ │ │ ├─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket" | "websocket-legacy"]
+    │ │ │ └─[output carriage type-dependent options - see below]
     │ │ └─adapters : see below
     │ ├─input : the input settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to emit outgoing documents
-    │ │ │ └─type : ["direct" | "filesystem" | "websocket" (default) | "websocket-legacy"]
-    │ │ │   ├─ id (when "direct") : id of the pipe to read from, default "default"
-    │ │ │   ├─ uri (when "websocket-legacy") : URI to connect to, default "ws://localhost:9001"
-    │ │ │   ├─ proxy (when "websocket" or "websocket-legacy") : HTTP proxy in format ADDR:PORT
-    │ │ │   ├─ listen (when "websocket") : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-    │ │ │   ├─ client (when "websocket") : List of /subscribe connections to make
-    │ │ │   │  └─ TODO: what goes here ????
-    │ │ │   ├─ manifest_file (when "filesystem") : The timing manifest file for importing files
-    │ │ │   └─ tail (when "filesystem") : Keep the manifest open and wait for new input much like UNIX's tail -f command
+    │ │ │ ├─type : ["direct" | "filesystem" | "websocket" (default) | "websocket-legacy"]
+    │ │ │ └─[input carriage type-dependent options - see below]
     │ │ └─adapters : see below
     │ ├─id : identifier for the node, defaults to a value based on the node's type.
-    │ └─[type-dependent options - see below]
+    │ └─[node type-dependent options - see below]
     backend
     └─type: ["twisted" (default) | "dummy"]    
 
-Type dependent options: ::
+Node type dependent options for [nodeN] : ::
 
    type="simple-consumer"
    ├─verbose : whether to log subtitle content on activation changes, default False
@@ -104,7 +89,7 @@ Type dependent options: ::
      └─type : ["auto" (default) | "utc" | "local"]
 
    type="simple-producer"
-   ├─show_time : (False if omitted)
+   ├─show_time : Whether to put the current time in the output text (true) or use the default text file input (false, default)
    ├─sequence_identifier : sequence identifier, default "TestSequence1"
    ├─interval : period between each document in seconds, default 2
    └─clock
@@ -129,6 +114,52 @@ Type dependent options: ::
    type="retiming-delay"
    ├─delay : delay in seconds, default 0
    └─sequence_identifier : sequence identifier, default "RetimedSequence1"
+
+Output carriage type dependent options for "carriage": ::
+
+   type="direct"
+   └─id : id of the pipe to write to, default "default"
+
+   type="filesystem"
+   └─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
+
+   type="filesystem-simple"
+   ├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
+   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
+   └─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
+
+   type="websocket"
+   ├─proxy : HTTP proxy in format ADDR:PORT
+   ├─listen : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
+   └─connect : List of /publish connections to make
+     └─[URL] : URL to connect out to, in the form "ws://ADDR:PORT/SEQUENCE_ID/publish", as many URLs as are needed. URL will be parsed; if it does not conform to the above pattern a config error will be generated.
+
+   type="websocket-legacy"
+   └─uri : URI to listen for connections on, default "ws://localhost:9001"
+
+Input carriage type dependent options for "carriage": ::
+
+   type="direct"
+   └─id : id of the pipe to read from, default "default"
+
+   type="filesystem"
+   ├─manifest_file : The timing manifest file for importing files. Files are required to be in the same folder as the manifest file.
+   └─tail : Keep the manifest open and wait for new input much like UNIX's tail -f command
+
+   type="filesystem-simple"
+   ├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
+   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
+   └─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
+
+   type="websocket"
+   ├─proxy : HTTP proxy in format ADDR:PORT
+   ├─listen : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
+   └─connect : List of /subscribe connections to make
+     └─[URL] : URL to connect out to, in the form "ws://ADDR:PORT/SEQUENCE_ID/subscribe", as many URLs as are needed. URL will be parsed; if it does not conform to the above pattern a config error will be generated.
+
+   type="websocket-legacy"
+   ├─proxy : HTTP proxy in format ADDR:PORT
+   └─uri : URI to connect to, default "ws://localhost:9001"
 
 Adapters will be automatically selected if not specified, or can be manually specified: ::
 
