@@ -1,6 +1,6 @@
 {
   "nodes": {
-    "node1": {
+    "node2": {
       "id": "producer1",
       "type": "simple-producer",
       "show_time": true,
@@ -8,19 +8,19 @@
       "output": {
         "carriage": {
           "type": "websocket",
-          "listen": "ws://localhost:9000"
+          "connect": [
+            "ws://localhost:9000/TestSequence1/publish"
+            ]
         }
       }
     },
-    "node2": {
+    "node1": {
       "id": "consumer1",
       "type": "simple-consumer",
       "input": {
         "carriage": {
           "type": "websocket",
-          "connect": [
-            "ws://localhost:9000/TestSequence1/subscribe"
-            ]
+          "listen": "ws://localhost:9000"
         }
       }
     }
