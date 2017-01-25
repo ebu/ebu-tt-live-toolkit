@@ -49,5 +49,6 @@ def given_document_emitted(test_context):
 def then_delta_should_be_correct(delay_offset, test_context):
 
     delay_timedelta = LimitedClockTimingType(delay_offset).timedelta
+    emission_timedelta = LimitedClockTimingType(test_context['doc'].emission).timedelta
 
-    assert test_context['doc'].emission - test_context['doc'].availability_time >= delay_timedelta
+    assert emission_timedelta - test_context['doc'].availability_time >= delay_timedelta
