@@ -354,3 +354,5 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
             raise TypeError('Can\'t instantiate {} is an abstract base class.'.format(cls))
         instance = super(AutoRegisteringABCMeta, cls).__call__(*args, **kwargs)
         return instance
+
+HTTPProxyConfig = collections.namedtuple('HTTPProxyConfig', ['host', 'port'])

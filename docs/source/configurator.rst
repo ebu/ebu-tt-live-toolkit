@@ -76,8 +76,8 @@ The more detailed options are: ::
     │ │ │   ├─ uri (when "websocket-legacy") : URI to listen for connections on, default "ws://localhost:9001"
     │ │ │   ├─ proxy (when "websocket") : HTTP proxy in format ADDR:PORT
     │ │ │   ├─ listen (when "websocket") : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-    │ │ │   └─ client (when "websocket") : List of /publish connections to make
-    │ │ │      └─ TODO: what goes here ????
+    │ │ │   └─ connect (when "websocket") : List of /publish connections to make. Expected values are URL strings.
+    │ │ │      └─ Example: ws://<host>:<port>/<sequenceIdentifier>/publish
     │ │ └─adapters : see below
     │ ├─input : the input settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to emit outgoing documents
@@ -86,8 +86,8 @@ The more detailed options are: ::
     │ │ │   ├─ uri (when "websocket-legacy") : URI to connect to, default "ws://localhost:9001"
     │ │ │   ├─ proxy (when "websocket" or "websocket-legacy") : HTTP proxy in format ADDR:PORT
     │ │ │   ├─ listen (when "websocket") : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-    │ │ │   ├─ client (when "websocket") : List of /subscribe connections to make
-    │ │ │   │  └─ TODO: what goes here ????
+    │ │ │   ├─ connect (when "websocket") : List of /publish connections to make. Expected values are URL strings.
+    │ │ │   │  └─ Example: ws://<host>:<port>/<sequenceIdentifier>/subscribe
     │ │ │   ├─ manifest_file (when "filesystem") : The timing manifest file for importing files
     │ │ │   └─ tail (when "filesystem") : Keep the manifest open and wait for new input much like UNIX's tail -f command
     │ │ └─adapters : see below

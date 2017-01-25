@@ -2,7 +2,11 @@ from .common import ConfigurableComponent, Namespace
 from ebu_tt_live.carriage.direct import DirectCarriageImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage, WebsocketConsumerCarriage
 from ebu_tt_live.carriage import filesystem
+from ebu_tt_live.utils import HTTPProxyConfig
+from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE
+from ebu_tt_live.errors import ConfigurationError
 import urlparse
+import re
 
 
 def producer_carriage_by_type(carriage_type):
@@ -147,6 +151,35 @@ def str_to_url_converter(value):
     return parsed
 
 
+def parse_url_list(value):
+    parsed_value = []
+    if value is not None:
+        for item in value:
+            parsed_value.append(str_to_url_converter(item))
+    return parsed_value
+
+proxy_regex = re.compile(r'^((?P<protocol>.+?)://)?(?P<host>[^:]+?):(?P<port>[0-9]+)$')
+
+
+def parse_proxy_address(value):
+    result = None
+    match = proxy_regex.match(value)
+    if match:
+        # Ignoring the protocol part for now as it is only a http proxy
+        result = HTTPProxyConfig(
+            host=match.group('host'),
+            port=int(match.group('port'))
+        )
+    elif value:
+        # In this case something was provided that isn't a falsy value but the parsing failed.
+        raise ConfigurationError(
+            ERR_CONF_PROXY_CONF_VALUE.format(
+                value=value
+            )
+        )
+    return result
+
+
 class WebsocketLegacyBase(ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option('uri', default='ws://localhost:9001', from_string_converter=str_to_url_converter)
@@ -170,7 +203,12 @@ class WebsocketLegacyInput(WebsocketLegacyBase):
 
     _backend_consumer = None
     required_config = Namespace()
-    required_config.add_option('proxy', doc='HTTP proxy in format ADDR:PORT')
+    required_config.add_option(
+        'proxy',
+        doc='HTTP proxy in format ADDR:PORT',
+        default=None,
+        from_string_converter=parse_proxy_address
+    )
 
     def __init__(self, config, local_config):
         super(WebsocketLegacyInput, self).__init__(config, local_config)
@@ -182,18 +220,55 @@ class WebsocketLegacyInput(WebsocketLegacyBase):
 
 
 class WebsocketBase(ConfigurableComponent):
+
     required_config = Namespace()
-    required_config.add_option('listen', default='ws://localhost:9001', doc='Socket to listen on i.e: ws://ADDR:PORT', from_string_converter=str_to_url_converter)
-    required_config.add_option('client', default=[], doc='List of connections to make')
+    required_config.add_option('listen', default=None, doc='Socket to listen on i.e: ws://ADDR:PORT', from_string_converter=str_to_url_converter)
+    required_config.add_option('connect', default=[], doc='List of connections to make')
+    required_config.add_option(
+        'proxy',
+        doc='HTTP proxy in format ADDR:PORT',
+        default=None,
+        from_string_converter=parse_proxy_address
+    )
 
 
 class WebsocketOutput(WebsocketBase):
 
     required_config = Namespace()
-    required_config.add_option('proxy', doc='HTTP proxy in format ADDR:PORT')
+    _backend_producer = None
+
+    def __init__(self, config, local_config):
+        super(WebsocketOutput, self).__init__(config, local_config)
+        # from_string_converter does not work for lists in configman :( Doing it manually here
+        self.config.connect = parse_url_list(self.config.connect)
+        self.component = WebsocketProducerCarriage()
+        self.backend.register_component_start(self)
+
+    def start(self):
+        self._backend_producer = self.backend.ws_backend_producer(
+            custom_producer=self.component,
+            listen=self.config.listen,
+            connect=self.config.connect,
+            proxy=self.config.proxy
+        )
 
 
 class WebsocketInput(WebsocketBase):
 
     required_config = Namespace()
-    required_config.add_option('proxy', doc='HTTP proxy in format ADDR:PORT')
+    _backend_consumer = None
+
+    def __init__(self, config, local_config):
+        super(WebsocketInput, self).__init__(config, local_config)
+        # from_string_converter does not work for lists in configman :( Doing it manually here
+        self.config.connect = parse_url_list(self.config.connect)
+        self.component = WebsocketConsumerCarriage()
+        self.backend.register_component_start(self)
+
+    def start(self):
+        self._backend_consumer = self.backend.ws_backend_consumer(
+            custom_consumer=self.component,
+            listen=self.config.listen,
+            connect=self.config.connect,
+            proxy=self.config.proxy
+        )
