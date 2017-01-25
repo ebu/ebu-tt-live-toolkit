@@ -1,4 +1,4 @@
-
+# coding=utf8
 from twisted.trial.unittest import TestCase
 from twisted.test import proto_helpers
 from ebu_tt_live.twisted.websocket import BroadcastServerFactory, BroadcastServerProtocol, \
@@ -152,6 +152,21 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
 
         # This is meant to fail handshake so wait for AssertionError here
         self.assertRaises(AssertionError, self._connect)
+
+    def test_url_encoded_components(self):
+        # This test is about getting percent encoded characters work in sequenceId or hostname
+        sequence_id = u'sequence/ünicödé/Name'
+        self._create_server(url='ws://localhost:9006')
+        self._create_client(
+            url='ws://localhost:9006/sequence%2F%C3%BCnic%C3%B6d%C3%A9%2FName/subscribe',
+            consumer=self.cons
+        )
+
+        self.cproto.consumer = self.cons
+
+        self._connect()
+
+        self.assertTrue(True)
 
     def tearDown(self):
         self.ctr.loseConnection()
