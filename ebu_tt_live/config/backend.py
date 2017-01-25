@@ -1,5 +1,7 @@
 import logging
 from .common import ConfigurableComponent, Namespace, RequiredConfig
+from ebu_tt_live.strings import ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH
+from ebu_tt_live.errors import ConfigurationError
 
 log = logging.getLogger(__name__)
 
@@ -74,6 +76,7 @@ class TwistedBackend(BackendBase):
     _wsl_twisted_consumer_type = None
     _ws_twisted_producers = None
     _ws_twisted_consumers = None
+    _wsl_twisted_servers = None
     _ws_twisted_servers = None
 
     def __init__(self, config, local_config):
@@ -87,6 +90,7 @@ class TwistedBackend(BackendBase):
         self._ws_twisted_consumer_type = TwistedWSConsumer
         self._wsl_twisted_consumer_type = TwistedConsumer
 
+        self._wsl_twisted_servers = {}
         self._ws_twisted_servers = {}
         super(TwistedBackend, self).__init__(config=config, local_config=local_config)
 
@@ -94,56 +98,132 @@ class TwistedBackend(BackendBase):
         super(TwistedBackend, self).start()
         self._reactor.run()
 
-    def ws_backend_producer(self, uri, custom_producer):
-        if uri not in self._ws_twisted_servers:
+    def _crosscheck_ws_server_uri(self, listen, legacy=False):
+        """
+        Checking for sockets already listening on the specified listen address. If there is a server there
+        its factory is returned, if there isn't one, None is returned, if there is protocol mismatch
+        a ConfigurationError exception is raised.
+        :param listen: URI of websocket server
+        :return: BroadcastServerFactory instance if exists for listen address, otherwise None
+        :raises ConfigurationError: on protocol mismatch
+        """
+        ws_server = self._ws_twisted_servers.get(listen)
+        wsl_server = self._wsl_twisted_servers.get(listen)
+        if ws_server and legacy or wsl_server and not legacy:
+            raise ConfigurationError(
+                ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH.format(
+                    address=listen
+                )
+            )
+        if ws_server:
+            return ws_server
+        if wsl_server:
+            return wsl_server
+        return None
+
+    def ws_backend_producer(self, custom_producer, listen=None, connect=None, proxy=None):
+        """
+        The following cases to be considered.
+            1. There is listen address
+                1.1. The address is used by another producer: ERROR
+                1.2. The address is used by another protocol: ERROR
+                1.3. The address is used by a consumer server: create producer and assign it to the factory
+                1.4. The address is not in use: Create factory and create producer
+            2. There are connections to make with *publish* action
+                2.1 There is a producer from the server. Use that. Create client factories with it.
+                2.2 There is no producer from the server. Create producer, create client factories with it.
+
+        :param custom_producer:
+        :param listen:
+        :param connect:
+        :param proxy:
+        :return: The Twisted Producer instance with server socket and/or client connections
+        """
+        server_factory = listen and self._crosscheck_ws_server_uri(listen.geturl()) or None
+        twisted_producer = server_factory and server_factory.producer or None
+        if not twisted_producer:
             twisted_producer = self._ws_twisted_producer_type(
                 custom_producer=custom_producer
             )
-            factory = self._websocket.BroadcastServerFactory(
-                uri.geturl(),
-                producer=twisted_producer
-            )
-            factory.protocol = self._websocket.BroadcastServerProtocol
-            self._ws_twisted_servers[uri] = factory
-            factory.listen()
-        else:
-            factory = self._ws_twisted_servers.get(uri)
 
-        return factory.producer
+        if listen:
+            if server_factory:
+                server_factory.producer = twisted_producer
+            else:
+                server_factory = self._websocket.BroadcastServerFactory(
+                    listen.geturl(),
+                    producer=twisted_producer
+                )
+                server_factory.protocol = self._websocket.BroadcastServerProtocol
+                self._ws_twisted_servers[listen.geturl()] = server_factory
+                server_factory.listen()
+
+        if connect:
+            factory_args = {}
+            if proxy:
+                factory_args.update({'host': proxy.host, 'port': proxy.port})
+            for dst in connect:
+                client_factory = self._websocket.BroadcastClientFactory(
+                    url=dst.geturl(),
+                    producer=twisted_producer,
+                    **factory_args
+                )
+                client_factory.protocol = self._websocket.BroadcastClientProtocol
+                client_factory.connect()
+
+        return twisted_producer
+
+    def ws_backend_consumer(self, custom_consumer, listen=None, connect=None, proxy=None):
+        server_factory = listen and self._crosscheck_ws_server_uri(listen.geturl()) or None
+        twisted_consumer = server_factory and server_factory.consumer or None
+
+        if not twisted_consumer:
+            twisted_consumer = self._ws_twisted_consumer_type(
+                custom_consumer=custom_consumer
+            )
+
+        if listen:
+            if server_factory:
+                server_factory.consumer = twisted_consumer
+            else:
+                server_factory = self._websocket.BroadcastServerFactory(
+                    listen.geturl(),
+                    consumer=twisted_consumer
+                )
+                server_factory.protocol = self._websocket.BroadcastServerProtocol
+                self._ws_twisted_servers[listen.geturl()] = server_factory
+                server_factory.listen()
+
+        if connect:
+            factory_args = {}
+            if proxy:
+                factory_args.update({'host': proxy.host, 'port': proxy.port})
+            for dst in connect:
+                client_factory = self._websocket.BroadcastClientFactory(
+                    url=dst.geturl(),
+                    consumer=twisted_consumer,
+                    **factory_args
+                )
+                client_factory.protocol = self._websocket.BroadcastClientProtocol
+                client_factory.connect()
+
+        return twisted_consumer
 
     def wsl_backend_producer(self, uri, custom_producer):
-        if uri not in self._ws_twisted_servers:
+        server_factory = self._crosscheck_ws_server_uri(listen=uri.geturl(), legacy=True)
+        if not server_factory:
             twisted_producer = self._wsl_twisted_producer_type(
                 custom_producer=custom_producer
             )
-            factory = self._websocket.LegacyBroadcastServerFactory(
+            server_factory = self._websocket.LegacyBroadcastServerFactory(
                 uri.geturl()
             )
-            factory.protocol = self._websocket.LegacyBroadcastServerProtocol
-            factory.registerProducer(twisted_producer, streaming=True)
-            self._ws_twisted_servers[uri] = factory
-            factory.listen()
-        else:
-            factory = self._ws_twisted_servers.get(uri)
+            server_factory.protocol = self._websocket.LegacyBroadcastServerProtocol
+            server_factory.registerProducer(twisted_producer, streaming=True)
+            self._wsl_twisted_servers[uri.geturl()] = server_factory
+            server_factory.listen()
 
-        return factory.producer
-
-    def ws_backend_consumer(self, uri, custom_consumer, proxy=None):
-        factory_args = {}
-        if proxy:
-            proxyHost, proxyPort = proxy.split(':')
-            factory_args['proxy'] = {'host': proxyHost, 'port': int(proxyPort)}
-        factory = self._websocket.BroadcastClientFactory(
-            url=uri.geturl(),
-            consumer=self._ws_twisted_consumer_type(
-                custom_consumer=custom_consumer
-            ),
-            **factory_args
-        )
-
-        factory.protocol = self._websocket.BroadcastClientProtocol
-
-        factory.connect()
+        return server_factory.producer
 
     def wsl_backend_consumer(self, uri, custom_consumer, proxy=None):
         factory_args = {}

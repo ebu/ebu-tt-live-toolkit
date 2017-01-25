@@ -131,8 +131,8 @@ Output carriage type dependent options for "carriage": ::
    type="websocket"
    ├─proxy : HTTP proxy in format ADDR:PORT
    ├─listen : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-   └─connect : List of /publish connections to make
-     └─[URL] : URL to connect out to, in the form "ws://ADDR:PORT/SEQUENCE_ID/publish", as many URLs as are needed. URL will be parsed; if it does not conform to the above pattern a config error will be generated.
+   └─connect : List of /publish connections to make. Expected values are URL strings which will be parsed; if one does not conform to the pattern a config error will be generated..
+     └─Example: ws://<host>:<port>/<sequenceIdentifier>/publish
 
    type="websocket-legacy"
    └─uri : URI to listen for connections on, default "ws://localhost:9001"
@@ -154,8 +154,8 @@ Input carriage type dependent options for "carriage": ::
    type="websocket"
    ├─proxy : HTTP proxy in format ADDR:PORT
    ├─listen : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-   └─connect : List of /subscribe connections to make
-     └─[URL] : URL to connect out to, in the form "ws://ADDR:PORT/SEQUENCE_ID/subscribe", as many URLs as are needed. URL will be parsed; if it does not conform to the above pattern a config error will be generated.
+   └─connect : List of /subscribe connections to make. Expected values are URL strings which will be parsed; if one does not conform to the pattern a config error will be generated..
+     └─Example: ws://<host>:<port>/<sequenceIdentifier>/subscribe
 
    type="websocket-legacy"
    ├─proxy : HTTP proxy in format ADDR:PORT

@@ -37,6 +37,8 @@ ERR_WS_RECEIVE_VIA_PRODUCER = gettext('Producer socket cannot be used to receive
 
 ERR_CONF_ONE_BACKEND_ONLY = gettext('There is only one backend allowed. Already created: {backend1}, New: {backend2}')
 ERR_CONF_NO_SUCH_NODE = gettext('No such node type found: {node_type}')
+ERR_CONF_PROXY_CONF_VALUE = gettext('Failed to parse proxy config: {value}')
+ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH = gettext('The address: {address} is in use by another server with different protocol version')
 
 DOC_SYNTACTIC_VALIDATION_SUCCESSFUL = gettext('Syntactic validation successful')
 DOC_SEMANTIC_VALIDATION_SUCCESSFUL = gettext('Document {sequence_identifier}__{sequence_number} semantic validation successful')
