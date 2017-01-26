@@ -8,6 +8,7 @@ sphinx-rtd-theme
 pytest-bdd
 pytest-cov
 pytest-mock
+pytest-capturelog
 coverage
 pytest-runner
 pytest
