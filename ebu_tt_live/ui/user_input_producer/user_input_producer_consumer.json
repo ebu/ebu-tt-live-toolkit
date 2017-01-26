@@ -1,0 +1,22 @@
+{
+	"nodes" :
+	{
+		"node1" :
+		{
+			"type" : "simple-consumer",
+			"verbose" : true,
+			"input" : 
+			{
+				"carriage" : 
+				{
+					"type" : "websocket",
+					"listen" : "ws://127.0.0.1:9001"
+				}
+			}
+		}
+	},
+	"backend" : 
+	{
+		"type": "twisted"
+	}
+}
