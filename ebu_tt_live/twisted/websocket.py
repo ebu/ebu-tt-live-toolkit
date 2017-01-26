@@ -7,7 +7,7 @@ from twisted.python import url as twisted_url
 from zope.interface import implementer
 from logging import getLogger
 import json
-import re
+import six
 from ebu_tt_live.strings import ERR_WS_INVALID_ACTION, ERR_WS_NOT_CONSUMER, ERR_WS_NOT_PRODUCER, \
     ERR_WS_RECEIVE_VIA_PRODUCER, ERR_WS_SEND_VIA_CONSUMER
 
@@ -100,7 +100,7 @@ class EBUWebsocketProtocolMixin(object):
 
     def _parse_path(self, full_url):
         if not isinstance(full_url, unicode):
-            full_url = unicode(full_url)
+            full_url = six.text_type(full_url)
         result = twisted_url.URL.fromText(full_url)
         sequence_identifier, action = result.path
         return sequence_identifier, action
@@ -216,9 +216,10 @@ class BroadcastServerProtocol(EBUWebsocketProtocolMixin, WebSocketServerProtocol
 
     def onOpen(self):
         try:
-            sequence_identifier, action = self._path_regex.match(self.http_request_path).groups()
-            self._sequence_identifier = sequence_identifier
-            self.action = action
+            # Not that well documented in twisted but this being only a path segment gets picked up fine
+            self._sequence_identifier, self.action = self._parse_path(
+                full_url=self.http_request_path
+            )
         except ValueError as err:
             log.error(err)
             self.dropConnection()
