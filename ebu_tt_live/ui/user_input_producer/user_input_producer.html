@@ -18,19 +18,8 @@
          It streams a sequence of Part 3 documents on a WebSocket connection.
       </div>
 
-      <div id="websocket-url-div" class="control-section-div">
-         <span class="control-section-header-span">Connection</span>
-         <label for="websocket-url-input">Websocket server URL: </label>
-         <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
-         <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
-         <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
-         <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
-         </div>
-      <form action="" id="subtitle-form">
       <div id="sequence-slector-div" class="control-section-div">
-         <span class="control-section-header-span">Sequence</span>
-         <label for="sequence-selector">Choose document sequence: </label>
-         <select id="sequence-selector" name="sequence-selector"></select>
+         <span class="control-section-header-span">Manage Sequence</span>
          <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
          <div id="new-sequence-div" style="display: none">
                <label for="new-sequence-identifier-input">Sequence Identifier: </label>
@@ -77,6 +66,19 @@
             </div>
                <span id="new-sequence-notification-span"></span>
          </div>
+         
+      <div id="websocket-url-div" class="control-section-div">
+         <span class="control-section-header-span">Connection/Sequence</span>
+         <label for="websocket-url-input">Websocket URL: </label>
+         <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
+         <span> / </span><label for="sequence-selector">Sequence: </label>
+         <select id="sequence-selector" name="sequence-selector"></select>
+         <span> / publish </span>
+         <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
+         <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
+         <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
+         </div>
+      <form action="" id="subtitle-form">
       <div id="send-mode-div" class="control-section-div">
          <span class="control-section-header-span">Send Document </span>
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Now!</button>
