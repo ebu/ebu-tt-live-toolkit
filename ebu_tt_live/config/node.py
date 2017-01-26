@@ -27,18 +27,18 @@ class ProducerMixin(RequiredConfig):
     )
     required_config.output.add_option('adapters')
 
-    _output = None
+    output = None
 
     def _create_output(self, config=None):
-        self._output = self.config.output
-        self._output.carriage = self.config.output.carriage.type.configure_component(
+        self.output = self.config.output
+        self.output.carriage = self.config.output.carriage.type.configure_component(
             config, self.config.output.carriage)
 
-        self._output.adapters = ProducerNodeCarriageAdapter.configure_component(
+        self.output.adapters = ProducerNodeCarriageAdapter.configure_component(
             config=config,
             local_config=self.config.output.adapters,
             producer=self.component,
-            carriage=self._output.carriage.component
+            carriage=self.output.carriage.component
         )
 
 

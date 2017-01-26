@@ -1,9 +1,12 @@
 import logging
+import urlparse
 from .common import ConfigurableComponent, Namespace, RequiredConfig
 from ebu_tt_live.strings import ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH
 from ebu_tt_live.errors import ConfigurationError
 
+
 log = logging.getLogger(__name__)
+
 
 
 class BackendBase(ConfigurableComponent):
@@ -28,6 +31,7 @@ class BackendBase(ConfigurableComponent):
 
     def register_component_start(self, component):
         self._components_to_start.append(component)
+        print self._components_to_start
 
     def call_once(self, func, delay=0.0, result_callback=None, error_callback=None, *args, **kwargs):
         raise NotImplementedError()
@@ -137,6 +141,17 @@ class TwistedBackend(BackendBase):
         if proxy:
             factory_args.update({'host': proxy.host, 'port': proxy.port})
         for dst in connect:
+            # Some dark magic to allow us to template some variables runtime
+            netloc = self.resolve_runtime_variables(dst.netloc)
+            dst = urlparse.ParseResult(
+                scheme=dst.scheme,
+                netloc=netloc,
+                path=dst.path,
+                params=dst.params,
+                query=dst.query,
+                fragment=dst.fragment
+            )
+
             client_factory = self._websocket.BroadcastClientFactory(
                 url=dst.geturl(),
                 producer=producer,

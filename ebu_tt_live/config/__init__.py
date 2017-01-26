@@ -22,18 +22,17 @@ from configman import RequiredConfig, ConfigurationManager, ConfigFileFutureProx
     command_line
 from .backend import UniversalBackend
 from .node import UniversalNodes
+from .common import current_app, install_app
 
 __all__ = [
     'common', 'backend', 'node', 'carriage', 'adapters', 'clocks'
 ]
 
-current_app = None
-
 
 def create_app(**kwargs):
-    global current_app
-    current_app = AppConfig(**kwargs)
-    return current_app
+    new_app = AppConfig(**kwargs)
+    install_app(new_app)
+    return new_app
 
 
 class AppConfig(RequiredConfig):
@@ -65,6 +64,11 @@ class AppConfig(RequiredConfig):
 
         global current_app
         current_app = self
+
+    def get_node(self, node_id):
+        # TODO: This is horrible. Replace it with a dictionary
+        node_num = int(node_id.replace('node', ''))
+        return self._nodes._nodes[node_num - 1]
 
     def start(self):
 
