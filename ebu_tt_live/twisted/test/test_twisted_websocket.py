@@ -166,7 +166,8 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
 
         self._connect()
 
-        self.assertTrue(True)
+        self.assertEquals(sequence_id, self.cproto._sequence_identifier)
+        self.assertEquals(sequence_id, self.sproto._sequence_identifier)
 
     def tearDown(self):
         self.ctr.loseConnection()

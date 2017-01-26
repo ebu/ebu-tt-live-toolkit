@@ -99,9 +99,9 @@ class EBUWebsocketProtocolMixin(object):
         self._consumer = value
 
     def _parse_path(self, full_url):
-        if not isinstance(full_url, unicode):
+        if not isinstance(full_url, six.text_type):
             full_url = six.text_type(full_url)
-        result = twisted_url.URL.fromText(full_url)
+        result = twisted_url.URL.fromText(full_url).asIRI()
         sequence_identifier, action = result.path
         return sequence_identifier, action
 
