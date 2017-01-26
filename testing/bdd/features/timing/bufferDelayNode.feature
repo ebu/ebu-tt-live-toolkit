@@ -20,9 +20,8 @@ Feature: BufferDelayNode
     Then the delta between emission and availability time is greater or equal to <delay_offset>
 
     Examples:
-    | delay_offset |
-    | 00:00:00.500 |
-    | 00:00:01.0   |
-    | 00:01:01.0   |
-    | 01:01:01.0   |
-+
+    | delay_offset   |
+    | 00:00:00.500   |
+    | 00:00:01.0     |
+    | 00:01:01.0     |
+    | 01:01:01.0     |
