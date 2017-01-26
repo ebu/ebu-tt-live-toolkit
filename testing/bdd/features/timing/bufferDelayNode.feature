@@ -15,11 +15,14 @@ Feature: BufferDelayNode
   Scenario: BufferDelayNode delays emission by no less than the delay period
     Given an xml file <xml_file>
     And the document is generated
-    And it has availability time <avail_time>
     And the buffer delay node delays it by <delay_offset>
     And the document is emitted
     Then the delta between emission and availability time is greater or equal to <delay_offset>
 
     Examples:
-    | avail_time  | delay_offset |
-    | 00:00:02.0  | 00:00:01.0   |
+    | delay_offset |
+    | 00:00:00.500 |
+    | 00:00:01.0   |
+    | 00:01:01.0   |
+    | 01:01:01.0   |
++

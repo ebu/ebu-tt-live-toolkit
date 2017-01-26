@@ -94,7 +94,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
             except EndOfData:
                 break
 
-    def emit_document(self, document, **kwargs):
+    def emit_document(self, document, delay=None, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -108,6 +108,9 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
         time = self._reference_clock.get_time()
+        if delay is not None:
+            delay = timedelta(seconds=delay)
+            time = time + delay
         time_base = self._reference_clock.time_base
         new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(time, time_base), filename)
         self._manifest_content += new_manifest_line
