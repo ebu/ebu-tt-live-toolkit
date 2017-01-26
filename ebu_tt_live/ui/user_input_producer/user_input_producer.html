@@ -19,7 +19,7 @@
       </div>
 
       <div id="sequence-slector-div" class="control-section-div">
-         <span class="control-section-header-span">Manage Sequence</span>
+         <span class="control-section-header-span">Manage Sequences</span>
          <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
          <div id="new-sequence-div" style="display: none">
                <label for="new-sequence-identifier-input">Sequence Identifier: </label>
@@ -66,9 +66,9 @@
             </div>
                <span id="new-sequence-notification-span"></span>
          </div>
-         
+
       <div id="websocket-url-div" class="control-section-div">
-         <span class="control-section-header-span">Connection/Sequence</span>
+         <span class="control-section-header-span">Connection</span>
          <label for="websocket-url-input">Websocket URL: </label>
          <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
          <span> / </span><label for="sequence-selector">Sequence: </label>
@@ -340,11 +340,10 @@
             }
 
             function websocketOnMessage(e) {
-               if (e.data == ("SUCCESS")) {
-                  notifySuccess($("#subtitle-form-notification-div"), "Document successfully sent to server", true);
-               } else {
-                  notifyError($("#subtitle-form-notification-div"), e.data, false);
-               }
+               // We are not expecting any messages back - close the connection!
+               socket.websocket.close();
+
+               notifyError($('#subtitle-form-notification-div'), "Unexpected message from server!", false); 
             }
 
 
@@ -413,10 +412,18 @@
                }
             });
 
+            // Encoding function from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+            function fixedEncodeURIComponent (str) {
+              return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
+                return '%' + c.charCodeAt(0).toString(16);
+              });
+            }
+
             // websocket connection
             $("#websocket-connect-button").click(function(){
                if (socket.connected == false) {
-                  var websocket_url = $("#websocket-url-input").val();
+                  var websocket_url = $("#websocket-url-input").val() + "/" + fixedEncodeURIComponent($('#sequence-selector').val()) + "/publish";
+                  //console.log("WebSocket URL: ", websocket_url);
                   socket.websocket = new WebSocket(websocket_url);
                   // onclose hook is not set yet because we need to know if the connection has been established
                   // and to get an error if not. However if onclose is defined it is called instead of onerror.
