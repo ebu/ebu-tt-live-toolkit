@@ -119,8 +119,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R108|3.2.2.1|When discarding a document with a previously received pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber`, the availability time of the document shall NOT be changed due to such a discard.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R109|2.3.4.1|A Delay node SHALL accept a non-negative offset value | |
-|R110|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
-|R111|2.3.4.1|A Buffer Delay node SHALL NOT modify times within the document  | |
+|R110|2.3.4.1|~~A Buffer Delay node SHALL NOT alter the sequence identifier~~TBC (may be superseded by a more general requirement)| |
+|R111|2.3.4.1|~~A Buffer Delay node SHALL NOT modify times within the document~~TBC (may be superseded by a more general requirement)| |
 |R112|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  | |
 |R113|2.3.4.2|A Retiming Delay node SHALL output a sequence with an identifier different to that of the input.  | |
 |R114|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
