@@ -62,10 +62,6 @@ class ConfigurableComponent(RequiredConfig):
         result = node
         for attr_name in attr_names:
             temp_result = getattr(result, attr_name)
-            while temp_result is None:
-                log.warning('Variable should not be None. Trying to wait for deferred.')
-                time.sleep(2)
-                temp_result = getattr(result, attr_name)
             result = temp_result
 
         if not isinstance(result, six.text_type):

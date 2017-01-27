@@ -141,17 +141,6 @@ class TwistedBackend(BackendBase):
         if proxy:
             factory_args.update({'host': proxy.host, 'port': proxy.port})
         for dst in connect:
-            # Some dark magic to allow us to template some variables runtime
-            netloc = self.resolve_runtime_variables(dst.netloc)
-            dst = urlparse.ParseResult(
-                scheme=dst.scheme,
-                netloc=netloc,
-                path=dst.path,
-                params=dst.params,
-                query=dst.query,
-                fragment=dst.fragment
-            )
-
             client_factory = self._websocket.BroadcastClientFactory(
                 url=dst.geturl(),
                 producer=producer,
