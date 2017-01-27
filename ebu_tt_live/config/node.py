@@ -103,12 +103,23 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
     required_config.add_option('discard', default=True)
+    required_config.add_option(
+        'begin_output',
+        doc='The time to begin outputting segments according to the clock',
+        default='immediate'
+    )
 
     _output = None
     _clock = None
 
     def _create_component(self, config=None):
         self._clock = self.config.clock.type(config, self.config.clock)
+
+        begin_output = self.config.begin_output
+        if begin_output == 'immediate':
+            begin_output = self._clock.component.get_time()
+        else:
+            begin_output = bindings.ebuttdt.LimitedClockTimingType(begin_output).timedelta
 
         self.component = processing_node.ReSequencer(
             node_id=self.config.id,
