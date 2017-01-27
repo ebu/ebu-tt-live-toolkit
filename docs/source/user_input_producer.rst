@@ -6,7 +6,7 @@ The user input producer is composed of a user interface written in javascript, t
 Demo
 ----
 
-To test the user input producer, setup the environment as indicated in the ``README.md`` file at the root of the project. Then launch a node that can listen for /publish requests - for example ``ebu-run --admin.conf ebu_tt_live/ui/user_input_producer/user_input_producer_consumer.json`` will run the simplest user-input-consumer script listening for a connection on the local host port 9001. Then open the ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` file in your browser. 
+To test the user input producer, setup the environment as indicated in the ``README.md`` file at the root of the project. Then launch a node that can listen for /publish requests - for example ``ebu-run --admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json`` will run the simplest user-input-consumer script listening for a connection on the local host port 9001. Then open the ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` file in your browser. 
 
 If you have no configured sequences or you need to create a new one, click "Create a new sequence", enter the sequence number, what time base and clock mode you want the documents in the sequence to have and click Validate. Assuming all is well you can now use this sequence.
 
