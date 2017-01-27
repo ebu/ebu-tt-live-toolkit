@@ -7,3 +7,6 @@ Nodes and Carriage Mechanisms
 
    .. toctree::
       filesystem_carriage_mechanism
+      websocket_carriage_mechanism
+      direct_carriage_mechanism
+      
