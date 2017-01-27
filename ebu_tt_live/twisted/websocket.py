@@ -148,6 +148,7 @@ class TwistedWSPushProducer(object):
     _custom_producer = None
     _connections = None
     _callLater = reactor.callLater
+    real_port_number = None
 
     def __init__(self, custom_producer):
         self._custom_producer = custom_producer
@@ -192,6 +193,7 @@ class TwistedWSConsumer(object):
     This class wraps the protocol objects.
     """
     _custom_consumer = None
+    real_port_number = None
 
     def __init__(self, custom_consumer):
         self._custom_consumer = custom_consumer
@@ -293,6 +295,8 @@ class BroadcastFactoryCommon(object):
 
 class BroadcastServerFactory(BroadcastFactoryCommon, WebSocketServerFactory):
 
+    real_port_number = None
+
     def __init__(self, url=None, producer=None, consumer=None):
         super(BroadcastServerFactory, self).__init__(url, protocols=[13])
         self.producer = producer
@@ -327,7 +331,12 @@ class BroadcastServerFactory(BroadcastFactoryCommon, WebSocketServerFactory):
         self._stop_producer()
 
     def listen(self):
-        listenWS(self)
+        listener = listenWS(self)
+        self.real_port_number = listener.getHost().port
+        if self.producer:
+            self.producer.real_port_number = self.real_port_number
+        if self.consumer:
+            self.consumer.real_port_number = self.real_port_number
 
 
 class BroadcastClientProtocol(EBUWebsocketProtocolMixin, WebSocketClientProtocol):
