@@ -111,15 +111,19 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
 
     _output = None
     _clock = None
+    _begin_delay = None
 
     def _create_component(self, config=None):
         self._clock = self.config.clock.type(config, self.config.clock)
 
         begin_output = self.config.begin_output
         if begin_output == 'immediate':
-            begin_output = self._clock.component.get_time()
+            self._begin_delay = 0
         else:
-            begin_output = bindings.ebuttdt.LimitedClockTimingType(begin_output).timedelta
+            self._begin_delay = bindings.ebuttdt.LimitedClockTimingType(
+                begin_output
+            ).timedelta - self._clock.component.get_time()
+            self._begin_delay = self._begin_delay.total_seconds()
 
         self.component = processing_node.ReSequencer(
             node_id=self.config.id,
@@ -140,8 +144,14 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
 
         self.backend.register_component_start(self)
 
+    def _start_looping_call(self):
+        self.backend.call_periodically(
+            self.component.convert_next_segment,
+            interval=self.config.segment_length
+        )
+
     def start(self):
-        self.backend.call_periodically(self.component.convert_next_segment, interval=self.config.segment_length)
+        self.backend.call_once(self._start_looping_call, delay=self._begin_delay)
 
 
 class BufferDelay(ConsumerMixin, ProducerMixin, NodeBase):
