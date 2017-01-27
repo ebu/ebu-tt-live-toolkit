@@ -33,14 +33,6 @@ carriage Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`forwarder_carriage` Module
---------------------------------
-
-.. automodule:: ebu_tt_live.carriage.forwarder_carriage
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`websocket` Module
 -----------------------
 
