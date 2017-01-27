@@ -118,7 +118,7 @@ Node type dependent options for [nodeN] : ::
 Output carriage type dependent options for "carriage": ::
 
    type="direct"
-   └─id : id of the pipe to write to, default "default"
+   └─id : id of the 'pipe' to write to, default "default"
 
    type="filesystem"
    └─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
