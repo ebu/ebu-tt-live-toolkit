@@ -98,6 +98,7 @@ Node type dependent options for [nodeN] : ::
    type="resequencer"
    ├─sequence_identifier : sequence identifier, default "re-sequencer"
    ├─segment_length : duration of each output segment in seconds, default 2
+   ├─begin_output : ["immediate" (default) | {begin time} ] the time at which the first output segment should begin.
    ├─discard : whether to discard content that has been encoded, default True
    └─clock
      └─type : ["local" (default) | "auto" | "clock"]
