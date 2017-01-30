@@ -8,7 +8,7 @@ from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
     DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, ERR_SEQUENCE_FROM_DOCUMENT, \
-    ERR_DOCUMENT_SEQUENCE_SEQID_COLLISION
+    ERR_DOCUMENT_SEQUENCENUMBER_COLLISION
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
     SequenceOverridden, SequenceNumberCollisionError
 from ebu_tt_live.clocks import get_clock_from_document
@@ -519,7 +519,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
 
         if existing_document is not None:
             raise SequenceNumberCollisionError(
-                ERR_DOCUMENT_SEQUENCE_SEQID_COLLISION.format(
+                ERR_DOCUMENT_SEQUENCENUMBER_COLLISION.format(
                     sequence_identifier=self.sequence_identifier,
                     sequence_number=document.sequence_number
                 )
