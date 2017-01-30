@@ -2,6 +2,7 @@
 from .base import AbstractConsumerNode, AbstractProducerNode
 from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTT3Document
 from ebu_tt_live.strings import DOC_RECEIVED
+from ebu_tt_live.errors import SequenceNumberCollisionError
 from datetime import timedelta
 import logging
 
@@ -43,7 +44,14 @@ class SimpleConsumer(AbstractConsumerNode):
             computed_begin_time=document.computed_begin_time,
             computed_end_time=document.computed_end_time
         ))
-        self._sequence.add_document(document)
+        try:
+            self._sequence.add_document(document)
+        except SequenceNumberCollisionError:
+            log.info(
+                'Consumer ignoring duplicate seq number: {}'.format(
+                    document.sequence_number
+                )
+            )
 
     @property
     def reference_clock(self):
