@@ -23,5 +23,11 @@ Feature: Values of documentRevisionNumber
 
     Examples:
     | document_revision_number |
+    |                          |  # This is a tricky case that passes validation because of PyXB https://github.com/pabigot/pyxb/issues/71
+    | -1                       |
     | a                        |
-    |                          |
+    | 12s                      |
+    | 1 3                      |
+    | ,                        |
+    | 1,2                      |
+    | 1.2                      |
