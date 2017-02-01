@@ -7,6 +7,7 @@ import logging
 from ebu_tt_live.errors import StopBranchIteration
 from pyxb.binding.basis import NonElementContent, ElementContent, complexTypeDefinition
 from pyxb.exceptions_ import NotComplexContentError
+from pyxb.binding.datatypes import nonNegativeInteger
 
 
 log = logging.getLogger(__name__)
@@ -155,3 +156,12 @@ class RecursiveOperation(object):
 
     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
         return None
+
+
+class PatchedNonNegativeInteger(nonNegativeInteger):
+
+    def _ConvertArguments_vx(cls, args, kw):
+        log.info('Lefuque: {}; {}'.format(args, kw))
+        pass
+
+#nonNegativeInteger._SetSupersedingClass(PatchedNonNegativeInteger)
