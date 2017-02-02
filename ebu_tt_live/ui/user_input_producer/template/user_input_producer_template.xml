@@ -25,7 +25,8 @@
       <ebuttm:documentMetadata/>
     </tt:metadata>
     <tt:styling>
-      <tt:style xml:id="ID001" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)"  ebutts:linePadding="0.5c" tts:fontFamily="sansSerif" />
+      <tt:style xml:id="styleP" tts:color="rgb(255, 255, 255)"  ebutts:linePadding="0.5c" tts:fontFamily="sansSerif" />
+      <tt:style xml:id="styleSpan" tts:backgroundColor="rgb(0, 0, 0)"/>
     </tt:styling>
     <tt:layout>
       <tt:region xml:id="bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" tts:displayAlign="after" tts:writingMode="lrtb" tts:overflow="visible" />
@@ -42,8 +43,8 @@
     dur="{{ dur }}"
   {% endif %}
   >
-    <tt:div region="bottomRegion" style="ID001">
-      <tt:p xml:id="ID002">{{body_content}}</tt:p>
+    <tt:div region="bottomRegion">
+      <tt:p xml:id="p1" style="styleP"><tt:span style="styleSpan">{{body_content}}</tt:span></tt:p>
     </tt:div>
   </tt:body>
 </tt:tt>
