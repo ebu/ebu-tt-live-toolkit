@@ -116,7 +116,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 | | **Tech3370 Revision 1 (Dec 2016)**| | |
-|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
+|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`ebu_tt_live/documents/test/test_ebutt3sequence.py`|
 |R108|3.2.2.1|When discarding a document with a previously received pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber`, the availability time of the document shall NOT be changed due to such a discard.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R109|2.3.4.1|A Delay node SHALL accept a non-negative offset value | |
 |R110|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
