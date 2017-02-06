@@ -26,12 +26,13 @@ Feature: Discard document with already seen pair of sequence identifier and sequ
     And it has sequence identifier <seq_id>
     And it has sequence number <seq_n>
     When a previous document exists with sequence identifier <prev_seq_id> and sequence number <prev_seq_n> 
-    And the previous document is available between <prev_begin> and <prev_end>
-    Then the previous document is available between <post_begin> and <post_end>
+    And the previous document has availability time <prev_avail>
+    Then the previous document has availability time <post_avail>
 
     Examples:
-    | seq_id | seq_n | prev_seq_id | prev_seq_n | prev_begin   | prev_end     | post_begin   | post_end     |  
-    | n      | 1     | n           | 1          | 00:00:00.000 | 00:00:00.001 | 00:00:00.000 | 00:00:00.001 |  
+    | seq_id | seq_n | prev_seq_id | prev_seq_n | prev_avail   | post_avail   |  
+    | n      | 1     | n           | 1          | 00:00:00.000 | 00:00:00.000 | 
+     
 
   # NOT A CONFORMANCE REQUIREMENT, CAN BE POSTPONED  
   Scenario: Issue warning for non-identical documents
