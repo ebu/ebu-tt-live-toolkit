@@ -162,7 +162,7 @@
 <span id="filesystem-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">filesystem</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.filesystem" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemConsumerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemConsumerImpl</code><span class="sig-paren">(</span><em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ConsumerCarriageImpl</span></code></p>
 <p>This class is responsible for setting the document object from the xml and set its availability time.
 The document is then sent to the node.</p>
@@ -175,7 +175,7 @@ The document is then sent to the node.</p>
 
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemProducerImpl</code><span class="sig-paren">(</span><em>dirpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemProducerImpl</code><span class="sig-paren">(</span><em>dirpath</em>, <em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ProducerCarriageImpl</span></code></p>
 <p>This class implements a carriage mechanism to output produced documents
 to the file system. Its constructor takes a mandatory argument : the path to
@@ -198,7 +198,7 @@ document sequence, the last line of the existing manifest file is parsed to get 
 and the current sequence is set to start from the next sequence number.</p>
 <dl class="method">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document">
-<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document" title="Permalink to this definition">¶</a></dt>
+<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

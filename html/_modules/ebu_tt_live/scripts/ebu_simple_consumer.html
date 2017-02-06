@@ -177,15 +177,15 @@
     <span class="n">consumer_impl</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">fs_reader</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="n">reference_clock</span> <span class="o">=</span> <span class="n">LocalMachineClock</span><span class="p">()</span>
+    <span class="n">reference_clock</span><span class="o">.</span><span class="n">clock_mode</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span>
+
     <span class="k">if</span> <span class="n">manifest_path</span><span class="p">:</span>
         <span class="n">do_tail</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">do_tail</span>
-        <span class="n">consumer_impl</span> <span class="o">=</span> <span class="n">FilesystemConsumerImpl</span><span class="p">()</span>
+        <span class="n">consumer_impl</span> <span class="o">=</span> <span class="n">FilesystemConsumerImpl</span><span class="p">(</span><span class="n">reference_clock</span><span class="p">)</span>
         <span class="n">fs_reader</span> <span class="o">=</span> <span class="n">FilesystemReader</span><span class="p">(</span><span class="n">manifest_path</span><span class="p">,</span> <span class="n">consumer_impl</span><span class="p">,</span> <span class="n">do_tail</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">consumer_impl</span> <span class="o">=</span> <span class="n">TwistedConsumerImpl</span><span class="p">()</span>
-
-    <span class="n">reference_clock</span> <span class="o">=</span> <span class="n">LocalMachineClock</span><span class="p">()</span>
-    <span class="n">reference_clock</span><span class="o">.</span><span class="n">clock_mode</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span>
 
     <span class="n">simple_consumer</span> <span class="o">=</span> <span class="n">SimpleConsumer</span><span class="p">(</span>
         <span class="n">node_id</span><span class="o">=</span><span class="s1">&#39;simple-consumer&#39;</span><span class="p">,</span>

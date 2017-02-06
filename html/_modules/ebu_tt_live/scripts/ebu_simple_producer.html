@@ -191,7 +191,7 @@
     <span class="c1"># This object is used as flexible binding to the carriage mechanism and twisted integrated as dependency injection</span>
     <span class="n">prod_impl</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">do_export</span><span class="p">:</span>
-        <span class="n">prod_impl</span> <span class="o">=</span> <span class="n">FilesystemProducerImpl</span><span class="p">(</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">folder_export</span><span class="p">)</span>
+        <span class="n">prod_impl</span> <span class="o">=</span> <span class="n">FilesystemProducerImpl</span><span class="p">(</span><span class="n">parsed_args</span><span class="o">.</span><span class="n">folder_export</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">prod_impl</span> <span class="o">=</span> <span class="n">TwistedProducerImpl</span><span class="p">()</span>
 
