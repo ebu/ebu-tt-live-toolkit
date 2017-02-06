@@ -44,15 +44,15 @@ def main():
     consumer_impl = None
     fs_reader = None
 
+    reference_clock = LocalMachineClock()
+    reference_clock.clock_mode = 'local'
+
     if manifest_path:
         do_tail = args.do_tail
-        consumer_impl = FilesystemConsumerImpl()
+        consumer_impl = FilesystemConsumerImpl(reference_clock)
         fs_reader = FilesystemReader(manifest_path, consumer_impl, do_tail)
     else:
         consumer_impl = TwistedConsumerImpl()
-
-    reference_clock = LocalMachineClock()
-    reference_clock.clock_mode = 'local'
 
     simple_consumer = SimpleConsumer(
         node_id='simple-consumer',
