@@ -2,6 +2,7 @@ from unittest import TestCase
 from datetime import timedelta, datetime
 from ebu_tt_live.documents import EBUTT3Document
 import os
+from ebu_tt_live.utils import compare_xml
 
 
 class TestEBUTT3Document(TestCase):
@@ -50,8 +51,6 @@ class TestEBUTT3Document(TestCase):
             xml = xml_file.read()
         document1 = EBUTT3Document.create_from_xml(xml)
         document2 = EBUTT3Document.create_from_xml(xml)
-        self.assertTrue(document1.has_same_hash(document2))
+        self.assertTrue(compare_xml(document1.get_xml(), document2.get_xml()))
         document2 = EBUTT3Document.create_from_xml(xml.replace('500', '3500'))
-        self.assertFalse(document1.has_same_hash(document2))
-        document2 = EBUTT3Document.create_from_xml(xml.replace('another', 'y'))
-        self.assertFalse(document1.has_same_hash(document2))
+        self.assertFalse(compare_xml(document2.get_xml(), document1.get_xml()))

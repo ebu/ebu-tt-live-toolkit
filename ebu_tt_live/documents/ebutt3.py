@@ -169,9 +169,6 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
 
     # The sequence the document belongs to
     _sequence = None
-    # The _hash attribute is only in "receiving" context : when a document is
-    # created from a received xml string. It is set in create_from_xml method.
-    _hash = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
@@ -206,7 +203,6 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
                 xml_text=xml
             )
         )
-        instance.document_hash = hash(xml)
         return instance
 
     def _cmp_key(self):
@@ -405,20 +401,6 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
 
     def get_element_by_id(self, elem_id, elem_type=None):
         return self.binding.get_element_by_id(elem_id=elem_id, elem_type=elem_type)
-
-    @property
-    def document_hash(self):
-        return self._hash
-
-    @document_hash.setter
-    def document_hash(self, doc_hash):
-        self._hash = doc_hash
-
-    def has_same_hash(self, other_document):
-        # It should never be raised, but it is a safety test
-        if not self.document_hash or not other_document.document_hash:
-            raise UnknownHashError(ERR_UNKNOWN_HASH)
-        return self.document_hash == other_document.document_hash
 
     def extract_segment(self, begin=None, end=None, deconflict_ids=False):
         """
