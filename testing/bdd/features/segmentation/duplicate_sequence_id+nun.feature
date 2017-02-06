@@ -50,10 +50,10 @@ Feature: Discard document with already seen pair of sequence identifier and sequ
     When a document arrives 
     And it has sequence identifier <seq_id_2> 
     And it has sequence number <seq_n_2> 
-    Then the previous document has availability time <avail_time_2>
+    Then the first document has availability time <avail_time_2>
 
     Examples:
-    | seq_id_1 | seq_n_1 | avail_time_1 | seq_id_2 | seq_n_2      | avail_time_2 |  
-    | n        | 1       | n            | 1        | 00:00:00.000 | 00:00:00.000 |  
-    | n        | 1       | n            | 1        | 00:00:01     | 00:00:01     |  
+    | seq_id_1 | seq_n_1 | avail_time_1 | seq_id_2 | seq_n_2 | avail_time_2 |  
+    | n        | 1       | 00:00:00.000 | n        | 1       | 00:00:00.000 |  
+    | n        | 0       | 00:00:01.000 | n        | 0       | 00:00:01     |  
   
