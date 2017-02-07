@@ -12,8 +12,8 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     _expects = six.string_types
     _provides = EBUTT3Document
 
-    def convert_data(self, data, **kwargs):
-        return EBUTT3Document.create_from_xml(data), kwargs
+    def convert_data(self, data, availability_time=None, **kwargs):
+        return EBUTT3Document.create_from_xml(data, availability_time=availability_time), kwargs
 
 
 class XMLtoEBUTTDAdapter(IDocumentDataAdapter):

@@ -1,11 +1,10 @@
 from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 from ebu_tt_live.documents import EBUTT3Document
-from ebu_tt_live.bindings import CreateFromDocument
-from ebu_tt_live.errors import EndOfData, XMLParsingFailed
-from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.utils import RotatingFileBuffer
 from datetime import timedelta
 import logging
+import six
 import os
 import time
 
@@ -120,19 +119,14 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
     The document is then sent to the node.
     """
 
-    def on_new_data(self, data, **kwargs):
-        document = None
-        availability_time_str, xml_content = data
-        try:
-            document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(xml_content))
-        except:
-            log.exception(ERR_DECODING_XML_FAILED)
-            raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
+    _provides = six.text_type
 
-        if document:
+    def on_new_data(self, data, **kwargs):
+        availability_time_str, xml_content = data
+
+        if xml_content:
             availability_time = timestr_manifest_to_timedelta(availability_time_str, self._node.reference_clock.time_base)
-            document.availability_time = availability_time
-            self._node.process_document(document)
+            self._node.process_document(xml_content, availability_time=availability_time)
 
 
 class FilesystemReader(object):

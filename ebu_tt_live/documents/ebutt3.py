@@ -169,7 +169,8 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
     # The sequence the document belongs to
     _sequence = None
 
-    def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
+    def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None,
+                 availability_time=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
             clock_mode = 'local'
         self._ebutt3_content = bindings.tt(
@@ -185,22 +186,27 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
             ),
             body=BIND()
         )
+        if availability_time is not None:
+            self._availability_time = availability_time
 
         self.validate()
 
     @classmethod
-    def create_from_raw_binding(cls, binding):
+    def create_from_raw_binding(cls, binding, availability_time=None):
         instance = cls.__new__(cls)
         instance._ebutt3_content = binding
+        if availability_time is not None:
+            instance._availability_time = availability_time
         instance.validate()
         return instance
 
     @classmethod
-    def create_from_xml(cls, xml):
+    def create_from_xml(cls, xml, availability_time=None):
         instance = cls.create_from_raw_binding(
             binding=bindings.CreateFromDocument(
                 xml_text=xml
-            )
+            ),
+            availability_time=availability_time
         )
         return instance
 
