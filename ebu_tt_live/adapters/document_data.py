@@ -50,7 +50,8 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
         kwargs.update({
             'sequence_identifier': data.sequence_identifier,
             'sequence_number': data.sequence_number,
-            'availability_time': data.availability_time
+            'availability_time': data.availability_time,
+            'time_base': data.time_base
         })
         instance = data.get_xml()
         return instance, kwargs

@@ -8,6 +8,7 @@ from datetime import timedelta
 import os
 import tempfile
 import shutil
+import six
 
 
 class TestFilesystemProducerImpl(TestCase):
@@ -23,45 +24,31 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         self.assertIsInstance(fs_carriage, FilesystemProducerImpl)
 
-    @skip
-    @patch('ebu_tt_live.node.SimpleProducer')
-    def test_resume_producing_no_existing_manifest(self, node):
-        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
-        node.process_document = MagicMock(side_effect=EndOfData())
-        node.document_sequence.sequence_identifier = "testSeq"
-        fs_carriage.register_node(node)
-        fs_carriage.resume_producing()
-        assert node.process_document.called
+    def test_resume_producing_no_existing_manifest(self):
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
 
-    @skip
-    @patch('ebu_tt_live.node.SimpleProducer')
-    def test_resume_producing_existing_manifest(self, node):
-        manifest_path = os.path.join(self.test_dir_path, "manifest_testSeq.txt")
-        with open(manifest_path, 'w') as f:
-            f.write("00:00:00.123678,testSeq_177.xml")
-        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
-        node.process_document = MagicMock(side_effect=EndOfData())
-        node.document_sequence.sequence_identifier = "testSeq"
-        fs_carriage.register_node(node)
-        fs_carriage.resume_producing()
-        assert node.process_document.called
-        self.assertEqual(node.document_sequence.last_sequence_number, 177)
+        def side_effect():
+            raise EndOfData()
 
-    @skip
-    def test_emit_document(self):
-        document = MagicMock(sequence_identifier="testSeq", sequence_number=1)
-        document.get_xml = MagicMock(return_value="test")
-        node = MagicMock()
-        test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
-        node.reference_clock.get_time.return_value = test_time
-        node.process_document = MagicMock(side_effect=EndOfData())
-        node.document_sequence.sequence_identifier = "testSeq"
-        node.reference_clock.time_base = "clock"
-        node.provides.return_value = EBUTT3Document
+        node.resume_producing.side_effect = side_effect
+
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         fs_carriage.resume_producing()
-        fs_carriage.emit_data(document)
+        node.resume_producing.assert_called_once()
+
+    def test_emit_document(self):
+        data = 'test'
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
+        test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
+        node.resume_producing.side_effect = EndOfData()
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        fs_carriage.register_producer_node(node)
+        fs_carriage.resume_producing()
+        fs_carriage.emit_data(data, availability_time=test_time, sequence_identifier='testSeq',
+                              sequence_number=1, time_base='clock')
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
         manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
@@ -73,30 +60,17 @@ class TestFilesystemConsumerImpl(TestCase):
     def setUp(self):
         self.test_data_dir_path = os.path.join(os.path.dirname(__file__), 'test_data')
 
-    @skip
-    @patch('ebu_tt_live.node.SimpleConsumer')
-    def test_on_new_data(self, node):
-        node.process_document = MagicMock(return_value=True)
-        node.reference_clock.time_base = "clock"
-        test_xml = None
+    def test_on_new_data(self):
+        node = MagicMock(spec=IConsumerNode)
+        node.expects.return_value = six.text_type
         test_xml_file_path = os.path.join(self.test_data_dir_path, 'testSeq_1.xml')
         with open(test_xml_file_path, 'r') as test_xml_file:
             test_xml = test_xml_file.read()
         data = ["18:42:42.42", test_xml]
         fs_consumer_impl = FilesystemConsumerImpl()
-        fs_consumer_impl.register_node(node)
+        fs_consumer_impl.register_consumer_node(node)
         fs_consumer_impl.on_new_data(data)
-        assert node.process_document.called
-
-    @skip
-    @patch('ebu_tt_live.node.SimpleConsumer')
-    def test_on_new_data_raise_XMLParsingFailed(self, node):
-        node.process_document = MagicMock(return_value=None)
-        data = ["18:42:42.42", "test"]
-        fs_consumer_impl = FilesystemConsumerImpl()
-        fs_consumer_impl.register_node(node)
-        self.assertRaises(XMLParsingFailed, lambda: fs_consumer_impl.on_new_data(data))
-        assert not node.process_document.called
+        node.process_document.assert_called_once()
 
 
 class TestFilesystemReader(TestCase):

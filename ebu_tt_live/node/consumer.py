@@ -66,8 +66,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
     _provides = EBUTT3Document
 
     def __init__(self, node_id, reference_clock, segment_length, discard, sequence_identifier,
-                 segmentation_starts=None, consumer_carriage=None,
-                 producer_carriage=None, **kwargs):
+                 consumer_carriage=None, producer_carriage=None, **kwargs):
         super(ReSequencer, self).__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage,
@@ -81,8 +80,6 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
         self._segment_counter = 1
         self._sequence_identifier = sequence_identifier
         self._discard = discard
-        if segmentation_starts is not None:
-            self._last_segment_end = segmentation_starts
 
     @property
     def last_segment_end(self):
