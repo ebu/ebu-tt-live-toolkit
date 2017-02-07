@@ -11,3 +11,14 @@ Feature: Passive nodes shall not modify documents in any way
     Examples:
     | xml_file              |
     | complete_document.xml |
+
+  Scenario: BufferDelay node does not modify documents
+    Given an xml file <xml_file>
+    And a buffer delay node
+    When it delays the document
+    Then the delayed document is identical to the received one
+
+    Examples:
+    | xml_file              |
+    | complete_document.xml |
+
