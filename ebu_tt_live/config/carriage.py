@@ -86,9 +86,11 @@ class FileOutputCommon(ConfigurableComponent):
 
 class FilesystemOutput(FileOutputCommon):
 
+    required_config = Namespace()
+
     def __init__(self, config, local_config):
         super(FilesystemOutput, self).__init__(config, local_config)
-        self.component = filesystem.FilesystemProducerImpl(dirpath=config.folder)
+        self.component = filesystem.FilesystemProducerImpl(dirpath=self.config.folder)
 
 
 class SimpleFilesystemOutput(FileOutputCommon):
