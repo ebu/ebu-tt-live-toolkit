@@ -1,4 +1,5 @@
 
+import six
 from .base import AbstractCombinedNode
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
@@ -44,19 +45,17 @@ class RetimingDelayNode(AbstractCombinedNode):
 class BufferDelayNode(AbstractCombinedNode):
 
     _reference_clock = None
-    _document_sequence = None
     _fixed_delay = None
-    _expects = EBUTT3Document
-    _provides = EBUTT3Document
+    _expects = six.text_type
+    _provides = six.text_type
 
-    def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
+    def __init__(self, node_id, producer_carriage, reference_clock, fixed_delay):
         super(BufferDelayNode, self).__init__(
             node_id=node_id,
-            producer_carriage=carriage_impl
+            producer_carriage=producer_carriage
         )
         self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
-        self._document_sequence = document_sequence
 
     def process_document(self, document, **kwargs):
 
