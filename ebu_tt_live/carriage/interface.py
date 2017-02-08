@@ -14,7 +14,7 @@ class ICarriageMechanism(object):
 
 class IProducerCarriage(ICarriageMechanism):
     """
-    Node that emits documents to an output interface, usually some network socket.
+    Carriage mechanism interface for producer nodes.
     """
 
     _expects = AbstractStaticMember(validate_types_only)
@@ -35,8 +35,8 @@ class IProducerCarriage(ICarriageMechanism):
         """
         Register the producer node in the carriage mechanism
 
-        :param node:
-        :return:
+        :param node: The node to connect to.
+
         """
 
     @abstractproperty
@@ -68,7 +68,7 @@ class IProducerCarriage(ICarriageMechanism):
 
 class IConsumerCarriage(ICarriageMechanism):
     """
-    Node that receives documents and processes them.
+    Carriage mechanism interface for consumer nodes.
     """
 
     _provides = AbstractStaticMember(validate_types_only)
@@ -107,5 +107,5 @@ class IConsumerCarriage(ICarriageMechanism):
         Implement protocol specific preprocessing here.
 
         :param kwargs: Extra parameters to send down
-        :return:
+
         """
