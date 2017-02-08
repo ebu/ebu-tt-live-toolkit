@@ -123,7 +123,7 @@ class TestXMLtoEBUTTDAdapter(TestCase):
 
 
 class TestEBUTT3toXMLAdapter(TestXMLtoEBUTT3Adapter):
-    _output_type = six.string_types
+    _output_type = six.text_type
     _adapter_class = document_data.EBUTT3toXMLAdapter
     _expected_keys = [
         'sequence_identifier',

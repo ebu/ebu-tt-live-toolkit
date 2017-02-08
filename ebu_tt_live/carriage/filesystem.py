@@ -64,12 +64,14 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
 
     _manifest_path = None
     _dirpath = None
+    _reference_clock = None
     _manifest_content = None
     _manifest_time_format = None
     _expects = EBUTT3Document
 
-    def __init__(self, dirpath):
+    def __init__(self, dirpath, reference_clock):
         self._dirpath = dirpath
+        self._reference_clock = reference_clock
         if not os.path.exists(self._dirpath):
             os.makedirs(self._dirpath)
         self._manifest_content = ''
@@ -93,7 +95,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
             except EndOfData:
                 break
 
-    def emit_data(self, data, **kwargs):
+    def emit_data(self, data, delay=None, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + data.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -107,7 +109,9 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
         time_base = data.time_base
-        availability_time = data.availability_time
+        availability_time = data.availability_time or timedelta()
+        if delay is not None:
+            availability_time = availability_time + timedelta(seconds=delay)
         new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
@@ -120,6 +124,11 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
     The document is then sent to the node.
     """
 
+    _reference_clock = None
+
+    def __init__(self, reference_clock):
+        self._reference_clock = reference_clock
+
     def on_new_data(self, data, **kwargs):
         document = None
         availability_time_str, xml_content = data
@@ -130,7 +139,7 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
             raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
 
         if document:
-            availability_time = timestr_manifest_to_timedelta(availability_time_str, self._node.reference_clock.time_base)
+            availability_time = timestr_manifest_to_timedelta(availability_time_str, self._reference_clock.time_base)
             document.availability_time = availability_time
             self._node.process_document(document)
 

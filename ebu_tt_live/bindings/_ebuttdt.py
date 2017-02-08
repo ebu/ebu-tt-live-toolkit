@@ -216,7 +216,7 @@ class TwoDimSizingMixin(object):
     def __eq__(self, other):
         if type(self) == type(other) and self.horizontal == other.horizontal and self.vertical == other.vertical:
             return True
-        elif isinstance(other, six.string_types):
+        elif isinstance(other, six.text_type):
             return str(self) == str(other)
         else:
             return NotImplemented
@@ -574,7 +574,7 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
             else:
                 return self.vertical == other.vertical and \
                        self.horizontal == other.horizontal
-        elif isinstance(other, six.string_types):
+        elif isinstance(other, six.text_type):
             return str(self) == str(other)
         else:
             return NotImplemented
