@@ -20,7 +20,11 @@ IConsumerCarriage - [Websocket]
 [Websocket] -up-> INode : process_document
 [Synthesizer Nodes] -> IProducerCarriage : emit_data
 
-note "Carriage mechanisms may\nor may not work\nboth directions." as carrN
+note bottom of [Websocket]
+  Carriage mechanisms may
+  or may not work
+  both directions.
+end note
 
 }
 

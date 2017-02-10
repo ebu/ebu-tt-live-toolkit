@@ -47,7 +47,7 @@ extensions = [
 
 # Tell Sphinx where plantUML is:
 plantuml = 'java -jar ../contrib/plantuml.jar'
-plantuml_output_format = 'svg'
+plantuml_output_format = 'png'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
