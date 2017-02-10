@@ -13,12 +13,10 @@ IConsumerNode -- INode
 }
 
 package "Carriage Mechanisms" {
-[Filesystem] ..> FileStorage : use
 [Producer Nodes] -> IProducerCarriage : emit_data
 [Websocket] - IProducerCarriage
 [Websocket] ..> HTTP :use
 IConsumerCarriage - [Websocket]
-[Direct (in memory)] ..> Memory : use
 [Websocket] -up-> INode : process_document
 [Synthesizer Nodes] -> IProducerCarriage : emit_data
 
