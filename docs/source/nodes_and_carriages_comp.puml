@@ -40,7 +40,5 @@ end note
 note top of [Consumer Nodes]
   Consumers consume only
 end note
-
-
-
 @enduml
+

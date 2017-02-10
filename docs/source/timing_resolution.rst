@@ -17,7 +17,7 @@ begin and end events on an absolute timeline. For this we hook into the Depth Fi
 uses to process element validation. It is very important to notice that the begin and end times are possible to be
 calculated either as the algorithm cascades down or on its way up in case information derived from children is required.
 
-.. graphviz:: dfs.dot
+.. graphviz:: dot/dfs.dot
 
 Sequence Timings
 ----------------

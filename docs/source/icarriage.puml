@@ -1,0 +1,95 @@
+@startuml
+
+interface ICarriageMechanism
+interface IConsumerCarriage {
+  .. properties ..
+  +{abstract} consumer_node
+  .. classmethods ..
+  +provides()
+  .. methods ..
+  +{abstract} on_new_data()
+  +{abstract} register_consumer_node()
+}
+interface IProducerCarriage {
+  .. properties ..
+  +{abstract} producer_node
+  .. classmethods ..
+  +expects()
+  .. methods ..
+  +{abstract} emit_data()
+  +{abstract} register_producer_node()
+}
+
+abstract AbstractConsumerCarriage {
+  .. properties ..
+  +consumer_node
+  .. methods ..
+  +register_consumer_node()
+}
+abstract AbstractProducerCarriage {
+  .. properties ..
+  +producer_node
+  .. methods ..
+  +register_producer_node()
+}
+abstract AbstractCombinedCarriage
+
+class WebsocketConsumerCarriage {
+  -_provides : String
+  .. methods ..
+  +on_new_data()
+}
+class WebsocketProducerCarriage {
+  -_expects : String
+  .. methods ..
+  +emit_data()
+}
+class FilesystemConsumerImpl {
+  -_provides : String
+  .. methods ..
+  +on_new_data()
+}
+class FilesystemProducerImpl {
+  -_expects : String
+  .. methods ..
+  +emit_data()
+}
+class SimpleFolderExport {
+  -_expects : String
+  .. methods ..
+  +emit_data()
+}
+class RotatingFolderExport{
+  .. methods ..
+  +emit_data()
+}
+
+class DirectCarriageImpl {
+  -_expects : Any
+  -_provides : Any
+  .. methods ..
+  +emit_data()
+  +on_new_data()
+}
+
+
+ICarriageMechanism <|-- IProducerCarriage
+ICarriageMechanism <|-- IConsumerCarriage
+
+IProducerCarriage <|-- AbstractProducerCarriage
+IConsumerCarriage <|-- AbstractConsumerCarriage
+AbstractProducerCarriage <|-- AbstractCombinedCarriage
+AbstractConsumerCarriage <|-- AbstractCombinedCarriage
+
+AbstractConsumerCarriage <|-- WebsocketConsumerCarriage
+AbstractProducerCarriage <|-- WebsocketProducerCarriage
+
+AbstractConsumerCarriage <|-- FilesystemConsumerImpl
+AbstractProducerCarriage <|-- FilesystemProducerImpl
+
+AbstractCombinedCarriage <|-- DirectCarriageImpl
+
+AbstractProducerCarriage <|-- SimpleFolderExport
+SimpleFolderExport <|-- RotatingFolderExport
+
+@enduml
