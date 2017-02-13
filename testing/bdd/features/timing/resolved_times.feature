@@ -5,7 +5,8 @@ Feature: Resolved times computation in sequence
   | xml_file                             | sequence_identifier | time_base | doc1_avail_time | doc1_begin  | doc1_end   | doc1_dur | doc2_avail_time | doc2_begin | doc2_end | doc2_dur  |
   | computed_resolved_time_semantics.xml | testSequence1       | clock     | 00:00:01.0      | 00:00:10.0  | 00:00:20.0 |          | 00:00:05.0      | 00:00:30.0 |          | 10s       |
 
-  # SPEC-CONFORMANCE: R16 R17
+  # SPEC-CONFORMANCE: R15 R16 R17
+  # Also validates that resolved times don't overlap, which tests SPEC-CONFORMANCE R1 R13 R14
   Scenario: Resolved times in sequence
     Given a sequence <sequence_identifier> with timeBase <time_base>
     And an xml file <xml_file>
@@ -46,7 +47,7 @@ Feature: Resolved times computation in sequence
     | 00:00:20.0      | 00:00:35.0  | 00:01:00.0  |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:35.0 | 00:00:35.0   | 00:01:00.0 |
 
 
-  # SPEC-CONFORMANCE: R16 R17
+  # SPEC-CONFORMANCE: R15 R16 R17
   Scenario: Resolved times in sequence, document 2 skipped
     Given a sequence <sequence_identifier> with timeBase <time_base>
     And an xml file <xml_file>
@@ -85,7 +86,7 @@ Feature: Resolved times computation in sequence
     | 00:00:15.0      | 00:00:16.0  | 00:00:35.0  |          | 00:00:10.0   | 00:00:16.0 | 00:00:16.0   | 00:00:35.0 |
 
 
-  # SPEC-CONFORMANCE: R16 R17
+  # SPEC-CONFORMANCE: R15 R16 R17
   Scenario: Resolved times in sequence, document 1 and 2 skipped
     Given a sequence <sequence_identifier> with timeBase <time_base>
     And an xml file <xml_file>
