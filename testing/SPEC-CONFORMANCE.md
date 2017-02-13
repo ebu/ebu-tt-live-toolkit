@@ -37,7 +37,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R28|2.5.1|If all the content in a document has\_not a `facet` then the summary shall be `"all\_has_not"`.|`bdd/features/validation/facet.feature` `(In)valid facet summary` |
 |R29|2.5.1|If there is a mix of has and has\_not and unknown or if some of the content does not have the `facet` then the summary shall be `"mixed"`.|`bdd/features/validation/facet.feature` `(In)valid facet summary` |
 |R30|2.5.1|If none of the document's content has the `facet` or all of the document's content has the `facet` described as unknown then the summary shall be `"unspecified"`.| `bdd/features/validation/facet.feature` `(In)valid facet summary`|
-|R31|2.6|If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R31|2.6|~~If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.~~ Merged with `ebuttm:appliedProcessing`|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R32|3.2.2.1|`ttp:timeBase` Cardinality 1..1|`bdd/features/validation/timeBase_attribute_mandatory.feature` `(In)valid ttp:timeBase`|
 |R33|3.2.2.1|The `ttp:timeBase` element is as defined in [EBUTT1] with the addition that all time expressions of `dur` attributes shall denote a relative coordinate on the same timeline as the `begin` and `end` attributes.| |
 |R34|3.2.2.1|`ebuttp:sequenceIdentifier` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
@@ -48,8 +48,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R39|3.2.2.2|Order of metadata elements (if present) in `ebuttm:documentMetadata` is: `ebuttm:originalSourceServiceIdentifier`, `ebuttm:intendedDestinationServiceIdentifier`, `ebuttm:documentFacet`, `ebuttm:trace`. |`bdd/features/validation/documentMetadata_elements_order.feature` `(In)valid documentMetadata elements order`|
 |R40|3.2.2.2|`ebuttm:documentFacet` : Each distinctly identified `facet` that is summarised shall have a separate `documentFacet` element.| |
 |R41|3.2.2.2|Documents shall NOT contain more than one `documentFacet` element referring to the same term, where the term is identified by the combination of the element contents and the value of the link attribute.| |
-|R42|3.2.2.2.1| `ebuttm:trace` `action` attribute Cardinality 1..1 |`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
-|R43|3.2.2.2.1| `ebuttm:trace` `generatedBy` attribute Cardinality 1..1 |`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R42|3.2.2.2.1|~~ `ebuttm:trace` `action` attribute Cardinality 1..1 ~~ Merged with `ebuttm:appliedProcessing`|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R43|3.2.2.2.1| ~~`ebuttm:trace` `generatedBy` attribute Cardinality 1..1~~ Merged with `ebuttm:appliedProcessing`|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R44|3.2.2.3| A document that contains a `tt:body` element with no content shall be treated as being active as defined by the semantics described in § 2.3.1, and shall cause no content to be presented while it is active.| |
 |R45|3.2.2.3|~~`body` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`.~~ SMPTE Deprecated.|`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in body` |
 |R46|3.2.2.3|`body` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
