@@ -6,6 +6,19 @@ Nodes and Carriage Mechanisms
    .. uml:: nodes_and_carriages_comp.puml
       :caption: Processing node and Carriage mechanism components
 
+Processing Nodes
+----------------
+
+   The processing nodes are the key components of this package and facilitate several different use-cases laid out
+   in the Node conformance section of EBU-3370. A node can be a producer or a consumer or both. This requirement
+   is fulfilled by the class structure depicted below.
+
+   .. uml:: inode.puml
+      :caption: Processing node classes
+
+Carriage mechanisms
+-------------------
+
    The carriage mechanisms are divided into 2 distinct kinds: producer and consumer carriages:
 
    Producers serve the purpose of sending/serialising a document once a processing node
@@ -20,11 +33,7 @@ Nodes and Carriage Mechanisms
    .. uml:: icarriage.puml
       :caption: Carriage mechanism classes
 
-   .. uml:: inode.puml
-      :caption: Processing node classes
-
    .. toctree::
       filesystem_carriage_mechanism
       websocket_carriage_mechanism
       direct_carriage_mechanism
-      
