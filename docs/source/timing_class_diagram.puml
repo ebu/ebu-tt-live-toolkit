@@ -1,0 +1,51 @@
+@startuml
+
+class tt_type {
+  #_semantic_before_validation()
+  #_semantic_after_validation()
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class body_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class div_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class p_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class span_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+
+class SemanticValidationMixin {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class SemanticDocumentMixin {
+  #_semantic_before_validation()
+  #_semantic_after_validation()
+  +validateBinding()
+}
+class TimingValidationMixin {
+  #_semantic_preprocess_timing()
+  #_semantic_postprocess_timing()
+}
+
+SemanticDocumentMixin -|> SemanticValidationMixin
+SemanticDocumentMixin <|-- tt_type
+SemanticValidationMixin <|-- body_type
+SemanticValidationMixin <|-- div_type
+SemanticValidationMixin <|-- p_type
+SemanticValidationMixin <|-- span_type
+TimingValidationMixin <|-- body_type
+TimingValidationMixin <|-- div_type
+TimingValidationMixin <|-- p_type
+TimingValidationMixin <|-- span_type
+
+@enduml

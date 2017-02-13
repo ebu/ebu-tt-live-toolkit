@@ -19,6 +19,13 @@ calculated either as the algorithm cascades down or on its way up in case inform
 
 .. graphviz:: dot/dfs.dot
 
+The classes involved in the timing resolution are in the diagram below. For every type of element in the XSD there is
+a python binding class defined. For the sake of simplicity the diagram only contains a fraction of them to provide
+enough context but omits the parts that are irrelevant to the timing resolution logic.
+
+.. uml:: timing_class_diagram.puml
+   :caption: Classes involved in timing resolution (Simplified)
+
 Sequence Timings
 ----------------
 
