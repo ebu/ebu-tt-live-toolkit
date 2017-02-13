@@ -119,8 +119,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R108|3.2.2.1|When discarding a document with a previously received pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber`, the availability time of the document shall NOT be changed due to such a discard.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R109|2.3.4.1|A Delay node SHALL accept a non-negative offset value | |
-|R110|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
-|R111|2.3.4.1|A Buffer Delay node SHALL NOT modify times within the document  | |
+|R110|2.3.4.1|~~A Buffer Delay node SHALL NOT alter the sequence identifier~~| Implicit in R119|
+|R111|2.3.4.1|~~A Buffer Delay node SHALL NOT modify times within the document~~|Implicit in R119|
 |R112|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  | |
 |R113|2.3.4.2|A Retiming Delay node SHALL output a sequence with an identifier different to that of the input.  | |
 |R114|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
@@ -128,3 +128,4 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R116|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
 |R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
 |R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.||
+|R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`|
