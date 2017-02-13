@@ -36,8 +36,23 @@ class TimingValidationMixin {
   #_semantic_preprocess_timing()
   #_semantic_postprocess_timing()
 }
+class RecursiveOperation {
+  #{abstract}_process_element()
+  #{abstract}_process_non_element()
+  #_before_element()
+  #_after_element()
+  +proceed()
+}
+class SemanticValidator {
+  #_process_element()
+  #_process_non_element()
+  #_before_element()
+  #_after_element()
+}
 
-SemanticDocumentMixin -|> SemanticValidationMixin
+RecursiveOperation <|-- SemanticValidator
+SemanticValidationMixin --> SemanticValidator
+SemanticDocumentMixin <|-- SemanticValidationMixin
 SemanticDocumentMixin <|-- tt_type
 SemanticValidationMixin <|-- body_type
 SemanticValidationMixin <|-- div_type

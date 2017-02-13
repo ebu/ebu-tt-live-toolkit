@@ -36,7 +36,34 @@ the children of the element in question. Types that subclass these mixins should
 their own customized hook behaviour. In the case of timing resolution another mixin,
 :py:class:`ebu_tt_live.bindings.validation.base.TimingValidationMixin` is involved, which encapsulates the functions
 used to process `begin` and `end` attributes. In order for a particular element type to gain timing resolution
-capability it needs to subclass TimingValidationMixin and SemanticValidationMixin.
+capability it needs to subclass TimingValidationMixin and SemanticValidationMixin and it must have begin and end
+attributes capability. Then it should implement `_semantic_before_traversal` and `_semantic_after_traversal` functions
+and call the :py:class:`ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing`
+in the before traversal and
+:py:class:`ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing` in the after
+traversal hook. The following code sample is from the implementation of the div_type class.
+
+.. code-block:: python
+
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_register_id(dataset=dataset)
+        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_set_region(dataset=dataset, region_type=region_type)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
+        )
+        self._semantic_push_styles(dataset=dataset)
+
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_unset_region(dataset=dataset)
+
+In the following sequence diagram we traverse the document structure depicted in the first figure of this page and
+process the timings.
+
+.. uml:: timing_sequence_diagram.puml
+   :caption: Timing validation of document tree (head element omitted as it is irrelevant to timing)
 
 Sequence Timings
 ----------------
