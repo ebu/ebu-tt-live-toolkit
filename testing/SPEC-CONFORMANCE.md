@@ -18,7 +18,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
 |R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. ~~(Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)~~ SMPTE Deprecated.|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
-|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s)| |
+|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s). See R118 for a definition of identity.| |
 |R13|2.2 |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.| |
 |R14|2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.| |
 |R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.| |
@@ -27,7 +27,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R18|2.3.1.3|When no document is active a presentation processor shall NOT render any content.| |
 |R19|2.3.4|~~A Delay node is a processing node. Therefore the output sequence shall have a different sequence identifier from the input sequence.~~| Deprecated. See retiming delay node. |
 |R20|2.3.4|~~A Delay node may emit implicitly timed documents within a sequence. In this case the Delay node shall delay emission of the stream by a period equivalent to the adjustment value.~~|Deprecated. See retiming delay node. |
-|R21|2.3.4|A Delay node shall NOT emit an output sequence with reordered subtitles.| |
+|R21|2.3.4|~~A Delay node shall NOT emit an output sequence with reordered subtitles.~~|Replaced by a 'should' for a retiming delay node|
 |R22|2.3.4|A Delay node shall NOT update the value of `ebuttm:authoringDelay`.| |
 |R23|2.4|The Handover Manager node shall use a 'who claimed control most recently' algorithm for selecting the sequence, based on a control token parameter within each document.| |
 |R24|2.4.1|All documents within a sequence that contain the element `ebuttp:authorsGroupIdentifier` shall have the same `ebuttp:authorsGroupIdentifier`.| |
