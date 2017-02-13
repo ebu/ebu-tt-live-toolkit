@@ -26,6 +26,18 @@ enough context but omits the parts that are irrelevant to the timing resolution 
 .. uml:: timing_class_diagram.puml
    :caption: Classes involved in timing resolution (Simplified)
 
+The functions :py:func:`ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation` and
+:py:func:`ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_after_validation` are hooks that run
+before and after the Depth First Search traversal of the content tree.
+The :py:func:`ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal` and
+:py:func:`ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal` are element hooks,
+which are called before the traversal logic gets to the element and after the traversal logic has finished processing
+the children of the element in question. Types that subclass these mixins should override these functions to provide
+their own customized hook behaviour. In the case of timing resolution another mixin,
+:py:class:`ebu_tt_live.bindings.validation.base.TimingValidationMixin` is involved, which encapsulates the functions
+used to process `begin` and `end` attributes. In order for a particular element type to gain timing resolution
+capability it needs to subclass TimingValidationMixin and SemanticValidationMixin.
+
 Sequence Timings
 ----------------
 
