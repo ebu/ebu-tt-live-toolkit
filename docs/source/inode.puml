@@ -1,0 +1,118 @@
+@startuml
+
+interface INode {
+  ..methods..
+  +{abstract} process_document()
+}
+interface IConsumerNode {
+  ..properties..
+  +{abstract} consumer_carriage
+  ..classmethods..
+  +expects()
+  ..methods..
+  +{abstract}register_consumer_carriage()
+}
+interface IProducerNode {
+  ..properties..
+  +{abstract} producer_carriage
+  ..classmethods..
+  +provides()
+  ..methods..
+  +{abstract}register_producer_carriage()
+}
+
+abstract class __AbstractNode {
+  -_node_id : String
+  ..properties..
+  +node_id
+  ..methods..
+  __repr__()
+}
+abstract class AbstractConsumerNode {
+  -_consumer_carriage
+  ..properties..
+  +consumer_carriage
+  ..methods..
+  +register_consumer_carriage()
+}
+abstract class AbstractProducerNode {
+  -_producer_carriage
+  ..properties..
+  +producer_carriage
+  ..methods..
+  +register_producer_carriage()
+}
+abstract class AbstractCombinedNode {
+}
+
+class SimpleProducer {
+  -_input_blocks : List<String>
+  -_document_sequence : EBUTT3DocumentSequence
+  -_reference_clock : Clock
+  ..properties..
+  +document_sequence
+  +reference_clock
+  ..methods..
+  +process_document()
+}
+
+class SimpleConsumer {
+  -_reference_clock : Clock
+  -_sequence : EBUTT3DocumentSequence
+  ..properties..
+  +reference_clock
+  ..methods..
+  +process_document()
+}
+
+class BufferDelayNode {
+  ..methods..
+  +process_document()
+}
+
+class RetimingDelayNode{
+  ..methods..
+  +process_document()
+}
+
+class EBUTTDEncoder {
+  ..methods..
+  +process_document()
+}
+
+class DistributingNode {
+  ..methods..
+  +process_document()
+}
+
+class ReSequencer {
+  ..methods..
+  +process_document()
+  +get_segment()
+  +get_next_segment()
+}
+
+class HandoverNode {
+  ..methods..
+  +process_document()
+}
+
+INode <|-- __AbstractNode
+__AbstractNode <|-- AbstractConsumerNode
+IConsumerNode <|-- AbstractConsumerNode
+__AbstractNode <|-- AbstractProducerNode
+IProducerNode <|-- AbstractProducerNode
+AbstractConsumerNode <|-- AbstractCombinedNode
+AbstractProducerNode <|-- AbstractCombinedNode
+
+AbstractProducerNode <|-- SimpleProducer
+AbstractProducerNode <|-- ReSequencer
+AbstractConsumerNode <|-- SimpleConsumer
+AbstractCombinedNode <|-- EBUTTDEncoder
+AbstractCombinedNode <|-- BufferDelayNode
+AbstractCombinedNode <|-- RetimingDelayNode
+AbstractCombinedNode <|-- DistributingNode
+AbstractCombinedNode <|-- HandoverNode
+SimpleConsumer <|-- ReSequencer
+
+@enduml

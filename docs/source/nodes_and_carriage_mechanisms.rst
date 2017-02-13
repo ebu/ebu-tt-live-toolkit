@@ -20,6 +20,9 @@ Nodes and Carriage Mechanisms
    .. uml:: icarriage.puml
       :caption: Carriage mechanism classes
 
+   .. uml:: inode.puml
+      :caption: Processing node classes
+
    .. toctree::
       filesystem_carriage_mechanism
       websocket_carriage_mechanism
