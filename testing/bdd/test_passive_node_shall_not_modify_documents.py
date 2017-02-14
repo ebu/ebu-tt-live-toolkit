@@ -62,4 +62,4 @@ def when_processes_document(distributing_node, test_context, template_file):
 def then_emitted_document_identical(distributing_node, test_context):
     prod_carriage = distributing_node.producer_carriage
     assert prod_carriage.emit_data.call_count == 1
-    assert compare_xml(test_context['document'], prod_carriage.emit_data.call_args[0][0])
+    assert compare_xml(test_context['document'], prod_carriage.emit_data.call_args[1]['data'])

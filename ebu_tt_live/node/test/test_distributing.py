@@ -19,4 +19,4 @@ class TestDistributingNode(TestCase):
         )
         document = MagicMock(spec=six.text_type)
         node.process_document(document)
-        carriage.emit_data.assert_called_with(document)
+        carriage.emit_data.assert_called_with(data=document)
