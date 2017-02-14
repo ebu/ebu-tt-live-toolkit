@@ -87,7 +87,6 @@ class TestFilesystemConsumerImpl(TestCase):
             test_xml = test_xml_file.read()
         data = ["18:42:42.42", test_xml]
         fs_consumer_impl = FilesystemConsumerImpl(node.reference_clock)
-        fs_consumer_impl.register_node(node)
         fs_consumer_impl.on_new_data(data)
         assert node.process_document.called
 
@@ -98,7 +97,7 @@ class TestFilesystemConsumerImpl(TestCase):
         data = ["18:42:42.42", "test"]
         reference_clock = MagicMock()
         fs_consumer_impl = FilesystemConsumerImpl(reference_clock)
-        fs_consumer_impl.register_node(node)
+        fs_consumer_impl.register(node)
         self.assertRaises(XMLParsingFailed, lambda: fs_consumer_impl.on_new_data(data))
         assert not node.process_document.called
 

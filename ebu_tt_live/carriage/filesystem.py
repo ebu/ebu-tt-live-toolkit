@@ -141,7 +141,7 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
         if document:
             availability_time = timestr_manifest_to_timedelta(availability_time_str, self._reference_clock.time_base)
             document.availability_time = availability_time
-            self._node.process_document(document)
+            self.consumer_node.process_document(document)
 
 
 class FilesystemReader(object):
