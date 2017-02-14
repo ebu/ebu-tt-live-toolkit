@@ -403,6 +403,13 @@ def compare_xml(want, got):
     comparison. Leading and trailing whitespace is ignored on both chunks.
 
     Based on https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py
+
+    This function is a close but not full implementation of fn:deep-equals.
+    Possible scenario where this will yield a false positive result is where an element can have 2 arguments with
+    the same name but different namespaces:
+
+        i.e.: <elem ns1:myattr="1" /> != <elem ns2:myattr="1" /> if ns1 != ns2
+
     """
     _norm_whitespace_re = re.compile(r'[ \t\n][ \t\n]+')
 
