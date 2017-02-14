@@ -6,7 +6,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from mock import MagicMock
 from pytest_bdd import scenarios, given, when, then
 
-scenarios('features/timing/delay.feature')
+scenarios('features/timing/retimingDelayNode.feature')
 
 
 @given('it has body begin time <body_begin>')

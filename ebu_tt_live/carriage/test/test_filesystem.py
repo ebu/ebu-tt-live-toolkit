@@ -20,13 +20,15 @@ class TestFilesystemProducerImpl(TestCase):
         shutil.rmtree(self.test_dir)
 
     def test_instantiation(self):
-        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        reference_clock = MagicMock()
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path, reference_clock)
         self.assertIsInstance(fs_carriage, FilesystemProducerImpl)
 
     @skip
     @patch('ebu_tt_live.node.SimpleProducer')
     def test_resume_producing_no_existing_manifest(self, node):
-        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        reference_clock = MagicMock()
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path, reference_clock)
         node.process_document = MagicMock(side_effect=EndOfData())
         node.document_sequence.sequence_identifier = "testSeq"
         fs_carriage.register_node(node)
@@ -39,7 +41,8 @@ class TestFilesystemProducerImpl(TestCase):
         manifest_path = os.path.join(self.test_dir_path, "manifest_testSeq.txt")
         with open(manifest_path, 'w') as f:
             f.write("00:00:00.123678,testSeq_177.xml")
-        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        reference_clock = MagicMock()
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path, reference_clock)
         node.process_document = MagicMock(side_effect=EndOfData())
         node.document_sequence.sequence_identifier = "testSeq"
         fs_carriage.register_node(node)
@@ -83,7 +86,6 @@ class TestFilesystemConsumerImpl(TestCase):
         with open(test_xml_file_path, 'r') as test_xml_file:
             test_xml = test_xml_file.read()
         data = ["18:42:42.42", test_xml]
-        fs_consumer_impl = FilesystemConsumerImpl()
         fs_consumer_impl.register_node(node)
         fs_consumer_impl.on_new_data(data)
         assert node.process_document.called
@@ -93,7 +95,6 @@ class TestFilesystemConsumerImpl(TestCase):
     def test_on_new_data_raise_XMLParsingFailed(self, node):
         node.process_document = MagicMock(return_value=None)
         data = ["18:42:42.42", "test"]
-        fs_consumer_impl = FilesystemConsumerImpl()
         fs_consumer_impl.register_node(node)
         self.assertRaises(XMLParsingFailed, lambda: fs_consumer_impl.on_new_data(data))
         assert not node.process_document.called

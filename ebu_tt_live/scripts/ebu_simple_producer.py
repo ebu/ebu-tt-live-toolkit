@@ -62,7 +62,7 @@ def main():
     # This object is used as flexible binding to the carriage mechanism and twisted integrated as dependency injection
     prod_impl = None
     if do_export:
-        prod_impl = FilesystemProducerImpl(parsed_args.folder_export)
+        prod_impl = FilesystemProducerImpl(parsed_args.folder_export, reference_clock)
     else:
         prod_impl = WebsocketProducerCarriage()
         prod_impl.sequence_identifier = sequence_identifier
