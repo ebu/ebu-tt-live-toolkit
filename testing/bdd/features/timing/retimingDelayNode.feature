@@ -20,7 +20,7 @@ Feature: Delay of a document sequence
     | xxx           | 00:00:00   | xxx           |
     | 99999999999   | 99:00:00   | 99999999999   |
 
-
+  # SPEC-CONFORMANCE.md R114    
   # Times are inherited so to delay an element we only need to delay its syncbase  
   Scenario: RetimingDelayNode delays document, computed times
     Given an xml file <xml_file>
@@ -123,3 +123,23 @@ Feature: Delay of a document sequence
     |            |              |           | 00:00:20 |          | 00:00:10 |            |          |             |           | 00:00:15 | 00:00:15           |                  |                   | 00:00:20        |                 | 00:00:10      |                    |                  |                     |                   |          |
     |            |              | 00:00:20  |          |          | 00:00:10 |            |          |             |           | 00:00:15 |                    |                  | 00:00:35          |                 |                 | 00:00:10      |                    |                  |                     |                   |          |
     |            |              |           |          |          |          |            |          |             |           | 00:00:05 | 00:00:05           |                  |                   |                 |                 |               |                    |                  |                     |                   |          |
+
+
+    # SPEC-CONFORMANCE.md R113 R117
+    Scenario: RetimingDelayNode changes sequence ID but not authoring delay
+        Given an xml file <xml_file>
+        And it has <sequence_id_1>
+        And it has <authoring_delay_1>
+        And the document is generated
+        When the retiming delay node delays it by <delay>
+        Then the updated document has <sequence_id_2>
+        And the updated document has  <authoring_delay_2>
+
+        Examples:
+        | sequence_id_1 | authoring_delay_1 | delay    | sequence_id_2 | authoring_delay_2 |  
+        | id1           | 00:00:00          | 0        | id2           | 00:00:00          |  
+        | 0             | 00:00:05          | 00:00:03 | 1             | 00:00:05          |  
+        | 0             |                   | 00:00:03 | 1             |                   |  
+
+
+      
