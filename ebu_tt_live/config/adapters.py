@@ -1,18 +1,14 @@
 
 from .common import ConfigurableComponent
-from configman import RequiredConfig, Namespace, converters
 from ebu_tt_live.adapters import document_data, node_carriage
 
 
-def data_adapters_by_directed_conversion(data_adapter):
-    if data_adapter == 'xml->ebutt3':
-        return document_data.XMLtoEBUTT3Adapter
-    elif data_adapter == 'xml->ebuttd':
-        return document_data.XMLtoEBUTTDAdapter
-    elif data_adapter == 'ebutt3->xml':
-        return document_data.EBUTT3toXMLAdapter
-    elif data_adapter == 'ebuttd->xml':
-        return document_data.EBUTTDtoXMLAdapter
+data_adapters_by_directed_conversion = {
+    'xml->ebutt3': document_data.XMLtoEBUTT3Adapter,
+    'xml->ebuttd': document_data.XMLtoEBUTTDAdapter,
+    'ebutt3->xml': document_data.EBUTT3toXMLAdapter,
+    'ebuttd->xml': document_data.EBUTTDtoXMLAdapter
+}
 
 
 def parse_adapter_list(value):
@@ -22,7 +18,7 @@ def parse_adapter_list(value):
         for item in value:
             conv_type = item['type']
             kwargs = {ckey: carg for ckey, carg in item.items() if ckey != 'type'}
-            parsed_value.append(data_adapters_by_directed_conversion(conv_type)(**kwargs))
+            parsed_value.append(data_adapters_by_directed_conversion.get(conv_type)(**kwargs))
     return parsed_value or None
 
 

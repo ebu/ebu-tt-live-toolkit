@@ -2,6 +2,7 @@
 from gettext import gettext
 
 # ERRORS
+ERR_NO_SUCH_COMPONENT = gettext('No such component: {type_name}')
 ERR_INCOMPATIBLE_COMPONENT = gettext('Incompatible component: {component} Expected interface: {expected_interface}')
 ERR_INCOMPATIBLE_DATA_PROVIDED = gettext('{component} provides incompatible data type: {provides} Expected type: {expects}')
 ERR_INCOMPATIBLE_DATA_EXPECTED = gettext('{component} expects incompatible data type: {expects} Provided type: {provides}')

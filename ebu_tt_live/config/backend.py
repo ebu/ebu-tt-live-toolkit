@@ -1,12 +1,11 @@
 import logging
-import urlparse
 from .common import ConfigurableComponent, Namespace, RequiredConfig
 from ebu_tt_live.strings import ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH
 from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import ERR_NO_SUCH_COMPONENT
 
 
 log = logging.getLogger(__name__)
-
 
 
 class BackendBase(ConfigurableComponent):
@@ -269,16 +268,24 @@ class TwistedBackend(BackendBase):
             d.addErrback(error_callback)
 
 
-def backend_by_type(backend_name):
-    if backend_name == 'twisted':
-        return TwistedBackend
-    elif backend_name == 'dummy':
-        return DummyBackend
-    else:
-        raise Exception('No such component: {}'.format(backend_name))
+backend_by_type = {
+    'twisted': TwistedBackend,
+    'dummy': DummyBackend
+}
+
+
+def get_backend(backend_name):
+    try:
+        return backend_by_type.get(backend_name)
+    except KeyError:
+        raise ConfigurationError(
+            ERR_NO_SUCH_COMPONENT.format(
+                type_name=backend_name
+            )
+        )
 
 
 class UniversalBackend(RequiredConfig):
     required_config = Namespace()
     required_config.backend = backend = Namespace()
-    backend.add_option('type', default='twisted', from_string_converter=backend_by_type)
+    backend.add_option('type', default='twisted', from_string_converter=get_backend)
