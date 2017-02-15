@@ -635,11 +635,12 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
 ebuttdt_raw.percentageFontSizeType._SetSupersedingClass(PercentageFontSizeType)
 
 
-class CellResolutionType(TwoDimSizingMixin ,ebuttdt_raw.cellResolutionType):
+class CellResolutionType(TwoDimSizingMixin, ebuttdt_raw.cellResolutionType):
 
     _groups_regex = re.compile('(?P<first>[0]*[1-9][0-9]*)\s(?P<second>[0]*[1-9][0-9]*)')
     _2dim_format = '{} {}'
-    
+
+
 ebuttdt_raw.cellResolutionType._SetSupersedingClass(CellResolutionType)
 
 
