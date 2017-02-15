@@ -131,22 +131,18 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.node.base</h1><div class="highlight"><pre>
-<span></span>
-<div class="viewcode-block" id="Node"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This is the foundation of all nodes that take part in the processing of subtitle documents.</span>
-<span class="sd">    The Node should deal with subtitles in a high level interface,</span>
-<span class="sd">    which is an instance of :class:`&lt;ebu_tt_live.documents.SubtitleDocument&gt;`. That is the interface which should</span>
-<span class="sd">    be used to communicate with the carriage machanism. See :class:`&lt;CarriageImpl&gt;`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span></span><span class="kn">from</span> <span class="nn">.interface</span> <span class="k">import</span> <span class="n">INode</span><span class="p">,</span> <span class="n">IConsumerNode</span><span class="p">,</span> <span class="n">IProducerNode</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage.interface</span> <span class="k">import</span> <span class="n">IConsumerCarriage</span><span class="p">,</span> <span class="n">IProducerCarriage</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">ComponentCompatError</span><span class="p">,</span> <span class="n">DataCompatError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_INCOMPATIBLE_COMPONENT</span><span class="p">,</span> <span class="n">ERR_INCOMPATIBLE_DATA_EXPECTED</span><span class="p">,</span> <span class="n">ERR_INCOMPATIBLE_DATA_PROVIDED</span>
+
+
+<span class="k">class</span> <span class="nc">__AbstractNode</span><span class="p">(</span><span class="n">INode</span><span class="p">):</span>
 
     <span class="n">_node_id</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_carriage_impl</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node_id</span> <span class="o">=</span> <span class="n">node_id</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_carriage_impl</span> <span class="o">=</span> <span class="n">carriage_impl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_carriage_impl</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{name}</span><span class="s1">, ID:</span><span class="si">{id}</span><span class="s1"> at </span><span class="si">{address}</span><span class="s1"> &gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -163,14 +159,85 @@
     <span class="k">def</span> <span class="nf">node_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_node_id</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="Node.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.Node.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The central hook that is meant to implement the main functionality of the node.</span>
-<span class="sd">        A node must implement this method.</span>
-<span class="sd">        :param document:</span>
-<span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="AbstractProducerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractProducerNode">[docs]</a><span class="k">class</span> <span class="nc">AbstractProducerNode</span><span class="p">(</span><span class="n">IProducerNode</span><span class="p">,</span> <span class="n">__AbstractNode</span><span class="p">):</span>
+
+    <span class="n">_producer_carriage</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractProducerNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">producer_carriage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_producer_carriage</span><span class="p">(</span><span class="n">producer_carriage</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractProducerNode.register_producer_carriage"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractProducerNode.register_producer_carriage">[docs]</a>    <span class="k">def</span> <span class="nf">register_producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">producer_carriage</span><span class="p">,</span> <span class="n">IProducerCarriage</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ComponentCompatError</span><span class="p">(</span>
+                <span class="n">ERR_INCOMPATIBLE_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">component</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
+                    <span class="n">expected_interface</span><span class="o">=</span><span class="n">IProducerCarriage</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">provides</span><span class="p">()</span> <span class="o">!=</span> <span class="n">producer_carriage</span><span class="o">.</span><span class="n">expects</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">DataCompatError</span><span class="p">(</span>
+                <span class="n">ERR_INCOMPATIBLE_DATA_EXPECTED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">component</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
+                    <span class="n">expects</span><span class="o">=</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">expects</span><span class="p">(),</span>
+                    <span class="n">provides</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">provides</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span> <span class="o">=</span> <span class="n">producer_carriage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span><span class="o">.</span><span class="n">register_producer_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span>
+
+<div class="viewcode-block" id="AbstractProducerNode.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractProducerNode.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="AbstractConsumerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode">[docs]</a><span class="k">class</span> <span class="nc">AbstractConsumerNode</span><span class="p">(</span><span class="n">IConsumerNode</span><span class="p">,</span> <span class="n">__AbstractNode</span><span class="p">):</span>
+
+    <span class="n">_consumer_carriage</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractConsumerNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">consumer_carriage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_consumer_carriage</span><span class="p">(</span><span class="n">consumer_carriage</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AbstractConsumerNode.register_consumer_carriage"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.register_consumer_carriage">[docs]</a>    <span class="k">def</span> <span class="nf">register_consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">consumer_carriage</span><span class="p">,</span> <span class="n">IConsumerCarriage</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ComponentCompatError</span><span class="p">(</span>
+                <span class="n">ERR_INCOMPATIBLE_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">component</span><span class="o">=</span><span class="n">consumer_carriage</span><span class="p">,</span>
+                    <span class="n">expected_interface</span><span class="o">=</span><span class="n">IConsumerCarriage</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">expects</span><span class="p">()</span> <span class="o">!=</span> <span class="n">consumer_carriage</span><span class="o">.</span><span class="n">provides</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">DataCompatError</span><span class="p">(</span>
+                <span class="n">ERR_INCOMPATIBLE_DATA_EXPECTED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">component</span><span class="o">=</span><span class="n">consumer_carriage</span><span class="p">,</span>
+                    <span class="n">expects</span><span class="o">=</span><span class="n">consumer_carriage</span><span class="o">.</span><span class="n">provides</span><span class="p">(),</span>
+                    <span class="n">provides</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expects</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span> <span class="o">=</span> <span class="n">consumer_carriage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span><span class="o">.</span><span class="n">register_consumer_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span></div>
+
+
+<div class="viewcode-block" id="AbstractCombinedNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractCombinedNode">[docs]</a><span class="k">class</span> <span class="nc">AbstractCombinedNode</span><span class="p">(</span><span class="n">AbstractConsumerNode</span><span class="p">,</span> <span class="n">AbstractProducerNode</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AbstractCombinedNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
+            <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
+            <span class="n">consumer_carriage</span><span class="o">=</span><span class="n">consumer_carriage</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
 </pre></div>
 
            </div>

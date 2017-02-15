@@ -131,12 +131,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.utils</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">Queue</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">types</span>
+
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="k">import</span> <span class="n">BlanklineTokenizer</span><span class="p">,</span> <span class="n">PunktSentenceTokenizer</span><span class="p">,</span> <span class="n">WhitespaceTokenizer</span>
 
 
 <div class="viewcode-block" id="ComparableMixin"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.ComparableMixin">[docs]</a><span class="k">class</span> <span class="nc">ComparableMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -199,8 +202,8 @@
 
     <span class="n">_callback</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="p">(),</span> <span class="n">maxlen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>  <span class="ow">and</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="o">=</span><span class="p">(),</span> <span class="n">maxlen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Callback: </span><span class="si">{}</span><span class="s1"> is not callable&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">callback</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span> <span class="o">=</span> <span class="n">callback</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">maxlen</span><span class="p">)</span>
@@ -321,6 +324,171 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span><span class="o">.</span><span class="n">stopped</span><span class="p">():</span>
                 <span class="k">raise</span> <span class="n">RotatingFileBufferStopped</span><span class="p">(</span><span class="s1">&#39;File deletion thread is stopped!&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFileBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="tokenize_english_document"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.tokenize_english_document">[docs]</a><span class="k">def</span> <span class="nf">tokenize_english_document</span><span class="p">(</span><span class="n">input_text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a crude tokenizer for input conversations in English.</span>
+<span class="sd">    :param input_text:</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">end_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">block_tokenizer</span> <span class="o">=</span> <span class="n">BlanklineTokenizer</span><span class="p">()</span>
+    <span class="n">sentence_tokenizer</span> <span class="o">=</span> <span class="n">PunktSentenceTokenizer</span><span class="p">()</span>
+    <span class="n">word_tokenizer</span> <span class="o">=</span> <span class="n">WhitespaceTokenizer</span><span class="p">()</span>
+    <span class="c1"># using the 38 characters in one line rule from ITV subtitle guidelines</span>
+    <span class="n">characters_per_line</span> <span class="o">=</span> <span class="mi">38</span>
+    <span class="n">lines_per_subtitle</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="c1"># We have one speaker</span>
+        <span class="n">sentences</span> <span class="o">=</span> <span class="n">sentence_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+        <span class="c1"># We have the sentences</span>
+        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
+            <span class="n">words</span> <span class="o">=</span> <span class="n">word_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+            <span class="n">reverse_words</span> <span class="o">=</span> <span class="n">words</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">line_full</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">while</span> <span class="n">reverse_words</span><span class="p">:</span>
+                <span class="n">word</span> <span class="o">=</span> <span class="n">reverse_words</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">longer_line</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">current_line</span><span class="p">,</span> <span class="n">word</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">longer_line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">characters_per_line</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_line</span><span class="p">):</span>
+                    <span class="c1"># The longer line is overreaching boundaries</span>
+                    <span class="n">reverse_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">characters_per_line</span><span class="p">:</span>
+                    <span class="c1"># Very long words</span>
+                    <span class="n">current_line</span> <span class="o">=</span> <span class="n">longer_line</span>
+                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">current_line</span> <span class="o">=</span> <span class="n">longer_line</span>
+
+                <span class="k">if</span> <span class="n">line_full</span><span class="p">:</span>
+                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
+                    <span class="n">current_line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">lines_per_subtitle</span><span class="p">:</span>
+                    <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">current_line</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">end_list</span></div>
+
+
+<span class="k">def</span> <span class="nf">_assert_asm_is_defined</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="bp">NotImplemented</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s1">&#39;Abstract static member: \`</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">\` does not match the criteria&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">class_name</span><span class="p">,</span>
+                <span class="n">member_name</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+
+<div class="viewcode-block" id="validate_types_only"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.validate_types_only">[docs]</a><span class="k">def</span> <span class="nf">validate_types_only</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="p">,)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="p">(</span><span class="nb">type</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">ClassType</span><span class="p">))</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">ANY</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s1">&#39;Abstract static member: </span><span class="se">\&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1"> is not a type or class&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">class_name</span><span class="p">,</span>
+                    <span class="n">member_name</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AnyType"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AnyType">[docs]</a><span class="k">class</span> <span class="nc">AnyType</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="s2">&quot;A helper object that compares equal to everything.&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&lt;ANY&gt;&#39;</span></div>
+
+<span class="n">ANY</span> <span class="o">=</span> <span class="n">AnyType</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="AbstractStaticMember"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AbstractStaticMember">[docs]</a><span class="k">class</span> <span class="nc">AbstractStaticMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This allows me to require the subclasses to define some attributes using a customizeable</span>
+<span class="sd">    validator. The idea is that all static members should be initialized to a value by the time</span>
+<span class="sd">    abstract functions have all been implemented.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_validation_func</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">validation_func</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">validation_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validation_func</span> <span class="o">=</span> <span class="n">_assert_asm_is_defined</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_validation_func</span> <span class="o">=</span> <span class="n">validation_func</span>
+
+<div class="viewcode-block" id="AbstractStaticMember.validate"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AbstractStaticMember.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validation_func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="AutoRegisteringABCMeta"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AutoRegisteringABCMeta">[docs]</a><span class="k">class</span> <span class="nc">AutoRegisteringABCMeta</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This metaclass gets us automatic class registration and cooperates with AbstractStaticMember.</span>
+<span class="sd">    If none of the 2 features are needed it just provides the basic abc.ABCMeta functionality.</span>
+<span class="sd">    For the auto registration an abstract class needs to implement the auto_register_impl classmethod.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">mcls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">):</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AutoRegisteringABCMeta</span><span class="p">,</span> <span class="n">mcls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">mcls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">namespace</span><span class="p">)</span>
+        <span class="n">abstract_members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">name</span>
+                        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">))</span>
+
+        <span class="n">abstracts</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;__abstractmethods__&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">abstracts</span><span class="p">:</span>
+            <span class="c1"># This means the class is not abstract so we should not have any abstract static members</span>
+            <span class="n">validated_members</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="n">bases</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">mcls</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">base_member</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s1">&#39;_abc_static_members&#39;</span><span class="p">,</span> <span class="nb">set</span><span class="p">()):</span>
+                        <span class="k">if</span> <span class="n">base_member</span> <span class="ow">in</span> <span class="n">validated_members</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">base_member</span><span class="p">,</span> <span class="bp">NotImplemented</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="bp">NotImplemented</span><span class="p">:</span>
+                            <span class="n">abstract_members</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">base_member</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="nb">getattr</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">base_member</span><span class="p">)</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">base_member</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                            <span class="n">validated_members</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">base_member</span><span class="p">)</span>
+
+                    <span class="n">base</span><span class="o">.</span><span class="n">auto_register_impl</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">abstract_members</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> must implement abstract static members: [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span>
+                    <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">abstract_members</span><span class="p">)</span>
+                <span class="p">))</span>
+        <span class="k">if</span> <span class="n">namespace</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;auto_register_impl&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">auto_register_impl</span> <span class="o">=</span> <span class="nb">classmethod</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_abc_static_members</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">abstract_members</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_abc_interface</span> <span class="o">=</span> <span class="s1">&#39;__metaclass__&#39;</span> <span class="ow">in</span> <span class="n">namespace</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_abc_interface</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Can</span><span class="se">\&#39;</span><span class="s1">t instantiate </span><span class="si">{}</span><span class="s1"> is an abstract base class.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AutoRegisteringABCMeta</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">instance</span></div>
+
+<span class="n">HTTPProxyConfig</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;HTTPProxyConfig&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">])</span>
 </pre></div>
 
            </div>

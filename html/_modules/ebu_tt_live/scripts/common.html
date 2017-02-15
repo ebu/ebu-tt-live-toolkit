@@ -131,14 +131,10 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.scripts.common</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">configobj</span> <span class="k">import</span> <span class="n">ConfigObj</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="k">import</span> <span class="n">PunktSentenceTokenizer</span><span class="p">,</span> <span class="n">BlanklineTokenizer</span><span class="p">,</span> <span class="n">WhitespaceTokenizer</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">twisted.python</span> <span class="k">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">twisted_log</span>
 
+<span class="kn">from</span> <span class="nn">twisted.python</span> <span class="k">import</span> <span class="n">log</span> <span class="k">as</span> <span class="n">twisted_log</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">log_format</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">%(levelname)s</span><span class="s1">] (</span><span class="si">%(asctime)s</span><span class="s1">) in </span><span class="si">%(name)s</span><span class="s1">[</span><span class="si">%(lineno)d</span><span class="s1">] - </span><span class="si">%(message)s</span><span class="s1">&#39;</span>
@@ -152,69 +148,6 @@
     <span class="c1"># Python logging setup</span>
     <span class="c1"># TODO: Make this configurable (https://github.com/bbc/ebu-tt-live-toolkit/issues/15)</span>
     <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">log_format</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="parse_config"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.parse_config">[docs]</a><span class="k">def</span> <span class="nf">parse_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">module_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="kn">import</span> <span class="nn">ipdb</span><span class="p">;</span> <span class="n">ipdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">yaml_file</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;YAML config mode&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
-
-
-<div class="viewcode-block" id="tokenize_english_document"><a class="viewcode-back" href="../../../ebu_tt_live.scripts.html#ebu_tt_live.scripts.common.tokenize_english_document">[docs]</a><span class="k">def</span> <span class="nf">tokenize_english_document</span><span class="p">(</span><span class="n">input_text</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This is a crude tokenizer for input conversations in English.</span>
-<span class="sd">    :param input_text:</span>
-<span class="sd">    :return:</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">end_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">block_tokenizer</span> <span class="o">=</span> <span class="n">BlanklineTokenizer</span><span class="p">()</span>
-    <span class="n">sentence_tokenizer</span> <span class="o">=</span> <span class="n">PunktSentenceTokenizer</span><span class="p">()</span>
-    <span class="n">word_tokenizer</span> <span class="o">=</span> <span class="n">WhitespaceTokenizer</span><span class="p">()</span>
-    <span class="c1"># using the 38 characters in one line rule from ITV subtitle guidelines</span>
-    <span class="n">characters_per_line</span> <span class="o">=</span> <span class="mi">38</span>
-    <span class="n">lines_per_subtitle</span> <span class="o">=</span> <span class="mi">2</span>
-
-    <span class="n">blocks</span> <span class="o">=</span> <span class="n">block_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">input_text</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
-        <span class="c1"># We have one speaker</span>
-        <span class="n">sentences</span> <span class="o">=</span> <span class="n">sentence_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
-        <span class="c1"># We have the sentences</span>
-        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
-            <span class="n">words</span> <span class="o">=</span> <span class="n">word_tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
-            <span class="n">reverse_words</span> <span class="o">=</span> <span class="n">words</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-            <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">current_line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-            <span class="n">line_full</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">while</span> <span class="n">reverse_words</span><span class="p">:</span>
-                <span class="n">word</span> <span class="o">=</span> <span class="n">reverse_words</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                <span class="n">longer_line</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">current_line</span><span class="p">,</span> <span class="n">word</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">longer_line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">characters_per_line</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_line</span><span class="p">):</span>
-                    <span class="c1"># The longer line is overreaching boundaries</span>
-                    <span class="n">reverse_words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
-                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">characters_per_line</span><span class="p">:</span>
-                    <span class="c1"># Very long words</span>
-                    <span class="n">current_line</span> <span class="o">=</span> <span class="n">longer_line</span>
-                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">current_line</span> <span class="o">=</span> <span class="n">longer_line</span>
-
-                <span class="k">if</span> <span class="n">line_full</span><span class="p">:</span>
-                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
-                    <span class="n">current_line</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                    <span class="n">line_full</span> <span class="o">=</span> <span class="kc">False</span>
-
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">lines_per_subtitle</span><span class="p">:</span>
-                    <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-                    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">if</span> <span class="n">current_line</span><span class="p">:</span>
-                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
-                <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">end_list</span></div>
 </pre></div>
 
            </div>

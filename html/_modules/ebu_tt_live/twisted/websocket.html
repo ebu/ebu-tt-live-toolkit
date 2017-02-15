@@ -135,10 +135,14 @@
 <span class="kn">from</span> <span class="nn">autobahn.twisted.websocket</span> <span class="k">import</span> <span class="n">WebSocketClientProtocol</span><span class="p">,</span> <span class="n">WebSocketServerFactory</span><span class="p">,</span> <span class="n">WebSocketServerProtocol</span><span class="p">,</span> \
     <span class="n">listenWS</span><span class="p">,</span> <span class="n">WebSocketClientFactory</span><span class="p">,</span> <span class="n">connectWS</span>
 
-<span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="k">import</span> <span class="n">interfaces</span>
+<span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="k">import</span> <span class="n">interfaces</span><span class="p">,</span> <span class="n">reactor</span>
+<span class="kn">from</span> <span class="nn">twisted.python</span> <span class="k">import</span> <span class="n">url</span> <span class="k">as</span> <span class="n">twisted_url</span>
 <span class="kn">from</span> <span class="nn">zope.interface</span> <span class="k">import</span> <span class="n">implementer</span>
 <span class="kn">from</span> <span class="nn">logging</span> <span class="k">import</span> <span class="n">getLogger</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_WS_INVALID_ACTION</span><span class="p">,</span> <span class="n">ERR_WS_NOT_CONSUMER</span><span class="p">,</span> <span class="n">ERR_WS_NOT_PRODUCER</span><span class="p">,</span> \
+    <span class="n">ERR_WS_RECEIVE_VIA_PRODUCER</span><span class="p">,</span> <span class="n">ERR_WS_SEND_VIA_CONSUMER</span>
 
 <span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">IBroadcaster</span>
 
@@ -202,15 +206,403 @@
         <span class="n">listenWS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="StreamingServerProtocol"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.StreamingServerProtocol">[docs]</a><span class="k">class</span> <span class="nc">StreamingServerProtocol</span><span class="p">(</span><span class="n">WebSocketServerProtocol</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUWebsocketProtocolMixin"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.EBUWebsocketProtocolMixin">[docs]</a><span class="k">class</span> <span class="nc">EBUWebsocketProtocolMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This mixin exists because the WS protocol suggested in EBU-3370s1 is agnostic of client-server relationship</span>
+<span class="sd">    in the sense that data can be streamed from client to server or the other way around. Based on which action</span>
+<span class="sd">    a server/client is doing different functions should be available. This class holds the common logic.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_action</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_path_format</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="si">{sequence_identifier}</span><span class="s1">/</span><span class="si">{action}</span><span class="s1">&#39;</span>
+    <span class="n">_valid_actions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;publish&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;subscribe&#39;</span>
+    <span class="p">]</span>
+    <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span>
+
+    <span class="nd">@consumer</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># TODO: Some checks here</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_parse_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_url</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
+            <span class="n">full_url</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">full_url</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">twisted_url</span><span class="o">.</span><span class="n">URL</span><span class="o">.</span><span class="n">fromText</span><span class="p">(</span><span class="n">full_url</span><span class="p">)</span><span class="o">.</span><span class="n">asIRI</span><span class="p">()</span>
+        <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">action</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">path</span>
+        <span class="k">return</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">action</span>
+
+    <span class="k">def</span> <span class="nf">_write_to_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="c1"># Consumer mode</span>
+        <span class="c1"># TODO: This can error in multiple ways</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_send_sequence_message</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fragmentSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doNotCompress</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">):</span>
+        <span class="k">if</span> <span class="n">sequence_identifier</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span>
+                <span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+                <span class="n">isBinary</span><span class="o">=</span><span class="n">isBinary</span><span class="p">,</span>
+                <span class="n">fragmentSize</span><span class="o">=</span><span class="n">fragmentSize</span><span class="p">,</span>
+                <span class="n">sync</span><span class="o">=</span><span class="n">sync</span><span class="p">,</span>
+                <span class="n">doNotCompress</span><span class="o">=</span><span class="n">doNotCompress</span>
+            <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;message sent to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">peer</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_action</span>
+
+    <span class="nd">@action</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_valid_actions</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="n">ERR_WS_INVALID_ACTION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">action</span><span class="o">=</span><span class="n">value</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_action</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPushProducer</span><span class="p">)</span>
+<div class="viewcode-block" id="TwistedWSPushProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer">[docs]</a><span class="k">class</span> <span class="nc">TwistedWSPushProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a Twisted Push producer. The concept is related to twisted and it is not the same as our producer</span>
+<span class="sd">    and consumer nodes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_custom_producer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_connections</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_callLater</span> <span class="o">=</span> <span class="n">reactor</span><span class="o">.</span><span class="n">callLater</span>
+    <span class="n">real_port_number</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_producer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_producer</span> <span class="o">=</span> <span class="n">custom_producer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_producer</span><span class="o">.</span><span class="n">register_backend_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="TwistedWSPushProducer.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">deferred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callLater</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_write</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">deferred</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_write</span><span class="p">(</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="TwistedWSPushProducer.register"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TwistedWSPushProducer.unregister"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_do_write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;broadcasting message...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connections</span><span class="p">:</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">sendSequenceMessage</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">payload</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="TwistedWSPushProducer.resumeProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer.resumeProducing">[docs]</a>    <span class="k">def</span> <span class="nf">resumeProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_producer</span><span class="o">.</span><span class="n">resume_producing</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TwistedWSPushProducer.pauseProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer.pauseProducing">[docs]</a>    <span class="k">def</span> <span class="nf">pauseProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TwistedWSPushProducer.stopProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer.stopProducing">[docs]</a>    <span class="k">def</span> <span class="nf">stopProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
+<div class="viewcode-block" id="TwistedWSConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer">[docs]</a><span class="k">class</span> <span class="nc">TwistedWSConsumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class wraps the protocol objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_custom_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">real_port_number</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span> <span class="o">=</span> <span class="n">custom_consumer</span>
+
+<div class="viewcode-block" id="TwistedWSConsumer.register"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="TwistedWSConsumer.unregister"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="p">):</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="TwistedWSConsumer.write"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TwistedWSConsumer.registerProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer.registerProducer">[docs]</a>    <span class="k">def</span> <span class="nf">registerProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">,</span> <span class="n">streaming</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TwistedWSConsumer.unregisterProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer.unregisterProducer">[docs]</a>    <span class="k">def</span> <span class="nf">unregisterProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<div class="viewcode-block" id="BroadcastServerProtocol"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerProtocol">[docs]</a><span class="k">class</span> <span class="nc">BroadcastServerProtocol</span><span class="p">(</span><span class="n">EBUWebsocketProtocolMixin</span><span class="p">,</span> <span class="n">WebSocketServerProtocol</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BroadcastServerProtocol.onOpen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerProtocol.onOpen">[docs]</a>    <span class="k">def</span> <span class="nf">onOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Not that well documented in twisted but this being only a path segment gets picked up fine</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_path</span><span class="p">(</span>
+                <span class="n">full_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">http_request_path</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastServerProtocol.onMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerProtocol.onMessage">[docs]</a>    <span class="k">def</span> <span class="nf">onMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_to_consumer</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_RECEIVE_VIA_PRODUCER</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">(</span><span class="n">abort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastServerProtocol.sendSequenceMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerProtocol.sendSequenceMessage">[docs]</a>    <span class="k">def</span> <span class="nf">sendSequenceMessage</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fragmentSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doNotCompress</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;subscribe&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_send_sequence_message</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+                <span class="n">isBinary</span><span class="o">=</span><span class="n">isBinary</span><span class="p">,</span>
+                <span class="n">fragmentSize</span><span class="o">=</span><span class="n">fragmentSize</span><span class="p">,</span>
+                <span class="n">sync</span><span class="o">=</span><span class="n">sync</span><span class="p">,</span>
+                <span class="n">doNotCompress</span><span class="o">=</span><span class="n">doNotCompress</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_SEND_VIA_CONSUMER</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">(</span><span class="n">abort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastServerProtocol.connectionLost"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerProtocol.connectionLost">[docs]</a>    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="n">WebSocketServerProtocol</span><span class="o">.</span><span class="n">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BroadcastFactoryCommon"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastFactoryCommon">[docs]</a><span class="k">class</span> <span class="nc">BroadcastFactoryCommon</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span>
+
+    <span class="nd">@producer</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">producer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Overwriting a producer without explicit removal is not supported</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># At removal make sure the producer is stopped.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stop_producer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_stop_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span>
+
+    <span class="nd">@consumer</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="BroadcastServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory">[docs]</a><span class="k">class</span> <span class="nc">BroadcastServerFactory</span><span class="p">(</span><span class="n">BroadcastFactoryCommon</span><span class="p">,</span> <span class="n">WebSocketServerFactory</span><span class="p">):</span>
+
+    <span class="n">real_port_number</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consumer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BroadcastServerFactory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">protocols</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">producer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="n">consumer</span>
+
+    <span class="k">def</span> <span class="nf">_stop_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">stopProducing</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BroadcastServerFactory.register"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;subscribe&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># TODO: Here a message would be useful</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_NOT_PRODUCER</span><span class="p">)</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_NOT_CONSUMER</span><span class="p">)</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastServerFactory.unregister"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;subscribe&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastServerFactory.stopFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.stopFactory">[docs]</a>    <span class="k">def</span> <span class="nf">stopFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop_producer</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BroadcastServerFactory.listen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.listen">[docs]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">listener</span> <span class="o">=</span> <span class="n">listenWS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_port_number</span> <span class="o">=</span> <span class="n">listener</span><span class="o">.</span><span class="n">getHost</span><span class="p">()</span><span class="o">.</span><span class="n">port</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">real_port_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_port_number</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">real_port_number</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_port_number</span></div></div>
+
+
+<div class="viewcode-block" id="BroadcastClientProtocol"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientProtocol">[docs]</a><span class="k">class</span> <span class="nc">BroadcastClientProtocol</span><span class="p">(</span><span class="n">EBUWebsocketProtocolMixin</span><span class="p">,</span> <span class="n">WebSocketClientProtocol</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BroadcastClientProtocol.onOpen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientProtocol.onOpen">[docs]</a>    <span class="k">def</span> <span class="nf">onOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastClientProtocol.onMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientProtocol.onMessage">[docs]</a>    <span class="k">def</span> <span class="nf">onMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;subscribe&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_write_to_consumer</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_RECEIVE_VIA_PRODUCER</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastClientProtocol.sendSequenceMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientProtocol.sendSequenceMessage">[docs]</a>    <span class="k">def</span> <span class="nf">sendSequenceMessage</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fragmentSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doNotCompress</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_send_sequence_message</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+                <span class="n">isBinary</span><span class="o">=</span><span class="n">isBinary</span><span class="p">,</span>
+                <span class="n">fragmentSize</span><span class="o">=</span><span class="n">fragmentSize</span><span class="p">,</span>
+                <span class="n">sync</span><span class="o">=</span><span class="n">sync</span><span class="p">,</span>
+                <span class="n">doNotCompress</span><span class="o">=</span><span class="n">doNotCompress</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_SEND_VIA_CONSUMER</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">(</span><span class="n">abort</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastClientProtocol.connectionLost"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientProtocol.connectionLost">[docs]</a>    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+        <span class="n">WebSocketClientProtocol</span><span class="o">.</span><span class="n">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BroadcastClientFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory">[docs]</a><span class="k">class</span> <span class="nc">BroadcastClientFactory</span><span class="p">(</span><span class="n">BroadcastFactoryCommon</span><span class="p">,</span> <span class="n">WebSocketClientFactory</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">consumer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BroadcastClientFactory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="o">=</span> <span class="n">producer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="o">=</span> <span class="n">consumer</span>
+
+<div class="viewcode-block" id="BroadcastClientFactory.register"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;subscribe&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_NOT_CONSUMER</span><span class="p">)</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">ERR_WS_NOT_PRODUCER</span><span class="p">)</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">dropConnection</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastClientFactory.unregister"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;subscribe&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">client</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s1">&#39;publish&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BroadcastClientFactory.connect"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Connecting to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+        <span class="n">connectWS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<span class="c1"># Here comes the legacy ws protocol</span>
+<span class="c1"># =================================</span>
+<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPullProducer</span><span class="p">)</span>
+<div class="viewcode-block" id="TwistedPullProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedPullProducer">[docs]</a><span class="k">class</span> <span class="nc">TwistedPullProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">_custom_producer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer</span><span class="p">,</span> <span class="n">custom_producer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_producer</span> <span class="o">=</span> <span class="n">custom_producer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span> <span class="o">=</span> <span class="n">consumer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">registerProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_producer</span><span class="o">.</span><span class="n">register_twisted_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TwistedPullProducer.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedPullProducer.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">reactor</span><span class="o">.</span><span class="n">callLater</span><span class="p">(</span><span class="n">delay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">write</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TwistedPullProducer.resumeProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedPullProducer.resumeProducing">[docs]</a>    <span class="k">def</span> <span class="nf">resumeProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_producer</span><span class="o">.</span><span class="n">resume_producing</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TwistedPullProducer.stopProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedPullProducer.stopProducing">[docs]</a>    <span class="k">def</span> <span class="nf">stopProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
+<div class="viewcode-block" id="TwistedConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedConsumer">[docs]</a><span class="k">class</span> <span class="nc">TwistedConsumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">_custom_consumer</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span> <span class="o">=</span> <span class="n">custom_consumer</span>
+
+<div class="viewcode-block" id="TwistedConsumer.registerProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedConsumer.registerProducer">[docs]</a>    <span class="k">def</span> <span class="nf">registerProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">,</span> <span class="n">streaming</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="n">producer</span>
+        <span class="k">if</span> <span class="n">streaming</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">resumeProducing</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TwistedConsumer.unregisterProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedConsumer.unregisterProducer">[docs]</a>    <span class="k">def</span> <span class="nf">unregisterProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">stopProducing</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="TwistedConsumer.write"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedConsumer.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LegacyBroadcastServerProtocol"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerProtocol">[docs]</a><span class="k">class</span> <span class="nc">LegacyBroadcastServerProtocol</span><span class="p">(</span><span class="n">WebSocketServerProtocol</span><span class="p">):</span>
 
     <span class="n">_channels</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="StreamingServerProtocol.onOpen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.StreamingServerProtocol.onOpen">[docs]</a>    <span class="k">def</span> <span class="nf">onOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerProtocol.onOpen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerProtocol.onOpen">[docs]</a>    <span class="k">def</span> <span class="nf">onOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="StreamingServerProtocol.onMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.StreamingServerProtocol.onMessage">[docs]</a>    <span class="k">def</span> <span class="nf">onMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerProtocol.onMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerProtocol.onMessage">[docs]</a>    <span class="k">def</span> <span class="nf">onMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">isBinary</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
@@ -223,13 +615,14 @@
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                 <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="StreamingServerProtocol.connectionLost"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.StreamingServerProtocol.connectionLost">[docs]</a>    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerProtocol.connectionLost"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerProtocol.connectionLost">[docs]</a>    <span class="k">def</span> <span class="nf">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">):</span>
         <span class="n">WebSocketServerProtocol</span><span class="o">.</span><span class="n">connectionLost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="StreamingServerProtocol.sendMessageOnChannel"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.StreamingServerProtocol.sendMessageOnChannel">[docs]</a>    <span class="k">def</span> <span class="nf">sendMessageOnChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fragmentSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doNotCompress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerProtocol.sendMessageOnChannel"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerProtocol.sendMessageOnChannel">[docs]</a>    <span class="k">def</span> <span class="nf">sendMessageOnChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fragmentSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                             <span class="n">doNotCompress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span><span class="p">:</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">StreamingServerProtocol</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">LegacyBroadcastServerProtocol</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span>
                 <span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
                 <span class="n">isBinary</span><span class="o">=</span><span class="n">isBinary</span><span class="p">,</span>
                 <span class="n">fragmentSize</span><span class="o">=</span><span class="n">fragmentSize</span><span class="p">,</span>
@@ -240,84 +633,84 @@
 
 
 <span class="nd">@implementer</span><span class="p">(</span><span class="n">IBroadcaster</span><span class="p">,</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
-<div class="viewcode-block" id="BroadcastServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory">[docs]</a><span class="k">class</span> <span class="nc">BroadcastServerFactory</span><span class="p">(</span><span class="n">WebSocketServerFactory</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory">[docs]</a><span class="k">class</span> <span class="nc">LegacyBroadcastServerFactory</span><span class="p">(</span><span class="n">WebSocketServerFactory</span><span class="p">):</span>
     <span class="n">_clients</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_push_producer</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">BroadcastServerFactory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">protocols</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">])</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LegacyBroadcastServerFactory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">protocols</span><span class="o">=</span><span class="p">[</span><span class="mi">13</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="BroadcastServerFactory.registerProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.registerProducer">[docs]</a>    <span class="k">def</span> <span class="nf">registerProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">,</span> <span class="n">streaming</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.registerProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.registerProducer">[docs]</a>    <span class="k">def</span> <span class="nf">registerProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">,</span> <span class="n">streaming</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="n">producer</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_push_producer</span> <span class="o">=</span> <span class="n">streaming</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.unregisterProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregisterProducer">[docs]</a>    <span class="k">def</span> <span class="nf">unregisterProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.unregisterProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.unregisterProducer">[docs]</a>    <span class="k">def</span> <span class="nf">unregisterProducer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">stopProducing</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.write"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.write"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.register"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.register"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.register">[docs]</a>    <span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">client</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;registered client </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">peer</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.unregister"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.unregister"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.unregister">[docs]</a>    <span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">client</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;unregistered client </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">peer</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">client</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.pull"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.pull"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_producer</span><span class="o">.</span><span class="n">resumeProducing</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.broadcast"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.broadcast">[docs]</a>    <span class="k">def</span> <span class="nf">broadcast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.broadcast"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.broadcast">[docs]</a>    <span class="k">def</span> <span class="nf">broadcast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;broadcasting message...&quot;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clients</span><span class="p">:</span>
             <span class="n">c</span><span class="o">.</span><span class="n">sendMessageOnChannel</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span> <span class="n">isBinary</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doNotCompress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.stopFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.stopFactory">[docs]</a>    <span class="k">def</span> <span class="nf">stopFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.stopFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.stopFactory">[docs]</a>    <span class="k">def</span> <span class="nf">stopFactory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">unregisterProducer</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="BroadcastServerFactory.listen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastServerFactory.listen">[docs]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory.listen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory.listen">[docs]</a>    <span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">listenWS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="ClientNodeProtocol"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.ClientNodeProtocol">[docs]</a><span class="k">class</span> <span class="nc">ClientNodeProtocol</span><span class="p">(</span><span class="n">WebSocketClientProtocol</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientProtocol"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientProtocol">[docs]</a><span class="k">class</span> <span class="nc">LegacyBroadcastClientProtocol</span><span class="p">(</span><span class="n">WebSocketClientProtocol</span><span class="p">):</span>
 
-<div class="viewcode-block" id="ClientNodeProtocol.onOpen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.ClientNodeProtocol.onOpen">[docs]</a>    <span class="k">def</span> <span class="nf">onOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientProtocol.onOpen"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientProtocol.onOpen">[docs]</a>    <span class="k">def</span> <span class="nf">onOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">channels</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subscribeChannel</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ClientNodeProtocol.subscribeChannel"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.ClientNodeProtocol.subscribeChannel">[docs]</a>    <span class="k">def</span> <span class="nf">subscribeChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientProtocol.subscribeChannel"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientProtocol.subscribeChannel">[docs]</a>    <span class="k">def</span> <span class="nf">subscribeChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;subscribe&#39;</span><span class="p">:</span> <span class="n">channel</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ClientNodeProtocol.unsubscribeChannel"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.ClientNodeProtocol.unsubscribeChannel">[docs]</a>    <span class="k">def</span> <span class="nf">unsubscribeChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientProtocol.unsubscribeChannel"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientProtocol.unsubscribeChannel">[docs]</a>    <span class="k">def</span> <span class="nf">unsubscribeChannel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;unsubscribe&#39;</span><span class="p">:</span> <span class="n">channel</span>
         <span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sendMessage</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="ClientNodeProtocol.onMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.ClientNodeProtocol.onMessage">[docs]</a>    <span class="k">def</span> <span class="nf">onMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientProtocol.onMessage"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientProtocol.onMessage">[docs]</a>    <span class="k">def</span> <span class="nf">onMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">isBinary</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">dataReceived</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div></div>
 
 
 <span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPushProducer</span><span class="p">)</span>
-<div class="viewcode-block" id="BroadcastClientFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory">[docs]</a><span class="k">class</span> <span class="nc">BroadcastClientFactory</span><span class="p">(</span><span class="n">WebSocketClientFactory</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory">[docs]</a><span class="k">class</span> <span class="nc">LegacyBroadcastClientFactory</span><span class="p">(</span><span class="n">WebSocketClientFactory</span><span class="p">):</span>
 
     <span class="n">_channels</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_stopped</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">consumer</span><span class="p">,</span> <span class="n">channels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">BroadcastClientFactory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LegacyBroadcastClientFactory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">channels</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="p">[]</span>
@@ -336,19 +729,19 @@
     <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_channels</span> <span class="o">=</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="BroadcastClientFactory.dataReceived"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.dataReceived">[docs]</a>    <span class="k">def</span> <span class="nf">dataReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory.dataReceived"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory.dataReceived">[docs]</a>    <span class="k">def</span> <span class="nf">dataReceived</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_consumer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BroadcastClientFactory.stopProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.stopProducing">[docs]</a>    <span class="k">def</span> <span class="nf">stopProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory.stopProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory.stopProducing">[docs]</a>    <span class="k">def</span> <span class="nf">stopProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="BroadcastClientFactory.resumeProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.resumeProducing">[docs]</a>    <span class="k">def</span> <span class="nf">resumeProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory.resumeProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory.resumeProducing">[docs]</a>    <span class="k">def</span> <span class="nf">resumeProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="BroadcastClientFactory.pauseProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.pauseProducing">[docs]</a>    <span class="k">def</span> <span class="nf">pauseProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory.pauseProducing"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory.pauseProducing">[docs]</a>    <span class="k">def</span> <span class="nf">pauseProducing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stopped</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="BroadcastClientFactory.connect"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.BroadcastClientFactory.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory.connect"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Connecting to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
         <span class="n">connectWS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
 </pre></div>

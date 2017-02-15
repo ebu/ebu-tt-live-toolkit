@@ -131,23 +131,28 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.node.producer</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">Node</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">AbstractProducerNode</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">div_type</span><span class="p">,</span> <span class="n">br_type</span><span class="p">,</span> <span class="n">p_type</span><span class="p">,</span> <span class="n">style_type</span><span class="p">,</span> <span class="n">styling</span><span class="p">,</span> <span class="n">layout</span><span class="p">,</span> <span class="n">region_type</span><span class="p">,</span> <span class="n">span_type</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="k">import</span> <span class="n">LimitedClockTimingType</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents.ebutt3</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">END_OF_DATA</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">END_OF_DATA</span><span class="p">,</span> <span class="n">DOC_PRODUCED</span>
 
 
-<div class="viewcode-block" id="SimpleProducer"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.producer.SimpleProducer">[docs]</a><span class="k">class</span> <span class="nc">SimpleProducer</span><span class="p">(</span><span class="n">Node</span><span class="p">):</span>
+<span class="n">document_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;document_logger&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SimpleProducer"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.producer.SimpleProducer">[docs]</a><span class="k">class</span> <span class="nc">SimpleProducer</span><span class="p">(</span><span class="n">AbstractProducerNode</span><span class="p">):</span>
 
     <span class="n">_document_sequence</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_input_blocks</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_reference_clock</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_provides</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">,</span> <span class="n">document_sequence</span><span class="p">,</span> <span class="n">input_blocks</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SimpleProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">node_id</span><span class="p">,</span> <span class="n">carriage_impl</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="p">,</span> <span class="n">document_sequence</span><span class="p">,</span> <span class="n">input_blocks</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SimpleProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span> <span class="o">=</span> <span class="n">document_sequence</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_input_blocks</span> <span class="o">=</span> <span class="n">input_blocks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="n">document_sequence</span><span class="o">.</span><span class="n">reference_clock</span>
@@ -186,7 +191,7 @@
             <span class="n">region</span><span class="o">=</span><span class="s1">&#39;bottomRegion&#39;</span>
         <span class="p">)</span>
 
-<div class="viewcode-block" id="SimpleProducer.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.producer.SimpleProducer.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+<div class="viewcode-block" id="SimpleProducer.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.producer.SimpleProducer.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="n">activation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -232,7 +237,13 @@
 
         <span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_carriage_impl</span><span class="o">.</span><span class="n">emit_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span></div></div>
+        <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="n">DOC_PRODUCED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

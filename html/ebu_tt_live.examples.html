@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>configspec Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>examples Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
-        <link rel="next" title="documents Package" href="ebu_tt_live.documents.html"/>
-        <link rel="prev" title="clocks Package" href="ebu_tt_live.clocks.html"/> 
+        <link rel="next" title="node Package" href="ebu_tt_live.node.html"/>
+        <link rel="prev" title="documents Package" href="ebu_tt_live.documents.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -93,12 +93,12 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">configspec Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">configspec</span></code> Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">examples Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">examples</span></code> Package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
@@ -141,11 +141,11 @@
       
           <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
       
-    <li>configspec Package</li>
+    <li>examples Package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/ebu_tt_live.configspec.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/ebu_tt_live.examples.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -155,17 +155,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="configspec-package">
-<h1>configspec Package<a class="headerlink" href="#configspec-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="examples-package">
+<h1>examples Package<a class="headerlink" href="#examples-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2><code class="xref py py-mod docutils literal"><span class="pre">configspec</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-ebu_tt_live.configspec"></span><p>This subpackage is meant to contain configuration directives of validation and and normalization as well as defaults.
-The current plan is to use configobj but there may be a better tool. Ultimately there is one goal there. Avoid any
-runtime errors because of a broken configuration value being used at a later stage in execution at which point due to
-not having been validated would cause the system to break. Validation and normalization eliminates this problem
-completely. This means At startup time we can be sure that all of the configuration values match the requirements
-of successful operation.</p>
-<p>TODO: implement this when we have more understanding of the parameters one would want to control.</p>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">examples</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-ebu_tt_live.examples"></span><dl class="function">
+<dt id="ebu_tt_live.examples.get_example_data">
+<code class="descclassname">ebu_tt_live.examples.</code><code class="descname">get_example_data</code><span class="sig-paren">(</span><em>dataset_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/examples.html#get_example_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.examples.get_example_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a smart package loader that locates text files inside our package
+:param dataset_name:
+:return:</p>
+</dd></dl>
+
 </div>
 </div>
 
@@ -176,10 +177,10 @@ of successful operation.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ebu_tt_live.documents.html" class="btn btn-neutral float-right" title="documents Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ebu_tt_live.node.html" class="btn btn-neutral float-right" title="node Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ebu_tt_live.clocks.html" class="btn btn-neutral" title="clocks Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ebu_tt_live.documents.html" class="btn btn-neutral" title="documents Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

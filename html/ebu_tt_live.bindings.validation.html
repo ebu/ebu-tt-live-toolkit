@@ -105,9 +105,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
@@ -220,8 +220,7 @@
 <dt id="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding">
 <code class="descname">validateBinding</code><span class="sig-paren">(</span><em>**extra_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticDocumentMixin.validateBinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the binding content matches its content model.</p>
-<p>&#64;return: C{True} if validation was not performed due to settings.
-&#64;return: Complex result dictionary with success and semantic_dataset keys.
+<p>&#64;return: C{True} if validation was not performed due to settings or complex result dictionary with success and semantic_dataset keys.
 &#64;raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...
 &#64;raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints</p>
 </dd></dl>
@@ -821,6 +820,11 @@ implemented by the subclasses of this class to make sure the container checks fo
 <dl class="method">
 <dt id="ebu_tt_live.bindings.validation.content.SubtitleContentContainer.contains_subtitles">
 <code class="descname">contains_subtitles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#SubtitleContentContainer.contains_subtitles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.SubtitleContentContainer.contains_subtitles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.bindings.validation.content.SubtitleContentContainer.content_to_string">
+<code class="descname">content_to_string</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/content.html#SubtitleContentContainer.content_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.content.SubtitleContentContainer.content_to_string" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

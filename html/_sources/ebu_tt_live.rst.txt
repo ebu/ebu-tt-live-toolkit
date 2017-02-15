@@ -20,8 +20,9 @@ user. The very quick overview before the generated source code reference hopeful
      │ └*.py - Custom extension code importing bindings from the raw package and enhancing them with extra functions such as validation capability
      ├─carriage - Carriage Mechanism classes to be used by the Nodes
      ├─clocks - Various reference clock implementations
+     ├─config - Component configurators
      ├─documents - Document wrapper classes wrapping bindings into an less cluttered interface
-     ├─example_data - Built-in data files that are used to make the tools easier to run
+     ├─examples - Built-in data files that are used to make the tools easier to run
      ├─node - Processing node code mostly on the document level independent on carriage mechanism implementation
      ├─scripts - Console scripts that make things easier to run
      ├─twisted - Carriage implementations using the twisted framework(currently websocket server and client classes)
@@ -39,9 +40,9 @@ Subpackages
     ebu_tt_live.bindings
     ebu_tt_live.carriage
     ebu_tt_live.clocks
-    ebu_tt_live.configspec
+    ebu_tt_live.config
     ebu_tt_live.documents
-    ebu_tt_live.example_data
+    ebu_tt_live.examples
     ebu_tt_live.node
     ebu_tt_live.scripts
     ebu_tt_live.twisted

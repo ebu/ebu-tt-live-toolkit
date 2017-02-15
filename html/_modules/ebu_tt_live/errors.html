@@ -132,10 +132,16 @@
             
   <h1>Source code for ebu_tt_live.errors</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">from</span> <span class="nn">pyxb.utils</span> <span class="k">import</span> <span class="n">six</span>
-<span class="kn">from</span> <span class="nn">pyxb.exceptions_</span> <span class="k">import</span> <span class="n">ValidationError</span>
-
 <span class="kn">from</span> <span class="nn">.strings</span> <span class="k">import</span> <span class="n">ERR_DOCUMENT_EXTENT_MISSING</span>
+
+
+<div class="viewcode-block" id="ComponentCompatError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.ComponentCompatError">[docs]</a><span class="k">class</span> <span class="nc">ComponentCompatError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="DataCompatError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.DataCompatError">[docs]</a><span class="k">class</span> <span class="nc">DataCompatError</span><span class="p">(</span><span class="ne">TypeError</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
 
 <div class="viewcode-block" id="DocumentNotLoadedError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.DocumentNotLoadedError">[docs]</a><span class="k">class</span> <span class="nc">DocumentNotLoadedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="k">pass</span></div>
@@ -162,6 +168,10 @@
 
 
 <div class="viewcode-block" id="IncompatibleSequenceError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.IncompatibleSequenceError">[docs]</a><span class="k">class</span> <span class="nc">IncompatibleSequenceError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SequenceNumberCollisionError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.SequenceNumberCollisionError">[docs]</a><span class="k">class</span> <span class="nc">SequenceNumberCollisionError</span><span class="p">(</span><span class="n">IncompatibleSequenceError</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
@@ -208,6 +218,10 @@
 <span class="sd">    in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting</span>
 <span class="sd">    an interval between them so the container ends up being empty and thus should be discarded.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="ConfigurationError"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.errors.ConfigurationError">[docs]</a><span class="k">class</span> <span class="nc">ConfigurationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
 </pre></div>
 
            </div>

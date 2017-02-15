@@ -139,6 +139,7 @@
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">six</span>
 
 <span class="kn">from</span> <span class="nn">pyxb.namespace</span> <span class="k">import</span> <span class="n">ExpandedName</span>
 
@@ -272,7 +273,7 @@
         <span class="k">if</span> <span class="n">old_elem_ids</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_elem_ids</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">old_elem_ids</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
             <span class="n">new_elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_deconflicted_elem_by_id</span><span class="p">(</span><span class="n">elem_id</span><span class="o">=</span><span class="n">old_elem_ids</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">new_elem</span><span class="o">.</span><span class="n">id</span>
         <span class="k">else</span><span class="p">:</span>
@@ -310,8 +311,7 @@
 <div class="viewcode-block" id="SemanticDocumentMixin.validateBinding"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding">[docs]</a>    <span class="k">def</span> <span class="nf">validateBinding</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check whether the binding content matches its content model.</span>
 
-<span class="sd">        @return: C{True} if validation was not performed due to settings.</span>
-<span class="sd">        @return: Complex result dictionary with success and semantic_dataset keys.</span>
+<span class="sd">        @return: C{True} if validation was not performed due to settings or complex result dictionary with success and semantic_dataset keys.</span>
 <span class="sd">        @raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...</span>
 <span class="sd">        @raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints</span>
 <span class="sd">        &quot;&quot;&quot;</span>

@@ -35,8 +35,8 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
-        <link rel="next" title="Document and sequence validation" href="validation.html"/>
-        <link rel="prev" title="Filesystem Carriage Mechanism" href="filesystem_carriage_mechanism.html"/> 
+        <link rel="next" title="Configuration files and ebu-run" href="configurator.html"/>
+        <link rel="prev" title="Direct Carriage Mechanism" href="direct_carriage_mechanism.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -95,8 +95,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#user-input-consumer">User Input Consumer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#user-input-forwarder">User Input Forwarder</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ebu-tt-d-encoder">EBU-TT-D Encoder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-ebu-run-script">The ebu-run script</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
@@ -154,7 +156,7 @@
 <h1>Scripts and their functions<a class="headerlink" href="#scripts-and-their-functions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="simple-producer">
 <h2>Simple Producer<a class="headerlink" href="#simple-producer" title="Permalink to this headline">¶</a></h2>
-<p>This is a command line script. It loads static text from a file (<code class="docutils literal"><span class="pre">ebu-tt-live-toolkit/ebu_tt_live/example_data/simple_producer.txt</span></code>) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command <code class="docutils literal"><span class="pre">ebu-simple-producer</span></code> without any arguments.</p>
+<p>This is a command line script. It loads static text from a file (<code class="docutils literal"><span class="pre">ebu-tt-live-toolkit/ebu_tt_live/examples/simple_producer.txt</span></code>) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command <code class="docutils literal"><span class="pre">ebu-simple-producer</span></code> without any arguments.</p>
 <p>The default carriage mechanism is WebSocket, so you will need to listen to <code class="docutils literal"><span class="pre">ws://127.0.0.1:9000</span></code>. Conveniently, we&#8217;ve created an HTML page that does just that. After you launch <code class="docutils literal"><span class="pre">ebu-simple-producer</span></code>, open <code class="docutils literal"><span class="pre">test.html</span></code> in your browser. The &#8216;Broadcast message&#8217; field should be populated with the correct address (<code class="docutils literal"><span class="pre">ws://localhost:9000</span></code>). Click &#8216;Connect&#8217; and then &#8216;Subscribe&#8217;. You can also change the identifier for the sequence. The documents should appear in the window below.</p>
 <p>Alternatively, the Simple Producer can use the file system as the carriage mechanism. Start it with the folder argument, like this: <code class="docutils literal"><span class="pre">ebu-simple-producer</span> <span class="pre">--folder-export</span> <span class="pre">myFolder</span></code>. This saves the documents in <code class="docutils literal"><span class="pre">myFolder</span></code> together with a manifest file that can be used by the Simple Consumer (below). See <a class="reference external" href="filesystem_carriage_mechanism.html">filesystem_carriage_mechanism.html</a> for more details about the file system carriage mechanism.</p>
 </div>
@@ -181,6 +183,10 @@ EBU-TT Live documents into EBU-TT-D documents that can be later used to be embed
 The script launches with the <code class="docutils literal"><span class="pre">ebu-ebuttd-encoder</span></code> command. There are switches to control the mediatime conversion
 reference point and the segmentation interval. Please run <code class="docutils literal"><span class="pre">ebu-ebuttd-encoder</span> <span class="pre">--help</span></code> to find our more.</p>
 </div>
+<div class="section" id="the-ebu-run-script">
+<h2>The ebu-run script<a class="headerlink" href="#the-ebu-run-script" title="Permalink to this headline">¶</a></h2>
+<p>This script is capable of picking up a structured configuration file and use that to create the nodes and carriage mechanism objects that we would like to use and they can be even wired in the same configuration file together so in the end a complex system can be modeled using a single json file. Please refer to <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> as well as <a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config" title="ebu_tt_live.config"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.config</span></code></a> to learn more about the way the configuration logic works. To get help on permitted options for the specified node(s) run <code class="docutils literal"><span class="pre">ebu-run</span></code> with a <code class="docutils literal"><span class="pre">--help</span></code>. See <a class="reference internal" href="configurator.html"><span class="doc">Configuration files and ebu-run</span></a>.</p>
+</div>
 </div>
 
 
@@ -190,10 +196,10 @@ reference point and the segmentation interval. Please run <code class="docutils 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="validation.html" class="btn btn-neutral float-right" title="Document and sequence validation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="configurator.html" class="btn btn-neutral float-right" title="Configuration files and ebu-run" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="filesystem_carriage_mechanism.html" class="btn btn-neutral" title="Filesystem Carriage Mechanism" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="direct_carriage_mechanism.html" class="btn btn-neutral" title="Direct Carriage Mechanism" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

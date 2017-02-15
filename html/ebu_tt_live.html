@@ -92,9 +92,9 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
@@ -167,8 +167,9 @@ user. The very quick overview before the generated source code reference hopeful
 │ └*.py - Custom extension code importing bindings from the raw package and enhancing them with extra functions such as validation capability
 ├─carriage - Carriage Mechanism classes to be used by the Nodes
 ├─clocks - Various reference clock implementations
+├─config - Component configurators
 ├─documents - Document wrapper classes wrapping bindings into an less cluttered interface
-├─example_data - Built-in data files that are used to make the tools easier to run
+├─examples - Built-in data files that are used to make the tools easier to run
 ├─node - Processing node code mostly on the document level independent on carriage mechanism implementation
 ├─scripts - Console scripts that make things easier to run
 ├─twisted - Carriage implementations using the twisted framework(currently websocket server and client classes)
@@ -221,8 +222,11 @@ user. The very quick overview before the generated source code reference hopeful
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.interface"><code class="docutils literal"><span class="pre">interface</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.direct"><code class="docutils literal"><span class="pre">direct</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.filesystem"><code class="docutils literal"><span class="pre">filesystem</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.twisted"><code class="docutils literal"><span class="pre">twisted</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.websocket"><code class="docutils literal"><span class="pre">websocket</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a><ul>
@@ -231,8 +235,14 @@ user. The very quick overview before the generated source code reference hopeful
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.media"><code class="docutils literal"><span class="pre">media</span></code> Module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.configspec.html#id1"><code class="docutils literal"><span class="pre">configspec</span></code> Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config"><code class="docutils literal"><span class="pre">config</span></code> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.backend"><code class="docutils literal"><span class="pre">backend</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.node"><code class="docutils literal"><span class="pre">node</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.carriage"><code class="docutils literal"><span class="pre">carriage</span></code> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.adapters"><code class="docutils literal"><span class="pre">adapters</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.clocks"><code class="docutils literal"><span class="pre">clocks</span></code> module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.common"><code class="docutils literal"><span class="pre">common</span></code> module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a><ul>
@@ -243,8 +253,8 @@ user. The very quick overview before the generated source code reference hopeful
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.example_data.html#id1"><code class="docutils literal"><span class="pre">example_data</span></code> Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.examples.html#id1"><code class="docutils literal"><span class="pre">examples</span></code> Package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a><ul>
@@ -256,6 +266,12 @@ user. The very quick overview before the generated source code reference hopeful
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.common"><code class="docutils literal"><span class="pre">common</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run"><code class="docutils literal"><span class="pre">ebu_run</span></code> Module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html#basic-usage">Basic usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html#adjust-existing-config-file">Adjust existing config file:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html#help">Help:</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
@@ -275,6 +291,24 @@ user. The very quick overview before the generated source code reference hopeful
 </div>
 <div class="section" id="module-ebu_tt_live.errors">
 <span id="errors-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">errors</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.errors" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="ebu_tt_live.errors.ComponentCompatError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">ComponentCompatError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#ComponentCompatError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.ComponentCompatError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.TypeError</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ebu_tt_live.errors.ConfigurationError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">ConfigurationError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#ConfigurationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.ConfigurationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ebu_tt_live.errors.DataCompatError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">DataCompatError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#DataCompatError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.DataCompatError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.TypeError</span></code></p>
+</dd></dl>
+
 <dl class="exception">
 <dt id="ebu_tt_live.errors.DiscardElement">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">DiscardElement</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#DiscardElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.DiscardElement" title="Permalink to this definition">¶</a></dt>
@@ -340,6 +374,12 @@ subtree is not meant to be parsed.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="ebu_tt_live.errors.SequenceNumberCollisionError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">SequenceNumberCollisionError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#SequenceNumberCollisionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.SequenceNumberCollisionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.errors.IncompatibleSequenceError" title="ebu_tt_live.errors.IncompatibleSequenceError"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.errors.IncompatibleSequenceError</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.SequenceOverridden">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">SequenceOverridden</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#SequenceOverridden"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.SequenceOverridden" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -378,6 +418,36 @@ further.</p>
 <div class="section" id="module-ebu_tt_live.utils">
 <span id="utils-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">utils</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.utils" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="ebu_tt_live.utils.AbstractStaticMember">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.utils.</code><code class="descname">AbstractStaticMember</code><span class="sig-paren">(</span><em>validation_func=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#AbstractStaticMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.AbstractStaticMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This allows me to require the subclasses to define some attributes using a customizeable
+validator. The idea is that all static members should be initialized to a value by the time
+abstract functions have all been implemented.</p>
+<dl class="method">
+<dt id="ebu_tt_live.utils.AbstractStaticMember.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>value</em>, <em>member_name</em>, <em>class_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#AbstractStaticMember.validate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.AbstractStaticMember.validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.utils.AnyType">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.utils.</code><code class="descname">AnyType</code><a class="reference internal" href="_modules/ebu_tt_live/utils.html#AnyType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.AnyType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A helper object that compares equal to everything.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.utils.AutoRegisteringABCMeta">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.utils.</code><code class="descname">AutoRegisteringABCMeta</code><a class="reference internal" href="_modules/ebu_tt_live/utils.html#AutoRegisteringABCMeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.AutoRegisteringABCMeta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">abc.ABCMeta</span></code></p>
+<p>This metaclass gets us automatic class registration and cooperates with AbstractStaticMember.
+If none of the 2 features are needed it just provides the basic abc.ABCMeta functionality.
+For the auto registration an abstract class needs to implement the auto_register_impl classmethod.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="ebu_tt_live.utils.ComparableMixin">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.utils.</code><code class="descname">ComparableMixin</code><a class="reference internal" href="_modules/ebu_tt_live/utils.html#ComparableMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.ComparableMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
@@ -386,6 +456,24 @@ custom class implementations that would only like to delegate their comparison t
 This class is Python3 compatible.
 NOTE: This is a slightly modified version of the one suggested by the following blog:
 <a class="reference external" href="https://regebro.wordpress.com/2010/12/13/python-implementing-rich-comparison-the-correct-way/">https://regebro.wordpress.com/2010/12/13/python-implementing-rich-comparison-the-correct-way/</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.utils.HTTPProxyConfig">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.utils.</code><code class="descname">HTTPProxyConfig</code><span class="sig-paren">(</span><em>host</em>, <em>port</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.utils.HTTPProxyConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.utils.HTTPProxyConfig.host">
+<code class="descname">host</code><a class="headerlink" href="#ebu_tt_live.utils.HTTPProxyConfig.host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.utils.HTTPProxyConfig.port">
+<code class="descname">port</code><a class="headerlink" href="#ebu_tt_live.utils.HTTPProxyConfig.port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -448,6 +536,19 @@ regularly for the stopped() condition.</p>
 <dd></dd></dl>
 
 </dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.utils.tokenize_english_document">
+<code class="descclassname">ebu_tt_live.utils.</code><code class="descname">tokenize_english_document</code><span class="sig-paren">(</span><em>input_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#tokenize_english_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.tokenize_english_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a crude tokenizer for input conversations in English.
+:param input_text:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.utils.validate_types_only">
+<code class="descclassname">ebu_tt_live.utils.</code><code class="descname">validate_types_only</code><span class="sig-paren">(</span><em>value</em>, <em>member_name</em>, <em>class_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#validate_types_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.validate_types_only" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 </div>

@@ -92,14 +92,17 @@
 <li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">carriage Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.interface"><code class="docutils literal"><span class="pre">interface</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.direct"><code class="docutils literal"><span class="pre">direct</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.filesystem"><code class="docutils literal"><span class="pre">filesystem</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.twisted"><code class="docutils literal"><span class="pre">twisted</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.carriage.websocket"><code class="docutils literal"><span class="pre">websocket</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
@@ -158,17 +161,290 @@
             
   <div class="section" id="carriage-package">
 <h1>carriage Package<a class="headerlink" href="#carriage-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ebu_tt_live.carriage.interface">
+<span id="interface-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">interface</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.interface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.carriage.interface.ICarriageMechanism">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.interface.</code><code class="descname">ICarriageMechanism</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#ICarriageMechanism"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.ICarriageMechanism" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Basic interface for the carrige mechanisms</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.interface.ICarriageMechanism.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.interface.ICarriageMechanism.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.interface.IConsumerCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.interface.</code><code class="descname">IConsumerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IConsumerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.interface.ICarriageMechanism" title="ebu_tt_live.carriage.interface.ICarriageMechanism"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.interface.ICarriageMechanism</span></code></a></p>
+<p>Node that receives documents and processes them.</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.interface.IConsumerCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.carriage.interface.IConsumerCarriage.consumer_node">
+<code class="descname">consumer_node</code><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage.consumer_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node accessor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.interface.IConsumerCarriage.on_new_data">
+<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IConsumerCarriage.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage.on_new_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement protocol specific preprocessing here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> &#8211; Extra parameters to send down</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.interface.IConsumerCarriage.provides">
+<em class="property">classmethod </em><code class="descname">provides</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IConsumerCarriage.provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage.provides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data type provided</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.interface.IConsumerCarriage.register_consumer_node">
+<code class="descname">register_consumer_node</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IConsumerCarriage.register_consumer_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage.register_consumer_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the consumer node in the carriage mechanism</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.interface.</code><code class="descname">IProducerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IProducerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.interface.ICarriageMechanism" title="ebu_tt_live.carriage.interface.ICarriageMechanism"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.interface.ICarriageMechanism</span></code></a></p>
+<p>Node that emits documents to an output interface, usually some network socket.</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IProducerCarriage.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.emit_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement protocol specific postprocessing here.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>kwargs</strong> &#8211; Extra parameters to send down</li>
+<li><strong>data</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage.expects">
+<em class="property">classmethod </em><code class="descname">expects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IProducerCarriage.expects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.expects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data type expected</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage.producer_node">
+<code class="descname">producer_node</code><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.producer_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Node accessor</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage.register_producer_node">
+<code class="descname">register_producer_node</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IProducerCarriage.register_producer_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.register_producer_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the producer node in the carriage mechanism</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> &#8211; </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.interface.IProducerCarriage.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IProducerCarriage.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This makes sure that the producers can be pulled. This is good for timer or manual triggering</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.carriage.base">
+<span id="base-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">base</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.base" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.carriage.base.AbstractCombinedCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.base.</code><code class="descname">AbstractCombinedCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/base.html#AbstractCombinedCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractCombinedCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage" title="ebu_tt_live.carriage.base.AbstractConsumerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractConsumerCarriage</span></code></a>, <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage" title="ebu_tt_live.carriage.base.AbstractProducerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractProducerCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.base.AbstractCombinedCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractCombinedCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.base.AbstractConsumerCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.base.</code><code class="descname">AbstractConsumerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/base.html#AbstractConsumerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.interface.IConsumerCarriage" title="ebu_tt_live.carriage.interface.IConsumerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.interface.IConsumerCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.base.AbstractConsumerCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.carriage.base.AbstractConsumerCarriage.consumer_node">
+<code class="descname">consumer_node</code><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage.consumer_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.base.AbstractConsumerCarriage.register_consumer_node">
+<code class="descname">register_consumer_node</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/base.html#AbstractConsumerCarriage.register_consumer_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage.register_consumer_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.carriage.base.AbstractProducerCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.base.</code><code class="descname">AbstractProducerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/base.html#AbstractProducerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.interface.IProducerCarriage" title="ebu_tt_live.carriage.interface.IProducerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.interface.IProducerCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.base.AbstractProducerCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.carriage.base.AbstractProducerCarriage.producer_node">
+<code class="descname">producer_node</code><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage.producer_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.base.AbstractProducerCarriage.register_producer_node">
+<code class="descname">register_producer_node</code><span class="sig-paren">(</span><em>node</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/base.html#AbstractProducerCarriage.register_producer_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage.register_producer_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.base.AbstractProducerCarriage.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/base.html#AbstractProducerCarriage.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.carriage.direct">
+<span id="direct-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">direct</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.direct" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.carriage.direct.DirectCarriageImpl">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.direct.</code><code class="descname">DirectCarriageImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/direct.html#DirectCarriageImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.direct.DirectCarriageImpl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractCombinedCarriage" title="ebu_tt_live.carriage.base.AbstractCombinedCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractCombinedCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.direct.DirectCarriageImpl.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.direct.DirectCarriageImpl.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.direct.DirectCarriageImpl.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/direct.html#DirectCarriageImpl.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.direct.DirectCarriageImpl.emit_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.direct.DirectCarriageImpl.on_new_data">
+<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/direct.html#DirectCarriageImpl.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.direct.DirectCarriageImpl.on_new_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.direct.DirectCarriageImpl.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/direct.html#DirectCarriageImpl.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.direct.DirectCarriageImpl.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-ebu_tt_live.carriage.filesystem">
 <span id="filesystem-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">filesystem</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.filesystem" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemConsumerImpl</code><span class="sig-paren">(</span><em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ConsumerCarriageImpl</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage" title="ebu_tt_live.carriage.base.AbstractConsumerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractConsumerCarriage</span></code></a></p>
 <p>This class is responsible for setting the document object from the xml and set its availability time.
 The document is then sent to the node.</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.on_new_data">
-<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.on_new_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl.on_new_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -176,7 +452,7 @@ The document is then sent to the node.</p>
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemProducerImpl</code><span class="sig-paren">(</span><em>dirpath</em>, <em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ProducerCarriageImpl</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage" title="ebu_tt_live.carriage.base.AbstractProducerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractProducerCarriage</span></code></a></p>
 <p>This class implements a carriage mechanism to output produced documents
 to the file system. Its constructor takes a mandatory argument : the path to
 the desired output folder. If the folder does not exist it will be created.
@@ -196,9 +472,14 @@ timebase used by the producer node time may loop (going to the next day). It can
 If the output folder already exists and it contains a manifest_sequenceIdentifier.txt file for the same
 document sequence, the last line of the existing manifest file is parsed to get the last used sequence number
 and the current sequence is set to start from the next sequence number.</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
-<dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document">
-<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -231,9 +512,14 @@ of the producer).</p>
 oldest one is discarded. The size of the buffer can be specified. This is useful for use-cases when the entire
 sequence of files is not meant to be kept, only just the right amount to cover the needs of broadcast requirement
 such as timeshift, which allows the viewer to rewind the TV show within a specific limited time range.</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.filesystem.RotatingFolderExport.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.RotatingFolderExport.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
-<dt id="ebu_tt_live.carriage.filesystem.RotatingFolderExport.emit_document">
-<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#RotatingFolderExport.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.RotatingFolderExport.emit_document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.filesystem.RotatingFolderExport.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#RotatingFolderExport.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.RotatingFolderExport.emit_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -241,10 +527,15 @@ such as timeshift, which allows the viewer to rewind the TV show within a specif
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.SimpleFolderExport">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">SimpleFolderExport</code><span class="sig-paren">(</span><em>dir_path</em>, <em>file_name_pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#SimpleFolderExport"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.SimpleFolderExport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ProducerCarriageImpl</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage" title="ebu_tt_live.carriage.base.AbstractProducerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractProducerCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.filesystem.SimpleFolderExport.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.SimpleFolderExport.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
-<dt id="ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_document">
-<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#SimpleFolderExport.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#SimpleFolderExport.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -260,36 +551,46 @@ such as timeshift, which allows the viewer to rewind the TV show within a specif
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-ebu_tt_live.carriage.twisted">
-<span id="twisted-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">twisted</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.twisted" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ebu_tt_live.carriage.websocket">
+<span id="websocket-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">websocket</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.websocket" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="ebu_tt_live.carriage.twisted.TwistedConsumerImpl">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.twisted.</code><code class="descname">TwistedConsumerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedConsumerImpl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ConsumerCarriageImpl</span></code></p>
+<dt id="ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.websocket.</code><code class="descname">WebsocketConsumerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/websocket.html#WebsocketConsumerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage" title="ebu_tt_live.carriage.base.AbstractConsumerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractConsumerCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
-<dt id="ebu_tt_live.carriage.twisted.TwistedConsumerImpl.on_new_data">
-<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedConsumerImpl.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedConsumerImpl.on_new_data" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage.on_new_data">
+<code class="descname">on_new_data</code><span class="sig-paren">(</span><em>data</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/websocket.html#WebsocketConsumerCarriage.on_new_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage.on_new_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
-<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.twisted.</code><code class="descname">TwistedProducerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.ProducerCarriageImpl</span></code></p>
-<dl class="method">
-<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl.emit_document">
-<code class="descname">emit_document</code><span class="sig-paren">(</span><em>document</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl.emit_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl.emit_document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.websocket.WebsocketProducerCarriage">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.websocket.</code><code class="descname">WebsocketProducerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/websocket.html#WebsocketProducerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage" title="ebu_tt_live.carriage.base.AbstractProducerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractProducerCarriage</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl.register_twisted_producer">
-<code class="descname">register_twisted_producer</code><span class="sig-paren">(</span><em>producer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl.register_twisted_producer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl.register_twisted_producer" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.emit_data">
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>sequence_identifier='default'</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/websocket.html#WebsocketProducerCarriage.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.emit_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ebu_tt_live.carriage.twisted.TwistedProducerImpl.resume_producing">
-<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/twisted.html#TwistedProducerImpl.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.twisted.TwistedProducerImpl.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.register_backend_producer">
+<code class="descname">register_backend_producer</code><span class="sig-paren">(</span><em>producer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/websocket.html#WebsocketProducerCarriage.register_backend_producer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.register_backend_producer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/websocket.html#WebsocketProducerCarriage.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.resume_producing" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

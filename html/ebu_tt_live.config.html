@@ -1,0 +1,906 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>config Package - Component configurators &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="next" title="documents Package" href="ebu_tt_live.documents.html"/>
+        <link rel="prev" title="clocks Package" href="ebu_tt_live.clocks.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#layout-of-the-source-files">Layout of the source files</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">config Package - Component configurators</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config"><code class="docutils literal"><span class="pre">config</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config.backend"><code class="docutils literal"><span class="pre">backend</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config.node"><code class="docutils literal"><span class="pre">node</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config.carriage"><code class="docutils literal"><span class="pre">carriage</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config.adapters"><code class="docutils literal"><span class="pre">adapters</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config.clocks"><code class="docutils literal"><span class="pre">clocks</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.config.common"><code class="docutils literal"><span class="pre">common</span></code> module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="ebu_tt_live.html">Source code reference</a> &raquo;</li>
+      
+    <li>config Package - Component configurators</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/ebu_tt_live.config.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="config-package-component-configurators">
+<h1>config Package - Component configurators<a class="headerlink" href="#config-package-component-configurators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-ebu_tt_live.config">
+<span id="config-package"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">config</span></code> Package<a class="headerlink" href="#module-ebu_tt_live.config" title="Permalink to this headline">¶</a></h2>
+<p>This subpackage is meant to contain configuration directives of validation and normalization as well as defaults.
+The current plan is to use mozilla/configman package. Ultimately there is one goal there. Avoid any
+runtime errors because of a broken configuration value being used at a later stage in execution at which point due to
+not having been validated would cause the system to break. Validation and normalization eliminates this problem
+completely. This means At startup time we can be sure that all of the configuration values match the requirements
+of successful operation.</p>
+<p>Further on there is the requirement of the code to be independent from the configurator. The code needs to be
+written in a way that the modules are self-contained and only expect their dependencies to have a particular interface
+but not knowing about the details of their configuration. Therefore in the modules dependency injection is used. In
+turn however these configurator classes are here to make sure the configuration is possible via a single structured
+configuration file or environment variables or command line argument overrides.</p>
+<p>The mozilla/configman package gives a modular way of writing a complex configuration factory that is
+controllable by file, environment and command line arguments. This gives great flexibility as the configuration of
+the individual modules can be self-contained as much as possible yet it is possible to have system-wide configuration
+parameters, such as a HTTP proxy.</p>
+</div>
+<div class="section" id="module-ebu_tt_live.config.backend">
+<span id="backend-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">backend</span></code> module<a class="headerlink" href="#module-ebu_tt_live.config.backend" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.config.backend.BackendBase">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.backend.</code><code class="descname">BackendBase</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#BackendBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.BackendBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.BackendBase.call_once">
+<code class="descname">call_once</code><span class="sig-paren">(</span><em>func</em>, <em>delay=0.0</em>, <em>result_callback=None</em>, <em>error_callback=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#BackendBase.call_once"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.BackendBase.call_once" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.BackendBase.call_periodically">
+<code class="descname">call_periodically</code><span class="sig-paren">(</span><em>func</em>, <em>interval=0.0</em>, <em>result_callback=None</em>, <em>error_callback=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#BackendBase.call_periodically"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.BackendBase.call_periodically" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.BackendBase.register_component_start">
+<code class="descname">register_component_start</code><span class="sig-paren">(</span><em>component</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#BackendBase.register_component_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.BackendBase.register_component_start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.BackendBase.register_configurator">
+<code class="descname">register_configurator</code><span class="sig-paren">(</span><em>configurator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#BackendBase.register_configurator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.BackendBase.register_configurator" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.BackendBase.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#BackendBase.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.BackendBase.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.backend.DummyBackend">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.backend.</code><code class="descname">DummyBackend</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#DummyBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.DummyBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.backend.BackendBase" title="ebu_tt_live.config.backend.BackendBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.backend.BackendBase</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.DummyBackend.call_once">
+<code class="descname">call_once</code><span class="sig-paren">(</span><em>func</em>, <em>delay=0.0</em>, <em>result_callback=None</em>, <em>error_callback=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#DummyBackend.call_once"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.DummyBackend.call_once" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.DummyBackend.call_periodically">
+<code class="descname">call_periodically</code><span class="sig-paren">(</span><em>func</em>, <em>interval=0.0</em>, <em>result_callback=None</em>, <em>error_callback=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#DummyBackend.call_periodically"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.DummyBackend.call_periodically" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.backend.TwistedBackend">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.backend.</code><code class="descname">TwistedBackend</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.backend.BackendBase" title="ebu_tt_live.config.backend.BackendBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.backend.BackendBase</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.call_once">
+<code class="descname">call_once</code><span class="sig-paren">(</span><em>func</em>, <em>delay=0.0</em>, <em>result_callback=None</em>, <em>error_callback=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.call_once"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.call_once" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.call_periodically">
+<code class="descname">call_periodically</code><span class="sig-paren">(</span><em>func</em>, <em>interval=0.0</em>, <em>result_callback=None</em>, <em>error_callback=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.call_periodically"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.call_periodically" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.ws_backend_consumer">
+<code class="descname">ws_backend_consumer</code><span class="sig-paren">(</span><em>custom_consumer</em>, <em>listen=None</em>, <em>connect=None</em>, <em>proxy=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.ws_backend_consumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.ws_backend_consumer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.ws_backend_producer">
+<code class="descname">ws_backend_producer</code><span class="sig-paren">(</span><em>custom_producer</em>, <em>listen=None</em>, <em>connect=None</em>, <em>proxy=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.ws_backend_producer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.ws_backend_producer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>The following cases to be considered.</dt>
+<dd><ol class="first last arabic simple">
+<li><dl class="first docutils">
+<dt>There is listen address</dt>
+<dd>1.1. The address is used by another producer: ERROR
+1.2. The address is used by another protocol: ERROR
+1.3. The address is used by a consumer server: create producer and assign it to the factory
+1.4. The address is not in use: Create factory and create producer</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>There are connections to make with <em>publish</em> action</dt>
+<dd>2.1 There is a producer from the server. Use that. Create client factories with it.
+2.2 There is no producer from the server. Create producer, create client factories with it.</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>custom_producer</strong> &#8211; </li>
+<li><strong>listen</strong> &#8211; </li>
+<li><strong>connect</strong> &#8211; </li>
+<li><strong>proxy</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">The Twisted Producer instance with server socket and/or client connections</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.wsl_backend_consumer">
+<code class="descname">wsl_backend_consumer</code><span class="sig-paren">(</span><em>uri</em>, <em>custom_consumer</em>, <em>proxy=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.wsl_backend_consumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.wsl_backend_consumer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.backend.TwistedBackend.wsl_backend_producer">
+<code class="descname">wsl_backend_producer</code><span class="sig-paren">(</span><em>uri</em>, <em>custom_producer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#TwistedBackend.wsl_backend_producer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.TwistedBackend.wsl_backend_producer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.backend.UniversalBackend">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.backend.</code><code class="descname">UniversalBackend</code><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#UniversalBackend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.UniversalBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">configman.required_config.RequiredConfig</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.backend.UniversalBackend.backend">
+<code class="descname">backend</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.backend.UniversalBackend.backend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.backend.UniversalBackend.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.backend.UniversalBackend.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.backend.get_backend">
+<code class="descclassname">ebu_tt_live.config.backend.</code><code class="descname">get_backend</code><span class="sig-paren">(</span><em>backend_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/backend.html#get_backend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.backend.get_backend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.config.node">
+<span id="node-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">node</span></code> module<a class="headerlink" href="#module-ebu_tt_live.config.node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.config.node.BufferDelay">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">BufferDelay</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#BufferDelay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.BufferDelay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.node.ConsumerMixin" title="ebu_tt_live.config.node.ConsumerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ConsumerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.ProducerMixin" title="ebu_tt_live.config.node.ProducerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ProducerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.NodeBase" title="ebu_tt_live.config.node.NodeBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.NodeBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.BufferDelay.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.BufferDelay.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.ConsumerMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">ConsumerMixin</code><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#ConsumerMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.ConsumerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">configman.required_config.RequiredConfig</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.ConsumerMixin.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.ConsumerMixin.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.EBUTTDEncoder">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">EBUTTDEncoder</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#EBUTTDEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.EBUTTDEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.node.ProducerMixin" title="ebu_tt_live.config.node.ProducerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ProducerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.ConsumerMixin" title="ebu_tt_live.config.node.ConsumerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ConsumerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.NodeBase" title="ebu_tt_live.config.node.NodeBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.NodeBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.EBUTTDEncoder.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.EBUTTDEncoder.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.NodeBase">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">NodeBase</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#NodeBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.NodeBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.NodeBase.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.NodeBase.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.ProducerMixin">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">ProducerMixin</code><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#ProducerMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.ProducerMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">configman.required_config.RequiredConfig</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.ProducerMixin.output">
+<code class="descname">output</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.config.node.ProducerMixin.output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.ProducerMixin.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.ProducerMixin.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.ReSequencer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">ReSequencer</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#ReSequencer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.ReSequencer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.node.ProducerMixin" title="ebu_tt_live.config.node.ProducerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ProducerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.ConsumerMixin" title="ebu_tt_live.config.node.ConsumerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ConsumerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.NodeBase" title="ebu_tt_live.config.node.NodeBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.NodeBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.ReSequencer.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.ReSequencer.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.node.ReSequencer.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#ReSequencer.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.ReSequencer.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.RetimingDelay">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">RetimingDelay</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#RetimingDelay"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.RetimingDelay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.node.ConsumerMixin" title="ebu_tt_live.config.node.ConsumerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ConsumerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.ProducerMixin" title="ebu_tt_live.config.node.ProducerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ProducerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.NodeBase" title="ebu_tt_live.config.node.NodeBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.NodeBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.RetimingDelay.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.RetimingDelay.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.SimpleConsumer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">SimpleConsumer</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#SimpleConsumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.SimpleConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.node.ConsumerMixin" title="ebu_tt_live.config.node.ConsumerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ConsumerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.NodeBase" title="ebu_tt_live.config.node.NodeBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.NodeBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.SimpleConsumer.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.SimpleConsumer.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.SimpleProducer">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">SimpleProducer</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#SimpleProducer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.SimpleProducer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.node.ProducerMixin" title="ebu_tt_live.config.node.ProducerMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.ProducerMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.config.node.NodeBase" title="ebu_tt_live.config.node.NodeBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.node.NodeBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.SimpleProducer.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.SimpleProducer.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.node.SimpleProducer.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#SimpleProducer.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.SimpleProducer.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.UniversalNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">UniversalNode</code><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#UniversalNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">configman.required_config.RequiredConfig</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNode.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNode.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.UniversalNodeList">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">UniversalNodeList</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#UniversalNodeList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.configure_component">
+<em class="property">classmethod </em><code class="descname">configure_component</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#UniversalNodeList.configure_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.configure_component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node1">
+<code class="descname">node1</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node2">
+<code class="descname">node2</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node3">
+<code class="descname">node3</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node4">
+<code class="descname">node4</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node5">
+<code class="descname">node5</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node6">
+<code class="descname">node6</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node6" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.node7">
+<code class="descname">node7</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.node7" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodeList.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodeList.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.node.UniversalNodes">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">UniversalNodes</code><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#UniversalNodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">configman.required_config.RequiredConfig</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.node.UniversalNodes.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.node.UniversalNodes.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.node.get_node">
+<code class="descclassname">ebu_tt_live.config.node.</code><code class="descname">get_node</code><span class="sig-paren">(</span><em>node_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/node.html#get_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.node.get_node" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.config.carriage">
+<span id="carriage-package"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">carriage</span></code> Package<a class="headerlink" href="#module-ebu_tt_live.config.carriage" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.DirectCommon">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">DirectCommon</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#DirectCommon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.DirectCommon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.config.carriage.DirectCommon.configure_component">
+<em class="property">classmethod </em><code class="descname">configure_component</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#DirectCommon.configure_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.DirectCommon.configure_component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.DirectCommon.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.DirectCommon.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.DirectInput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">DirectInput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#DirectInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.DirectInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.DirectCommon" title="ebu_tt_live.config.carriage.DirectCommon"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.DirectCommon</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.DirectOutput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">DirectOutput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#DirectOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.DirectOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.DirectCommon" title="ebu_tt_live.config.carriage.DirectCommon"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.DirectCommon</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.FileOutputCommon">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">FileOutputCommon</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#FileOutputCommon"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.FileOutputCommon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.FileOutputCommon.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.FileOutputCommon.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.FilesystemInput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">FilesystemInput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#FilesystemInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.FilesystemInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.FilesystemInput.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.FilesystemInput.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.carriage.FilesystemInput.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#FilesystemInput.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.FilesystemInput.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.FilesystemOutput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">FilesystemOutput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#FilesystemOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.FilesystemOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.FileOutputCommon" title="ebu_tt_live.config.carriage.FileOutputCommon"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.FileOutputCommon</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.SimpleFilesystemOutput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">SimpleFilesystemOutput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#SimpleFilesystemOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.SimpleFilesystemOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.FileOutputCommon" title="ebu_tt_live.config.carriage.FileOutputCommon"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.FileOutputCommon</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.SimpleFilesystemOutput.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.SimpleFilesystemOutput.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.WebsocketBase">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">WebsocketBase</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.WebsocketBase.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketBase.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.WebsocketInput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">WebsocketInput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.WebsocketBase" title="ebu_tt_live.config.carriage.WebsocketBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.WebsocketBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.WebsocketInput.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketInput.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.carriage.WebsocketInput.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketInput.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketInput.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyBase">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">WebsocketLegacyBase</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketLegacyBase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyBase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyBase.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyBase.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyInput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">WebsocketLegacyInput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketLegacyInput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.WebsocketLegacyBase" title="ebu_tt_live.config.carriage.WebsocketLegacyBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.WebsocketLegacyBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyInput.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyInput.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyInput.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketLegacyInput.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyInput.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyOutput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">WebsocketLegacyOutput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketLegacyOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.WebsocketLegacyBase" title="ebu_tt_live.config.carriage.WebsocketLegacyBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.WebsocketLegacyBase</span></code></a></p>
+<dl class="method">
+<dt id="ebu_tt_live.config.carriage.WebsocketLegacyOutput.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketLegacyOutput.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketLegacyOutput.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.carriage.WebsocketOutput">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">WebsocketOutput</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketOutput"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.carriage.WebsocketBase" title="ebu_tt_live.config.carriage.WebsocketBase"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.carriage.WebsocketBase</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.carriage.WebsocketOutput.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketOutput.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.carriage.WebsocketOutput.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#WebsocketOutput.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.WebsocketOutput.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.carriage.get_consumer_carriage">
+<code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">get_consumer_carriage</code><span class="sig-paren">(</span><em>carriage_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#get_consumer_carriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.get_consumer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.carriage.get_producer_carriage">
+<code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">get_producer_carriage</code><span class="sig-paren">(</span><em>carriage_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#get_producer_carriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.get_producer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.carriage.parse_proxy_address">
+<code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">parse_proxy_address</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#parse_proxy_address"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.parse_proxy_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.carriage.parse_url_list">
+<code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">parse_url_list</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#parse_url_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.parse_url_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.carriage.str_to_url_converter">
+<code class="descclassname">ebu_tt_live.config.carriage.</code><code class="descname">str_to_url_converter</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/carriage.html#str_to_url_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.carriage.str_to_url_converter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.config.adapters">
+<span id="adapters-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">adapters</span></code> module<a class="headerlink" href="#module-ebu_tt_live.config.adapters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.config.adapters.ConsumerNodeCarriageAdapter">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.adapters.</code><code class="descname">ConsumerNodeCarriageAdapter</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/adapters.html#ConsumerNodeCarriageAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.adapters.ConsumerNodeCarriageAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.config.adapters.ConsumerNodeCarriageAdapter.configure_component">
+<em class="property">classmethod </em><code class="descname">configure_component</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>consumer=None</em>, <em>carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/adapters.html#ConsumerNodeCarriageAdapter.configure_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.adapters.ConsumerNodeCarriageAdapter.configure_component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.adapters.ProducerNodeCarriageAdapter">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.adapters.</code><code class="descname">ProducerNodeCarriageAdapter</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/adapters.html#ProducerNodeCarriageAdapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.adapters.ProducerNodeCarriageAdapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.config.adapters.ProducerNodeCarriageAdapter.configure_component">
+<em class="property">classmethod </em><code class="descname">configure_component</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>producer=None</em>, <em>carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/adapters.html#ProducerNodeCarriageAdapter.configure_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.adapters.ProducerNodeCarriageAdapter.configure_component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.adapters.parse_adapter_list">
+<code class="descclassname">ebu_tt_live.config.adapters.</code><code class="descname">parse_adapter_list</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/adapters.html#parse_adapter_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.adapters.parse_adapter_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.config.clocks">
+<span id="clocks-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">clocks</span></code> module<a class="headerlink" href="#module-ebu_tt_live.config.clocks" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.config.clocks.DummyClock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.clocks.</code><code class="descname">DummyClock</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/clocks.html#DummyClock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.clocks.DummyClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+<p>This wrapper returns None for reference clock allowing the consumer to create a reference clock from the first
+document received</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.clocks.DummyClock.component">
+<code class="descname">component</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.config.clocks.DummyClock.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.clocks.LocalMachineClock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.clocks.</code><code class="descname">LocalMachineClock</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/clocks.html#LocalMachineClock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.clocks.LocalMachineClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.config.clocks.UTCClock">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.clocks.</code><code class="descname">UTCClock</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/clocks.html#UTCClock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.clocks.UTCClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.config.common.ConfigurableComponent" title="ebu_tt_live.config.common.ConfigurableComponent"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.config.common.ConfigurableComponent</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.clocks.get_clock">
+<code class="descclassname">ebu_tt_live.config.clocks.</code><code class="descname">get_clock</code><span class="sig-paren">(</span><em>clock_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/clocks.html#get_clock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.clocks.get_clock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.config.common">
+<span id="common-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">common</span></code> module<a class="headerlink" href="#module-ebu_tt_live.config.common" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.config.common.</code><code class="descname">ConfigurableComponent</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>backend=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/common.html#ConfigurableComponent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">configman.required_config.RequiredConfig</span></code></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.backend">
+<code class="descname">backend</code><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.backend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.component">
+<code class="descname">component</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.component" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.config">
+<code class="descname">config</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.configure_component">
+<em class="property">classmethod </em><code class="descname">configure_component</code><span class="sig-paren">(</span><em>config</em>, <em>local_config</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/common.html#ConfigurableComponent.configure_component"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.configure_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a class method to either return an instance that already exists or create one.
+:param config:
+:param local_config:
+:param kwargs: Extra parameters
+:return: Instance of ConfigurableComponent</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.required_config">
+<code class="descname">required_config</code><em class="property"> = &lt;configman.namespace.Namespace object&gt;</em><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.required_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.resolve_runtime_variables">
+<em class="property">classmethod </em><code class="descname">resolve_runtime_variables</code><span class="sig-paren">(</span><em>str_parameter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/common.html#ConfigurableComponent.resolve_runtime_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.resolve_runtime_variables" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.start">
+<code class="descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/common.html#ConfigurableComponent.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.config.common.ConfigurableComponent.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/common.html#ConfigurableComponent.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.common.ConfigurableComponent.stop" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.config.common.install_app">
+<code class="descclassname">ebu_tt_live.config.common.</code><code class="descname">install_app</code><span class="sig-paren">(</span><em>app_obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/config/common.html#install_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.config.common.install_app" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.documents.html" class="btn btn-neutral float-right" title="documents Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ebu_tt_live.clocks.html" class="btn btn-neutral" title="clocks Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

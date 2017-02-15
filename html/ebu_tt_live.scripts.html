@@ -93,12 +93,13 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">scripts Package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.common"><code class="docutils literal"><span class="pre">common</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_run"><code class="docutils literal"><span class="pre">ebu_run</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
@@ -169,19 +170,47 @@
 <code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">create_loggers</code><span class="sig-paren">(</span><em>level=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#create_loggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.create_loggers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</div>
+<div class="section" id="module-ebu_tt_live.scripts.ebu_run">
+<span id="ebu-run-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_run</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_run" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">ebu-run</span></code> script is a universal runner for any component or complex interconnected sets of components
+based on a compliant configuration file or set of valid options. The configuration framework uses
+the mozilla/configman package that picks up configuration from command line/config file.</p>
+<div class="section" id="basic-usage">
+<h3>Basic usage:<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="adjust-existing-config-file">
+<h3>Adjust existing config file:<a class="headerlink" href="#adjust-existing-config-file" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">nodes</span><span class="o">.</span><span class="n">node1</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="o">=</span><span class="n">Sequence2</span>
+</pre></div>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="help">
+<h3>Help:<a class="headerlink" href="#help" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">help</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The &#8211;help flag aims to be context matching so anywhere as long as configman is used is expected and it elaborates
+the directly accessible config file keys using the current configuration structure as well as possible alternative
+values for the keys already having a value from the config file or from the command line.</p>
+<p>Since the components and their connections are not hard-coded the <code class="docutils literal"><span class="pre">ebu-run</span></code> does not have a single purpose
+limitation. The usage of a configurator facilitates the configuration mapping of a single node or an entire complex
+interconnected set of nodes via various carriage mechanisms, events and timings.</p>
 <dl class="function">
-<dt id="ebu_tt_live.scripts.common.parse_config">
-<code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">parse_config</code><span class="sig-paren">(</span><em>config</em>, <em>module_name=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#parse_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.parse_config" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.scripts.ebu_run.main">
+<code class="descclassname">ebu_tt_live.scripts.ebu_run.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_run.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_run.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="ebu_tt_live.scripts.common.tokenize_english_document">
-<code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">tokenize_english_document</code><span class="sig-paren">(</span><em>input_text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#tokenize_english_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.tokenize_english_document" title="Permalink to this definition">¶</a></dt>
-<dd><p>This is a crude tokenizer for input conversations in English.
-:param input_text:
-:return:</p>
-</dd></dl>
-
+</div>
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_dummy_encoder">
 <span id="ebu-dummy-encoder-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder" title="Permalink to this headline">¶</a></h2>

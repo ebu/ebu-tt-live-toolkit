@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuration files and ebu-run &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
+        <link rel="next" title="Document and sequence validation" href="validation.html"/>
+        <link rel="prev" title="Scripts and their functions" href="scripts_and_their_functions.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-configuration-file-structure">The configuration file structure</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
+      
+    <li>Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/configurator.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="configuration-files-and-ebu-run">
+<h1>Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code><a class="headerlink" href="#configuration-files-and-ebu-run" title="Permalink to this headline">¶</a></h1>
+<p>There are 2 ways the nodes and carriage mechanisms can be set up:</p>
+<blockquote>
+<div><p>1. Write a script where you instantiate these components and connect them. This technique uses
+dependency injection. This means the nodes and carriage mechanisms do not need to know about the creation of
+each other. They just get the already created component referenced as a parameter, and check if that component
+implements the expected interface. This eliminates the possibility of creating spaghetti code where every node would know
+how to create every carriage mechanism and deal with all the possible parameters and every carriage mechanism would know
+in turn how to instantiate every node. This is to be avoided! And this brings us to the second way to do this.</p>
+<p>2. Use the component configurators and use a simple configuration file to create your system and give the
+configuration file to the <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> script, which takes care of creating all the
+required components for you. This eliminates the need for a programmer to keep repeating the configuration logic
+in their scripts where they create the components.</p>
+</div></blockquote>
+<p>The idea is the following: The components(nodes, carriage mechanisms, converters, re-sequencers...etc.) are agnostic
+to one another as long as the carriage mechanism is capable of transporting the payload the node expects. But their
+wiring and their factories are actually the configurator classes. The configurator class defines the type and
+name of the configuration options relevant to the component and wires it with its immediate dependencies. This
+way the factories that create the system are separate from the system&#8217;s business logic and this separation is
+meant to be kept. There is a simple naming correspondence. For instance the business logic of the processing
+nodes are in the <a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node" title="ebu_tt_live.node"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.node</span></code></a> package while their configurators are to be found in the
+<a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.node" title="ebu_tt_live.config.node"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.config.node</span></code></a> module.</p>
+<div class="section" id="the-configuration-file-structure">
+<h2>The configuration file structure<a class="headerlink" href="#the-configuration-file-structure" title="Permalink to this headline">¶</a></h2>
+<p>The configuration file is JSON at the moment. The general structure looks like this:</p>
+<blockquote>
+<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;node1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;simple-producer&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
+            <span class="o">...</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;node2&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="o">...</span> <span class="p">},</span>
+        <span class="o">...</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;twisted&quot;</span><span class="p">,</span>
+        <span class="o">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>The nodes are supposed to be compatible with the chosen backend. The backend object is instantiated first and
+every component configurator has access to the backend that was created and it is their responsibility to
+ensure that compatibility is checked with the backend. The backend provides a framework for
+timing things, network stack access, threading... etc. Different backends may offer different features and if
+a component configurator is not compatible with the backend object it should raise a ConfigurationError.</p>
+<p>The node contains either an input or an output section or both in case it is a node that both receives and emits
+sequences at the same time, like a forwarder node, a handover node, a converter... etc. The input and output bits
+define the carriage mechanism that that side is supposed to be talking to. So providing 2 nodes: 1) a producer with
+an output carriage mechanism that is &#8220;websocket&#8221; and 2) a consumer of an input carriage mechanism of the same websocket
+address that the producer is using essentially creates a loopback through the network stack between the 2 nodes
+and they will talk to one another. An even more convenient way of doing the same thing is to use
+the carriage mechanism type: <code class="docutils literal"><span class="pre">direct</span></code> which simply transfers the payload data in memory without going via e.g. a network stack.</p>
+<p>The more detailed options are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>nodes
+├─[nodeN] : a node to configure - any from node1 to node9
+│ ├─type : [&quot;simple-consumer&quot; | &quot;simple-producer&quot; | &quot;resequencer&quot; | &quot;ebuttd-encoder&quot; | &quot;buffer-delay&quot; | &quot;retiming-delay&quot;]
+│ ├─output : the output settings for the node, if applicable
+│ │ ├─carriage : the carriage mechanism to use to get incoming documents
+│ │ │ ├─type : [&quot;direct&quot; | &quot;filesystem&quot; | &quot;filesystem-simple&quot; | &quot;websocket&quot; | &quot;websocket-legacy&quot;]
+│ │ │ └─[output carriage type-dependent options - see below]
+│ │ └─adapters : see below
+│ ├─input : the input settings for the node, if applicable
+│ │ ├─carriage : the carriage mechanism to use to emit outgoing documents
+│ │ │ ├─type : [&quot;direct&quot; | &quot;filesystem&quot; | &quot;websocket&quot; (default) | &quot;websocket-legacy&quot;]
+│ │ │ └─[input carriage type-dependent options - see below]
+│ │ └─adapters : see below
+│ ├─id : identifier for the node, defaults to a value based on the node&#39;s type.
+│ └─[node type-dependent options - see below]
+backend
+└─type: [&quot;twisted&quot; (default) | &quot;dummy&quot;]
+</pre></div>
+</div>
+<p>Node type dependent options for [nodeN] :</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>type=&quot;simple-consumer&quot;
+├─verbose : whether to log subtitle content on activation changes, default False
+└─clock
+  └─type : [&quot;auto&quot; (default) | &quot;utc&quot; | &quot;local&quot;]
+
+type=&quot;simple-producer&quot;
+├─show_time : Whether to put the current time in the output text (true) or use the default text file input (false, default)
+├─sequence_identifier : sequence identifier, default &quot;TestSequence1&quot;
+├─interval : period between each document in seconds, default 2
+└─clock
+  └─type : [&quot;local&quot; (default) | &quot;auto&quot; | &quot;clock&quot;]
+
+type=&quot;resequencer&quot;
+├─sequence_identifier : sequence identifier, default &quot;re-sequencer&quot;
+├─segment_length : duration of each output segment in seconds, default 2
+├─begin_output : [&quot;immediate&quot; (default) | {begin time} ] the time at which the first output segment should begin.
+├─discard : whether to discard content that has been encoded, default True
+└─clock
+  └─type : [&quot;local&quot; (default) | &quot;auto&quot; | &quot;clock&quot;]
+
+type=&quot;ebuttd-encoder&quot;
+├─media_time_zero : [&quot;current&quot; (default) | clock time at media time zero TODO: check format]
+├─default_namespace : [&quot;false&quot; (default) | &quot;true&quot;]
+└─clock
+  └─type : [&quot;local&quot; (default) | &quot;auto&quot; | &quot;utc&quot;]
+
+type=&quot;buffer-delay&quot;
+└─delay : delay in seconds, default 0
+
+type=&quot;retiming-delay&quot;
+├─delay : delay in seconds, default 0
+└─sequence_identifier : sequence identifier, default &quot;RetimedSequence1&quot;
+</pre></div>
+</div>
+<p>Output carriage type dependent options for &#8220;carriage&#8221;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>type=&quot;direct&quot;
+└─id : id of the &#39;pipe&#39; to write to, default &quot;default&quot;
+
+type=&quot;filesystem&quot;
+└─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default &quot;./export&quot;
+
+type=&quot;filesystem-simple&quot;
+├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default &quot;./export&quot;
+├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
+└─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default &quot;export-{counter}.xml&quot;
+
+type=&quot;websocket&quot;
+├─proxy : HTTP proxy in format ADDR:PORT
+├─listen : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default &quot;ws://localhost:9001&quot;
+└─connect : List of /publish connections to make. Expected values are URL strings which will be parsed; if one does not conform to the pattern a config error will be generated..
+  └─Example: ws://&lt;host&gt;:&lt;port&gt;/&lt;sequenceIdentifier&gt;/publish
+
+type=&quot;websocket-legacy&quot;
+└─uri : URI to listen for connections on, default &quot;ws://localhost:9001&quot;
+</pre></div>
+</div>
+<p>Input carriage type dependent options for &#8220;carriage&#8221;:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>type=&quot;direct&quot;
+└─id : id of the pipe to read from, default &quot;default&quot;
+
+type=&quot;filesystem&quot;
+├─manifest_file : The timing manifest file for importing files. Files are required to be in the same folder as the manifest file.
+└─tail : Keep the manifest open and wait for new input much like UNIX&#39;s tail -f command
+
+type=&quot;filesystem-simple&quot;
+├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default &quot;./export&quot;
+├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
+└─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default &quot;export-{counter}.xml&quot;
+
+type=&quot;websocket&quot;
+├─proxy : HTTP proxy in format ADDR:PORT
+├─listen : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default &quot;ws://localhost:9001&quot;
+└─connect : List of /subscribe connections to make. Expected values are URL strings which will be parsed; if one does not conform to the pattern a config error will be generated..
+  └─Example: ws://&lt;host&gt;:&lt;port&gt;/&lt;sequenceIdentifier&gt;/subscribe
+
+type=&quot;websocket-legacy&quot;
+├─proxy : HTTP proxy in format ADDR:PORT
+└─uri : URI to connect to, default &quot;ws://localhost:9001&quot;
+</pre></div>
+</div>
+<p>Adapters will be automatically selected if not specified, or can be manually specified:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>adapters
+├─xml-&gt;ebutt3 : XML serialisation to EBU-TT Part 3
+├─xml-&gt;ebuttd : XML serialisation to EBU-TT-D
+├─ebutt3-&gt;xml : EBU-TT Part 3 to XML serialisation
+└─ebuttd-&gt;xml : EBU-TT-D to XML serialisation
+</pre></div>
+</div>
+<p>Please refer to the <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> for more information. Example <code class="docutils literal"><span class="pre">.conf</span></code> files for some common configurations can be found in <code class="docutils literal"><span class="pre">examples/config</span></code></p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="validation.html" class="btn btn-neutral float-right" title="Document and sequence validation" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="scripts_and_their_functions.html" class="btn btn-neutral" title="Scripts and their functions" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

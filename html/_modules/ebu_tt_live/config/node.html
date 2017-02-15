@@ -1,0 +1,540 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.config.node &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      
+    <li>ebu_tt_live.config.node</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.config.node</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">ConfigurableComponent</span><span class="p">,</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">converters</span><span class="p">,</span> <span class="n">RequiredConfig</span>
+<span class="kn">from</span> <span class="nn">.clocks</span> <span class="k">import</span> <span class="n">get_clock</span>
+<span class="kn">from</span> <span class="nn">.carriage</span> <span class="k">import</span> <span class="n">get_producer_carriage</span><span class="p">,</span> <span class="n">get_consumer_carriage</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">documents</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">bindings</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.examples</span> <span class="k">import</span> <span class="n">get_example_data</span>
+<span class="kn">import</span> <span class="nn">ebu_tt_live.node</span> <span class="k">as</span> <span class="nn">processing_node</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">cycle</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">tokenize_english_document</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_CONF_NO_SUCH_NODE</span>
+<span class="kn">from</span> <span class="nn">.adapters</span> <span class="k">import</span> <span class="n">ProducerNodeCarriageAdapter</span><span class="p">,</span> <span class="n">ConsumerNodeCarriageAdapter</span>
+
+
+<div class="viewcode-block" id="NodeBase"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.NodeBase">[docs]</a><span class="k">class</span> <span class="nc">NodeBase</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;generic_node&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProducerMixin"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.ProducerMixin">[docs]</a><span class="k">class</span> <span class="nc">ProducerMixin</span><span class="p">(</span><span class="n">RequiredConfig</span><span class="p">):</span>
+
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">carriage</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">carriage</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;websocket&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_producer_carriage</span>
+    <span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;adapters&#39;</span><span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_create_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">carriage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">carriage</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">configure_component</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">carriage</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">adapters</span> <span class="o">=</span> <span class="n">ProducerNodeCarriageAdapter</span><span class="o">.</span><span class="n">configure_component</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">local_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">adapters</span><span class="p">,</span>
+            <span class="n">producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
+            <span class="n">carriage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">carriage</span><span class="o">.</span><span class="n">component</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ConsumerMixin"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.ConsumerMixin">[docs]</a><span class="k">class</span> <span class="nc">ConsumerMixin</span><span class="p">(</span><span class="n">RequiredConfig</span><span class="p">):</span>
+
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">input</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">carriage</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">carriage</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+        <span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;websocket&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_consumer_carriage</span>
+    <span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;adapters&#39;</span><span class="p">)</span>
+
+    <span class="n">_input</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_create_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">carriage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">carriage</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">configure_component</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">carriage</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">adapters</span> <span class="o">=</span> <span class="n">ConsumerNodeCarriageAdapter</span><span class="o">.</span><span class="n">configure_component</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">local_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">adapters</span><span class="p">,</span>
+            <span class="n">consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
+            <span class="n">carriage</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_input</span><span class="o">.</span><span class="n">carriage</span><span class="o">.</span><span class="n">component</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.SimpleConsumer">[docs]</a><span class="k">class</span> <span class="nc">SimpleConsumer</span><span class="p">(</span><span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;simple-consumer&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;Log subtitle content on activation changes&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_clock</span><span class="p">)</span>
+
+    <span class="n">_input</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">reference_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">SimpleConsumer</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">verbose</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SimpleConsumer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReSequencer"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.ReSequencer">[docs]</a><span class="k">class</span> <span class="nc">ReSequencer</span><span class="p">(</span><span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;re-sequencer&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ReSequenced1&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;segment_length&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_clock</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;discard&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+        <span class="s1">&#39;begin_output&#39;</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;The time to begin outputting segments according to the clock&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;immediate&#39;</span>
+    <span class="p">)</span>
+
+    <span class="n">_output</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_clock</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_begin_delay</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span>
+
+        <span class="n">begin_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">begin_output</span>
+        <span class="k">if</span> <span class="n">begin_output</span> <span class="o">==</span> <span class="s1">&#39;immediate&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_begin_delay</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_begin_delay</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">ebuttdt</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span>
+                <span class="n">begin_output</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clock</span><span class="o">.</span><span class="n">component</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_begin_delay</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_begin_delay</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">ReSequencer</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_clock</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
+            <span class="n">discard</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">discard</span><span class="p">,</span>
+            <span class="n">segment_length</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">segment_length</span><span class="p">,</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sequence_identifier</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ReSequencer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_start_looping_call</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">call_periodically</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="o">.</span><span class="n">convert_next_segment</span><span class="p">,</span>
+            <span class="n">interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">segment_length</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="ReSequencer.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.ReSequencer.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">call_once</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_looping_call</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_begin_delay</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BufferDelay"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.BufferDelay">[docs]</a><span class="k">class</span> <span class="nc">BufferDelay</span><span class="p">(</span><span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;buffer-delay&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;delay&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">reference_clock</span> <span class="o">=</span> <span class="n">get_clock</span><span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">)(</span><span class="n">config</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">BufferDelayNode</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">document_sequence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">carriage_impl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">fixed_delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">component</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BufferDelay</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RetimingDelay"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.RetimingDelay">[docs]</a><span class="k">class</span> <span class="nc">RetimingDelay</span><span class="p">(</span><span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;retiming-delay&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;delay&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;RetimedSequence1&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">reference_clock</span> <span class="o">=</span> <span class="n">get_clock</span><span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">)(</span><span class="n">config</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">RetimingDelayNode</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">document_sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">fixed_delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">component</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RetimingDelay</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SimpleProducer"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.SimpleProducer">[docs]</a><span class="k">class</span> <span class="nc">SimpleProducer</span><span class="p">(</span><span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;simple-producer&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;show_time&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;TestSequence1&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;interval&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_clock</span><span class="p">)</span>
+
+    <span class="n">_clock</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_output</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span>
+        <span class="n">sequence</span> <span class="o">=</span> <span class="n">documents</span><span class="o">.</span><span class="n">EBUTT3DocumentSequence</span><span class="p">(</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">lang</span><span class="o">=</span><span class="s1">&#39;en-GB&#39;</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_clock</span><span class="o">.</span><span class="n">component</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">show_time</span><span class="p">:</span>
+            <span class="n">subtitle_tokens</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Instead of text we provide the availability time as content.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Let&#39;s read our example conversation</span>
+            <span class="n">full_text</span> <span class="o">=</span> <span class="n">get_example_data</span><span class="p">(</span><span class="s1">&#39;simple_producer.txt&#39;</span><span class="p">)</span>
+            <span class="c1"># if do_export:</span>
+            <span class="c1">#     subtitle_tokens = iter(tokenize_english_document(full_text))</span>
+            <span class="c1"># else:</span>
+            <span class="c1">#     # This makes the source cycle infinitely.</span>
+            <span class="n">subtitle_tokens</span> <span class="o">=</span> <span class="n">cycle</span><span class="p">(</span><span class="n">tokenize_english_document</span><span class="p">(</span><span class="n">full_text</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">SimpleProducer</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">document_sequence</span><span class="o">=</span><span class="n">sequence</span><span class="p">,</span>
+            <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">input_blocks</span><span class="o">=</span><span class="n">subtitle_tokens</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SimpleProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span> <span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SimpleProducer.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.SimpleProducer.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">call_periodically</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="o">.</span><span class="n">resume_producing</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">interval</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="EBUTTDEncoder"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.EBUTTDEncoder">[docs]</a><span class="k">class</span> <span class="nc">EBUTTDEncoder</span><span class="p">(</span><span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ebuttd-encoder&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;media_time_zero&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;current&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;default_namespace&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_clock</span><span class="p">)</span>
+
+    <span class="n">_clock</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="o">.</span><span class="n">type</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">media_time_zero</span> <span class="o">==</span> <span class="s1">&#39;current&#39;</span><span class="p">:</span>
+            <span class="n">mtz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clock</span><span class="o">.</span><span class="n">component</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mtz</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">ebuttdt</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">media_time_zero</span><span class="p">))</span><span class="o">.</span><span class="n">timedelta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">EBUTTDEncoder</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">media_time_zero</span><span class="o">=</span><span class="n">mtz</span><span class="p">,</span>
+            <span class="n">default_ns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">default_namespace</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EBUTTDEncoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
+<span class="n">nodes_by_type</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;simple-consumer&#39;</span><span class="p">:</span> <span class="n">SimpleConsumer</span><span class="p">,</span>
+    <span class="s1">&#39;simple-producer&#39;</span><span class="p">:</span> <span class="n">SimpleProducer</span><span class="p">,</span>
+    <span class="s1">&#39;resequencer&#39;</span><span class="p">:</span> <span class="n">ReSequencer</span><span class="p">,</span>
+    <span class="s1">&#39;ebuttd-encoder&#39;</span><span class="p">:</span> <span class="n">EBUTTDEncoder</span><span class="p">,</span>
+    <span class="s1">&#39;buffer-delay&#39;</span><span class="p">:</span> <span class="n">BufferDelay</span><span class="p">,</span>
+    <span class="s1">&#39;retiming-delay&#39;</span><span class="p">:</span> <span class="n">RetimingDelay</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="get_node"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.get_node">[docs]</a><span class="k">def</span> <span class="nf">get_node</span><span class="p">(</span><span class="n">node_type</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nodes_by_type</span><span class="p">[</span><span class="n">node_type</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
+            <span class="n">ERR_CONF_NO_SUCH_NODE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">node_type</span><span class="o">=</span><span class="n">node_type</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UniversalNode"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.UniversalNode">[docs]</a><span class="k">class</span> <span class="nc">UniversalNode</span><span class="p">(</span><span class="n">RequiredConfig</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_node</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UniversalNodeList"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.UniversalNodeList">[docs]</a><span class="k">class</span> <span class="nc">UniversalNodeList</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node1</span> <span class="o">=</span> <span class="n">node1</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node2</span> <span class="o">=</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node3</span> <span class="o">=</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node4</span> <span class="o">=</span> <span class="n">node4</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node5</span> <span class="o">=</span> <span class="n">node5</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node6</span> <span class="o">=</span> <span class="n">node6</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">node7</span> <span class="o">=</span> <span class="n">node7</span> <span class="o">=</span> <span class="n">UniversalNode</span><span class="o">.</span><span class="n">get_required_config</span><span class="p">()</span>
+
+    <span class="n">_nodes</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="UniversalNodeList.configure_component"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.UniversalNodeList.configure_component">[docs]</a>    <span class="k">def</span> <span class="nf">configure_component</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span><span class="p">)</span>
+
+        <span class="n">instance</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node1</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node2</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node3</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node4</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node5</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node6</span><span class="p">,</span>
+            <span class="n">instance</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">node7</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">_nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">configure_component</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">instance</span></div></div>
+
+
+<div class="viewcode-block" id="UniversalNodes"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.UniversalNodes">[docs]</a><span class="k">class</span> <span class="nc">UniversalNodes</span><span class="p">(</span><span class="n">RequiredConfig</span><span class="p">):</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">UniversalNodeList</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'1.0rc1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -12,6 +12,7 @@ The components mimic the nodes and carriage mechanisms defined in the specificat
 .. toctree::
     nodes_and_carriage_mechanisms
     scripts_and_their_functions
+    configurator
     validation
     user_input_producer
     timing_resolution

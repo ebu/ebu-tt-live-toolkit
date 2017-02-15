@@ -139,6 +139,7 @@
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="n">Decimal</span>
 <span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">pyxb.exceptions_</span> <span class="k">import</span> <span class="n">SimpleTypeValueError</span><span class="p">,</span> <span class="n">SimpleFacetValueError</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">TimeFormatOverflowError</span><span class="p">,</span> <span class="n">ExtentMissingError</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_TIME_FORMAT_OVERFLOW</span><span class="p">,</span> <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span><span class="p">,</span> <span class="n">ERR_1DIM_ONLY</span><span class="p">,</span> \
@@ -350,7 +351,7 @@
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">horizontal</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">horizontal</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">vertical</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span></div>
@@ -708,7 +709,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">vertical</span> <span class="ow">and</span> \
                        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">horizontal</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">basestring</span><span class="p">):</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>
@@ -769,11 +770,12 @@
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageFontSizeType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageFontSizeType</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CellResolutionType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellResolutionType">[docs]</a><span class="k">class</span> <span class="nc">CellResolutionType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span> <span class="p">,</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellResolutionType</span><span class="p">):</span>
+<div class="viewcode-block" id="CellResolutionType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellResolutionType">[docs]</a><span class="k">class</span> <span class="nc">CellResolutionType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellResolutionType</span><span class="p">):</span>
 
     <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;[0]*[1-9][0-9]*)\s(?P&lt;second&gt;[0]*[1-9][0-9]*)&#39;</span><span class="p">)</span>
     <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span></div>
-    
+
+
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellResolutionType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellResolutionType</span><span class="p">)</span>
 
 

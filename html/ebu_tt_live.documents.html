@@ -35,8 +35,8 @@
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
         <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
-        <link rel="next" title="example_data Package" href="ebu_tt_live.example_data.html"/>
-        <link rel="prev" title="configspec Package" href="ebu_tt_live.configspec.html"/> 
+        <link rel="next" title="examples Package" href="ebu_tt_live.examples.html"/>
+        <link rel="prev" title="config Package - Component configurators" href="ebu_tt_live.config.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -93,7 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.configspec.html">configspec Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">documents Package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">documents</span></code> Package</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.documents.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
@@ -102,7 +102,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.example_data.html">example_data Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
@@ -355,6 +355,27 @@ the objects.
 <code class="descname">computed_end_time</code><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.computed_end_time" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.content_to_string">
+<code class="descname">content_to_string</code><span class="sig-paren">(</span><em>begin=None</em>, <em>end=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.content_to_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.content_to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract the document textual content between begin/end along with their activation times.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>begin</strong> &#8211; From specified begin time or resolved begin time if begin is not specified.</li>
+<li><strong>end</strong> &#8211; Up to specified end time or resolved end time if end is not specified.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">String showing the activation and content of the elements.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="classmethod">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding">
 <em class="property">classmethod </em><code class="descname">create_from_raw_binding</code><span class="sig-paren">(</span><em>binding</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.create_from_raw_binding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding" title="Permalink to this definition">¶</a></dt>
@@ -367,7 +388,7 @@ the objects.
 
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.discard_document">
-<code class="descname">discard_document</code><span class="sig-paren">(</span><em>resolved_end_time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.discard_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.discard_document" title="Permalink to this definition">¶</a></dt>
+<code class="descname">discard_document</code><span class="sig-paren">(</span><em>resolved_end_time</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.discard_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.discard_document" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function discards the document by setting a resolved end time
 before the document begins.
 :param resolved_end_time:</p>
@@ -475,7 +496,7 @@ the document sequence number so that later merge does not have collision.</p>
 
 <dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3DocumentSequence</code><span class="sig-paren">(</span><em>sequence_identifier</em>, <em>reference_clock</em>, <em>lang</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3DocumentSequence</code><span class="sig-paren">(</span><em>sequence_identifier</em>, <em>reference_clock</em>, <em>lang</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin" title="ebu_tt_live.documents.ebutt3.TimelineUtilMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimelineUtilMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.documents.base.CloningDocumentSequence" title="ebu_tt_live.documents.base.CloningDocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.CloningDocumentSequence</span></code></a></p>
 <p>EBU-TT Live specific document sequence. It maps the documents based on their sequence numbers and timing attributes.</p>
 <dl class="docutils">
@@ -483,7 +504,7 @@ the document sequence number so that later merge does not have collision.</p>
 <dd><ul class="first last simple">
 <li>It can be used to produce a sequence(i.e.: new_document method)</li>
 <li>as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
-(i.e.: add_document method.</li>
+(i.e.: add_document method)</li>
 </ul>
 </dd>
 </dl>
@@ -603,6 +624,11 @@ sequence numbers.</p>
 <code class="descname">_time_base</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._time_base" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._verbose">
+<code class="descname">_verbose</code><em class="property"> = None</em><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._verbose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document">
 <code class="descname">add_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.add_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.add_document" title="Permalink to this definition">¶</a></dt>
@@ -636,7 +662,7 @@ sequence numbers.</p>
 
 <dl class="classmethod">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">
-<em class="property">classmethod </em><code class="descname">create_from_document</code><span class="sig-paren">(</span><em>document</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.create_from_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">create_from_document</code><span class="sig-paren">(</span><em>document</em>, <em>verbose=False</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3DocumentSequence.create_from_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -977,10 +1003,10 @@ on the timeline.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ebu_tt_live.example_data.html" class="btn btn-neutral float-right" title="example_data Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ebu_tt_live.examples.html" class="btn btn-neutral float-right" title="examples Package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ebu_tt_live.configspec.html" class="btn btn-neutral" title="configspec Package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ebu_tt_live.config.html" class="btn btn-neutral" title="config Package - Component configurators" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

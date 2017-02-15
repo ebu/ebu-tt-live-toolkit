@@ -175,7 +175,46 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="SubtitleContentContainer.is_empty"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.content.SubtitleContentContainer.is_empty">[docs]</a>    <span class="k">def</span> <span class="nf">is_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains_subtitles</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains_subtitles</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SubtitleContentContainer.content_to_string"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.content.SubtitleContentContainer.content_to_string">[docs]</a>    <span class="k">def</span> <span class="nf">content_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">str_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">:</span>
+                <span class="n">str_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">u</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> Timings: [(</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)(</span><span class="si">{}</span><span class="s1"> -</span><span class="si">{}</span><span class="s1">)(discarded)]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">computed_end_time</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_end_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_end_time</span><span class="p">:</span>
+                    <span class="n">res_end_time</span> <span class="o">=</span> <span class="n">end</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_end_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">res_end_time</span> <span class="o">=</span> <span class="n">end</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">res_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_end_time</span>
+                <span class="n">str_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">u</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> Timings: [(</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)(</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)(</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">computed_end_time</span><span class="p">,</span>
+                        <span class="n">begin</span> <span class="k">if</span> <span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">begin</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
+                        <span class="n">res_end_time</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">NonElementContent</span><span class="p">):</span>
+                <span class="n">str_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">str_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">content_to_string</span><span class="p">(</span><span class="n">begin</span><span class="o">=</span><span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">str_lines</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
