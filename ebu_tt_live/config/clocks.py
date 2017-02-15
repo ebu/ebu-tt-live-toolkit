@@ -1,5 +1,7 @@
 from .common import ConfigurableComponent, Namespace
 from ebu_tt_live import clocks
+from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import ERR_NO_SUCH_COMPONENT
 
 
 class LocalMachineClock(ConfigurableComponent):
@@ -24,10 +26,19 @@ class DummyClock(ConfigurableComponent):
     component = None
 
 
-def clock_by_type(clock_type):
-    if clock_type == 'utc':
-        return UTCClock
-    if clock_type == 'local':
-        return LocalMachineClock
-    elif clock_type == 'auto':
-        return DummyClock
+clock_by_type = {
+    'utc': UTCClock,
+    'local': LocalMachineClock,
+    'auto': DummyClock
+}
+
+
+def get_clock(clock_type):
+    try:
+        return clock_by_type[clock_type]
+    except KeyError:
+        raise ConfigurationError(
+            ERR_NO_SUCH_COMPONENT.format(
+                type_name=clock_type
+            )
+        )

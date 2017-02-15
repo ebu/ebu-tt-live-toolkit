@@ -51,7 +51,7 @@ def test_simple_producer_wrong_backend():
                 "output": {
                     "carriage": {
                         "type": "websocket",
-                        "uri": "ws://localhost:9001"
+                        "listen": "ws://localhost:9001"
                     }
                 }
             }
@@ -102,7 +102,7 @@ def test_simple_consumer_wrong_backend():
                 "input": {
                     "carriage": {
                         "type": "websocket",
-                        "uri": "ws://localhost:9000/TestSequence2"
+                        "connect": ["ws://localhost:9000/TestSequence2/subscribe"]
                     }
                 }
             }
@@ -128,7 +128,7 @@ def test_wrong_node_type():
                 "input": {
                     "carriage": {
                         "type": "websocket",
-                        "uri": "ws://localhost:9000/TestSequence2"
+                        "connect": ["ws://localhost:9000/TestSequence2/subscribe"]
                     }
                 }
             }

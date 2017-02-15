@@ -1,6 +1,6 @@
 from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
-from .clocks import clock_by_type
-from .carriage import producer_carriage_by_type, consumer_carriage_by_type
+from .clocks import get_clock
+from .carriage import get_producer_carriage, get_consumer_carriage
 from ebu_tt_live import documents
 from ebu_tt_live import bindings
 from ebu_tt_live.examples import get_example_data
@@ -23,7 +23,7 @@ class ProducerMixin(RequiredConfig):
     required_config.output = Namespace()
     required_config.output.carriage = Namespace()
     required_config.output.carriage.add_option(
-        'type', default='websocket', from_string_converter=producer_carriage_by_type
+        'type', default='websocket', from_string_converter=get_producer_carriage
     )
     required_config.output.add_option('adapters')
 
@@ -48,7 +48,7 @@ class ConsumerMixin(RequiredConfig):
     required_config.input = Namespace()
     required_config.input.carriage = Namespace()
     required_config.input.carriage.add_option(
-        'type', default='websocket', from_string_converter=consumer_carriage_by_type
+        'type', default='websocket', from_string_converter=get_consumer_carriage
     )
     required_config.input.add_option('adapters')
 
@@ -72,7 +72,7 @@ class SimpleConsumer(ConsumerMixin, NodeBase):
     required_config.add_option('id', default='simple-consumer')
     required_config.add_option('verbose', default=False, doc='Log subtitle content on activation changes')
     required_config.clock = Namespace()
-    required_config.clock.add_option('type', default='auto', from_string_converter=clock_by_type)
+    required_config.clock.add_option('type', default='auto', from_string_converter=get_clock)
 
     _input = None
 
@@ -101,7 +101,7 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
     required_config.add_option('sequence_identifier', default='ReSequenced1')
     required_config.add_option('segment_length', default=2.0)
     required_config.clock = Namespace()
-    required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
+    required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
     required_config.add_option('discard', default=True)
     required_config.add_option(
         'begin_output',
@@ -160,7 +160,7 @@ class BufferDelay(ConsumerMixin, ProducerMixin, NodeBase):
     required_config.add_option('delay', default=0.0)
 
     def _create_component(self, config):
-        reference_clock = clock_by_type('auto')(config, None)
+        reference_clock = get_clock('auto')(config, None)
         self.component = processing_node.BufferDelayNode(
             node_id=self.config.id,
             document_sequence=None,
@@ -184,7 +184,7 @@ class RetimingDelay(ConsumerMixin, ProducerMixin, NodeBase):
     required_config.add_option('sequence_identifier', default='RetimedSequence1')
 
     def _create_component(self, config):
-        reference_clock = clock_by_type('auto')(config, None)
+        reference_clock = get_clock('auto')(config, None)
         self.component = processing_node.RetimingDelayNode(
             node_id=self.config.id,
             document_sequence=self.config.sequence_identifier,
@@ -206,7 +206,7 @@ class SimpleProducer(ProducerMixin, NodeBase):
     required_config.add_option('sequence_identifier', default='TestSequence1')
     required_config.add_option('interval', default=2.0)
     required_config.clock = Namespace()
-    required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
+    required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
 
     _clock = None
     _output = None
@@ -259,7 +259,7 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
     required_config.add_option('media_time_zero', default='current')
     required_config.add_option('default_namespace', default=False)
     required_config.clock = Namespace()
-    required_config.clock.add_option('type', default='local', from_string_converter=clock_by_type)
+    required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
 
     _clock = None
 
@@ -282,28 +282,30 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
         self._create_output(config)
 
 
-def nodes_by_type(node_name):
-    if node_name == 'simple-consumer':
-        return SimpleConsumer
-    elif node_name == 'simple-producer':
-        return SimpleProducer
-    elif node_name == 'resequencer':
-        return ReSequencer
-    elif node_name == 'ebuttd-encoder':
-        return EBUTTDEncoder
-    elif node_name == 'buffer-delay':
-        return BufferDelay
-    elif node_name == 'retiming-delay':
-        return RetimingDelay
-    else:
-        raise ConfigurationError(ERR_CONF_NO_SUCH_NODE.format(
-            node_type=node_name
-        ))
+nodes_by_type = {
+    'simple-consumer': SimpleConsumer,
+    'simple-producer': SimpleProducer,
+    'resequencer': ReSequencer,
+    'ebuttd-encoder': EBUTTDEncoder,
+    'buffer-delay': BufferDelay,
+    'retiming-delay': RetimingDelay
+}
+
+
+def get_node(node_type):
+    try:
+        return nodes_by_type[node_type]
+    except KeyError:
+        raise ConfigurationError(
+            ERR_CONF_NO_SUCH_NODE.format(
+                node_type=node_type
+            )
+        )
 
 
 class UniversalNode(RequiredConfig):
     required_config = Namespace()
-    required_config.add_option('type', default=None, from_string_converter=nodes_by_type)
+    required_config.add_option('type', default=None, from_string_converter=get_node)
 
 
 class UniversalNodeList(ConfigurableComponent):

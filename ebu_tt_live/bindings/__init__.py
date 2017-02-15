@@ -302,9 +302,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         )
 
     @classmethod
-    def compute_inherited_attribute(
-            cls, attr_name, specified_style, parent_computed_style, region_computed_style
-    ):
+    def compute_inherited_attribute(cls, attr_name, specified_style, parent_computed_style, region_computed_style):
         fallback_order = [specified_style, parent_computed_style, region_computed_style]
         for item in fallback_order:
             if item is not None and attr_name not in item.default_attrs:
@@ -314,9 +312,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         return None
 
     @classmethod
-    def compute_simple_attribute(
-            cls, attr_name, specified_style
-    ):
+    def compute_simple_attribute(cls, attr_name, specified_style):
         if specified_style is not None:
             attr_value = getattr(specified_style, attr_name)
             if attr_value is not None:
@@ -938,7 +934,7 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
         """
 
         children = element.orderedContent()
-        
+
         output = []
 
         for item in children:

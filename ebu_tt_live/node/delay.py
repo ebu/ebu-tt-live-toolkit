@@ -167,7 +167,6 @@ class UntimedPathFinder(RecursiveOperation):
             bla = self._timed_element_stack.pop()
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        print value
         if value.is_timed_leaf() and not len(self._timed_element_stack):
             self._path_found = True
             raise StopBranchIteration()

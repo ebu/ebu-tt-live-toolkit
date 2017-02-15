@@ -71,8 +71,8 @@ class RingBufferWithCallback(collections.deque):
 
     _callback = None
 
-    def __init__(self, iterable=(), maxlen=None, callback = None):
-        if callback is not None  and not callable(callback):
+    def __init__(self, iterable=(), maxlen=None, callback=None):
+        if callback is not None and not callable(callback):
             raise ValueError('Callback: {} is not callable'.format(callback))
         self._callback = callback
         super(RingBufferWithCallback, self).__init__(iterable, maxlen)
