@@ -127,5 +127,5 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R115|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
 |R116|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
 |R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
-|R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.|NOTE: Due to partial support for XQuery functions in Python, this requirement is not implemented fully in this toolkit. Equality testing in other implementation may produce slightly different results.|
+|R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.|NOTE: Due to partial support for XQuery functions in the Python libraries that we use, this requirement is not implemented fully in this toolkit. Equality testing in other implementation may produce slightly different results.|
 |R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`|
