@@ -5,6 +5,7 @@ omit =
     */tests/*
     */test/*
     */bindings/raw/*
+    */scripts/*
 
 [report]
 # Regexes for lines to exclude from consideration

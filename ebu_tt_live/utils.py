@@ -1,9 +1,12 @@
-
+import abc
 import collections
 import threading
 import Queue
 import os
 import time
+import types
+
+from nltk import BlanklineTokenizer, PunktSentenceTokenizer, WhitespaceTokenizer
 
 
 class ComparableMixin(object):
@@ -66,8 +69,8 @@ class RingBufferWithCallback(collections.deque):
 
     _callback = None
 
-    def __init__(self, iterable=(), maxlen=None, callback = None):
-        if callback is not None  and not callable(callback):
+    def __init__(self, iterable=(), maxlen=None, callback=None):
+        if callback is not None and not callable(callback):
             raise ValueError('Callback: {} is not callable'.format(callback))
         self._callback = callback
         super(RingBufferWithCallback, self).__init__(iterable, maxlen)
@@ -188,3 +191,168 @@ class RotatingFileBuffer(RingBufferWithCallback):
             if self._deletion_thread.stopped():
                 raise RotatingFileBufferStopped('File deletion thread is stopped!')
         super(RotatingFileBuffer, self).append(item)
+
+
+def tokenize_english_document(input_text):
+    """
+    This is a crude tokenizer for input conversations in English.
+    :param input_text:
+    :return:
+    """
+    end_list = []
+    block_tokenizer = BlanklineTokenizer()
+    sentence_tokenizer = PunktSentenceTokenizer()
+    word_tokenizer = WhitespaceTokenizer()
+    # using the 38 characters in one line rule from ITV subtitle guidelines
+    characters_per_line = 38
+    lines_per_subtitle = 2
+
+    blocks = block_tokenizer.tokenize(input_text)
+    for block in blocks:
+        # We have one speaker
+        sentences = sentence_tokenizer.tokenize(block)
+        # We have the sentences
+        for sentence in sentences:
+            words = word_tokenizer.tokenize(sentence)
+            reverse_words = words[::-1]
+
+            lines = []
+            current_line = ''
+            line_full = False
+            while reverse_words:
+                word = reverse_words.pop()
+                longer_line = ' '.join([current_line, word]).strip()
+                if len(longer_line) > characters_per_line and len(current_line):
+                    # The longer line is overreaching boundaries
+                    reverse_words.append(word)
+                    line_full = True
+                elif len(word) >= characters_per_line:
+                    # Very long words
+                    current_line = longer_line
+                    line_full = True
+                else:
+                    current_line = longer_line
+
+                if line_full:
+                    lines.append(current_line)
+                    current_line = ''
+                    line_full = False
+
+                if len(lines) >= lines_per_subtitle:
+                    end_list.append(lines)
+                    lines = []
+            if current_line:
+                lines.append(current_line)
+            if lines:
+                end_list.append(lines)
+
+    return end_list
+
+
+def _assert_asm_is_defined(value, member_name, class_name):
+    if value in (None, NotImplemented):
+        raise TypeError(
+            'Abstract static member: \`{}.{}\` does not match the criteria'.format(
+                class_name,
+                member_name
+            )
+        )
+
+
+def validate_types_only(value, member_name, class_name):
+    if not isinstance(value, tuple):
+        value = (value,)
+    for item in value:
+        if not isinstance(item, (type, types.ClassType)) and item is not ANY:
+            raise TypeError(
+                'Abstract static member: \'{}.{}\' is not a type or class'.format(
+                    class_name,
+                    member_name
+                )
+            )
+
+
+class AnyType(object):
+    "A helper object that compares equal to everything."
+
+    def __eq__(self, other):
+        return True
+
+    def __ne__(self, other):
+        return False
+
+    def __repr__(self):
+        return '<ANY>'
+
+ANY = AnyType()
+
+
+class AbstractStaticMember(object):
+    """
+    This allows me to require the subclasses to define some attributes using a customizeable
+    validator. The idea is that all static members should be initialized to a value by the time
+    abstract functions have all been implemented.
+    """
+
+    _validation_func = None
+
+    def __init__(self, validation_func=None):
+        if validation_func is None:
+            self._validation_func = _assert_asm_is_defined
+        else:
+            self._validation_func = validation_func
+
+    def validate(self, value, member_name, class_name):
+        self._validation_func(value, member_name, class_name)
+
+
+class AutoRegisteringABCMeta(abc.ABCMeta):
+    """
+    This metaclass gets us automatic class registration and cooperates with AbstractStaticMember.
+    If none of the 2 features are needed it just provides the basic abc.ABCMeta functionality.
+    For the auto registration an abstract class needs to implement the auto_register_impl classmethod.
+    """
+
+    def __new__(mcls, name, bases, namespace):
+        cls = super(AutoRegisteringABCMeta, mcls).__new__(mcls, name, bases, namespace)
+        abstract_members = set(name
+                        for name, value in namespace.items()
+                        if isinstance(value, AbstractStaticMember))
+
+        abstracts = getattr(cls, "__abstractmethods__", set())
+
+        if not abstracts:
+            # This means the class is not abstract so we should not have any abstract static members
+            validated_members = set()
+            for base in bases:
+                if isinstance(base, mcls):
+                    for base_member in getattr(base, '_abc_static_members', set()):
+                        if base_member in validated_members:
+                            continue
+                        value = getattr(cls, base_member, NotImplemented)
+                        if isinstance(value, AbstractStaticMember) or value is NotImplemented:
+                            abstract_members.add(base_member)
+                        else:
+                            getattr(base, base_member).validate(value, base_member, name)
+                            validated_members.add(base_member)
+
+                    base.auto_register_impl(cls)
+
+            if abstract_members:
+                raise TypeError('{} must implement abstract static members: [{}]'.format(
+                    name,
+                    ', '.join(abstract_members)
+                ))
+        if namespace.get('auto_register_impl') is None:
+            cls.auto_register_impl = classmethod(lambda x, y: None)
+        cls._abc_static_members = frozenset(abstract_members)
+        cls._abc_interface = '__metaclass__' in namespace.keys()
+        return cls
+
+    def __call__(cls, *args, **kwargs):
+        if cls._abc_interface is True:
+            raise TypeError('Can\'t instantiate {} is an abstract base class.'.format(cls))
+        instance = super(AutoRegisteringABCMeta, cls).__call__(*args, **kwargs)
+        return instance
+
+HTTPProxyConfig = collections.namedtuple('HTTPProxyConfig', ['host', 'port'])

@@ -3,7 +3,7 @@ Scripts and their functions
 
 Simple Producer
 ---------------
-This is a command line script. It loads static text from a file (``ebu-tt-live-toolkit/ebu_tt_live/example_data/simple_producer.txt``) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command ``ebu-simple-producer`` without any arguments.
+This is a command line script. It loads static text from a file (``ebu-tt-live-toolkit/ebu_tt_live/examples/simple_producer.txt``) and breaks it into a sequence of EBU-TT Live documents using natural language processing. Run it by entering the command ``ebu-simple-producer`` without any arguments.
 
 The default carriage mechanism is WebSocket, so you will need to listen to ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just that. After you launch ``ebu-simple-producer``, open ``test.html`` in your browser. The 'Broadcast message' field should be populated with the correct address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can also change the identifier for the sequence. The documents should appear in the window below.
 
@@ -32,3 +32,7 @@ This script is an extension of simple consumer and is responsible for resegmenti
 EBU-TT Live documents into EBU-TT-D documents that can be later used to be embedded in video streams such as DASH.
 The script launches with the ``ebu-ebuttd-encoder`` command. There are switches to control the mediatime conversion
 reference point and the segmentation interval. Please run ``ebu-ebuttd-encoder --help`` to find our more.
+
+The ebu-run script
+------------------
+This script is capable of picking up a structured configuration file and use that to create the nodes and carriage mechanism objects that we would like to use and they can be even wired in the same configuration file together so in the end a complex system can be modeled using a single json file. Please refer to :py:mod:`ebu_tt_live.scripts.ebu_run` as well as :py:mod:`ebu_tt_live.config` to learn more about the way the configuration logic works. To get help on permitted options for the specified node(s) run ``ebu-run`` with a ``--help``. See :doc:`configurator`.

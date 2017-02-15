@@ -27,7 +27,7 @@ def sequence(sequence_identifier, time_base):
         ref_clock = MediaClock()
     elif time_base == 'smpte':
         raise NotImplementedError()
-    sequence = EBUTT3DocumentSequence(sequence_identifier, ref_clock, 'en-GB')
+    sequence = EBUTT3DocumentSequence(sequence_identifier, ref_clock, 'en-GB', verbose=True)
     return sequence
 
 

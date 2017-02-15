@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="TestSequence1" ebuttp:sequenceNumber="1" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+  </tt:head>
+  <tt:body begin="49403721ms" dur="00:00:01">
+    <tt:div>
+      <tt:p xml:id="ID001">It only took me six days.</tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

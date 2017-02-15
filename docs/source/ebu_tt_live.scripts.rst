@@ -9,6 +9,14 @@ scripts Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`ebu_run` Module
+-------------------------------
+
+.. automodule:: ebu_tt_live.scripts.ebu_run
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`ebu_dummy_encoder` Module
 -------------------------------
 

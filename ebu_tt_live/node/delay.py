@@ -1,24 +1,30 @@
 
-from .base import Node
+from .base import AbstractCombinedNode
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
+from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
 
 
-class RetimingDelayNode(Node):
+class RetimingDelayNode(AbstractCombinedNode):
 
     _reference_clock = None
     _document_sequence = None
     _fixed_delay = None
+    _expects = EBUTT3Document
+    _provides = EBUTT3Document
 
     def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
-        super(RetimingDelayNode, self).__init__(node_id, carriage_impl)
+        super(RetimingDelayNode, self).__init__(
+            node_id=node_id,
+            producer_carriage=carriage_impl
+        )
         self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
         self._document_sequence = document_sequence
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
 
         # change the sequence identifier
         document.sequence_identifier = self._document_sequence
@@ -32,24 +38,29 @@ class RetimingDelayNode(Node):
             update_children_timing(document.binding, document.time_base, self._fixed_delay)
 
         document.validate()
-        self._carriage_impl.emit_document(document)
+        self.producer_carriage.emit_data(data=document, **kwargs)
 
 
-class BufferDelayNode(Node):
+class BufferDelayNode(AbstractCombinedNode):
 
     _reference_clock = None
     _document_sequence = None
     _fixed_delay = None
+    _expects = EBUTT3Document
+    _provides = EBUTT3Document
 
     def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
-        super(BufferDelayNode, self).__init__(node_id, carriage_impl)
+        super(BufferDelayNode, self).__init__(
+            node_id=node_id,
+            producer_carriage=carriage_impl
+        )
         self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
         self._document_sequence = document_sequence
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
 
-        self._carriage_impl.emit_document(document, delay=self._fixed_delay)
+        self.producer_carriage.emit_data(data=document, delay=self._fixed_delay)
 
 
 def update_children_timing(element, timebase, delay_int):

@@ -31,7 +31,10 @@ import logging
 
 log = logging.getLogger(__name__)
 
-
+# This mapping controls the namespace aliases used in the generated XML content.
+# Not having these results in default mapping to ns1 ns2 ns3..., which should not be a problem
+# but many downstream tools may have terrible custom XML parsing typically by using regular expressions
+# to find `tt:head` for instance. So controlling these to match the spec namespaces helps interoperability.
 namespace_prefix_map = {
     'tt': raw.Namespace,
     'ebuttdt': ebuttdt.Namespace,
@@ -272,7 +275,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         This property function gives back a set in which we find the unspecified style attributes.
 
         :return: set for attribute names that were inheriting the default in the computed style. Important at
-            inheritance override
+        inheritance override
         """
         if self._default_attrs is None:
             self._default_attrs = set()
@@ -299,9 +302,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         )
 
     @classmethod
-    def compute_inherited_attribute(
-            cls, attr_name, specified_style, parent_computed_style, region_computed_style
-    ):
+    def compute_inherited_attribute(cls, attr_name, specified_style, parent_computed_style, region_computed_style):
         fallback_order = [specified_style, parent_computed_style, region_computed_style]
         for item in fallback_order:
             if item is not None and attr_name not in item.default_attrs:
@@ -311,9 +312,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         return None
 
     @classmethod
-    def compute_simple_attribute(
-            cls, attr_name, specified_style
-    ):
+    def compute_simple_attribute(cls, attr_name, specified_style):
         if specified_style is not None:
             attr_value = getattr(specified_style, attr_name)
             if attr_value is not None:
@@ -816,6 +815,9 @@ class br_type(SemanticValidationMixin, raw.br_type):
     def __copy__(self):
         return br_type()
 
+    def content_to_string(self, begin=None, end=None):
+        return '<br />'
+
 
 raw.br_type._SetSupersedingClass(br_type)
 
@@ -932,7 +934,7 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
         """
 
         children = element.orderedContent()
-        
+
         output = []
 
         for item in children:

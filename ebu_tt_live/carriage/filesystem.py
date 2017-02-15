@@ -1,4 +1,4 @@
-from .base import ProducerCarriageImpl, ConsumerCarriageImpl
+from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import CreateFromDocument
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
@@ -37,7 +37,7 @@ def timestr_manifest_to_timedelta(timestr, time_base):
         raise ValueError()
 
 
-class FilesystemProducerImpl(ProducerCarriageImpl):
+class FilesystemProducerImpl(AbstractProducerCarriage):
     """
     This class implements a carriage mechanism to output produced documents
     to the file system. Its constructor takes a mandatory argument : the path to
@@ -67,6 +67,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
     _reference_clock = None
     _manifest_content = None
     _manifest_time_format = None
+    _expects = EBUTT3Document
 
     def __init__(self, dirpath, reference_clock):
         self._dirpath = dirpath
@@ -76,7 +77,7 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
         self._manifest_content = ''
 
     def resume_producing(self):
-        manifest_filename = "manifest_" + self._node.document_sequence.sequence_identifier + ".txt"
+        manifest_filename = "manifest_" + self.producer_node.document_sequence.sequence_identifier + ".txt"
         self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         if os.path.exists(self._manifest_path):
             with open(self._manifest_path, 'r') as f:
@@ -87,49 +88,47 @@ class FilesystemProducerImpl(ProducerCarriageImpl):
                 # sequenceIdentifier_sequenceNumber.xml
                 _, last_filename = last_line.split(',')
                 last_sequence_number, _ = last_filename.split('_')[1].split('.')
-                self._node.document_sequence.last_sequence_number = int(last_sequence_number)
+                self.producer_node.document_sequence.last_sequence_number = int(last_sequence_number)
         while True:
             try:
-                self._node.process_document(document=None)
+                self.producer_node.resume_producing()
             except EndOfData:
                 break
 
-    def emit_document(self, document, delay=None, **kwargs):
+    def emit_data(self, data, delay=None, **kwargs):
         if self._manifest_path is None:
-            manifest_filename = "manifest_" + document.sequence_identifier + ".txt"
+            manifest_filename = "manifest_" + data.sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
-        filename = '{}_{}.xml'.format(document.sequence_identifier, document.sequence_number)
+        filename = '{}_{}.xml'.format(data.sequence_identifier, data.sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
-            f.write(document.get_xml())
+            f.write(data.get_xml())
         # To be able to format the output we need a datetime.time object and
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
-        time = self._reference_clock.get_time()
+        time_base = data.time_base
+        availability_time = data.availability_time or timedelta()
         if delay is not None:
-            delay = timedelta(seconds=delay)
-            time = time + delay
-        time_base = self._reference_clock.time_base
-        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(time, time_base), filename)
+            availability_time = availability_time + timedelta(seconds=delay)
+        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
             f.write(new_manifest_line)
 
 
-class FilesystemConsumerImpl(ConsumerCarriageImpl):
+class FilesystemConsumerImpl(AbstractConsumerCarriage):
     """
     This class is responsible for setting the document object from the xml and set its availability time.
     The document is then sent to the node.
     """
-
     _reference_clock = None
 
     def __init__(self, reference_clock):
         self._reference_clock = reference_clock
 
-    def on_new_data(self, data):
+    def on_new_data(self, data, **kwargs):
         document = None
         availability_time_str, xml_content = data
         try:
@@ -141,7 +140,7 @@ class FilesystemConsumerImpl(ConsumerCarriageImpl):
         if document:
             availability_time = timestr_manifest_to_timedelta(availability_time_str, self._reference_clock.time_base)
             document.availability_time = availability_time
-            self._node.process_document(document)
+            self.consumer_node.process_document(document)
 
 
 class FilesystemReader(object):
@@ -187,30 +186,30 @@ class FilesystemReader(object):
                     self._custom_consumer.on_new_data(data)
 
 
-class SimpleFolderExport(ProducerCarriageImpl):
+class SimpleFolderExport(AbstractProducerCarriage):
 
     _dir_path = None
     _file_name_pattern = None
     _counter = None
 
     def __init__(self, dir_path, file_name_pattern):
-        if not os.path.exists(dir_path):
-            raise Exception('Directory: {} could not be found.'.format(dir_path))
         self._dir_path = dir_path
+        if not os.path.exists(dir_path):
+            os.makedirs(self._dir_path)
         self._file_name_pattern = file_name_pattern
         self._counter = 0
 
     def _do_write_document(self, document, **kwargs):
         self._counter += 1
-        filename = self._file_name_pattern.format(self._counter)
+        filename = self._file_name_pattern.format(counter=self._counter)
         filepath = os.path.join(self._dir_path, filename)
         with open(filepath, 'w') as destfile:
             destfile.write(document.get_xml())
             destfile.flush()
         return filepath
 
-    def emit_document(self, document, **kwargs):
-        self._do_write_document(document, **kwargs)
+    def emit_data(self, data, **kwargs):
+        self._do_write_document(data, **kwargs)
 
 
 class RotatingFolderExport(SimpleFolderExport):
@@ -227,6 +226,6 @@ class RotatingFolderExport(SimpleFolderExport):
         super(RotatingFolderExport, self).__init__(dir_path, file_name_pattern)
         self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
 
-    def emit_document(self, document):
-        file_name = self._do_write_document(document)
+    def emit_data(self, data, **kwargs):
+        file_name = self._do_write_document(data)
         self._circular_buf.append(file_name)

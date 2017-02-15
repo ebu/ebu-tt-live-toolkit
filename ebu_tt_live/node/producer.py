@@ -1,20 +1,25 @@
-
-from .base import Node
+import logging
+from .base import AbstractProducerNode
 from datetime import timedelta
 from ebu_tt_live.bindings import div_type, br_type, p_type, style_type, styling, layout, region_type, span_type
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
-from ebu_tt_live.strings import END_OF_DATA
+from ebu_tt_live.strings import END_OF_DATA, DOC_PRODUCED
 
 
-class SimpleProducer(Node):
+document_logger = logging.getLogger('document_logger')
+
+
+class SimpleProducer(AbstractProducerNode):
 
     _document_sequence = None
     _input_blocks = None
     _reference_clock = None
+    _provides = EBUTT3Document
 
-    def __init__(self, node_id, carriage_impl, document_sequence, input_blocks):
-        super(SimpleProducer, self).__init__(node_id, carriage_impl)
+    def __init__(self, node_id, producer_carriage, document_sequence, input_blocks):
+        super(SimpleProducer, self).__init__(node_id=node_id, producer_carriage=producer_carriage)
         self._document_sequence = document_sequence
         self._input_blocks = input_blocks
         self._reference_clock = document_sequence.reference_clock
@@ -53,7 +58,7 @@ class SimpleProducer(Node):
             region='bottomRegion'
         )
 
-    def process_document(self, document):
+    def process_document(self, document=None, **kwargs):
 
         activation_time = self._reference_clock.get_time() + timedelta(seconds=1)
 
@@ -99,4 +104,10 @@ class SimpleProducer(Node):
 
         document.validate()
 
-        self._carriage_impl.emit_document(document)
+        document_logger.info(
+            DOC_PRODUCED.format(
+                sequence_identifier=document.sequence_identifier,
+                sequence_number=document.sequence_number
+            )
+        )
+        self.producer_carriage.emit_data(document, **kwargs)
