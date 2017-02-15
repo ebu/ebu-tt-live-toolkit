@@ -7,9 +7,10 @@ from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
-    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, ERR_SEQUENCE_FROM_DOCUMENT
+    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, ERR_SEQUENCE_FROM_DOCUMENT, \
+    ERR_DOCUMENT_SEQUENCENUMBER_COLLISION
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
-    SequenceOverridden
+    SequenceOverridden, SequenceNumberCollisionError
 from ebu_tt_live.clocks import get_clock_from_document
 from datetime import timedelta
 from pyxb import BIND
@@ -459,7 +460,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         self._lang = lang
         self._last_sequence_number = 0
         # The documents are kept in a sorted set that is sorted by the documents's sequence number
-        self._documents = sortedset.SortedSet()
+        self._documents = sortedset.SortedSet(key=lambda x: x.sequence_number)
         self._verbose = verbose
 
     @property
@@ -504,6 +505,30 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 raise IncompatibleSequenceError(
                     ERR_DOCUMENT_NOT_COMPATIBLE
                 )
+        existing_document = None
+        try:
+            # Locate the insertion position
+            insertion_idx = self._documents.bisect_key_left(document.sequence_number)
+            found_doc = self._documents[
+                 insertion_idx
+            ]
+            if found_doc.sequence_number == document.sequence_number:
+                existing_document = found_doc
+        except IndexError:
+            log.debug('Document not found at position')
+
+        if existing_document is not None:
+            raise SequenceNumberCollisionError(
+                ERR_DOCUMENT_SEQUENCENUMBER_COLLISION.format(
+                    sequence_identifier=self.sequence_identifier,
+                    sequence_number=document.sequence_number
+                )
+            )
+        else:
+            log.debug('Sequence number: {} can be safely inserted into sequence: {}'.format(
+                document.sequence_number,
+                self.sequence_identifier
+            ))
         return True
 
     def create_compatible_document(self, *args, **kwargs):

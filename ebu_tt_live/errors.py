@@ -38,6 +38,10 @@ class IncompatibleSequenceError(Exception):
     pass
 
 
+class SequenceNumberCollisionError(IncompatibleSequenceError):
+    pass
+
+
 class DocumentDiscardedError(Exception):
     offending_document = None
 
