@@ -10,9 +10,9 @@ scenarios('features/timing/bufferDelayNode.feature')
 
 # functions for scenario: BufferDelayNode delays emission by no less than the delay period
 
+
 @given('the buffer delay node delays it by <delay_offset>')
 def given_buffer_delay(delay_offset, test_context, gen_document):
-
 
     gen_document.availability_time = LimitedClockTimingType('00:00:00.0').timedelta
 
