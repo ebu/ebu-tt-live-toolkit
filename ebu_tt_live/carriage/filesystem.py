@@ -81,7 +81,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                 break
 
     def emit_data(self, data, sequence_identifier=None, sequence_number=None,
-                  time_base=None, availability_time=None, **kwargs):
+                  time_base=None, availability_time=None, delay=None, **kwargs):
         if self._manifest_path is None:
             manifest_filename = "manifest_" + sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
@@ -96,6 +96,8 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         # a time with a timedelta gives a time)
         time_base = time_base
         availability_time = availability_time
+        if delay is not None:
+            availability_time += timedelta(seconds=delay)
         new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
