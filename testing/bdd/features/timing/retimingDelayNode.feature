@@ -6,10 +6,27 @@ Feature: Delay of a document sequence
   | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
 
 
+  @skip 
+  # SPEC-CONFORMANCE.md R115
+  Scenario: RetimingDelayNode delays emission by no less than the delay period
+    Given an xml file <xml_file>
+    And the document is generated
+    And the retiming delay node delays it by <delay_offset>
+    And the document is emitted
+    Then the delta between emission and availability time is greater or equal to <delay_offset>
+
+    Examples:
+    | delay_offset   |
+    | 00:00:00.500   |
+    | 00:00:01.0     |
+    | 00:01:01.0     |
+    | 01:01:01.0     |
+
+
   # SPEC-CONFORMANCE.md R114    
   # Times are inherited so to delay an element we only need to delay its syncbase  
   Scenario: RetimingDelayNode delays document, computed times
-    Given an xml file <xml_file>
+     Given an xml file <xml_file>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
@@ -111,7 +128,7 @@ Feature: Delay of a document sequence
     |            |              |           |          |          |          |            |          |             |           | 00:00:05 | 00:00:05           |                  |                   |                 |                 |               |                    |                  |                     |                   |          |
 
 
-    # SPEC-CONFORMANCE.md R113 R117
+    # SPEC-CONFORMANCE.md R113 RR117
     Scenario: RetimingDelayNode changes sequence ID but not authoring delay
         Given an xml file <xml_file>
         And it has <sequence_id_1>
