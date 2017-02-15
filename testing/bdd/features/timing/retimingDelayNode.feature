@@ -5,20 +5,6 @@ Feature: Delay of a document sequence
   | xml_file      |
   | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
 
-  #TBC: this is a change to the spec (passive delay node)
-  @skip
-  Scenario: BufferDelayNode, unchanged sequence identifier
-    Given an xml file <xml_file>
-    And the document is generated
-    And sequence identifier <sequence_id_1>
-    When the delay node delays it by <delay>
-    Then the delayed document has <sequence_id_2>
-
-    Examples:
-    | sequence_id_1 | delay      | sequence_id_2 |
-    | 1             | 00:00:02.0 | 1             |
-    | xxx           | 00:00:00   | xxx           |
-    | 99999999999   | 99:00:00   | 99999999999   |
 
   # SPEC-CONFORMANCE.md R114    
   # Times are inherited so to delay an element we only need to delay its syncbase  
