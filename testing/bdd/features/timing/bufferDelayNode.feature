@@ -5,6 +5,21 @@ Feature: BufferDelayNode
   | xml_file      |
   | delayNode.xml |  
 
+  #TBC: this is a change to the spec (passive delay node)
+  @skip
+  Scenario: BufferDelayNode, unchanged sequence identifier
+    Given an xml file <xml_file>
+    And the document is generated
+    And sequence identifier <sequence_id_1>
+    When the delay node delays it by <delay>
+    Then the delayed document has <sequence_id_2>
+
+    Examples:
+    | sequence_id_1 | delay      | sequence_id_2 |
+    | 1             | 00:00:02.0 | 1             |
+    | xxx           | 00:00:00   | xxx           |
+    | 99999999999   | 99:00:00   | 99999999999   |
+
   # SPEC-CONFORMANCE.md R109, R112
   # Any delay introduced by the carriage mechanism can not lead to a test passing falsely. 
   # For example, if the desired delay offset is 10s and the carriage mech imposes a delay of 3s, 
