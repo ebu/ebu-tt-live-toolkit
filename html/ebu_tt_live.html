@@ -406,6 +406,12 @@ further.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="ebu_tt_live.errors.UnknownHashError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">UnknownHashError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#UnknownHashError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.UnknownHashError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.XMLParsingFailed">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">XMLParsingFailed</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#XMLParsingFailed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.XMLParsingFailed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -535,6 +541,33 @@ regularly for the stopped() condition.</p>
 <code class="descname">stopped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#StoppableThread.stopped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.StoppableThread.stopped" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.utils.compare_xml">
+<code class="descclassname">ebu_tt_live.utils.</code><code class="descname">compare_xml</code><span class="sig-paren">(</span><em>want</em>, <em>got</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#compare_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.compare_xml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to do a &#8216;xml-comparison&#8217; of want and got.  Plain string
+comparison doesn&#8217;t always work because, for example, attribute
+ordering should not be important. Comment nodes are not considered in the
+comparison. Leading and trailing whitespace is ignored on both chunks.</p>
+<p>Based on <a class="reference external" href="https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py">https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py</a></p>
+<p>This function is a close but not full implementation of fn:deep-equals.
+Possible scenario where this will yield a false positive result is where an element can have 2 arguments with
+the same name but different namespaces:</p>
+<blockquote>
+<div>i.e.: &lt;elem ns1:myattr=&#8221;1&#8221; /&gt; != &lt;elem ns2:myattr=&#8221;1&#8221; /&gt; if ns1 != ns2</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.utils.strip_quotes">
+<code class="descclassname">ebu_tt_live.utils.</code><code class="descname">strip_quotes</code><span class="sig-paren">(</span><em>want</em>, <em>got</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#strip_quotes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.strip_quotes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip quotes of doctests output values:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">strip_quotes</span><span class="p">(</span><span class="s2">&quot;&#39;foo&#39;&quot;</span><span class="p">)</span>
+<span class="go">&quot;foo&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">strip_quotes</span><span class="p">(</span><span class="s1">&#39;&quot;foo&quot;&#39;</span><span class="p">)</span>
+<span class="go">&quot;foo&quot;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">

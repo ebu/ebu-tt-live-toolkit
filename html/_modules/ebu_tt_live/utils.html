@@ -140,6 +140,8 @@
 <span class="kn">import</span> <span class="nn">types</span>
 
 <span class="kn">from</span> <span class="nn">nltk</span> <span class="k">import</span> <span class="n">BlanklineTokenizer</span><span class="p">,</span> <span class="n">PunktSentenceTokenizer</span><span class="p">,</span> <span class="n">WhitespaceTokenizer</span>
+<span class="kn">from</span> <span class="nn">xml.dom.minidom</span> <span class="k">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">parseString</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 
 <div class="viewcode-block" id="ComparableMixin"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.ComparableMixin">[docs]</a><span class="k">class</span> <span class="nc">ComparableMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -489,6 +491,115 @@
         <span class="k">return</span> <span class="n">instance</span></div>
 
 <span class="n">HTTPProxyConfig</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;HTTPProxyConfig&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">])</span>
+
+
+<span class="c1"># The following section is taken from https://github.com/django/django/blob/master/django/test/utils.py</span>
+<span class="c1"># This is a relatively simple XML comparator implementation based on Python&#39;s minidom library.</span>
+<span class="c1"># NOTE: different namespace aliases can break this code. The code superficial on namespaces. It ignores them</span>
+<span class="c1"># In very rare cases when an element has 2 attributes with the same localName but their namespaces differ</span>
+<span class="c1"># this implementation might say the document differs. It also avoids attribute sorting by comparing</span>
+<span class="c1"># and attr_dict that it builds from minidom attributes.</span>
+<span class="c1">#</span>
+<span class="c1"># The Django Project is protected by the BSD Licence.</span>
+
+
+<div class="viewcode-block" id="strip_quotes"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.strip_quotes">[docs]</a><span class="k">def</span> <span class="nf">strip_quotes</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Strip quotes of doctests output values:</span>
+
+<span class="sd">    &gt;&gt;&gt; strip_quotes(&quot;&#39;foo&#39;&quot;)</span>
+<span class="sd">    &quot;foo&quot;</span>
+<span class="sd">    &gt;&gt;&gt; strip_quotes(&#39;&quot;foo&quot;&#39;)</span>
+<span class="sd">    &quot;foo&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">is_quoted_string</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_quoted_unicode</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;u&#39;</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_quoted_string</span><span class="p">(</span><span class="n">want</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_quoted_string</span><span class="p">(</span><span class="n">got</span><span class="p">):</span>
+        <span class="n">want</span> <span class="o">=</span> <span class="n">want</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">got</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">is_quoted_unicode</span><span class="p">(</span><span class="n">want</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_quoted_unicode</span><span class="p">(</span><span class="n">got</span><span class="p">):</span>
+        <span class="n">want</span> <span class="o">=</span> <span class="n">want</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">got</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">want</span><span class="p">,</span> <span class="n">got</span></div>
+
+
+<div class="viewcode-block" id="compare_xml"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.compare_xml">[docs]</a><span class="k">def</span> <span class="nf">compare_xml</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Tries to do a &#39;xml-comparison&#39; of want and got.  Plain string</span>
+<span class="sd">    comparison doesn&#39;t always work because, for example, attribute</span>
+<span class="sd">    ordering should not be important. Comment nodes are not considered in the</span>
+<span class="sd">    comparison. Leading and trailing whitespace is ignored on both chunks.</span>
+
+<span class="sd">    Based on https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py</span>
+
+<span class="sd">    This function is a close but not full implementation of fn:deep-equals.</span>
+<span class="sd">    Possible scenario where this will yield a false positive result is where an element can have 2 arguments with</span>
+<span class="sd">    the same name but different namespaces:</span>
+
+<span class="sd">        i.e.: &lt;elem ns1:myattr=&quot;1&quot; /&gt; != &lt;elem ns2:myattr=&quot;1&quot; /&gt; if ns1 != ns2</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_norm_whitespace_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[ \t\n][ \t\n]+&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">norm_whitespace</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">_norm_whitespace_re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">child_text</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">childNodes</span>
+                       <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">nodeType</span> <span class="o">==</span> <span class="n">Node</span><span class="o">.</span><span class="n">TEXT_NODE</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">element</span><span class="o">.</span><span class="n">childNodes</span>
+                <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">nodeType</span> <span class="o">==</span> <span class="n">Node</span><span class="o">.</span><span class="n">ELEMENT_NODE</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">norm_child_text</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">norm_whitespace</span><span class="p">(</span><span class="n">child_text</span><span class="p">(</span><span class="n">element</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">attrs_dict</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">check_element</span><span class="p">(</span><span class="n">want_element</span><span class="p">,</span> <span class="n">got_element</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">want_element</span><span class="o">.</span><span class="n">tagName</span> <span class="o">!=</span> <span class="n">got_element</span><span class="o">.</span><span class="n">tagName</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">norm_child_text</span><span class="p">(</span><span class="n">want_element</span><span class="p">)</span> <span class="o">!=</span> <span class="n">norm_child_text</span><span class="p">(</span><span class="n">got_element</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="n">attrs_dict</span><span class="p">(</span><span class="n">want_element</span><span class="p">)</span> <span class="o">!=</span> <span class="n">attrs_dict</span><span class="p">(</span><span class="n">got_element</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">want_children</span> <span class="o">=</span> <span class="n">children</span><span class="p">(</span><span class="n">want_element</span><span class="p">)</span>
+        <span class="n">got_children</span> <span class="o">=</span> <span class="n">children</span><span class="p">(</span><span class="n">got_element</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">want_children</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">got_children</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">want</span><span class="p">,</span> <span class="n">got</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">want_children</span><span class="p">,</span> <span class="n">got_children</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">check_element</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">first_node</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">document</span><span class="o">.</span><span class="n">childNodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">nodeType</span> <span class="o">!=</span> <span class="n">Node</span><span class="o">.</span><span class="n">COMMENT_NODE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">node</span>
+
+    <span class="n">want</span><span class="p">,</span> <span class="n">got</span> <span class="o">=</span> <span class="n">strip_quotes</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">)</span>
+    <span class="n">want</span> <span class="o">=</span> <span class="n">want</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">got</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">n&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># If the string is not a complete xml document, we may need to add a</span>
+    <span class="c1"># root element. This allow us to compare fragments, like &quot;&lt;foo/&gt;&lt;bar/&gt;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">want</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;&lt;?xml&#39;</span><span class="p">):</span>
+        <span class="n">wrapper</span> <span class="o">=</span> <span class="s1">&#39;&lt;root&gt;</span><span class="si">%s</span><span class="s1">&lt;/root&gt;&#39;</span>
+        <span class="n">want</span> <span class="o">=</span> <span class="n">wrapper</span> <span class="o">%</span> <span class="n">want</span>
+        <span class="n">got</span> <span class="o">=</span> <span class="n">wrapper</span> <span class="o">%</span> <span class="n">got</span>
+
+    <span class="c1"># Parse the want and got strings, and compare the parsings.</span>
+    <span class="n">want_root</span> <span class="o">=</span> <span class="n">first_node</span><span class="p">(</span><span class="n">parseString</span><span class="p">(</span><span class="n">want</span><span class="p">))</span>
+    <span class="n">got_root</span> <span class="o">=</span> <span class="n">first_node</span><span class="p">(</span><span class="n">parseString</span><span class="p">(</span><span class="n">got</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">check_element</span><span class="p">(</span><span class="n">want_root</span><span class="p">,</span> <span class="n">got_root</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

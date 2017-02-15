@@ -143,7 +143,7 @@
 <div class="viewcode-block" id="WebsocketProducerCarriage"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage">[docs]</a><span class="k">class</span> <span class="nc">WebsocketProducerCarriage</span><span class="p">(</span><span class="n">AbstractProducerCarriage</span><span class="p">):</span>
 
     <span class="n">_backend_producer</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_expects</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span>
+    <span class="n">_expects</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
 
 <div class="viewcode-block" id="WebsocketProducerCarriage.register_backend_producer"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.websocket.WebsocketProducerCarriage.register_backend_producer">[docs]</a>    <span class="k">def</span> <span class="nf">register_backend_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_backend_producer</span> <span class="o">=</span> <span class="n">producer</span></div>
@@ -159,7 +159,7 @@
 
 <div class="viewcode-block" id="WebsocketConsumerCarriage"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage">[docs]</a><span class="k">class</span> <span class="nc">WebsocketConsumerCarriage</span><span class="p">(</span><span class="n">AbstractConsumerCarriage</span><span class="p">):</span>
 
-    <span class="n">_provides</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span>
+    <span class="n">_provides</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
 
 <div class="viewcode-block" id="WebsocketConsumerCarriage.on_new_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.websocket.WebsocketConsumerCarriage.on_new_data">[docs]</a>    <span class="k">def</span> <span class="nf">on_new_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">consumer_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
