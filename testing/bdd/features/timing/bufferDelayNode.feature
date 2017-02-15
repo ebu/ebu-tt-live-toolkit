@@ -5,7 +5,7 @@ Feature: BufferDelayNode
   | xml_file      |
   | delayNode.xml |  
 
-  #TBC: this is a change to the spec (passive delay node)
+  # TODO: This should be changed to check for document identity on emission (passive delay node)
   @skip
   Scenario: BufferDelayNode, unchanged sequence identifier
     Given an xml file <xml_file>
