@@ -1,6 +1,8 @@
 from unittest import TestCase
 from datetime import timedelta, datetime
 from ebu_tt_live.documents import EBUTT3Document
+import os
+from ebu_tt_live.utils import compare_xml
 
 
 class TestEBUTT3Document(TestCase):
@@ -41,3 +43,14 @@ class TestEBUTT3Document(TestCase):
         # this syntax and not the "=" syntax, because of the way the "="
         # operator works in python
         self.assertRaises(TypeError, lambda: document.availability_time(1))
+
+    def test_is_equal_dom(self):
+        xml = ""
+        file_path = os.path.join(os.path.dirname(__file__), 'data', 'document.xml')
+        with open(file_path) as xml_file:
+            xml = xml_file.read()
+        document1 = EBUTT3Document.create_from_xml(xml)
+        document2 = EBUTT3Document.create_from_xml(xml)
+        self.assertTrue(compare_xml(document1.get_xml(), document2.get_xml()))
+        document2 = EBUTT3Document.create_from_xml(xml.replace('500', '3500'))
+        self.assertFalse(compare_xml(document2.get_xml(), document1.get_xml()))

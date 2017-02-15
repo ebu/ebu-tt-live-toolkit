@@ -123,6 +123,7 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
     This class is responsible for setting the document object from the xml and set its availability time.
     The document is then sent to the node.
     """
+
     _reference_clock = None
 
     def __init__(self, reference_clock):

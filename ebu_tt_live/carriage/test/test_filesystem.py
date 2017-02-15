@@ -61,7 +61,7 @@ class TestFilesystemProducerImpl(TestCase):
         node.document_sequence.sequence_identifier = "testSeq"
         node.reference_clock.time_base = "clock"
         node.provides.return_value = EBUTT3Document
-        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path, node.reference_clock)
         fs_carriage.register_producer_node(node)
         fs_carriage.resume_producing()
         fs_carriage.emit_data(document)
@@ -86,7 +86,7 @@ class TestFilesystemConsumerImpl(TestCase):
         with open(test_xml_file_path, 'r') as test_xml_file:
             test_xml = test_xml_file.read()
         data = ["18:42:42.42", test_xml]
-        fs_consumer_impl.register_node(node)
+        fs_consumer_impl = FilesystemConsumerImpl(node.reference_clock)
         fs_consumer_impl.on_new_data(data)
         assert node.process_document.called
 
@@ -95,7 +95,9 @@ class TestFilesystemConsumerImpl(TestCase):
     def test_on_new_data_raise_XMLParsingFailed(self, node):
         node.process_document = MagicMock(return_value=None)
         data = ["18:42:42.42", "test"]
-        fs_consumer_impl.register_node(node)
+        reference_clock = MagicMock()
+        fs_consumer_impl = FilesystemConsumerImpl(reference_clock)
+        fs_consumer_impl.register(node)
         self.assertRaises(XMLParsingFailed, lambda: fs_consumer_impl.on_new_data(data))
         assert not node.process_document.called
 

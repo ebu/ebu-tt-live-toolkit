@@ -18,7 +18,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
 |R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. ~~(Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)~~ SMPTE Deprecated.|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
-|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s). See R118 for a definition of identity.| |
+|R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.| |
+|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s). See R118 for a definition of identity.|`bdd/nodes/passive_nodes_shall_not_modify_documents.feature`|
 |R13|2.2 |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.|`/bdd/features/timing/resolved_times.feature`|
 |R14|2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
 |R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.|`/bdd/features/timing/resolved_times.feature`|

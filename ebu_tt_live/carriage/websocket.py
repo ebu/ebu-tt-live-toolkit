@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 class WebsocketProducerCarriage(AbstractProducerCarriage):
 
     _backend_producer = None
-    _expects = six.string_types
+    _expects = six.text_type
 
     def register_backend_producer(self, producer):
         self._backend_producer = producer
@@ -26,7 +26,7 @@ class WebsocketProducerCarriage(AbstractProducerCarriage):
 
 class WebsocketConsumerCarriage(AbstractConsumerCarriage):
 
-    _provides = six.string_types
+    _provides = six.text_type
 
     def on_new_data(self, data, **kwargs):
         self.consumer_node.process_document(data, **kwargs)

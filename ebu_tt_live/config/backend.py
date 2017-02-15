@@ -30,7 +30,7 @@ class BackendBase(ConfigurableComponent):
 
     def register_component_start(self, component):
         self._components_to_start.append(component)
-        print self._components_to_start
+        log.info(self._components_to_start)
 
     def call_once(self, func, delay=0.0, result_callback=None, error_callback=None, *args, **kwargs):
         raise NotImplementedError()
