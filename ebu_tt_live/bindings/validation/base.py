@@ -138,7 +138,7 @@ class SemanticValidationMixin(object):
         if old_elem_ids is None:
             return None
 
-        if isinstance(old_elem_ids, six.string_types):
+        if isinstance(old_elem_ids, six.text_type):
             new_elem = self._find_deconflicted_elem_by_id(elem_id=old_elem_ids, dataset=dataset)
             return new_elem.id
         else:

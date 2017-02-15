@@ -9,7 +9,7 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     """
     This converter converts the raw XML documents to the EBUTT3Document type.
     """
-    _expects = six.string_types
+    _expects = six.text_type
     _provides = EBUTT3Document
 
     def convert_data(self, data, availability_time=None, **kwargs):
@@ -20,7 +20,7 @@ class XMLtoEBUTTDAdapter(IDocumentDataAdapter):
     """
     This converter converts the raw XML documents to the EBUTTDDocument type.
     """
-    _expects = six.string_types
+    _expects = six.text_type
     _provides = EBUTTDDocument
 
     def convert_data(self, data, **kwargs):
@@ -32,7 +32,7 @@ class EBUTTDtoXMLAdapter(IDocumentDataAdapter):
     This converter serializes Document objects to XML
     """
     _expects = EBUTTDDocument
-    _provides = six.string_types
+    _provides = six.text_type
 
     def convert_data(self, data, **kwargs):
         return data.get_xml(), kwargs
@@ -44,7 +44,7 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
     """
 
     _expects = EBUTT3Document
-    _provides = six.string_types
+    _provides = six.text_type
 
     def convert_data(self, data, **kwargs):
         kwargs.update({

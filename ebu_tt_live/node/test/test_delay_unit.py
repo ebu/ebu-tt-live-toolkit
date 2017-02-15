@@ -1,3 +1,4 @@
+import six
 from unittest import TestCase
 from mock import MagicMock
 from ebu_tt_live.node.delay import RetimingDelayNode, BufferDelayNode
@@ -25,11 +26,9 @@ class TestBufferDelayNode(TestCase):
     def test_process_document(self):
 
         carriage = MagicMock(spec=IProducerCarriage)
-        carriage.expects.return_value = EBUTT3Document
-        reference_clock = MagicMock()
+        carriage.expects.return_value = six.text_type
         delay = 2
-        document_sequence = 'TestSequence'
-        node = BufferDelayNode('delay_node', carriage, reference_clock, delay, document_sequence)
+        node = BufferDelayNode('delay_node', carriage, delay)
         document = MagicMock(spec=EBUTT3Document)
         node.process_document(document)
         carriage.emit_data.assert_called_with(data=document, delay=delay)

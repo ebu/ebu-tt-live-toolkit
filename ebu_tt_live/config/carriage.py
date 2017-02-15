@@ -3,38 +3,10 @@ from ebu_tt_live.carriage.direct import DirectCarriageImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage, WebsocketConsumerCarriage
 from ebu_tt_live.carriage import filesystem
 from ebu_tt_live.utils import HTTPProxyConfig
-from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE
+from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE, ERR_NO_SUCH_COMPONENT
 from ebu_tt_live.errors import ConfigurationError
 import urlparse
 import re
-
-
-def producer_carriage_by_type(carriage_type):
-    if carriage_type == 'websocket':
-        return WebsocketOutput
-    elif carriage_type == 'websocket-legacy':
-        return WebsocketLegacyOutput
-    elif carriage_type == 'filesystem':
-        return FilesystemOutput
-    elif carriage_type == 'filesystem-simple':
-        return SimpleFilesystemOutput
-    elif carriage_type == 'direct':
-        return DirectOutput
-    else:
-        raise Exception('No such component: {}'.format(carriage_type))
-
-
-def consumer_carriage_by_type(carriage_type):
-    if carriage_type == 'websocket':
-        return WebsocketInput
-    elif carriage_type == 'websocket-legacy':
-        return WebsocketLegacyInput
-    elif carriage_type == 'direct':
-        return DirectInput
-    elif carriage_type == 'filesystem':
-        return FilesystemInput
-    else:
-        raise Exception('No such component: {}'.format(carriage_type))
 
 
 class DirectCommon(ConfigurableComponent):
@@ -224,7 +196,12 @@ class WebsocketLegacyInput(WebsocketLegacyBase):
 class WebsocketBase(ConfigurableComponent):
 
     required_config = Namespace()
-    required_config.add_option('listen', default=None, doc='Socket to listen on i.e: ws://ADDR:PORT', from_string_converter=str_to_url_converter)
+    required_config.add_option(
+        'listen',
+        default=None,
+        doc='Socket to listen on i.e: ws://ADDR:PORT',
+        from_string_converter=str_to_url_converter
+    )
     required_config.add_option('connect', default=[], doc='List of connections to make')
     required_config.add_option(
         'proxy',
@@ -273,4 +250,43 @@ class WebsocketInput(WebsocketBase):
             listen=self.config.listen,
             connect=self.config.connect,
             proxy=self.config.proxy
+        )
+
+
+producer_carriage_by_type = {
+    'websocket': WebsocketOutput,
+    'websocket-legacy': WebsocketLegacyOutput,
+    'filesystem': FilesystemOutput,
+    'filesystem-simple': SimpleFilesystemOutput,
+    'direct': DirectOutput
+}
+
+
+def get_producer_carriage(carriage_type):
+    try:
+        return producer_carriage_by_type[carriage_type]
+    except KeyError:
+        raise ConfigurationError(
+            ERR_NO_SUCH_COMPONENT.format(
+                type_name=carriage_type
+            )
+        )
+
+
+consumer_carriage_by_type = {
+    'websocket': WebsocketInput,
+    'websocket-legacy': WebsocketLegacyInput,
+    'direct': DirectInput,
+    'filesystem':  FilesystemInput
+}
+
+
+def get_consumer_carriage(carriage_type):
+    try:
+        return consumer_carriage_by_type[carriage_type]
+    except KeyError:
+        raise ConfigurationError(
+            ERR_NO_SUCH_COMPONENT.format(
+                type_name=carriage_type
+            )
         )

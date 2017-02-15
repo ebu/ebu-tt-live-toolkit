@@ -8,7 +8,7 @@
       "output": {
         "carriage": {
           "type": "websocket",
-          "uri": "ws://localhost:9000"
+          "listen": "ws://localhost:9000"
         }
       }
     }

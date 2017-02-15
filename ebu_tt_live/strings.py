@@ -2,6 +2,7 @@
 from gettext import gettext
 
 # ERRORS
+ERR_NO_SUCH_COMPONENT = gettext('No such component: {type_name}')
 ERR_INCOMPATIBLE_COMPONENT = gettext('Incompatible component: {component} Expected interface: {expected_interface}')
 ERR_INCOMPATIBLE_DATA_PROVIDED = gettext('{component} provides incompatible data type: {provides} Expected type: {expects}')
 ERR_INCOMPATIBLE_DATA_EXPECTED = gettext('{component} expects incompatible data type: {expects} Provided type: {provides}')
@@ -10,6 +11,7 @@ ERR_CONV_NO_INPUT = gettext('The converter has no input set')
 ERR_TIME_WRONG_FORMAT = gettext('Wrong time format. datetime.timedelta is expected')
 ERR_TIME_FORMAT_OVERFLOW = gettext('Time value is out of format range')
 ERR_DOCUMENT_SEQUENCE_MISMATCH = gettext('sequenceIdentifier mismatch')
+ERR_DOCUMENT_SEQUENCENUMBER_COLLISION = gettext('Sequence number: [{sequence_number}] already present in sequence: [{sequence_identifier}]')
 ERR_DECODING_XML_FAILED = gettext('XML document parsing failed')
 ERR_SEMANTIC_VALIDATION_TIMING_TYPE = gettext('{attr_type}({attr_value}) is not a valid type for {attr_name} in timeBase={time_base}')
 ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES = gettext('{elem_name} is missing attributes: {attr_names}')
@@ -28,6 +30,7 @@ ERR_DOCUMENT_EXTENT_MISSING = gettext('{type} cannot be instantiated from {value
 ERR_1DIM_ONLY = gettext('{type} accepts 1 dimensional values only')
 ERR_2DIM_ONLY = gettext('{type} accepts 2 dimensional values only')
 END_OF_DATA = gettext('End of available data reached')
+ERR_UNKNOWN_HASH = gettext('The hash for this document is not known')
 
 ERR_WS_INVALID_ACTION = gettext('Invalid action: {action}')
 ERR_WS_NOT_PRODUCER = gettext('This socket does not belong to a producer.')

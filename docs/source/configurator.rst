@@ -170,4 +170,4 @@ Adapters will be automatically selected if not specified, or can be manually spe
     ├─ebutt3->xml : EBU-TT Part 3 to XML serialisation
     └─ebuttd->xml : EBU-TT-D to XML serialisation
 
-Please refer to the :py:mod:`ebu_tt_live.scripts.ebu_run` for more information.
+Please refer to the :py:mod:`ebu_tt_live.scripts.ebu_run` for more information. Example ``.conf`` files for some common configurations can be found in ``examples/config``  

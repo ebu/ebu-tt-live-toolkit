@@ -7,7 +7,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |ID|Section|Statement|Feature file path and Scenario name|
 |---|---|---|---|---|
 | | **Tech3370**| | |
-| R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.| |
+| R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
 | R2|2.2 |If no document is active, or if a document with no content is active, no content shall be displayed. | |
 | R3|2.2 |Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
 | R4|2.2 |Every distinct sequence shall have a unique sequence identifier.| |
@@ -18,16 +18,17 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
 |R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
 |R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. ~~(Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)~~ SMPTE Deprecated.|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
-|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s)| |
-|R13|2.2 |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.| |
-|R14|2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.| |
 |R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.| |
+|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s). See R118 for a definition of identity.|`bdd/nodes/passive_nodes_shall_not_modify_documents.feature`|
+|R13|2.2 |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.|`/bdd/features/timing/resolved_times.feature`|
+|R14|2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
+|R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.|`/bdd/features/timing/resolved_times.feature`|
 |R16|2.3.1.1|The document resolved begin time shall be the later of (a) the document availability time, (b) the earliest computed begin time in the document and (c) any externally specified document activation begin time, such as the beginning of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
-|R17|2.3.1.2|The document resolved end time shall be the earlier of (a) the earliest document resolved begin time of all available documents in the sequence with a greater sequence number, (b) the document resolved begin time plus the value of the `dur` attribute, if present, (c) the latest computed end time in the document and (d) any externally specified document deactivation time, such as the end of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
+|R17|2.3.1.2|The document resolved end time shall be the earlier of (a) the earliest document resolved begin time of all available documents in the sequence with a greater sequence number, (b) the document resolved begin time plus the value of the `dur` attribute, if and only if the `dur` attribute is present, (c) the latest computed end time in the document and (d) any externally specified document deactivation time, such as the end of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
 |R18|2.3.1.3|When no document is active a presentation processor shall NOT render any content.| |
 |R19|2.3.4|~~A Delay node is a processing node. Therefore the output sequence shall have a different sequence identifier from the input sequence.~~| Deprecated. See retiming delay node. |
 |R20|2.3.4|~~A Delay node may emit implicitly timed documents within a sequence. In this case the Delay node shall delay emission of the stream by a period equivalent to the adjustment value.~~|Deprecated. See retiming delay node. |
-|R21|2.3.4|A Delay node shall NOT emit an output sequence with reordered subtitles.| |
+|R21|2.3.4|~~A Delay node shall NOT emit an output sequence with reordered subtitles.~~|Replaced by a 'should' for a retiming delay node|
 |R22|2.3.4|A Delay node shall NOT update the value of `ebuttm:authoringDelay`.| |
 |R23|2.4|The Handover Manager node shall use a 'who claimed control most recently' algorithm for selecting the sequence, based on a control token parameter within each document.| |
 |R24|2.4.1|All documents within a sequence that contain the element `ebuttp:authorsGroupIdentifier` shall have the same `ebuttp:authorsGroupIdentifier`.| |
@@ -37,7 +38,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R28|2.5.1|If all the content in a document has\_not a `facet` then the summary shall be `"all\_has_not"`.|`bdd/features/validation/facet.feature` `(In)valid facet summary` |
 |R29|2.5.1|If there is a mix of has and has\_not and unknown or if some of the content does not have the `facet` then the summary shall be `"mixed"`.|`bdd/features/validation/facet.feature` `(In)valid facet summary` |
 |R30|2.5.1|If none of the document's content has the `facet` or all of the document's content has the `facet` described as unknown then the summary shall be `"unspecified"`.| `bdd/features/validation/facet.feature` `(In)valid facet summary`|
-|R31|2.6|If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R31|2.6|~~If present, a `trace` element shall describe in text the action that generated the document, in the action attribute, and an identifier that performed that action, in the `generatedBy` attribute.~~ Merged with `ebuttm:appliedProcessing`|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R32|3.2.2.1|`ttp:timeBase` Cardinality 1..1|`bdd/features/validation/timeBase_attribute_mandatory.feature` `(In)valid ttp:timeBase`|
 |R33|3.2.2.1|The `ttp:timeBase` element is as defined in [EBUTT1] with the addition that all time expressions of `dur` attributes shall denote a relative coordinate on the same timeline as the `begin` and `end` attributes.| |
 |R34|3.2.2.1|`ebuttp:sequenceIdentifier` Cardinality 1..1|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
@@ -48,8 +49,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R39|3.2.2.2|Order of metadata elements (if present) in `ebuttm:documentMetadata` is: `ebuttm:originalSourceServiceIdentifier`, `ebuttm:intendedDestinationServiceIdentifier`, `ebuttm:documentFacet`, `ebuttm:trace`. |`bdd/features/validation/documentMetadata_elements_order.feature` `(In)valid documentMetadata elements order`|
 |R40|3.2.2.2|`ebuttm:documentFacet` : Each distinctly identified `facet` that is summarised shall have a separate `documentFacet` element.| |
 |R41|3.2.2.2|Documents shall NOT contain more than one `documentFacet` element referring to the same term, where the term is identified by the combination of the element contents and the value of the link attribute.| |
-|R42|3.2.2.2.1| `ebuttm:trace` `action` attribute Cardinality 1..1 |`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
-|R43|3.2.2.2.1| `ebuttm:trace` `generatedBy` attribute Cardinality 1..1 |`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R42|3.2.2.2.1|~~ `ebuttm:trace` `action` attribute Cardinality 1..1 ~~ Merged with `ebuttm:appliedProcessing`|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
+|R43|3.2.2.2.1| ~~`ebuttm:trace` `generatedBy` attribute Cardinality 1..1~~ Merged with `ebuttm:appliedProcessing`|`bdd/features/validation/trace.feature` `(In)valid trace attributes`|
 |R44|3.2.2.3| A document that contains a `tt:body` element with no content shall be treated as being active as defined by the semantics described in § 2.3.1, and shall cause no content to be presented while it is active.| |
 |R45|3.2.2.3|~~`body` `begin` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`.~~ SMPTE Deprecated.|`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in body` |
 |R46|3.2.2.3|`body` `begin` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. |`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase`|
@@ -116,14 +117,16 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 | | **Tech3370 Revision 1 (Dec 2016)**| | |
-|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
+|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`ebu_tt_live/documents/test/test_ebutt3sequence.py`|
 |R108|3.2.2.1|When discarding a document with a previously received pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber`, the availability time of the document shall NOT be changed due to such a discard.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R109|2.3.4.1|A Delay node SHALL accept a non-negative offset value | |
-|R110|2.3.4.1|A Buffer Delay node SHALL NOT alter the sequence identifier | |
-|R111|2.3.4.1|A Buffer Delay node SHALL NOT modify times within the document  | |
+|R110|2.3.4.1|~~A Buffer Delay node SHALL NOT alter the sequence identifier~~| Implicit in R119|
+|R111|2.3.4.1|~~A Buffer Delay node SHALL NOT modify times within the document~~|Implicit in R119|
 |R112|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  | |
 |R113|2.3.4.2|A Retiming Delay node SHALL output a sequence with an identifier different to that of the input.  | |
 |R114|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
 |R115|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
 |R116|2.3.4.2|A Retiming Delay node shall not emit an output sequence with reordered subtitles. ||
 |R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
+|R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.|NOTE: Due to partial support for XQuery functions in the Python libraries that we use, this requirement is not implemented fully in this toolkit. Equality testing in other implementation may produce slightly different results.|
+|R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`|

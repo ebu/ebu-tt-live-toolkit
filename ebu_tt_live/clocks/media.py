@@ -21,7 +21,7 @@ class MediaClock(Clock):
 
     def get_machine_time(self):
         now = datetime.now().time()
-        current_time = timedelta(hours=now.hour,minutes=now.minute, seconds=now.second, microseconds=now.microsecond)
+        current_time = timedelta(hours=now.hour, minutes=now.minute, seconds=now.second, microseconds=now.microsecond)
         return current_time
 
     def get_media_time(self, real_clock_timedelta):
