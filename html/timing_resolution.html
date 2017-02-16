@@ -149,45 +149,305 @@
             
   <div class="section" id="timing-resolution-and-consumer-logic">
 <h1>Timing resolution and consumer logic<a class="headerlink" href="#timing-resolution-and-consumer-logic" title="Permalink to this headline">¶</a></h1>
-<p>EBU-TT part 3 deals with sequences of documents and uses those combined to create a single timeline/sequence where
-document contents(ISD) begin and end events are kept. Resolving this takes resolving the document timings first.
-After each document&#8217;s internal timing relationships have been worked out the document is getting inserted into the
+<p>EBU-TT part 3 deals with sequences of documents and creates a single timeline/sequence where
+document begin and end events are kept. Resolving this takes resolving the document timings first.
+After each document&#8217;s internal timing relationships have been worked out the document is inserted into the
 timeline where possible collisions are detected and resolved with the possible discarding of documents in the process.</p>
 <div class="section" id="document-timings">
 <h2>Document Timings<a class="headerlink" href="#document-timings" title="Permalink to this headline">¶</a></h2>
 <p>The document timing resolution logic is built using the validation framework and mostly is in
 <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.TimingValidationMixin</span></code></p>
 <p>The approach is that the element timing semantics require parent and children derived information to calculate
-begin and end events on an absolute timeline. For this we hook into the Depth First Search the validation framework
-uses to process element validation. It is very important to notice that the begin and end times are possible to be
+begin and end events on an absolute timeline. For this we hook into the Depth First Search that the validation framework
+uses to process element validation. It is very important to note that the begin and end times can be
 calculated either as the algorithm cascades down or on its way up in case information derived from children is required.</p>
-<img src="_images/graphviz-22cb90ac22be93cb0c71f7e751ac94cd60ee96c4.png" alt="digraph shells {
+<img src="_images/graphviz-2f94a68d995752b5619d94b03f7410b43726322e.png" alt="digraph shells {
     size=&quot;7,8&quot;;
     node [fontsize=24, shape = plaintext];
-    &quot;Document level&quot; -&gt; L1 -&gt; L2 -&gt; L3;
+    &quot;Document level&quot; -&gt; L1 -&gt; L2 -&gt; L3 -&gt; L4;
 
     node [fontsize=20, shape = ellipse];
     { rank = same; &quot;Document level&quot; tt; }
     { rank = same; L1 body; }
-    { rank = same; L2 p1 p2; }
-    { rank = same; L3 span1 span2 span3; }
+    { rank = same; L2 div; }
+    { rank = same; L3 p1 p2; }
+    { rank = same; L4 span1 span2 span3; }
 
     /* 'visible' edges */
     tt -&gt; body;
-    body -&gt; {p1 p2};
+    body -&gt; div;
+    div -&gt; {p1 p2};
     p1 -&gt; {span1 span2};
     p2 -&gt; span3;
 
     /* ’invisible’ edges to adjust node placement */
     edge [style=invis];
-    L3 -&gt; span1;
+    L4 -&gt; span1;
 }" />
+<p>The classes involved in the timing resolution are in the diagram below. For every type of element in the XSD there is
+a python binding class defined. For the sake of simplicity the diagram only contains a fraction of them to provide
+enough context but omits the parts that are irrelevant to the timing resolution logic.</p>
+<div class="figure" id="id1">
+<p class="plantuml">
+<img src="_images/plantuml-eb36c67efa5abfdfe49a3f9eec26e14c9118a827.png" alt="&#64;startuml
+
+class tt_type {
+  #_semantic_before_validation()
+  #_semantic_after_validation()
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class body_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class div_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class p_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class span_type {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+
+class SemanticValidationMixin {
+  #_semantic_before_traversal()
+  #_semantic_after_traversal()
+}
+class SemanticDocumentMixin {
+  #_semantic_before_validation()
+  #_semantic_after_validation()
+  +validateBinding()
+}
+class TimingValidationMixin {
+  #_semantic_preprocess_timing()
+  #_semantic_postprocess_timing()
+}
+class RecursiveOperation {
+  #{abstract}_process_element()
+  #{abstract}_process_non_element()
+  #_before_element()
+  #_after_element()
+  +proceed()
+}
+class SemanticValidator {
+  #_process_element()
+  #_process_non_element()
+  #_before_element()
+  #_after_element()
+}
+
+RecursiveOperation &lt;|-- SemanticValidator
+SemanticValidationMixin --&gt; SemanticValidator
+SemanticDocumentMixin &lt;|-- SemanticValidationMixin
+SemanticDocumentMixin &lt;|-- tt_type
+SemanticValidationMixin &lt;|-- body_type
+SemanticValidationMixin &lt;|-- div_type
+SemanticValidationMixin &lt;|-- p_type
+SemanticValidationMixin &lt;|-- span_type
+TimingValidationMixin &lt;|-- body_type
+TimingValidationMixin &lt;|-- div_type
+TimingValidationMixin &lt;|-- p_type
+TimingValidationMixin &lt;|-- span_type
+
+&#64;enduml
+" />
+</p>
+<p class="caption"><span class="caption-text">Classes involved in timing resolution (Simplified)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+<p>The functions <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation" title="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation()</span></code></a> and
+<code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_after_validation()</span></code> are hooks that run
+before and after the Depth First Search traversal of the content tree.
+The <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal()</span></code></a> and
+<a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal()</span></code></a> are element hooks,
+which are called before the traversal logic gets to the element and after the traversal logic has finished processing
+the children of the element in question. Types that subclass these mixins should override these functions to provide
+their own customized hook behaviour. In the case of timing resolution another mixin,
+<code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.TimingValidationMixin</span></code> is involved, which encapsulates the functions
+used to process <cite>begin</cite> and <cite>end</cite> attributes. In order for a particular element type to gain timing resolution
+capability it needs to subclass <cite>TimingValidationMixin</cite> and <cite>SemanticValidationMixin</cite> and it must have <cite>begin</cite> and <cite>end</cite>
+attributes capability. Then it should implement <cite>_semantic_before_traversal</cite> and <cite>_semantic_after_traversal</cite> functions
+and call the <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing</span></code></a>
+in the before traversal and
+<a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing</span></code></a> in the after
+traversal hook. The following code sample is from the implementation of the div_type class.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_register_id</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_preprocess_timing</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_set_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">region_type</span><span class="o">=</span><span class="n">region_type</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_collect_applicable_styles</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">style_type</span><span class="o">=</span><span class="n">style_type</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="o">=</span><span class="bp">True</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_push_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_semantic_after_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_postprocess_timing</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_unset_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the following sequence diagram we traverse the document structure depicted in the first figure of this page and
+process the timings.</p>
+<div class="figure" id="id2">
+<p class="plantuml">
+<img src="_images/plantuml-41332e09a4f3bc33abde0b4e93c8ebd757b6edb9.png" alt="&#64;startuml
+
+actor User
+User --&gt; &quot;root : tt_type&quot; as root: validateBinding()
+activate root
+
+create &quot;validator : SemanticValidator&quot; as validator
+root -&gt; validator : &lt;&lt;create&gt;&gt;
+root -&gt; validator : process()
+activate validator
+
+validator -&gt; &quot;body : body_type&quot; as body: _semantic_before_traversal()
+activate body
+
+body -&gt; body : _semantic_preprocess_timing()
+activate body
+deactivate body
+
+deactivate body
+
+validator -&gt; &quot;div : div_type&quot; as div: _semantic_before_traversal()
+activate div
+
+div -&gt; div : _semantic_preprocess_timing()
+activate div
+deactivate div
+
+deactivate div
+
+validator -&gt; &quot;p1 : p_type&quot; as p1 : _semantic_before_traversal()
+activate p1
+
+p1 -&gt; p1 : _semantic_preprocess_timing()
+activate p1
+deactivate p1
+
+deactivate p1
+
+validator -&gt; &quot;span1 : span_type&quot; as span1 : _semantic_before_traversal()
+activate span1
+
+span1 -&gt; span1 : _semantic_preprocess_timing()
+activate span1
+deactivate span1
+
+deactivate span1
+
+validator -&gt; span1 : _semantic_after_traversal()
+activate span1
+
+span1 -&gt; span1: _semantic_postprocess_timing()
+activate span1
+deactivate span1
+
+deactivate span1
+
+validator -&gt; &quot;span2 : span_type&quot; as span2 : _semantic_before_traversal()
+activate span2
+
+span2 -&gt; span2 : _semantic_preprocess_timing()
+activate span2
+deactivate span2
+
+deactivate span2
+
+validator -&gt; span2 : _semantic_after_traversal()
+activate span2
+
+span2 -&gt; span2 : _semantic_postprocess_timing()
+activate span2
+deactivate span2
+
+deactivate span2
+
+validator -&gt; p1 : _semantic_after_traversal()
+activate p1
+
+p1 -&gt; p1 : _semantic_postprocess_timing()
+activate p1
+deactivate p1
+
+deactivate p1
+
+validator -&gt; &quot;p2 : p_type&quot; as p2 : _semantic_before_traversal()
+activate p2
+
+p2 -&gt; p2 : _semantic_preprocess_timing()
+activate p2
+deactivate p2
+
+deactivate p2
+
+validator -&gt; &quot;span3 : span_type&quot; as span3 : _semantic_before_traversal()
+activate span3
+
+span3 -&gt; span3 : _semantic_preprocess_timing()
+activate span3
+deactivate span3
+
+deactivate span3
+
+validator -&gt; span3 : _semantic_after_traversal()
+activate span3
+
+span3 -&gt; span3 : _semantic_postprocess_timing()
+activate span3
+deactivate span3
+
+deactivate span3
+
+validator -&gt; p2 : _semantic_after_traversal()
+activate p2
+
+p2 -&gt; p2 : _semantic_postprocess_timing()
+activate p2
+deactivate p2
+
+deactivate p2
+
+validator -&gt; div : _semantic_after_traversal()
+activate div
+
+div -&gt; div : _semantic_postprocess_timing()
+activate div
+deactivate div
+
+deactivate div
+
+validator -&gt; body : _semantic_after_traversal()
+activate body
+
+body -&gt; body : _semantic_postprocess_timing()
+activate body
+deactivate body
+
+deactivate body
+
+root &lt;- validator
+destroy validator
+User &lt;- root
+
+deactivate root
+
+&#64;enduml
+" />
+</p>
+<p class="caption"><span class="caption-text">Timing validation of document tree (head element omitted as it is irrelevant to timing)</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
 </div>
 <div class="section" id="sequence-timings">
 <h2>Sequence Timings<a class="headerlink" href="#sequence-timings" title="Permalink to this headline">¶</a></h2>
 <p>The sequence timings are handled by the <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence</span></code></a> class.
-The document is insterted after having been validated into the sequence. The sequence looks at the computed begin and
-end times and detects collisions. If there are any the collisions are resolved by the logic starting in
+The document is inserted into the sequence after it is validated. The sequence looks at the computed begin and
+end times and detects collisions. If there are any, the collisions are resolved by the logic starting in
 <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard()</span></code></a></p>
 </div>
 </div>

@@ -147,7 +147,7 @@
 
 <div class="viewcode-block" id="IProducerCarriage"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage">[docs]</a><span class="k">class</span> <span class="nc">IProducerCarriage</span><span class="p">(</span><span class="n">ICarriageMechanism</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Node that emits documents to an output interface, usually some network socket.</span>
+<span class="sd">    Carriage mechanism interface for producer nodes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_expects</span> <span class="o">=</span> <span class="n">AbstractStaticMember</span><span class="p">(</span><span class="n">validate_types_only</span><span class="p">)</span>
@@ -168,8 +168,8 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register the producer node in the carriage mechanism</span>
 
-<span class="sd">        :param node:</span>
-<span class="sd">        :return:</span>
+<span class="sd">        :param node: The node to connect to.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
     <span class="nd">@abstractproperty</span>
@@ -201,7 +201,7 @@
 
 <div class="viewcode-block" id="IConsumerCarriage"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage">[docs]</a><span class="k">class</span> <span class="nc">IConsumerCarriage</span><span class="p">(</span><span class="n">ICarriageMechanism</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Node that receives documents and processes them.</span>
+<span class="sd">    Carriage mechanism interface for consumer nodes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_provides</span> <span class="o">=</span> <span class="n">AbstractStaticMember</span><span class="p">(</span><span class="n">validate_types_only</span><span class="p">)</span>
@@ -240,7 +240,7 @@
 <span class="sd">        Implement protocol specific preprocessing here.</span>
 
 <span class="sd">        :param kwargs: Extra parameters to send down</span>
-<span class="sd">        :return:</span>
+
 <span class="sd">        &quot;&quot;&quot;</span></div></div>
 </pre></div>
 

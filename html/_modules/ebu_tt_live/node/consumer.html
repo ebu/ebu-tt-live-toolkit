@@ -168,8 +168,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="o">=</span> <span class="n">EBUTT3DocumentSequence</span><span class="o">.</span><span class="n">create_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">reference_clock</span>
-            <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
 
         <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_RECEIVED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
@@ -207,8 +207,7 @@
     <span class="n">_provides</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">,</span> <span class="n">segment_length</span><span class="p">,</span> <span class="n">discard</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span>
-                 <span class="n">segmentation_starts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+                 <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ReSequencer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
             <span class="n">consumer_carriage</span><span class="o">=</span><span class="n">consumer_carriage</span><span class="p">,</span>
@@ -222,8 +221,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_segment_counter</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="n">sequence_identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_discard</span> <span class="o">=</span> <span class="n">discard</span>
-        <span class="k">if</span> <span class="n">segmentation_starts</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_last_segment_end</span> <span class="o">=</span> <span class="n">segmentation_starts</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_segment_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

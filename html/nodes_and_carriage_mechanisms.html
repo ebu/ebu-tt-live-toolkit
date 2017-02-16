@@ -88,9 +88,13 @@
                 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Nodes and Carriage Mechanisms</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="filesystem_carriage_mechanism.html">Filesystem Carriage Mechanism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="websocket_carriage_mechanism.html">WebSocket Carriage Mechanism</a></li>
-<li class="toctree-l3"><a class="reference internal" href="direct_carriage_mechanism.html">Direct Carriage Mechanism</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-nodes">Processing Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#carriage-mechanisms">Carriage mechanisms</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="filesystem_carriage_mechanism.html">Filesystem Carriage Mechanism</a></li>
+<li class="toctree-l4"><a class="reference internal" href="websocket_carriage_mechanism.html">WebSocket Carriage Mechanism</a></li>
+<li class="toctree-l4"><a class="reference internal" href="direct_carriage_mechanism.html">Direct Carriage Mechanism</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
@@ -152,34 +156,299 @@
 <h1>Nodes and Carriage Mechanisms<a class="headerlink" href="#nodes-and-carriage-mechanisms" title="Permalink to this headline">¶</a></h1>
 <blockquote>
 <div><p>The following piece should present the decisions behind the Node architecture and the carriage mechanism pluggability.</p>
-<img src="_images/graphviz-966ccaf0991f8765b118fccfea32633330c54914.png" alt="digraph &quot;classes_Node_and_CarriageImpl&quot; {
-charset=&quot;utf-8&quot;
-rankdir=BT
-&quot;0&quot; [label=&quot;{BroadcastClientFactory|channels\l|connect()\ldataReceived()\lpauseProducing()\lresumeProducing()\lstopProducing()\l}&quot;, shape=&quot;record&quot;];
-&quot;1&quot; [label=&quot;{BroadcastServerFactory|\l|broadcast()\llisten()\lpull()\lregister()\lregisterProducer()\lstopFactory()\lunregister()\lunregisterProducer()\lwrite()\l}&quot;, shape=&quot;record&quot;];
-&quot;2&quot; [label=&quot;{CarriageImpl|\l|register()\l}&quot;, shape=&quot;record&quot;];
-&quot;3&quot; [label=&quot;{ClientNodeProtocol|\l|onMessage()\lonOpen()\lsubscribeChannel()\lunsubscribeChannel()\l}&quot;, shape=&quot;record&quot;];
-&quot;4&quot; [label=&quot;{CombinedCarriageImpl|\l|}&quot;, shape=&quot;record&quot;];
-&quot;5&quot; [label=&quot;{ConsumerCarriageImpl|\l|on_new_data()\l}&quot;, shape=&quot;record&quot;];
-&quot;6&quot; [label=&quot;{IBroadcaster|\l|broadcast()\lregister()\lunregister()\l}&quot;, shape=&quot;record&quot;];
-&quot;7&quot; [label=&quot;{Node|node_id\l|process_document()\l}&quot;, shape=&quot;record&quot;];
-&quot;8&quot; [label=&quot;{ProducerCarriageImpl|\l|emit_document()\l}&quot;, shape=&quot;record&quot;];
-&quot;9&quot; [label=&quot;{SimpleConsumer|\l|process_document()\l}&quot;, shape=&quot;record&quot;];
-&quot;10&quot; [label=&quot;{SimpleProducer|\l|process_document()\l}&quot;, shape=&quot;record&quot;];
-&quot;11&quot; [label=&quot;{StreamingServerProtocol|\l|connectionLost()\lonMessage()\lonOpen()\lsendMessageOnChannel()\l}&quot;, shape=&quot;record&quot;];
-&quot;12&quot; [label=&quot;{TwistedConsumer|\l|registerProducer()\lunregisterProducer()\lwrite()\l}&quot;, shape=&quot;record&quot;];
-&quot;13&quot; [label=&quot;{TwistedConsumerImpl|\l|on_new_data()\l}&quot;, shape=&quot;record&quot;];
-&quot;14&quot; [label=&quot;{TwistedProducerImpl|\l|emit_document()\lregister_twisted_producer()\lresume_producing()\l}&quot;, shape=&quot;record&quot;];
-&quot;15&quot; [label=&quot;{TwistedPullProducer|\l|emit_data()\lresumeProducing()\lstopProducing()\l}&quot;, shape=&quot;record&quot;];
-&quot;4&quot; -&gt; &quot;5&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;4&quot; -&gt; &quot;8&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;5&quot; -&gt; &quot;2&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;8&quot; -&gt; &quot;2&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;9&quot; -&gt; &quot;7&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;10&quot; -&gt; &quot;7&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;13&quot; -&gt; &quot;5&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-&quot;14&quot; -&gt; &quot;8&quot; [arrowhead=&quot;empty&quot;, arrowtail=&quot;none&quot;];
-}" />
+<div class="figure" id="id1">
+<p class="plantuml">
+<img src="_images/plantuml-392f12d57982440a8e16b9cff16a840bae35def4.png" alt="&#64;startuml
+
+package &quot;Processing Nodes&quot; {
+[Consumer Nodes]
+[Synthesizer Nodes]
+[Producer Nodes]
+[Producer Nodes] -- IProducerNode
+[Synthesizer Nodes] -- IProducerNode
+[Synthesizer Nodes] -- IConsumerNode
+[Consumer Nodes] -- IConsumerNode
+IProducerNode -- INode
+IConsumerNode -- INode
+}
+
+package &quot;Carriage Mechanisms&quot; {
+[Producer Nodes] -&gt; IProducerCarriage : emit_data
+[Websocket] - IProducerCarriage
+[Websocket] ..&gt; HTTP :use
+IConsumerCarriage - [Websocket]
+[Websocket] -up-&gt; INode : process_document
+[Synthesizer Nodes] -&gt; IProducerCarriage : emit_data
+
+note bottom of [Websocket]
+  Carriage mechanisms may
+  or may not work
+  both directions.
+end note
+
+}
+
+note top of [Producer Nodes]
+  Producers produce only
+end note
+
+note top of [Synthesizer Nodes]
+  Synthesizers produce
+  and consume as well.
+end note
+
+note top of [Consumer Nodes]
+  Consumers consume only
+end note
+&#64;enduml
+
+" />
+</p>
+<p class="caption"><span class="caption-text">Processing node and Carriage mechanism components</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div></blockquote>
+<div class="section" id="processing-nodes">
+<h2>Processing Nodes<a class="headerlink" href="#processing-nodes" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The processing nodes are the key components of this package and facilitate several different use-cases laid out
+in the Node conformance section of the specification (EBU Tech3370). A node can be a producer or a consumer or both. This requirement
+is fulfilled by the class structure depicted below.</p>
+<div class="figure" id="id2">
+<p class="plantuml">
+<img src="_images/plantuml-5e3be0b7666a140dd29150339d37e31bc047ea75.png" alt="&#64;startuml
+
+interface INode {
+  ..methods..
+  +{abstract} process_document()
+}
+interface IConsumerNode {
+  ..properties..
+  +{abstract} consumer_carriage
+  ..classmethods..
+  +expects()
+  ..methods..
+  +{abstract}register_consumer_carriage()
+}
+interface IProducerNode {
+  ..properties..
+  +{abstract} producer_carriage
+  ..classmethods..
+  +provides()
+  ..methods..
+  +{abstract}register_producer_carriage()
+}
+
+abstract class __AbstractNode {
+  -_node_id : String
+  ..properties..
+  +node_id
+  ..methods..
+  __repr__()
+}
+abstract class AbstractConsumerNode {
+  -_consumer_carriage
+  ..properties..
+  +consumer_carriage
+  ..methods..
+  +register_consumer_carriage()
+}
+abstract class AbstractProducerNode {
+  -_producer_carriage
+  ..properties..
+  +producer_carriage
+  ..methods..
+  +register_producer_carriage()
+}
+abstract class AbstractCombinedNode {
+}
+
+class SimpleProducer {
+  -_input_blocks : List&lt;String&gt;
+  -_document_sequence : EBUTT3DocumentSequence
+  -_reference_clock : Clock
+  ..properties..
+  +document_sequence
+  +reference_clock
+  ..methods..
+  +process_document()
+}
+
+class SimpleConsumer {
+  -_reference_clock : Clock
+  -_sequence : EBUTT3DocumentSequence
+  ..properties..
+  +reference_clock
+  ..methods..
+  +process_document()
+}
+
+class BufferDelayNode {
+  ..methods..
+  +process_document()
+}
+
+class RetimingDelayNode{
+  ..methods..
+  +process_document()
+}
+
+class EBUTTDEncoder {
+  ..methods..
+  +process_document()
+}
+
+class DistributingNode {
+  ..methods..
+  +process_document()
+}
+
+class ReSequencer {
+  ..methods..
+  +process_document()
+  +get_segment()
+  +get_next_segment()
+}
+
+class HandoverNode {
+  ..methods..
+  +process_document()
+}
+
+INode &lt;|-- __AbstractNode
+__AbstractNode &lt;|-- AbstractConsumerNode
+IConsumerNode &lt;|-- AbstractConsumerNode
+__AbstractNode &lt;|-- AbstractProducerNode
+IProducerNode &lt;|-- AbstractProducerNode
+AbstractConsumerNode &lt;|-- AbstractCombinedNode
+AbstractProducerNode &lt;|-- AbstractCombinedNode
+
+AbstractProducerNode &lt;|-- SimpleProducer
+AbstractProducerNode &lt;|-- ReSequencer
+AbstractConsumerNode &lt;|-- SimpleConsumer
+AbstractCombinedNode &lt;|-- EBUTTDEncoder
+AbstractCombinedNode &lt;|-- BufferDelayNode
+AbstractCombinedNode &lt;|-- RetimingDelayNode
+AbstractCombinedNode &lt;|-- DistributingNode
+AbstractCombinedNode &lt;|-- HandoverNode
+SimpleConsumer &lt;|-- ReSequencer
+
+&#64;enduml
+" />
+</p>
+<p class="caption"><span class="caption-text">Processing node classes</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div></blockquote>
+</div>
+<div class="section" id="carriage-mechanisms">
+<h2>Carriage mechanisms<a class="headerlink" href="#carriage-mechanisms" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>The carriage mechanisms are divided into 2 distinct kinds: producer and consumer carriages (not to be confused with producer and consumer nodes).</p>
+<p>Producer carriages serve the purpose of sending/serialising a document once a processing node
+has finished processing them and push them via their domain forward.</p>
+<p>Consumers carriages on the other hand receive a (probably serialised) document from their own domain and
+their job is to make sure the document is picked up (possibly parsed and validated) and given
+to the consumer processing node that the carriage mechanism object is registered to.</p>
+<p>The class hierarchy providing the necessary steps looks the following way:</p>
+<div class="figure" id="id3">
+<p class="plantuml">
+<img src="_images/plantuml-5d36e3869b49fb024ae8ece9cbb290b1a369c69b.png" alt="&#64;startuml
+
+interface ICarriageMechanism
+interface IConsumerCarriage {
+  .. properties ..
+  +{abstract} consumer_node
+  .. classmethods ..
+  +provides()
+  .. methods ..
+  +{abstract} on_new_data()
+  +{abstract} register_consumer_node()
+}
+interface IProducerCarriage {
+  .. properties ..
+  +{abstract} producer_node
+  .. classmethods ..
+  +expects()
+  .. methods ..
+  +{abstract} emit_data()
+  +{abstract} register_producer_node()
+}
+
+abstract AbstractConsumerCarriage {
+  .. properties ..
+  +consumer_node
+  .. methods ..
+  +register_consumer_node()
+}
+abstract AbstractProducerCarriage {
+  .. properties ..
+  +producer_node
+  .. methods ..
+  +register_producer_node()
+}
+abstract AbstractCombinedCarriage
+
+class WebsocketConsumerCarriage {
+  -_provides : String
+  .. methods ..
+  +on_new_data()
+}
+class WebsocketProducerCarriage {
+  -_expects : String
+  .. methods ..
+  +emit_data()
+}
+class FilesystemConsumerImpl {
+  -_provides : String
+  .. methods ..
+  +on_new_data()
+}
+class FilesystemProducerImpl {
+  -_expects : String
+  .. methods ..
+  +emit_data()
+}
+class SimpleFolderExport {
+  -_expects : String
+  .. methods ..
+  +emit_data()
+}
+class RotatingFolderExport{
+  .. methods ..
+  +emit_data()
+}
+
+class DirectCarriageImpl {
+  -_expects : Any
+  -_provides : Any
+  .. methods ..
+  +emit_data()
+  +on_new_data()
+}
+
+
+ICarriageMechanism &lt;|-- IProducerCarriage
+ICarriageMechanism &lt;|-- IConsumerCarriage
+
+IProducerCarriage &lt;|-- AbstractProducerCarriage
+IConsumerCarriage &lt;|-- AbstractConsumerCarriage
+AbstractProducerCarriage &lt;|-- AbstractCombinedCarriage
+AbstractConsumerCarriage &lt;|-- AbstractCombinedCarriage
+
+AbstractConsumerCarriage &lt;|-- WebsocketConsumerCarriage
+AbstractProducerCarriage &lt;|-- WebsocketProducerCarriage
+
+AbstractConsumerCarriage &lt;|-- FilesystemConsumerImpl
+AbstractProducerCarriage &lt;|-- FilesystemProducerImpl
+
+AbstractCombinedCarriage &lt;|-- DirectCarriageImpl
+
+AbstractProducerCarriage &lt;|-- SimpleFolderExport
+SimpleFolderExport &lt;|-- RotatingFolderExport
+
+&#64;enduml" />
+</p>
+<p class="caption"><span class="caption-text">Carriage mechanism classes</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="filesystem_carriage_mechanism.html">Filesystem Carriage Mechanism</a></li>
@@ -191,6 +460,7 @@ rankdir=BT
 </ul>
 </div>
 </div></blockquote>
+</div>
 </div>
 
 

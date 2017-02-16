@@ -179,7 +179,7 @@
 <dt id="ebu_tt_live.carriage.interface.IConsumerCarriage">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.interface.</code><code class="descname">IConsumerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IConsumerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.interface.ICarriageMechanism" title="ebu_tt_live.carriage.interface.ICarriageMechanism"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.interface.ICarriageMechanism</span></code></a></p>
-<p>Node that receives documents and processes them.</p>
+<p>Carriage mechanism interface for consumer nodes.</p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.carriage.interface.IConsumerCarriage.auto_register_impl">
 <em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.interface.IConsumerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
@@ -208,8 +208,6 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>kwargs</strong> &#8211; Extra parameters to send down</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
 </tbody>
 </table>
@@ -251,7 +249,7 @@
 <dt id="ebu_tt_live.carriage.interface.IProducerCarriage">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.interface.</code><code class="descname">IProducerCarriage</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/interface.html#IProducerCarriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.interface.ICarriageMechanism" title="ebu_tt_live.carriage.interface.ICarriageMechanism"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.interface.ICarriageMechanism</span></code></a></p>
-<p>Node that emits documents to an output interface, usually some network socket.</p>
+<p>Carriage mechanism interface for producer nodes.</p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.carriage.interface.IProducerCarriage.auto_register_impl">
 <em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.carriage.interface.IProducerCarriage.auto_register_impl" title="Permalink to this definition">¶</a></dt>
@@ -314,9 +312,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> &#8211; </td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node</strong> &#8211; The node to connect to.</td>
 </tr>
 </tbody>
 </table>
@@ -433,7 +429,7 @@
 <span id="filesystem-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">filesystem</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.carriage.filesystem" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemConsumerImpl</code><span class="sig-paren">(</span><em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemConsumerImpl</code><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemConsumerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractConsumerCarriage" title="ebu_tt_live.carriage.base.AbstractConsumerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractConsumerCarriage</span></code></a></p>
 <p>This class is responsible for setting the document object from the xml and set its availability time.
 The document is then sent to the node.</p>
@@ -451,7 +447,7 @@ The document is then sent to the node.</p>
 
 <dl class="class">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemProducerImpl</code><span class="sig-paren">(</span><em>dirpath</em>, <em>reference_clock</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.carriage.filesystem.</code><code class="descname">FilesystemProducerImpl</code><span class="sig-paren">(</span><em>dirpath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.carriage.base.AbstractProducerCarriage" title="ebu_tt_live.carriage.base.AbstractProducerCarriage"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.carriage.base.AbstractProducerCarriage</span></code></a></p>
 <p>This class implements a carriage mechanism to output produced documents
 to the file system. Its constructor takes a mandatory argument : the path to
@@ -479,7 +475,7 @@ and the current sequence is set to start from the next sequence number.</p>
 
 <dl class="method">
 <dt id="ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data">
-<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">emit_data</code><span class="sig-paren">(</span><em>data</em>, <em>sequence_identifier=None</em>, <em>sequence_number=None</em>, <em>time_base=None</em>, <em>availability_time=None</em>, <em>delay=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/carriage/filesystem.html#FilesystemProducerImpl.emit_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

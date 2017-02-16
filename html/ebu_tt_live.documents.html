@@ -268,7 +268,7 @@ it does not match the semantics of the sequence.</p>
 <span id="ebutt3-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebutt3</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.documents.ebutt3" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3Document</code><span class="sig-paren">(</span><em>time_base</em>, <em>sequence_number</em>, <em>sequence_identifier</em>, <em>lang</em>, <em>clock_mode=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.documents.ebutt3.</code><code class="descname">EBUTT3Document</code><span class="sig-paren">(</span><em>time_base</em>, <em>sequence_number</em>, <em>sequence_identifier</em>, <em>lang</em>, <em>clock_mode=None</em>, <em>availability_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.documents.ebutt3.TimelineUtilMixin" title="ebu_tt_live.documents.ebutt3.TimelineUtilMixin"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.TimelineUtilMixin</span></code></a>, <a class="reference internal" href="#ebu_tt_live.documents.base.SubtitleDocument" title="ebu_tt_live.documents.base.SubtitleDocument"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.base.SubtitleDocument</span></code></a></p>
 <p>This class wraps the binding object representation of the XML and provides the features the applications in the
 specification require. e.g:availability time.</p>
@@ -378,12 +378,12 @@ the objects.
 
 <dl class="classmethod">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding">
-<em class="property">classmethod </em><code class="descname">create_from_raw_binding</code><span class="sig-paren">(</span><em>binding</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.create_from_raw_binding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">create_from_raw_binding</code><span class="sig-paren">(</span><em>binding</em>, <em>availability_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.create_from_raw_binding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
 <dt id="ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml">
-<em class="property">classmethod </em><code class="descname">create_from_xml</code><span class="sig-paren">(</span><em>xml</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.create_from_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">create_from_xml</code><span class="sig-paren">(</span><em>xml</em>, <em>availability_time=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/documents/ebutt3.html#EBUTT3Document.create_from_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">

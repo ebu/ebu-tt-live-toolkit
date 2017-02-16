@@ -407,9 +407,11 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This property function gives back a set in which we find the unspecified style attributes.</span>
 
-<span class="sd">        :return: set for attribute names that were inheriting the default in the computed style. Important at</span>
-<span class="sd">        inheritance override</span>
+<span class="sd">            :return: set for attribute names that were inheriting the default in the computed style. Important at</span>
+<span class="sd">                     inheritance override</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_default_attrs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_attrs</span>
