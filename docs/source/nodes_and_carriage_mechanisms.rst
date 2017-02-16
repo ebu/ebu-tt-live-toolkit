@@ -10,7 +10,7 @@ Processing Nodes
 ----------------
 
    The processing nodes are the key components of this package and facilitate several different use-cases laid out
-   in the Node conformance section of the specification (EBBU Tech3370). A node can be a producer or a consumer or both. This requirement
+   in the Node conformance section of the specification (EBU Tech3370). A node can be a producer or a consumer or both. This requirement
    is fulfilled by the class structure depicted below.
 
    .. uml:: inode.puml
