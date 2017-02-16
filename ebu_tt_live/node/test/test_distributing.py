@@ -18,5 +18,5 @@ class TestDistributingNode(TestCase):
             reference_clock=reference_clock
         )
         document = MagicMock(spec=six.text_type)
-        node.process_document(document)
-        carriage.emit_data.assert_called_with(data=document)
+        node.process_document(document, sequence_identifier='bla')
+        carriage.emit_data.assert_called_with(data=document, sequence_identifier='bla')
