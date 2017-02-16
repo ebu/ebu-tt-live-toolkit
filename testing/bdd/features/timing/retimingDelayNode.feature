@@ -8,7 +8,7 @@ Feature: Delay of a document sequence
 
   @skip - Zoltan to review 2017-02-15
   # SPEC-CONFORMANCE.md R115
-  Scenario: RetimingDelayNode delays emission by no less than the delay period
+  Scenario: RetimingDelayNode delays emission by no more than the time required to modify times in the document
     Given an xml file <xml_file>
     And the document is generated
     And the retiming delay node delays it by <delay_offset>
@@ -26,7 +26,7 @@ Feature: Delay of a document sequence
   # SPEC-CONFORMANCE.md R114    
   # Times are inherited so to delay an element we only need to delay its syncbase  
   Scenario: RetimingDelayNode delays document, computed times
-     Given an xml file <xml_file>
+    Given an xml file <xml_file>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
