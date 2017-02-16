@@ -128,7 +128,7 @@ Feature: Delay of a document sequence
     |            |              |           |          |          |          |            |          |             |           | 00:00:05 | 00:00:05           |                  |                   |                 |                 |               |                    |                  |                     |                   |          |
 
 
-    # SPEC-CONFORMANCE.md R113 RR117
+    # SPEC-CONFORMANCE.md R113 R117
     Scenario: RetimingDelayNode changes sequence ID but not authoring delay
         Given an xml file <xml_file>
         And it has <sequence_id_1>
