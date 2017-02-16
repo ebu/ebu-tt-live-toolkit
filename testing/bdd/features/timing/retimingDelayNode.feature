@@ -6,7 +6,7 @@ Feature: Delay of a document sequence
   | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
 
 
-  @skip 
+  @skip - Zoltan to review 2017-02-15
   # SPEC-CONFORMANCE.md R115
   Scenario: RetimingDelayNode delays emission by no less than the delay period
     Given an xml file <xml_file>
