@@ -10,22 +10,19 @@ scenarios('features/timing/bufferDelayNode.feature')
 
 # functions for scenario: BufferDelayNode delays emission by no less than the delay period
 
+
 @given('the buffer delay node delays it by <delay_offset>')
 def given_buffer_delay(delay_offset, test_context, gen_document):
-
-    reference_clock = LocalMachineClock()
-    reference_clock.clock_mode = 'local'
 
     gen_document.availability_time = LimitedClockTimingType('00:00:00.0').timedelta
 
     # the first delay node applies no delay
-    carriage_delay1 = FilesystemProducerImpl('testing/initial', reference_clock)
+    carriage_delay1 = FilesystemProducerImpl('testing/initial')
     delay_float1 = LimitedClockTimingType('00:00:00.0').timedelta.total_seconds()
 
     buffer_delay_node1 = BufferDelayNode(
         node_id='simple-delay-node',
         producer_carriage=None,
-        reference_clock=reference_clock,
         fixed_delay=delay_float1
     )
 
@@ -34,16 +31,21 @@ def given_buffer_delay(delay_offset, test_context, gen_document):
         producer_carriage=carriage_delay1
     )
 
-    buffer_delay_node1.process_document(gen_document.get_xml())
+    buffer_delay_node1.process_document(
+        document=gen_document.get_xml(),
+        time_base=gen_document.time_base,
+        availability_time=gen_document.availability_time,
+        sequence_identifier=gen_document.sequence_identifier,
+        sequence_number=gen_document.sequence_number
+    )
 
     # the second delay node applies a delay of delay_offset
-    carriage_delay2 = FilesystemProducerImpl('testing/buffer', reference_clock)
+    carriage_delay2 = FilesystemProducerImpl('testing/buffer')
     delay_float2 = LimitedClockTimingType(delay_offset).timedelta.total_seconds()
 
     buffer_delay_node2 = BufferDelayNode(
         node_id='simple-delay-node',
         producer_carriage=None,
-        reference_clock=reference_clock,
         fixed_delay=delay_float2
     )
 
@@ -52,7 +54,13 @@ def given_buffer_delay(delay_offset, test_context, gen_document):
         producer_carriage=carriage_delay2
     )
 
-    buffer_delay_node2.process_document(gen_document.get_xml())
+    buffer_delay_node2.process_document(
+        document=gen_document.get_xml(),
+        time_base=gen_document.time_base,
+        availability_time=gen_document.availability_time,
+        sequence_identifier=gen_document.sequence_identifier,
+        sequence_number=gen_document.sequence_number
+    )
     test_context['doc'] = gen_document
 
 

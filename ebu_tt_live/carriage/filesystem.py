@@ -1,11 +1,10 @@
 from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 from ebu_tt_live.documents import EBUTT3Document
-from ebu_tt_live.bindings import CreateFromDocument
-from ebu_tt_live.errors import EndOfData, XMLParsingFailed
-from ebu_tt_live.strings import ERR_DECODING_XML_FAILED
+from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.utils import RotatingFileBuffer
 from datetime import timedelta
 import logging
+import six
 import os
 import time
 
@@ -64,54 +63,41 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
 
     _manifest_path = None
     _dirpath = None
-    _reference_clock = None
     _manifest_content = None
     _manifest_time_format = None
-    _expects = EBUTT3Document
+    _expects = six.text_type
 
-    def __init__(self, dirpath, reference_clock):
+    def __init__(self, dirpath):
         self._dirpath = dirpath
-        self._reference_clock = reference_clock
         if not os.path.exists(self._dirpath):
             os.makedirs(self._dirpath)
         self._manifest_content = ''
 
     def resume_producing(self):
-        manifest_filename = "manifest_" + self.producer_node.document_sequence.sequence_identifier + ".txt"
-        self._manifest_path = os.path.join(self._dirpath, manifest_filename)
-        if os.path.exists(self._manifest_path):
-            with open(self._manifest_path, 'r') as f:
-                for last_line in f:
-                    pass
-                # Line has format: time,filename
-                # Where filename has the format:
-                # sequenceIdentifier_sequenceNumber.xml
-                _, last_filename = last_line.split(',')
-                last_sequence_number, _ = last_filename.split('_')[1].split('.')
-                self.producer_node.document_sequence.last_sequence_number = int(last_sequence_number)
         while True:
             try:
                 self.producer_node.resume_producing()
             except EndOfData:
                 break
 
-    def emit_data(self, data, delay=None, **kwargs):
+    def emit_data(self, data, sequence_identifier=None, sequence_number=None,
+                  time_base=None, availability_time=None, delay=None, **kwargs):
         if self._manifest_path is None:
-            manifest_filename = "manifest_" + data.sequence_identifier + ".txt"
+            manifest_filename = "manifest_" + sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
-        filename = '{}_{}.xml'.format(data.sequence_identifier, data.sequence_number)
+        filename = '{}_{}.xml'.format(sequence_identifier, sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
-            f.write(data.get_xml())
+            f.write(data)
         # To be able to format the output we need a datetime.time object and
         # not a datetime.timedelta. The next line serves as a converter (adding
         # a time with a timedelta gives a time)
-        time_base = data.time_base
-        availability_time = data.availability_time or timedelta()
+        time_base = time_base
+        availability_time = availability_time
         if delay is not None:
-            availability_time = availability_time + timedelta(seconds=delay)
+            availability_time += timedelta(seconds=delay)
         new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time, time_base), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
@@ -124,24 +110,15 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
     The document is then sent to the node.
     """
 
-    _reference_clock = None
-
-    def __init__(self, reference_clock):
-        self._reference_clock = reference_clock
+    _provides = six.text_type
 
     def on_new_data(self, data, **kwargs):
-        document = None
         availability_time_str, xml_content = data
-        try:
-            document = EBUTT3Document.create_from_raw_binding(CreateFromDocument(xml_content))
-        except:
-            log.exception(ERR_DECODING_XML_FAILED)
-            raise XMLParsingFailed(ERR_DECODING_XML_FAILED)
 
-        if document:
-            availability_time = timestr_manifest_to_timedelta(availability_time_str, self._reference_clock.time_base)
-            document.availability_time = availability_time
-            self.consumer_node.process_document(document)
+        if xml_content:
+            # TODO: Defaulting to media time parsing because that is the broadest. Figure out a nicer solution!
+            availability_time = timestr_manifest_to_timedelta(availability_time_str, 'media')
+            self.consumer_node.process_document(xml_content, availability_time=availability_time)
 
 
 class FilesystemReader(object):

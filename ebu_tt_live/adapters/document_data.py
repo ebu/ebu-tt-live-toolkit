@@ -12,8 +12,8 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     _expects = six.text_type
     _provides = EBUTT3Document
 
-    def convert_data(self, data, **kwargs):
-        return EBUTT3Document.create_from_xml(data), kwargs
+    def convert_data(self, data, availability_time=None, **kwargs):
+        return EBUTT3Document.create_from_xml(data, availability_time=availability_time), kwargs
 
 
 class XMLtoEBUTTDAdapter(IDocumentDataAdapter):
@@ -50,7 +50,8 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
         kwargs.update({
             'sequence_identifier': data.sequence_identifier,
             'sequence_number': data.sequence_number,
-            'availability_time': data.availability_time
+            'availability_time': data.availability_time,
+            'time_base': data.time_base
         })
         instance = data.get_xml()
         return instance, kwargs

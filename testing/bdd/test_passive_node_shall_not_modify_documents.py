@@ -31,7 +31,6 @@ def buffer_delay_node():
     node = BufferDelayNode(
         'test_buffer_delay',
         producer_carriage=prod_carriage,
-        reference_clock=reference_clock,
         fixed_delay=5.0
     )
     return node

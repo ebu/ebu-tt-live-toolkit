@@ -44,22 +44,20 @@ class RetimingDelayNode(AbstractCombinedNode):
 
 class BufferDelayNode(AbstractCombinedNode):
 
-    _reference_clock = None
     _fixed_delay = None
     _expects = six.text_type
     _provides = six.text_type
 
-    def __init__(self, node_id, producer_carriage, reference_clock, fixed_delay):
+    def __init__(self, node_id, producer_carriage, fixed_delay):
         super(BufferDelayNode, self).__init__(
             node_id=node_id,
             producer_carriage=producer_carriage
         )
-        self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
 
     def process_document(self, document, **kwargs):
 
-        self.producer_carriage.emit_data(data=document, delay=self._fixed_delay)
+        self.producer_carriage.emit_data(data=document, delay=self._fixed_delay, **kwargs)
 
 
 def update_children_timing(element, timebase, delay_int):

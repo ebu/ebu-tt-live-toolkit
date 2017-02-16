@@ -1,0 +1,144 @@
+@startuml
+
+actor User
+User --> "root : tt_type" as root: validateBinding()
+activate root
+
+create "validator : SemanticValidator" as validator
+root -> validator : <<create>>
+root -> validator : process()
+activate validator
+
+validator -> "body : body_type" as body: _semantic_before_traversal()
+activate body
+
+body -> body : _semantic_preprocess_timing()
+activate body
+deactivate body
+
+deactivate body
+
+validator -> "div : div_type" as div: _semantic_before_traversal()
+activate div
+
+div -> div : _semantic_preprocess_timing()
+activate div
+deactivate div
+
+deactivate div
+
+validator -> "p1 : p_type" as p1 : _semantic_before_traversal()
+activate p1
+
+p1 -> p1 : _semantic_preprocess_timing()
+activate p1
+deactivate p1
+
+deactivate p1
+
+validator -> "span1 : span_type" as span1 : _semantic_before_traversal()
+activate span1
+
+span1 -> span1 : _semantic_preprocess_timing()
+activate span1
+deactivate span1
+
+deactivate span1
+
+validator -> span1 : _semantic_after_traversal()
+activate span1
+
+span1 -> span1: _semantic_postprocess_timing()
+activate span1
+deactivate span1
+
+deactivate span1
+
+validator -> "span2 : span_type" as span2 : _semantic_before_traversal()
+activate span2
+
+span2 -> span2 : _semantic_preprocess_timing()
+activate span2
+deactivate span2
+
+deactivate span2
+
+validator -> span2 : _semantic_after_traversal()
+activate span2
+
+span2 -> span2 : _semantic_postprocess_timing()
+activate span2
+deactivate span2
+
+deactivate span2
+
+validator -> p1 : _semantic_after_traversal()
+activate p1
+
+p1 -> p1 : _semantic_postprocess_timing()
+activate p1
+deactivate p1
+
+deactivate p1
+
+validator -> "p2 : p_type" as p2 : _semantic_before_traversal()
+activate p2
+
+p2 -> p2 : _semantic_preprocess_timing()
+activate p2
+deactivate p2
+
+deactivate p2
+
+validator -> "span3 : span_type" as span3 : _semantic_before_traversal()
+activate span3
+
+span3 -> span3 : _semantic_preprocess_timing()
+activate span3
+deactivate span3
+
+deactivate span3
+
+validator -> span3 : _semantic_after_traversal()
+activate span3
+
+span3 -> span3 : _semantic_postprocess_timing()
+activate span3
+deactivate span3
+
+deactivate span3
+
+validator -> p2 : _semantic_after_traversal()
+activate p2
+
+p2 -> p2 : _semantic_postprocess_timing()
+activate p2
+deactivate p2
+
+deactivate p2
+
+validator -> div : _semantic_after_traversal()
+activate div
+
+div -> div : _semantic_postprocess_timing()
+activate div
+deactivate div
+
+deactivate div
+
+validator -> body : _semantic_after_traversal()
+activate body
+
+body -> body : _semantic_postprocess_timing()
+activate body
+deactivate body
+
+deactivate body
+
+root <- validator
+destroy validator
+User <- root
+
+deactivate root
+
+@enduml
