@@ -21,8 +21,11 @@ class DistributingNode(AbstractCombinedNode):
         )
         self._reference_clock = reference_clock
 
-    def process_document(self, document, **kwargs):
-        self.producer_carriage.emit_data(data=document, **kwargs)
+    def process_document(self, document, sequence_identifier=None, **kwargs):
+        if sequence_identifier is None:
+            doc = EBUTT3Document.create_from_xml(document)
+            sequence_identifier = doc.sequence_identifier
+        self.producer_carriage.emit_data(data=document, sequence_identifier=sequence_identifier, **kwargs)
 
     @property
     def reference_clock(self):
