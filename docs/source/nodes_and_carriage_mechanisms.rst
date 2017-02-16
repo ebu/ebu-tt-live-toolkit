@@ -10,7 +10,7 @@ Processing Nodes
 ----------------
 
    The processing nodes are the key components of this package and facilitate several different use-cases laid out
-   in the Node conformance section of EBU-3370. A node can be a producer or a consumer or both. This requirement
+   in the Node conformance section of the specification (EBBU Tech3370). A node can be a producer or a consumer or both. This requirement
    is fulfilled by the class structure depicted below.
 
    .. uml:: inode.puml
@@ -19,12 +19,12 @@ Processing Nodes
 Carriage mechanisms
 -------------------
 
-   The carriage mechanisms are divided into 2 distinct kinds: producer and consumer carriages:
+   The carriage mechanisms are divided into 2 distinct kinds: producer and consumer carriages (not to be confused with producer and consumer nodes).
 
-   Producers serve the purpose of sending/serialising a document once a processing node
+   Producer carriages serve the purpose of sending/serialising a document once a processing node
    has finished processing them and push them via their domain forward.
 
-   Consumers on the other hand receive a (probably serialised) document from their own domain and
+   Consumers carriages on the other hand receive a (probably serialised) document from their own domain and
    their job is to make sure the document is picked up (possibly parsed and validated) and given
    to the consumer processing node that the carriage mechanism object is registered to.
 
