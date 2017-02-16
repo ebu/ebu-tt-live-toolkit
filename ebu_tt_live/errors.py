@@ -91,5 +91,5 @@ class ConfigurationError(Exception):
     pass
 
 
-class UnknownHashError(Exception):
+class UnexpectedSequenceIdentifierError(Exception):
     pass

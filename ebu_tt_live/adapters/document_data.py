@@ -2,6 +2,7 @@
 from .base import IDocumentDataAdapter
 from ebu_tt_live.documents import EBUTT3EBUTTDConverter, EBUTTDDocument, EBUTT3Document
 from ebu_tt_live.clocks.media import MediaClock
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 import six
 
 
@@ -12,8 +13,11 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     _expects = six.text_type
     _provides = EBUTT3Document
 
-    def convert_data(self, data, availability_time=None, **kwargs):
-        return EBUTT3Document.create_from_xml(data, availability_time=availability_time), kwargs
+    def convert_data(self, data, availability_time=None, sequence_identifier=None, **kwargs):
+        doc = EBUTT3Document.create_from_xml(data, availability_time=availability_time)
+        if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
+            raise UnexpectedSequenceIdentifierError()
+        return doc, kwargs
 
 
 class XMLtoEBUTTDAdapter(IDocumentDataAdapter):
