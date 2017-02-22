@@ -3,24 +3,7 @@ Feature: Delay of a document sequence
 
   Examples:
   | xml_file      |
-  | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
-
-
-  @skip - Zoltan to review 2017-02-15
-  # SPEC-CONFORMANCE.md R115
-  Scenario: RetimingDelayNode delays emission by no more than the time required to modify times in the document
-    Given an xml file <xml_file>
-    And the document is generated
-    And the retiming delay node delays it by <delay_offset>
-    And the document is emitted
-    Then the delta between emission and availability time is greater or equal to <delay_offset>
-
-    Examples:
-    | delay_offset   |
-    | 00:00:00.500   |
-    | 00:00:01.0     |
-    | 00:01:01.0     |
-    | 01:01:01.0     |
+  | delayNode.xml |  
 
 
   # SPEC-CONFORMANCE.md R114    
@@ -136,7 +119,7 @@ Feature: Delay of a document sequence
         And the document is generated
         When the retiming delay node delays it by <delay>
         Then the updated document has <sequence_id_2>
-        And the updated document has  <authoring_delay_2>
+        And the updated document has <authoring_delay_2>
 
         Examples:
         | sequence_id_1 | authoring_delay_1 | delay    | sequence_id_2 | authoring_delay_2 |  
