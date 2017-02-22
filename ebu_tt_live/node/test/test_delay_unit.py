@@ -27,9 +27,8 @@ class TestBufferDelayNode(TestCase):
 
         carriage = MagicMock(spec=IProducerCarriage)
         carriage.expects.return_value = six.text_type
-        reference_clock = MagicMock()
         delay = 2
-        node = BufferDelayNode('delay_node', carriage, reference_clock, delay)
+        node = BufferDelayNode('delay_node', carriage, delay)
         document = MagicMock(spec=EBUTT3Document)
         node.process_document(document)
         carriage.emit_data.assert_called_with(data=document, delay=delay)

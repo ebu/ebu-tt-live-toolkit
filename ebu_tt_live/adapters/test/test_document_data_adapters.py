@@ -128,7 +128,8 @@ class TestEBUTT3toXMLAdapter(TestXMLtoEBUTT3Adapter):
     _expected_keys = [
         'sequence_identifier',
         'sequence_number',
-        'availability_time'
+        'availability_time',
+        'time_base'
     ]
 
     def _get_input(self):

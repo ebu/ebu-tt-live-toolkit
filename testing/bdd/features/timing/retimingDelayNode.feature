@@ -3,7 +3,7 @@ Feature: Delay of a document sequence
 
   Examples:
   | xml_file      |
-  | delayNode.xml |  
+  | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
 
 
   # SPEC-CONFORMANCE.md R114    

@@ -29,7 +29,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R19|2.3.4|~~A Delay node is a processing node. Therefore the output sequence shall have a different sequence identifier from the input sequence.~~| Deprecated. See retiming delay node. |
 |R20|2.3.4|~~A Delay node may emit implicitly timed documents within a sequence. In this case the Delay node shall delay emission of the stream by a period equivalent to the adjustment value.~~|Deprecated. See retiming delay node. |
 |R21|2.3.4|~~A Delay node shall NOT emit an output sequence with reordered subtitles.~~|Replaced by a 'should' for a retiming delay node|
-|R22|2.3.4|A Delay node shall NOT update the value of `ebuttm:authoringDelay`.| |
+|R22|2.3.4|~~A Delay node shall NOT update the value of `ebuttm:authoringDelay`.~~|Replaced by R117 and R119.|
 |R23|2.4|The Handover Manager node shall use a 'who claimed control most recently' algorithm for selecting the sequence, based on a control token parameter within each document.| |
 |R24|2.4.1|All documents within a sequence that contain the element `ebuttp:authorsGroupIdentifier` shall have the same `ebuttp:authorsGroupIdentifier`.| |
 |R25|2.4.1|when a document is received with a higher value `ebuttp:authorsGroupControlToken` than that most recently received in the currently selected sequence the Handover Manager shall switch to that document's sequence, i.e. it shall emit a document in its output sequence corresponding to the received document with the new control token without delay.| |

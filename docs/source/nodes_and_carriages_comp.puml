@@ -1,0 +1,44 @@
+@startuml
+
+package "Processing Nodes" {
+[Consumer Nodes]
+[Synthesizer Nodes]
+[Producer Nodes]
+[Producer Nodes] -- IProducerNode
+[Synthesizer Nodes] -- IProducerNode
+[Synthesizer Nodes] -- IConsumerNode
+[Consumer Nodes] -- IConsumerNode
+IProducerNode -- INode
+IConsumerNode -- INode
+}
+
+package "Carriage Mechanisms" {
+[Producer Nodes] -> IProducerCarriage : emit_data
+[Websocket] - IProducerCarriage
+[Websocket] ..> HTTP :use
+IConsumerCarriage - [Websocket]
+[Websocket] -up-> INode : process_document
+[Synthesizer Nodes] -> IProducerCarriage : emit_data
+
+note bottom of [Websocket]
+  Carriage mechanisms may
+  or may not work
+  both directions.
+end note
+
+}
+
+note top of [Producer Nodes]
+  Producers produce only
+end note
+
+note top of [Synthesizer Nodes]
+  Synthesizers produce
+  and consume as well.
+end note
+
+note top of [Consumer Nodes]
+  Consumers consume only
+end note
+@enduml
+

@@ -274,9 +274,11 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         """
         This property function gives back a set in which we find the unspecified style attributes.
 
-        :return: set for attribute names that were inheriting the default in the computed style. Important at
-        inheritance override
+            :return: set for attribute names that were inheriting the default in the computed style. Important at
+                     inheritance override
+
         """
+
         if self._default_attrs is None:
             self._default_attrs = set()
         return self._default_attrs
