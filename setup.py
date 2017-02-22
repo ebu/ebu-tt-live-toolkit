@@ -18,9 +18,8 @@ packages=[
     "ebu_tt_live.twisted",
     "ebu_tt_live.node",
     "ebu_tt_live.documents",
-    "ebu_tt_live.example_data"
+    "ebu_tt_live.examples"
 ]
-
 
 setup(
     name="ebu-tt-live",
@@ -34,12 +33,14 @@ setup(
         "twisted",
         "autobahn",
         "nltk",
-        "sortedcontainers"
+        "sortedcontainers",
+        "configman",
+        "six"
     ],
     license="BSD3",
     packages=packages,
     package_data={
-        'ebu_tt_live.example_data': ['*.txt']
+        'ebu_tt_live.examples': ['*.txt', '*.json']
     },
     entry_points={
         'console_scripts': [
@@ -49,7 +50,8 @@ setup(
             'ebu-simple-producer = ebu_tt_live.scripts.ebu_simple_producer:main',
             'ebu-user-input-consumer = ebu_tt_live.scripts.ebu_user_input_consumer:main',
             'ebu-user-input-forwarder = ebu_tt_live.scripts.ebu_user_input_forwarder:main',
-            'ebu-ebuttd-encoder = ebu_tt_live.scripts.ebu_ebuttd_encoder:main'
+            'ebu-ebuttd-encoder = ebu_tt_live.scripts.ebu_ebuttd_encoder:main',
+            'ebu-run = ebu_tt_live.scripts.ebu_run:main'
         ]
     },
     **extra

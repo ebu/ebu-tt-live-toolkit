@@ -1,24 +1,31 @@
 
-from .base import Node
+import six
+from .base import AbstractCombinedNode
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
+from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
 
 
-class RetimingDelayNode(Node):
+class RetimingDelayNode(AbstractCombinedNode):
 
     _reference_clock = None
     _document_sequence = None
     _fixed_delay = None
+    _expects = EBUTT3Document
+    _provides = EBUTT3Document
 
     def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
-        super(RetimingDelayNode, self).__init__(node_id, carriage_impl)
+        super(RetimingDelayNode, self).__init__(
+            node_id=node_id,
+            producer_carriage=carriage_impl
+        )
         self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
         self._document_sequence = document_sequence
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
 
         # change the sequence identifier
         document.sequence_identifier = self._document_sequence
@@ -32,24 +39,25 @@ class RetimingDelayNode(Node):
             update_children_timing(document.binding, document.time_base, self._fixed_delay)
 
         document.validate()
-        self._carriage_impl.emit_document(document)
+        self.producer_carriage.emit_data(data=document, **kwargs)
 
 
-class BufferDelayNode(Node):
+class BufferDelayNode(AbstractCombinedNode):
 
-    _reference_clock = None
-    _document_sequence = None
     _fixed_delay = None
+    _expects = six.text_type
+    _provides = six.text_type
 
-    def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
-        super(BufferDelayNode, self).__init__(node_id, carriage_impl)
-        self._reference_clock = reference_clock
+    def __init__(self, node_id, producer_carriage, fixed_delay):
+        super(BufferDelayNode, self).__init__(
+            node_id=node_id,
+            producer_carriage=producer_carriage
+        )
         self._fixed_delay = fixed_delay
-        self._document_sequence = document_sequence
 
-    def process_document(self, document):
+    def process_document(self, document, **kwargs):
 
-        self._carriage_impl.emit_document(document, delay=self._fixed_delay)
+        self.producer_carriage.emit_data(data=document, delay=self._fixed_delay, **kwargs)
 
 
 def update_children_timing(element, timebase, delay_int):
@@ -157,7 +165,6 @@ class UntimedPathFinder(RecursiveOperation):
             bla = self._timed_element_stack.pop()
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        print value
         if value.is_timed_leaf() and not len(self._timed_element_stack):
             self._path_found = True
             raise StopBranchIteration()

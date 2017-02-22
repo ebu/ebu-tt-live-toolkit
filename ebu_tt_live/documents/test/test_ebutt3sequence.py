@@ -3,6 +3,7 @@ from datetime import timedelta, datetime
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.errors import SequenceNumberCollisionError
 
 
 class TestEBUTT3Sequence(TestCase):
@@ -29,6 +30,18 @@ class TestEBUTT3Sequence(TestCase):
         self.document1 = self._create_document(1, 2)
         self.document2 = self._create_document(3, 4)
         self.document3 = self._create_document(5, 6)
+
+    def test_repeated_sequence_number(self):
+        """
+        This test tries to add the same sequence number twice. It should fail
+        """
+        self.document4 = self._create_document(7, 8)
+        self.document4.sequence_number -= 1
+        self.sequence.add_document(self.document1)
+        self.sequence.add_document(self.document2)
+        self.sequence.add_document(self.document3)
+
+        self.assertRaises(SequenceNumberCollisionError, self.sequence.add_document, self.document4)
 
     def test_sequence_add1(self):
         """

@@ -1,0 +1,28 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "producer1",
+      "type": "simple-producer",
+      "show_time": true,
+      "sequence_identifier": "TestSequence1",
+      "output": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:{{ephemeral_port}}"
+        }
+      }
+    },
+    "node2": {
+      "id": "consumer1",
+      "type": "simple-consumer",
+      "input": {
+        "carriage": {
+          "type": "websocket",
+          "connect": [
+            "ws://localhost:{{ephemeral_port}}/{{client_url_path}}"
+          ]
+        }
+      }
+    }
+  }
+}

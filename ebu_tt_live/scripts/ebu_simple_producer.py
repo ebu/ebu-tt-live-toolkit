@@ -2,22 +2,24 @@
 from itertools import cycle
 from twisted.internet import task, reactor
 from argparse import ArgumentParser
-from .common import create_loggers, tokenize_english_document
+from .common import create_loggers
+from ebu_tt_live.utils import tokenize_english_document
 
 from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.example_data import get_example_data
+from ebu_tt_live.examples import get_example_data
 from ebu_tt_live.documents import EBUTT3DocumentSequence
 from ebu_tt_live.node import SimpleProducer
-from ebu_tt_live.twisted import BroadcastServerFactory as wsFactory, StreamingServerProtocol, \
-    TwistedPullProducer
+from ebu_tt_live.twisted import BroadcastServerFactory, BroadcastServerProtocol, \
+    TwistedWSPushProducer
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
-from ebu_tt_live.carriage.twisted import TwistedProducerImpl
+from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage
+from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
 
 
 parser = ArgumentParser()
 
 parser.add_argument('--reference-clock', dest='reference_clock',
-                    help='content should reference clock times when the content was generated on the server',
+                    help='content should show reference clock times when the content was generated on the server',
                     action='store_true', default=False)
 
 parser.add_argument('--folder-export', dest='folder_export',
@@ -31,6 +33,8 @@ def main():
 
     parsed_args = parser.parse_args()
 
+    sequence_identifier = 'TestSequence1'
+
     do_export = False
     if parsed_args.folder_export:
         do_export = True
@@ -39,7 +43,7 @@ def main():
     reference_clock.clock_mode = 'local'
 
     document_sequence = EBUTT3DocumentSequence(
-        sequence_identifier='TestSequence1',
+        sequence_identifier=sequence_identifier,
         lang='en-GB',
         reference_clock=reference_clock
     )
@@ -60,32 +64,41 @@ def main():
     if do_export:
         prod_impl = FilesystemProducerImpl(parsed_args.folder_export, reference_clock)
     else:
-        prod_impl = TwistedProducerImpl()
+        prod_impl = WebsocketProducerCarriage()
+        prod_impl.sequence_identifier = sequence_identifier
 
     simple_producer = SimpleProducer(
         node_id='simple-producer',
-        carriage_impl=prod_impl,
+        producer_carriage=None,
         document_sequence=document_sequence,
         input_blocks=subtitle_tokens
+    )
+
+    # Chaining a converter
+    ProducerNodeCarriageAdapter(
+        producer_carriage=prod_impl,
+        producer_node=simple_producer
     )
 
     if do_export:
         prod_impl.resume_producing()
     else:
-        factory = wsFactory(u"ws://127.0.0.1:9000")
 
-        factory.protocol = StreamingServerProtocol
-
-        factory.listen()
-
-        # We are using a pull producer because it is the looping_task timer that triggers the production from the websocket
-        # level. Every time the factory gets a pull signal from the timer it tells the producer to generate data.
-        TwistedPullProducer(
-            consumer=factory,
+        twisted_producer = TwistedWSPushProducer(
             custom_producer=prod_impl
         )
 
-        looping_task = task.LoopingCall(factory.pull)
+        factory = BroadcastServerFactory(
+            url=u"ws://127.0.0.1:9000",
+            producer=twisted_producer
+        )
+
+        factory.protocol = BroadcastServerProtocol
+
+        factory.listen()
+
+        # Here we schedule in the simple producer to create content responding to a periodic interval timer.
+        looping_task = task.LoopingCall(simple_producer.process_document)
 
         looping_task.start(2.0)
 

@@ -1,9 +1,14 @@
-
+import abc
 import collections
 import threading
 import Queue
 import os
 import time
+import types
+
+from nltk import BlanklineTokenizer, PunktSentenceTokenizer, WhitespaceTokenizer
+from xml.dom.minidom import Node, parseString
+import re
 
 
 class ComparableMixin(object):
@@ -66,8 +71,8 @@ class RingBufferWithCallback(collections.deque):
 
     _callback = None
 
-    def __init__(self, iterable=(), maxlen=None, callback = None):
-        if callback is not None  and not callable(callback):
+    def __init__(self, iterable=(), maxlen=None, callback=None):
+        if callback is not None and not callable(callback):
             raise ValueError('Callback: {} is not callable'.format(callback))
         self._callback = callback
         super(RingBufferWithCallback, self).__init__(iterable, maxlen)
@@ -188,3 +193,277 @@ class RotatingFileBuffer(RingBufferWithCallback):
             if self._deletion_thread.stopped():
                 raise RotatingFileBufferStopped('File deletion thread is stopped!')
         super(RotatingFileBuffer, self).append(item)
+
+
+def tokenize_english_document(input_text):
+    """
+    This is a crude tokenizer for input conversations in English.
+    :param input_text:
+    :return:
+    """
+    end_list = []
+    block_tokenizer = BlanklineTokenizer()
+    sentence_tokenizer = PunktSentenceTokenizer()
+    word_tokenizer = WhitespaceTokenizer()
+    # using the 38 characters in one line rule from ITV subtitle guidelines
+    characters_per_line = 38
+    lines_per_subtitle = 2
+
+    blocks = block_tokenizer.tokenize(input_text)
+    for block in blocks:
+        # We have one speaker
+        sentences = sentence_tokenizer.tokenize(block)
+        # We have the sentences
+        for sentence in sentences:
+            words = word_tokenizer.tokenize(sentence)
+            reverse_words = words[::-1]
+
+            lines = []
+            current_line = ''
+            line_full = False
+            while reverse_words:
+                word = reverse_words.pop()
+                longer_line = ' '.join([current_line, word]).strip()
+                if len(longer_line) > characters_per_line and len(current_line):
+                    # The longer line is overreaching boundaries
+                    reverse_words.append(word)
+                    line_full = True
+                elif len(word) >= characters_per_line:
+                    # Very long words
+                    current_line = longer_line
+                    line_full = True
+                else:
+                    current_line = longer_line
+
+                if line_full:
+                    lines.append(current_line)
+                    current_line = ''
+                    line_full = False
+
+                if len(lines) >= lines_per_subtitle:
+                    end_list.append(lines)
+                    lines = []
+            if current_line:
+                lines.append(current_line)
+            if lines:
+                end_list.append(lines)
+
+    return end_list
+
+
+def _assert_asm_is_defined(value, member_name, class_name):
+    if value in (None, NotImplemented):
+        raise TypeError(
+            'Abstract static member: \`{}.{}\` does not match the criteria'.format(
+                class_name,
+                member_name
+            )
+        )
+
+
+def validate_types_only(value, member_name, class_name):
+    if not isinstance(value, tuple):
+        value = (value,)
+    for item in value:
+        if not isinstance(item, (type, types.ClassType)) and item is not ANY:
+            raise TypeError(
+                'Abstract static member: \'{}.{}\' is not a type or class'.format(
+                    class_name,
+                    member_name
+                )
+            )
+
+
+class AnyType(object):
+    "A helper object that compares equal to everything."
+
+    def __eq__(self, other):
+        return True
+
+    def __ne__(self, other):
+        return False
+
+    def __repr__(self):
+        return '<ANY>'
+
+ANY = AnyType()
+
+
+class AbstractStaticMember(object):
+    """
+    This allows me to require the subclasses to define some attributes using a customizeable
+    validator. The idea is that all static members should be initialized to a value by the time
+    abstract functions have all been implemented.
+    """
+
+    _validation_func = None
+
+    def __init__(self, validation_func=None):
+        if validation_func is None:
+            self._validation_func = _assert_asm_is_defined
+        else:
+            self._validation_func = validation_func
+
+    def validate(self, value, member_name, class_name):
+        self._validation_func(value, member_name, class_name)
+
+
+class AutoRegisteringABCMeta(abc.ABCMeta):
+    """
+    This metaclass gets us automatic class registration and cooperates with AbstractStaticMember.
+    If none of the 2 features are needed it just provides the basic abc.ABCMeta functionality.
+    For the auto registration an abstract class needs to implement the auto_register_impl classmethod.
+    """
+
+    def __new__(mcls, name, bases, namespace):
+        cls = super(AutoRegisteringABCMeta, mcls).__new__(mcls, name, bases, namespace)
+        abstract_members = set(name
+                        for name, value in namespace.items()
+                        if isinstance(value, AbstractStaticMember))
+
+        abstracts = getattr(cls, "__abstractmethods__", set())
+
+        if not abstracts:
+            # This means the class is not abstract so we should not have any abstract static members
+            validated_members = set()
+            for base in bases:
+                if isinstance(base, mcls):
+                    for base_member in getattr(base, '_abc_static_members', set()):
+                        if base_member in validated_members:
+                            continue
+                        value = getattr(cls, base_member, NotImplemented)
+                        if isinstance(value, AbstractStaticMember) or value is NotImplemented:
+                            abstract_members.add(base_member)
+                        else:
+                            getattr(base, base_member).validate(value, base_member, name)
+                            validated_members.add(base_member)
+
+                    base.auto_register_impl(cls)
+
+            if abstract_members:
+                raise TypeError('{} must implement abstract static members: [{}]'.format(
+                    name,
+                    ', '.join(abstract_members)
+                ))
+        if namespace.get('auto_register_impl') is None:
+            cls.auto_register_impl = classmethod(lambda x, y: None)
+        cls._abc_static_members = frozenset(abstract_members)
+        cls._abc_interface = '__metaclass__' in namespace.keys()
+        return cls
+
+    def __call__(cls, *args, **kwargs):
+        if cls._abc_interface is True:
+            raise TypeError('Can\'t instantiate {} is an abstract base class.'.format(cls))
+        instance = super(AutoRegisteringABCMeta, cls).__call__(*args, **kwargs)
+        return instance
+
+HTTPProxyConfig = collections.namedtuple('HTTPProxyConfig', ['host', 'port'])
+
+
+# The following section is taken from https://github.com/django/django/blob/master/django/test/utils.py
+# This is a relatively simple XML comparator implementation based on Python's minidom library.
+# NOTE: different namespace aliases can break this code. The code superficial on namespaces. It ignores them
+# In very rare cases when an element has 2 attributes with the same localName but their namespaces differ
+# this implementation might say the document differs. It also avoids attribute sorting by comparing
+# and attr_dict that it builds from minidom attributes.
+#
+# The Django Project is protected by the BSD Licence.
+
+
+def strip_quotes(want, got):
+    """
+    Strip quotes of doctests output values:
+
+    >>> strip_quotes("'foo'")
+    "foo"
+    >>> strip_quotes('"foo"')
+    "foo"
+    """
+    def is_quoted_string(s):
+        s = s.strip()
+        return len(s) >= 2 and s[0] == s[-1] and s[0] in ('"', "'")
+
+    def is_quoted_unicode(s):
+        s = s.strip()
+        return len(s) >= 3 and s[0] == 'u' and s[1] == s[-1] and s[1] in ('"', "'")
+
+    if is_quoted_string(want) and is_quoted_string(got):
+        want = want.strip()[1:-1]
+        got = got.strip()[1:-1]
+    elif is_quoted_unicode(want) and is_quoted_unicode(got):
+        want = want.strip()[2:-1]
+        got = got.strip()[2:-1]
+    return want, got
+
+
+def compare_xml(want, got):
+    """Tries to do a 'xml-comparison' of want and got.  Plain string
+    comparison doesn't always work because, for example, attribute
+    ordering should not be important. Comment nodes are not considered in the
+    comparison. Leading and trailing whitespace is ignored on both chunks.
+
+    Based on https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py
+
+    This function is a close but not full implementation of fn:deep-equals.
+    Possible scenario where this will yield a false positive result is where an element can have 2 arguments with
+    the same name but different namespaces:
+
+        i.e.: <elem ns1:myattr="1" /> != <elem ns2:myattr="1" /> if ns1 != ns2
+
+    """
+    _norm_whitespace_re = re.compile(r'[ \t\n][ \t\n]+')
+
+    def norm_whitespace(v):
+        return _norm_whitespace_re.sub(' ', v)
+
+    def child_text(element):
+        return ''.join(c.data for c in element.childNodes
+                       if c.nodeType == Node.TEXT_NODE)
+
+    def children(element):
+        return [c for c in element.childNodes
+                if c.nodeType == Node.ELEMENT_NODE]
+
+    def norm_child_text(element):
+        return norm_whitespace(child_text(element))
+
+    def attrs_dict(element):
+        return dict(element.attributes.items())
+
+    def check_element(want_element, got_element):
+        if want_element.tagName != got_element.tagName:
+            return False
+        if norm_child_text(want_element) != norm_child_text(got_element):
+            return False
+        if attrs_dict(want_element) != attrs_dict(got_element):
+            return False
+        want_children = children(want_element)
+        got_children = children(got_element)
+        if len(want_children) != len(got_children):
+            return False
+        for want, got in zip(want_children, got_children):
+            if not check_element(want, got):
+                return False
+        return True
+
+    def first_node(document):
+        for node in document.childNodes:
+            if node.nodeType != Node.COMMENT_NODE:
+                return node
+
+    want, got = strip_quotes(want, got)
+    want = want.strip().replace('\\n', '\n')
+    got = got.strip().replace('\\n', '\n')
+
+    # If the string is not a complete xml document, we may need to add a
+    # root element. This allow us to compare fragments, like "<foo/><bar/>"
+    if not want.startswith('<?xml'):
+        wrapper = '<root>%s</root>'
+        want = wrapper % want
+        got = wrapper % got
+
+    # Parse the want and got strings, and compare the parsings.
+    want_root = first_node(parseString(want))
+    got_root = first_node(parseString(got))
+
+    return check_element(want_root, got_root)

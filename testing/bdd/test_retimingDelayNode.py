@@ -1,6 +1,8 @@
 from ebu_tt_live.node.delay import RetimingDelayNode
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.carriage.interface import IProducerCarriage
+from ebu_tt_live.documents import EBUTT3Document
 from mock import MagicMock
 from pytest_bdd import scenarios, given, when, then
 
@@ -67,7 +69,8 @@ def when_retiming_delay(delay, test_context, gen_document):
 
     reference_clock = LocalMachineClock()
     reference_clock.clock_mode = 'local'
-    carriage = MagicMock()
+    carriage = MagicMock(spec=IProducerCarriage)
+    carriage.expects.return_value = EBUTT3Document
 
     delay_float = LimitedClockTimingType(delay).timedelta.total_seconds()
 

@@ -1,8 +1,14 @@
 
-from pyxb.utils import six
-from pyxb.exceptions_ import ValidationError
-
 from .strings import ERR_DOCUMENT_EXTENT_MISSING
+
+
+class ComponentCompatError(TypeError):
+    pass
+
+
+class DataCompatError(TypeError):
+    pass
+
 
 class DocumentNotLoadedError(Exception):
     pass
@@ -29,6 +35,10 @@ class EndOfData(Exception):
 
 
 class IncompatibleSequenceError(Exception):
+    pass
+
+
+class SequenceNumberCollisionError(IncompatibleSequenceError):
     pass
 
 
@@ -75,3 +85,11 @@ class DiscardElement(Exception):
     in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting
     an interval between them so the container ends up being empty and thus should be discarded.
     """
+
+
+class ConfigurationError(Exception):
+    pass
+
+
+class UnknownHashError(Exception):
+    pass

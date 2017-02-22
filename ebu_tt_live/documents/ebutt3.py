@@ -7,9 +7,10 @@ from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
-    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL
+    DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, ERR_SEQUENCE_FROM_DOCUMENT, \
+    ERR_DOCUMENT_SEQUENCENUMBER_COLLISION
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
-    SequenceOverridden
+    SequenceOverridden, SequenceNumberCollisionError
 from ebu_tt_live.clocks import get_clock_from_document
 from datetime import timedelta
 from pyxb import BIND
@@ -169,7 +170,8 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
     # The sequence the document belongs to
     _sequence = None
 
-    def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None):
+    def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None,
+                 availability_time=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
             clock_mode = 'local'
         self._ebutt3_content = bindings.tt(
@@ -185,22 +187,27 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
             ),
             body=BIND()
         )
+        if availability_time is not None:
+            self._availability_time = availability_time
 
         self.validate()
 
     @classmethod
-    def create_from_raw_binding(cls, binding):
+    def create_from_raw_binding(cls, binding, availability_time=None):
         instance = cls.__new__(cls)
         instance._ebutt3_content = binding
+        if availability_time is not None:
+            instance._availability_time = availability_time
         instance.validate()
         return instance
 
     @classmethod
-    def create_from_xml(cls, xml):
+    def create_from_xml(cls, xml, availability_time=None):
         instance = cls.create_from_raw_binding(
             binding=bindings.CreateFromDocument(
                 xml_text=xml
-            )
+            ),
+            availability_time=availability_time
         )
         return instance
 
@@ -274,7 +281,7 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         else:
             return self.sequence.resolved_begin_time(self)
 
-    def discard_document(self, resolved_end_time):
+    def discard_document(self, resolved_end_time, verbose=False):
         """
         This function discards the document by setting a resolved end time
         before the document begins.
@@ -288,6 +295,12 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         )
         self._resolved_end_time = resolved_end_time
         self._resolved_begin_time = self.computed_begin_time
+        if verbose:
+            document_logger.info(
+                u'Document discarded:\n{}'.format(
+                    self.content_to_string(end=resolved_end_time)
+                )
+            )
 
     @property
     def resolved_end_time(self):
@@ -303,6 +316,43 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
     @property
     def discarded(self):
         return self.resolved_begin_time >= self.resolved_end_time
+
+    def content_to_string(self, begin=None, end=None):
+        """
+        Extract the document textual content between begin/end along with their activation times.
+
+        :param begin: From specified begin time or resolved begin time if begin is not specified.
+        :param end: Up to specified end time or resolved end time if end is not specified.
+        :return: String showing the activation and content of the elements.
+        """
+        affected_elements = self.lookup_range_on_timeline(begin=begin, end=end)
+        affected_paragraphs = []
+        for item in affected_elements:
+            if isinstance(item, bindings.p_type):
+                affected_paragraphs.append(item)
+
+        if begin is not None and self.resolved_begin_time < begin:
+            resolved_begin = begin
+        else:
+            resolved_begin = self.resolved_begin_time
+
+        if end is not None and self.resolved_end_time is not None and end < self.resolved_end_time:
+            resolved_end = end
+        elif end is not None and self.resolved_end_time is None:
+            resolved_end = end
+        else:
+            resolved_end = self.resolved_end_time
+
+        str_lines = []
+        for item in affected_paragraphs:
+            str_lines.append(
+                item.content_to_string(
+                    begin=resolved_begin,
+                    end=resolved_end
+                )
+            )
+
+        return u'\n'.join(str_lines)
 
     def validate(self):
         # Reset timeline
@@ -395,7 +445,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     The sequence object can be used in 2 different modes:
       - It can be used to produce a sequence(i.e.: new_document method)
       - as well as it is the pivotal point of the consumer use-case when the document timings need to be resolved.
-        (i.e.: add_document method.
+        (i.e.: add_document method)
 
     The sequence is responsible to keep the documents ordered and filter those documents out, which were eventually
     overwritten. It ensures that at any given time exactly 0 or 1 document is active (R14).
@@ -408,14 +458,16 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     _clock_mode = None
     _lang = None
     _documents = None
+    _verbose = None
 
-    def __init__(self, sequence_identifier, reference_clock, lang):
+    def __init__(self, sequence_identifier, reference_clock, lang, verbose=False):
         self._sequence_identifier = sequence_identifier
         self._reference_clock = reference_clock
         self._lang = lang
         self._last_sequence_number = 0
         # The documents are kept in a sorted set that is sorted by the documents's sequence number
-        self._documents = sortedset.SortedSet()
+        self._documents = sortedset.SortedSet(key=lambda x: x.sequence_number)
+        self._verbose = verbose
 
     @property
     def reference_clock(self):
@@ -434,13 +486,18 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         self._last_sequence_number = value
 
     @classmethod
-    def create_from_document(cls, document, *args, **kwargs):
+    def create_from_document(cls, document, verbose=False, *args, **kwargs):
         if not isinstance(document, EBUTT3Document):
-            raise ValueError()
+            raise ValueError(
+                ERR_SEQUENCE_FROM_DOCUMENT.format(
+                    document=document
+                )
+            )
         return cls(
             sequence_identifier=kwargs.get('sequence_identifier', document.sequence_identifier),
             reference_clock=kwargs.get('reference_clock', get_clock_from_document(document)),
-            lang=kwargs.get('lang', document.lang)
+            lang=kwargs.get('lang', document.lang),
+            verbose=verbose
         )
 
     def _check_document_compatibility(self, document):
@@ -454,6 +511,30 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 raise IncompatibleSequenceError(
                     ERR_DOCUMENT_NOT_COMPATIBLE
                 )
+        existing_document = None
+        try:
+            # Locate the insertion position
+            insertion_idx = self._documents.bisect_key_left(document.sequence_number)
+            found_doc = self._documents[
+                 insertion_idx
+            ]
+            if found_doc.sequence_number == document.sequence_number:
+                existing_document = found_doc
+        except IndexError:
+            log.debug('Document not found at position')
+
+        if existing_document is not None:
+            raise SequenceNumberCollisionError(
+                ERR_DOCUMENT_SEQUENCENUMBER_COLLISION.format(
+                    sequence_identifier=self.sequence_identifier,
+                    sequence_number=document.sequence_number
+                )
+            )
+        else:
+            log.debug('Sequence number: {} can be safely inserted into sequence: {}'.format(
+                document.sequence_number,
+                self.sequence_identifier
+            ))
         return True
 
     def create_compatible_document(self, *args, **kwargs):
@@ -535,7 +616,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 if document.sequence_number > item.element.sequence_number:
                     raise SequenceOverridden()
                 if item.element.sequence_number > document.sequence_number:
-                    #This means our document may get trimmed into shape
+                    # This means our document may get trimmed into shape
                     if this_ends.when > item.when:
                         trims_this = item
                     break
@@ -563,6 +644,12 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 resolved_end_time=ends_after.when
             ))
             self.timeline.add(ends_after)
+            if self._verbose:
+                document_logger.info(
+                    u'Document trimmed by next one:\n{}'.format(
+                        begins_before.element.content_to_string()
+                    )
+                )
 
         self._insert_document(document, ends=this_ends)
 
@@ -576,17 +663,23 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         """
         self._documents.add(document)
         self.timeline.add(TimingEventBegin(document))
-        if ends is not None and ends.when is not None:
+
+        if ends is None:
+            ends = TimingEventEnd(document)
+
+        if ends.when is not None:
             self.timeline.add(ends)
-        else:
-            computed_end = TimingEventEnd(document)
-            if computed_end.when is not None:
-                self.timeline.add(computed_end)
 
         document_logger.info(DOC_INSERTED.format(
             sequence_identifier=document.sequence_identifier,
             sequence_number=document.sequence_number
         ))
+        if self._verbose:
+            document_logger.info(
+                u'New document inserted:\n{}'.format(
+                    document.content_to_string()
+                )
+            )
 
     def _override_sequence(self, document):
         """
@@ -612,7 +705,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                     discarded_timing_events.setdefault(item.element, []).append(item)
 
         for item, events in discarded_timing_events.items():
-            item.discard_document(resolved_end_time=resolved_begin.when)
+            item.discard_document(
+                resolved_end_time=resolved_begin.when,
+                verbose=self._verbose
+            )
             self._documents.remove(item)
             for event in events:
                 self.timeline.remove(event)
@@ -632,7 +728,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 discarded_timing_events.setdefault(item.element, []).append(item)
 
         for item, events in discarded_timing_events.items():
-            item.discard_document(resolved_end_time=discard_time)
+            item.discard_document(
+                resolved_end_time=discard_time,
+                verbose=self._verbose
+            )
             self._documents.remove(item)
             for event in events:
                 self.timeline.remove(event)
@@ -652,7 +751,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             # And retry the insertion operation
             self._insert_or_discard(document)
         except DocumentDiscardedError as exc:
-            document.discard_document(resolved_end_time=exc.offending_document.resolved_begin_time)
+            document.discard_document(
+                resolved_end_time=exc.offending_document.resolved_begin_time,
+                verbose=self._verbose
+            )
 
         if document.sequence_number > self._last_sequence_number:
             self._last_sequence_number = document.sequence_number
@@ -729,21 +831,22 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                         doc.sequence_identifier, doc.sequence_number
                     )
                 )
-                log.error(err)
+                log.error(repr(err))
                 
             begin = doc_ending
 
         if not document_segments:
             # TODO: This is good question what now? no documents found for range
-            return None
-
-        splicer = EBUTT3Splicer(
-            sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
-            sequence_number=sequence_number is not None or 1,
-            document_segments=document_segments
-        )
-
-        document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
+            document = self.create_compatible_document()
+            # comp_doc.set_begin(begin)
+            # comp_doc.set_end(end)
+        else:
+            splicer = EBUTT3Splicer(
+                sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
+                sequence_number=sequence_number is not None and sequence_number or 1,
+                document_segments=document_segments
+            )
+            document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
 
         if discard is True and affected_documents:
             self.discard_before(affected_documents[-1])

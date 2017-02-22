@@ -7,8 +7,8 @@ import math
 from ebu_tt_live.node import EBUTTDEncoder
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.utc import UTCClock
-from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, ClientNodeProtocol
-from ebu_tt_live.carriage.twisted import TwistedConsumerImpl
+from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, BroadcastClientProtocol
+from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage
 from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport, \
     RotatingFolderExport
 from ebu_tt_live import bindings
@@ -86,9 +86,9 @@ def main():
     if args.output_format == 'xml':
         if args.timeshift > 0.0:
             buffer_size = math.ceil(args.timeshift / args.interval)
-            outbound_carriage = RotatingFolderExport(args.output_folder, 'ebuttd-encode-{}.xml', buffer_size)
+            outbound_carriage = RotatingFolderExport(args.output_folder, 'ebuttd-encode-{counter}.xml', buffer_size)
         else:
-            outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{}.xml')
+            outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{counter}.xml')
     else:
         raise Exception('Invalid output format: {}'.format(args.output_format))
 
