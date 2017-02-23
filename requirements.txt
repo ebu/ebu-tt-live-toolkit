@@ -10,6 +10,7 @@ pytest-bdd
 pytest-cov
 pytest-mock
 pytest-capturelog
+pytest-twisted
 coverage
 pytest-runner
 pytest

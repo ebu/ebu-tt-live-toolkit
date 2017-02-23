@@ -2,9 +2,7 @@
   "nodes": {
     "node1": {
       "id": "producer1",
-      "type": "simple-producer",
-      "show_time": true,
-      "sequence_identifier": "TestSequence1",
+      "type": "distributor",
       "output": {
         "carriage": {
           "type": "websocket",
@@ -14,7 +12,7 @@
     },
     "node2": {
       "id": "consumer1",
-      "type": "simple-consumer",
+      "type": "distributor",
       "input": {
         "carriage": {
           "type": "websocket",

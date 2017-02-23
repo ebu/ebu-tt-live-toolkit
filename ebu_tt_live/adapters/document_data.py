@@ -4,6 +4,10 @@ from ebu_tt_live.documents import EBUTT3EBUTTDConverter, EBUTTDDocument, EBUTT3D
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 import six
+import logging
+
+
+log = logging.getLogger(__name__)
 
 
 class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
@@ -16,6 +20,9 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     def convert_data(self, data, availability_time=None, sequence_identifier=None, **kwargs):
         doc = EBUTT3Document.create_from_xml(data, availability_time=availability_time)
         if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
+            log.error(
+                'Sequence identifier mismatch found: {} != {}'.format(sequence_identifier, doc.sequence_identifier)
+            )
             raise UnexpectedSequenceIdentifierError()
         return doc, kwargs
 

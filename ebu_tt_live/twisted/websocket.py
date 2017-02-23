@@ -235,7 +235,7 @@ class BroadcastServerProtocol(EBUWebsocketProtocolMixin, WebSocketServerProtocol
     def onMessage(self, payload, isBinary):
         if self.action == 'publish':
             try:
-                self._write_to_consumer(payload)
+                self._write_to_consumer(payload, sequence_identifier=self._sequence_identifier)
             except UnexpectedSequenceIdentifierError:
                 self.dropConnection(abort=False)
         else:
@@ -359,7 +359,10 @@ class BroadcastClientProtocol(EBUWebsocketProtocolMixin, WebSocketClientProtocol
 
     def onMessage(self, payload, isBinary):
         if self.action == 'subscribe':
-            self._write_to_consumer(payload)
+            try:
+                self._write_to_consumer(payload, sequence_identifier=self._sequence_identifier)
+            except UnexpectedSequenceIdentifierError:
+                self.dropConnection(abort=False)
         else:
             log.error(ERR_WS_RECEIVE_VIA_PRODUCER)
 
