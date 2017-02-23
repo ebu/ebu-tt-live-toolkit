@@ -19,8 +19,8 @@
         "carriage": {
           "type": "websocket",
           "connect": [
-            "ws://localhost:{{ephemeral_port}}/TestSequence1/subscribe"
-            ]
+            "ws://localhost:{{ephemeral_port}}/{{client_url_path}}"
+          ]
         }
       }
     }
