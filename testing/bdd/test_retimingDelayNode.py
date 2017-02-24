@@ -3,6 +3,7 @@ from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 from mock import MagicMock
 from pytest_bdd import scenarios, given, when, then
 import pytest
@@ -115,7 +116,7 @@ def then_retiming_delay_node_rejects(gen_document, produced_sequence):
         fixed_delay=delay_float,
         document_sequence=produced_sequence,
     )
-    with pytest.raises(Exception):
+    with pytest.raises(UnexpectedSequenceIdentifierError):
         delay_node.process_document(gen_document)
 
 

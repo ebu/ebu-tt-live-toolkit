@@ -128,7 +128,6 @@ Feature: Delay of a document sequence
     | 0             |                 | 00:00:03 | delayed_sequence |
 
   # The above scenario brings up a problem with the incoming sequence identifier matching the produced one
-  # TODO: Narrow exception to UnexpectedSequenceIdentifierError when it gets merged from task/29
   Scenario: Retiming delay receives matching sequence identifier
     Given an xml file <xml_file>
     And it has <sequence_id_1>
