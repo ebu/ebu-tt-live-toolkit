@@ -6,6 +6,7 @@ from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimin
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 
 
 class RetimingDelayNode(AbstractCombinedNode):
@@ -26,6 +27,9 @@ class RetimingDelayNode(AbstractCombinedNode):
         self._document_sequence = document_sequence
 
     def process_document(self, document, **kwargs):
+
+        if document.sequence_identifier == self._document_sequence:
+            raise UnexpectedSequenceIdentifierError()
 
         # change the sequence identifier
         document.sequence_identifier = self._document_sequence

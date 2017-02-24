@@ -12,6 +12,8 @@ Feature: Passive nodes shall not modify documents in any way
     | xml_file              |
     | complete_document.xml |
 
+  # SPEC-CONFORMANCE: R118 (see note below) R119 
+  # Note: R118 is not fully implemented because the libraries we use do not fully support XQuery functions   
   Scenario: BufferDelay node does not modify documents
     Given an xml file <xml_file>
     And a buffer delay node
