@@ -27,6 +27,10 @@ class RetimingDelayNode(AbstractCombinedNode):
 
     def process_document(self, document, **kwargs):
 
+        if document.sequence_identifier == self._document_sequence:
+            # TODO: Narrow down class
+            raise Exception()
+
         # change the sequence identifier
         document.sequence_identifier = self._document_sequence
 

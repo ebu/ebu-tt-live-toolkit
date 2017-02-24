@@ -111,21 +111,30 @@ Feature: Delay of a document sequence
     |            |              |           |          |          |          |            |          |             |           | 00:00:05 | 00:00:05           |                  |                   |                 |                 |               |                    |                  |                     |                   |          |
 
 
-    # SPEC-CONFORMANCE.md R113 R117
-    Scenario: RetimingDelayNode changes sequence ID but not authoring delay
-        Given an xml file <xml_file>
-        And it has <sequence_id_1>
-        And it has <authoring_delay_1>
-        And the document is generated
-        When the retiming delay node delays it by <delay>
-        Then the updated document has <sequence_id_2>
-        And the updated document has <authoring_delay_2>
+  # SPEC-CONFORMANCE.md R113 R117
+  Scenario: RetimingDelayNode changes sequence ID but not authoring delay
+    Given an xml file <xml_file>
+    And it has <sequence_id_1>
+    And it has <authoring_delay>
+    And the document is generated
+    When the retiming delay node delays it by <delay>
+    Then the updated document has <sequence_id_2>
+    And the updated document has <authoring_delay>
 
-        Examples:
-        | sequence_id_1 | authoring_delay_1 | delay    | sequence_id_2 | authoring_delay_2 |  
-        | id1           | 00:00:00          | 0        | id2           | 00:00:00          |  
-        | 0             | 00:00:05          | 00:00:03 | 1             | 00:00:05          |  
-        | 0             |                   | 00:00:03 | 1             |                   |  
+    Examples:
+    | sequence_id_1 | authoring_delay | delay    | sequence_id_2    |
+    | id1           | 0s              | 00:00:00 | delayed_sequence |
+    | 0             | 5s              | 00:00:03 | delayed_sequence |
+    | 0             |                 | 00:00:03 | delayed_sequence |
 
+  # The above scenario brings up a problem with the incoming sequence identifier matching the produced one
+  # TODO: Narrow exception to UnexpectedSequenceIdentifierError when it gets merged from task/29
+  Scenario: Retiming delay receives matching sequence identifier
+    Given an xml file <xml_file>
+    And it has <sequence_id_1>
+    And the document is generated
+    Then the retiming delay node with <produced_sequence> will reject it
 
-      
+    Examples:
+    | sequence_id_1    | produced_sequence |
+    | delayed_sequence | delayed_sequence  |
