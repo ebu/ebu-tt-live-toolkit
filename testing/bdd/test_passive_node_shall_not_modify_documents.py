@@ -2,6 +2,7 @@ from ebu_tt_live.node.distributing import DistributingNode
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.node.delay import BufferDelayNode
 from ebu_tt_live.utils import compare_xml
+from ebu_tt_live.documents import EBUTT3Document
 from mock import MagicMock
 from pytest_bdd import given, when, then, scenarios
 import six
@@ -14,7 +15,7 @@ scenarios('features/nodes/passive_nodes_shall_not_modify_document.feature')
 def distributing_node():
     reference_clock = MagicMock()
     prod_carriage = MagicMock(spec=IProducerCarriage)
-    prod_carriage.expects.return_value = six.text_type
+    prod_carriage.expects.return_value = EBUTT3Document
     node = DistributingNode(
         'test_distributing',
         producer_carriage=prod_carriage,

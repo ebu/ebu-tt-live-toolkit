@@ -1,0 +1,64 @@
+{
+	"nodes" :
+	{
+	    "node1": 
+	    {
+			"id": "distributor1",
+			"type": "distributor",
+			"input": 
+			{
+				"carriage": 
+				{
+					"type": "websocket",
+					"listen": "ws://localhost:9001"
+				}
+			},
+			"output": 
+			{
+				"carriage": 
+				{
+					"type": "websocket",
+					"listen": "ws://localhost:9001"
+				}
+			}
+	    },
+		"node2" :
+		{
+			"id" : "consumer1",
+			"type" : "simple-consumer",
+			"verbose" : true,
+			"input" : 
+			{
+				"carriage" : 
+				{
+					"type" : "websocket",
+					"connect" : 
+					[
+						"ws://127.0.0.1:9001/TestSequence1/subscribe"
+					]
+				}
+			}
+		},
+		"node3" :
+		{
+			"id" : "consumer2",
+			"type" : "simple-consumer",
+			"verbose" : true,
+			"input" : 
+			{
+				"carriage" : 
+				{
+					"type" : "websocket",
+					"connect" : 
+					[
+						"ws://127.0.0.1:9001/TestSequence2/subscribe"
+					]
+				}
+			}
+		}
+	},
+	"backend" : 
+	{
+		"type": "twisted"
+	}
+}

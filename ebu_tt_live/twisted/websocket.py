@@ -10,6 +10,7 @@ import json
 import six
 from ebu_tt_live.strings import ERR_WS_INVALID_ACTION, ERR_WS_NOT_CONSUMER, ERR_WS_NOT_PRODUCER, \
     ERR_WS_RECEIVE_VIA_PRODUCER, ERR_WS_SEND_VIA_CONSUMER
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 
 from .base import IBroadcaster
 
@@ -105,10 +106,10 @@ class EBUWebsocketProtocolMixin(object):
         sequence_identifier, action = result.path
         return sequence_identifier, action
 
-    def _write_to_consumer(self, data):
+    def _write_to_consumer(self, data, **kwargs):
         # Consumer mode
         # TODO: This can error in multiple ways
-        self.consumer.write(data)
+        self.consumer.write(data, **kwargs)
 
     def _send_sequence_message(
             self, sequence_identifier, payload, isBinary=False, fragmentSize=None, sync=False, doNotCompress=False
@@ -204,8 +205,8 @@ class TwistedWSConsumer(object):
     def unregister(self, connection):
         connection.consumer = None
 
-    def write(self, data):
-        self._custom_consumer.on_new_data(data)
+    def write(self, data, **kwargs):
+        self._custom_consumer.on_new_data(data, **kwargs)
 
     def registerProducer(self, producer, streaming):
         pass
@@ -233,7 +234,10 @@ class BroadcastServerProtocol(EBUWebsocketProtocolMixin, WebSocketServerProtocol
 
     def onMessage(self, payload, isBinary):
         if self.action == 'publish':
-            self._write_to_consumer(payload)
+            try:
+                self._write_to_consumer(payload, sequence_identifier=self._sequence_identifier)
+            except UnexpectedSequenceIdentifierError:
+                self.dropConnection(abort=False)
         else:
             log.error(ERR_WS_RECEIVE_VIA_PRODUCER)
             self.dropConnection(abort=True)
@@ -355,7 +359,10 @@ class BroadcastClientProtocol(EBUWebsocketProtocolMixin, WebSocketClientProtocol
 
     def onMessage(self, payload, isBinary):
         if self.action == 'subscribe':
-            self._write_to_consumer(payload)
+            try:
+                self._write_to_consumer(payload, sequence_identifier=self._sequence_identifier)
+            except UnexpectedSequenceIdentifierError:
+                self.dropConnection(abort=False)
         else:
             log.error(ERR_WS_RECEIVE_VIA_PRODUCER)
 

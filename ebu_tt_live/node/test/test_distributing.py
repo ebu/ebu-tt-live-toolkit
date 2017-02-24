@@ -10,13 +10,13 @@ class TestDistributingNode(TestCase):
 
     def test_process_document(self):
         carriage = MagicMock(spec=IProducerCarriage)
-        carriage.expects.return_value = six.text_type
+        carriage.expects.return_value = EBUTT3Document
         reference_clock = MagicMock()
         node = DistributingNode(
             node_id='distributing_node',
             producer_carriage=carriage,
             reference_clock=reference_clock
         )
-        document = MagicMock(spec=six.text_type)
+        document = MagicMock(spec=EBUTT3Document)
         node.process_document(document)
         carriage.emit_data.assert_called_with(data=document)
