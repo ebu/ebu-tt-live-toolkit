@@ -9,8 +9,8 @@ log = logging.getLogger(__name__)
 class DistributingNode(AbstractCombinedNode):
 
     _reference_clock = None
-    _expects = six.text_type
-    _provides = six.text_type
+    _expects = EBUTT3Document
+    _provides = EBUTT3Document
 
     def __init__(self, node_id, reference_clock, producer_carriage=None, consumer_carriage=None, **kwargs):
         super(DistributingNode, self).__init__(

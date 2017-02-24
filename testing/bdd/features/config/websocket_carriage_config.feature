@@ -6,14 +6,14 @@ Feature: Configuration of websocket carriage
   | config_file                    | xml_file            | sequence_identifier | time_base |
   | websocket_carriage_config.json | sequence_id_num.xml | test                | media     |
 
-  @skip
   Scenario: Get parts of sequence
     Given an xml file <xml_file>
-    And a config file <config_file>
+    And a configuration file <config_file>
     And a sequence <sequence_identifier> with timeBase <time_base>
     When a free port has been found
     And the producer listens on the port
     And the consumer connects to the port with <client_url_path>
+    And the configuration file is loaded
     And producer sends document with <sequence_number_1>
     And producer sends document with <sequence_number_2>
     Then transmission should be successful

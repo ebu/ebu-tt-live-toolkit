@@ -3,6 +3,7 @@ from twisted.trial.unittest import TestCase
 from twisted.test import proto_helpers
 from ebu_tt_live.twisted.websocket import BroadcastServerFactory, BroadcastServerProtocol, \
     BroadcastClientFactory, BroadcastClientProtocol, TwistedWSConsumer, TwistedWSPushProducer
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 from mock import MagicMock
 from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
 
@@ -109,7 +110,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         self.ctr.clear()
 
         # This should be a successful reception of the data frame
-        self.cons.write.assert_called_with(doc)
+        self.cons.write.assert_called_with(doc, sequence_identifier=self.sequence_identifier)
 
         # Bring a clean disconnect
         self._disconnect()
@@ -119,6 +120,52 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         self.prod.unregister.assert_called_with(self.sproto)
 
         # And that is our success case here
+
+    def test_server_prod_client_cons_wrong_sequence_error(self):
+        # This test emulates the data parsing raising the UnexpectedSequenceIdentifierError
+        def fail_parsing(data, **kwargs):
+            raise UnexpectedSequenceIdentifierError()
+
+        self.cons.write.side_effect = fail_parsing
+
+        self._create_server(url='ws://localhost:9005', producer=self.prod)
+        self._create_client(
+            url='ws://localhost:9005/{}/subscribe'.format(
+                self.sequence_identifier
+            ),
+            consumer=self.cons
+        )
+
+        # This step is supposed to be done by the mocked out twisted consumer on connection registration
+        self.cproto.consumer = self.cons
+
+        self._connect()
+
+        self.cons.register.assert_called_with(self.cproto)
+        self.prod.register.assert_called_with(self.sproto)
+        self.assertEquals(self.cproto.action, 'subscribe')
+        self.assertEquals(self.sproto.action, 'subscribe')
+
+        # At this point we are supposed to be able to send data through
+        doc = 'dummy message'
+        self.sproto.sendSequenceMessage(
+            sequence_identifier=self.sequence_identifier,
+            payload=doc
+        )
+
+        self.cons.write.assert_not_called()
+
+        # Do the transport step
+        self.cproto.dataReceived(self.str.value())
+        self.str.clear()
+        self.sproto.dataReceived(self.ctr.value())
+        self.ctr.clear()
+
+        # Now the exception should be raised and the connection should be broken
+
+        self.cons.write.assert_called()
+        self.assertEquals(self.cproto.state, self.sproto.STATE_CLOSED)
+        self.assertFalse(self.cproto.wasClean)
 
     def test_consumer_send_data_error(self):
         self._create_server(url='ws://localhost:9005', producer=self.prod)
@@ -216,7 +263,7 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
         self.cproto.dataReceived(self.str.value())
         self.str.clear()
 
-        self.cons.write.assert_called_with(doc)
+        self.cons.write.assert_called_with(doc, sequence_identifier=self.sequence_identifier)
 
         # Let's do a clean disconnect
 
@@ -225,6 +272,50 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
         # Check de-registration
         self.cons.unregister.assert_called_with(self.sproto)
         self.prod.unregister.assert_called_with(self.cproto)
+
+    def test_serv_cons_client_prod_wrong_sequence_error(self):
+        def fail_parsing(data, **kwargs):
+            raise UnexpectedSequenceIdentifierError()
+
+        self.cons.write.side_effect = fail_parsing
+
+        self._create_server(
+            url='ws://localhost:9005',
+            consumer=self.cons
+        )
+
+        self._create_client(
+            url='ws://localhost:9005/{}/publish'.format(
+                self.sequence_identifier
+            ),
+            producer=self.prod
+        )
+
+        self.sproto.consumer = self.cons
+
+        self._connect()
+
+        self.cons.register.assert_called_with(self.sproto)
+        self.prod.register.assert_called_with(self.cproto)
+        self.assertEquals(self.sproto.action, 'publish')
+        self.assertEquals(self.cproto.action, 'publish')
+
+        # Sending data
+        doc = 'producer client sample'
+        self.cproto.sendSequenceMessage(
+            sequence_identifier=self.sequence_identifier,
+            payload=doc
+        )
+
+        self.sproto.dataReceived(self.ctr.value())
+        self.ctr.clear()
+        self.cproto.dataReceived(self.str.value())
+        self.str.clear()
+
+        # The connection should be broken by now
+
+        self.assertEquals(self.sproto.state, self.sproto.STATE_CLOSED)
+        self.assertFalse(self.sproto.wasClean)
 
     def test_consumer_to_consumer_error(self):
         self._create_server(

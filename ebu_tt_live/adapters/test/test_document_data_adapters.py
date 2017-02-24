@@ -6,6 +6,7 @@ from unittest import TestCase
 from ebu_tt_live import documents
 from ebu_tt_live.adapters.base import IDocumentDataAdapter
 from ebu_tt_live.adapters import document_data
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 
 
 class DummyDataTypeA(object):
@@ -114,6 +115,23 @@ class TestXMLtoEBUTT3Adapter(TestCase):
         result, res_kwargs = self.instance.convert_data(self._get_input(), **in_kwargs)
         self._assert_kwargs_passtrough(res_kwargs, expected_keys)
 
+    def test_sequence_id_match(self):
+        result, res_kwargs = self.instance.convert_data(
+            self._get_input(),
+            sequence_identifier='TestSequence1'
+        )
+
+    def test_sequence_id_mismatch(self):
+        # This test emulates a document being parsed and the sequenceIdentifier not matching the
+        # expected one in the kwargs. This (in the websocket case) should cause the connection to
+        # be broken.
+
+        with self.assertRaises(UnexpectedSequenceIdentifierError) as exc:
+            self.instance.convert_data(
+                self._get_input(),
+                sequence_identifier='wrong'
+            )
+
 
 class TestXMLtoEBUTTDAdapter(TestCase):
     _output_type = documents.EBUTTDDocument
@@ -135,6 +153,12 @@ class TestEBUTT3toXMLAdapter(TestXMLtoEBUTT3Adapter):
     def _get_input(self):
         return documents.EBUTT3Document.create_from_xml(self._get_xml())
 
+    def test_sequence_id_mismatch(self):
+        pass
+
+    def test_sequence_id_match(self):
+        pass
+
 
 class TestEBUTTDtoXMLAdapter(TestEBUTT3toXMLAdapter):
     _adapter_class = document_data.EBUTTDtoXMLAdapter
@@ -144,6 +168,12 @@ class TestEBUTTDtoXMLAdapter(TestEBUTT3toXMLAdapter):
         input_doc = documents.EBUTTDDocument(lang='en-GB')
         return input_doc
 
+    def test_sequence_id_mismatch(self):
+        pass
+
+    def test_sequence_id_match(self):
+        pass
+
 
 class TestEBUTT3toEBUTTDAdapter(TestXMLtoEBUTT3Adapter):
     _adapter_class = document_data.EBUTT3toEBUTTDAdapter
@@ -151,3 +181,9 @@ class TestEBUTT3toEBUTTDAdapter(TestXMLtoEBUTT3Adapter):
 
     def _get_input(self):
         return documents.EBUTT3Document.create_from_xml(self._get_xml())
+
+    def test_sequence_id_mismatch(self):
+        pass
+
+    def test_sequence_id_match(self):
+        pass

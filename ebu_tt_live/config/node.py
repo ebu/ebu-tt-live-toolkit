@@ -282,13 +282,29 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
         self._create_output(config)
 
 
+class Distributor(ConsumerMixin, ProducerMixin, NodeBase):
+
+    def _create_component(self, config):
+        self.component = processing_node.DistributingNode(
+            node_id=self.config.id,
+            reference_clock=None  # TODO: FIXME!
+        )
+
+    def __init__(self, config, local_config):
+        super(Distributor, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
+
+
 nodes_by_type = {
     'simple-consumer': SimpleConsumer,
     'simple-producer': SimpleProducer,
     'resequencer': ReSequencer,
     'ebuttd-encoder': EBUTTDEncoder,
     'buffer-delay': BufferDelay,
-    'retiming-delay': RetimingDelay
+    'retiming-delay': RetimingDelay,
+    'distributor': Distributor
 }
 
 
