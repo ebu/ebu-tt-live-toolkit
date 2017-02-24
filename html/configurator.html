@@ -206,7 +206,7 @@ the carriage mechanism type: <code class="docutils literal"><span class="pre">di
 <p>The more detailed options are:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>nodes
 ├─[nodeN] : a node to configure - any from node1 to node9
-│ ├─type : [&quot;simple-consumer&quot; | &quot;simple-producer&quot; | &quot;resequencer&quot; | &quot;ebuttd-encoder&quot; | &quot;buffer-delay&quot; | &quot;retiming-delay&quot;]
+│ ├─type : [&quot;simple-consumer&quot; | &quot;simple-producer&quot; | &quot;resequencer&quot; | &quot;ebuttd-encoder&quot; | &quot;buffer-delay&quot; | &quot;retiming-delay&quot; | &quot;distributor&quot;]
 │ ├─output : the output settings for the node, if applicable
 │ │ ├─carriage : the carriage mechanism to use to get incoming documents
 │ │ │ ├─type : [&quot;direct&quot; | &quot;filesystem&quot; | &quot;filesystem-simple&quot; | &quot;websocket&quot; | &quot;websocket-legacy&quot;]
@@ -256,6 +256,8 @@ type=&quot;buffer-delay&quot;
 type=&quot;retiming-delay&quot;
 ├─delay : delay in seconds, default 0
 └─sequence_identifier : sequence identifier, default &quot;RetimedSequence1&quot;
+
+type=&quot;distributor&quot; : No options
 </pre></div>
 </div>
 <p>Output carriage type dependent options for &#8220;carriage&#8221;:</p>

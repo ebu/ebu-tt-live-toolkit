@@ -415,13 +415,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Distributor"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.Distributor">[docs]</a><span class="k">class</span> <span class="nc">Distributor</span><span class="p">(</span><span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">DistributingNode</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">reference_clock</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># TODO: FIXME!</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Distributor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+
 <span class="n">nodes_by_type</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;simple-consumer&#39;</span><span class="p">:</span> <span class="n">SimpleConsumer</span><span class="p">,</span>
     <span class="s1">&#39;simple-producer&#39;</span><span class="p">:</span> <span class="n">SimpleProducer</span><span class="p">,</span>
     <span class="s1">&#39;resequencer&#39;</span><span class="p">:</span> <span class="n">ReSequencer</span><span class="p">,</span>
     <span class="s1">&#39;ebuttd-encoder&#39;</span><span class="p">:</span> <span class="n">EBUTTDEncoder</span><span class="p">,</span>
     <span class="s1">&#39;buffer-delay&#39;</span><span class="p">:</span> <span class="n">BufferDelay</span><span class="p">,</span>
-    <span class="s1">&#39;retiming-delay&#39;</span><span class="p">:</span> <span class="n">RetimingDelay</span>
+    <span class="s1">&#39;retiming-delay&#39;</span><span class="p">:</span> <span class="n">RetimingDelay</span><span class="p">,</span>
+    <span class="s1">&#39;distributor&#39;</span><span class="p">:</span> <span class="n">Distributor</span>
 <span class="p">}</span>
 
 
