@@ -22,7 +22,8 @@ class DistributingNode(AbstractCombinedNode):
         self._reference_clock = reference_clock
 
     def process_document(self, document, **kwargs):
-        self.producer_carriage.emit_data(data=document, **kwargs)
+        if self.check_document(document) is True:
+            self.producer_carriage.emit_data(data=document, **kwargs)
 
     @property
     def reference_clock(self):

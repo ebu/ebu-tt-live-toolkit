@@ -2,6 +2,7 @@ from .interface import INode, IConsumerNode, IProducerNode
 from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
 from ebu_tt_live.errors import ComponentCompatError, DataCompatError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
+from Queue import deque
 
 
 class __AbstractNode(INode):
@@ -66,11 +67,30 @@ class AbstractProducerNode(IProducerNode, __AbstractNode):
 class AbstractConsumerNode(IConsumerNode, __AbstractNode):
 
     _consumer_carriage = None
+    _seen_docs = None
 
     def __init__(self, node_id, consumer_carriage=None, **kwargs):
         super(AbstractConsumerNode, self).__init__(node_id=node_id, **kwargs)
         if consumer_carriage is not None:
             self.register_consumer_carriage(consumer_carriage)
+        self._seen_docs = {}
+
+    def check_document(self, document=None, sequence_identifier=None, sequence_number=None):
+        if document:
+            sequence_identifier = document.sequence_identifier
+            sequence_number = document.sequence_number
+
+        if sequence_identifier is None or sequence_number is None:
+            raise Exception()
+
+        if sequence_identifier in self._seen_docs.keys():
+            if sequence_number in self._seen_docs[sequence_identifier]:
+                return False
+
+        self._seen_docs.setdefault(sequence_identifier, deque()).append(sequence_number)
+
+        return True
+
 
     def register_consumer_carriage(self, consumer_carriage):
         if not isinstance(consumer_carriage, IConsumerCarriage):

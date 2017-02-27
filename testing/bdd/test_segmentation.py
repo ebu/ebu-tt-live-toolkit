@@ -1,10 +1,14 @@
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import style_type, region_type
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType
-from pytest_bdd import scenarios, when, then
+from ebu_tt_live.node.distributing import DistributingNode
+from ebu_tt_live.carriage.interface import IProducerCarriage, IConsumerCarriage
+from mock import MagicMock
+from pytest_bdd import scenarios, when, then, given
 
 scenarios('features/segmentation/splitting_documents.feature')
 scenarios('features/segmentation/segmenting_sequence.feature')
+scenarios('features/segmentation/duplicate_sequence_id+nun.feature')
 
 
 def assert_raises(exc_class, callable, *args, **kwargs):
@@ -38,6 +42,64 @@ def when_doc_added_to_sequence(template_file, template_dict, sequence):
 @when('it has sequenceIdentifier <sequence_identifier>')
 def when_sequence_identifier(template_dict, sequence_identifier):
     template_dict['sequence_identifier'] = sequence_identifier
+
+
+@when('it has sequence identifier <seq_id_1>')
+def when_seq_id_1(seq_id_1, template_dict):
+    template_dict['sequence_id'] = seq_id_1
+
+
+@when('it has sequence identifier <seq_id_2>')
+def when_seq_id_2(seq_id_2, template_dict):
+    template_dict['sequence_id'] = seq_id_2
+
+
+@when('it has sequence number <seq_n_1>')
+def when_seq_num_1(template_dict, seq_n_1):
+    template_dict['sequence_num'] = seq_n_1
+
+
+@when('it has sequence number <seq_n_2>')
+def when_seq_num_2(template_dict, seq_n_2):
+    template_dict['sequence_num'] = seq_n_2
+
+
+@when('another document arrives')
+def when_another_document_arrives(template_dict):
+    template_dict.clear()
+
+@given('a processing node')
+def given_processing_node(template_dict):
+    producer_carriage = MagicMock(spec=IProducerCarriage)
+    producer_carriage.expects.return_value = EBUTT3Document
+    consumer_carriage = MagicMock(spec=IConsumerCarriage)
+    consumer_carriage.provides.return_value = EBUTT3Document
+    distributor = DistributingNode(
+        node_id='test_distrib_processor',
+        reference_clock=MagicMock(),
+        producer_carriage=producer_carriage,
+        consumer_carriage=consumer_carriage
+    )
+    return distributor
+
+@then('the document is processed')
+def then_document_processed(test_context, given_processing_node):
+    given_processing_node.process_document(document=test_context['document'])
+    given_processing_node.producer_carriage.emit_data.assert_called_once()
+    given_processing_node.producer_carriage.reset_mock()
+
+
+@when('the document is processed')
+def when_document_processed(test_context, given_processing_node):
+    given_processing_node.process_document(document=test_context['document'])
+    given_processing_node.producer_carriage.reset_mock()
+
+
+@then('the document is not processed')
+def then_document_not_processed(test_context, given_processing_node):
+    given_processing_node.process_document(document=test_context['document'])
+    given_processing_node.producer_carriage.emit_data.assert_not_called()
+    given_processing_node.producer_carriage.reset_mock()
 
 
 @when('it has sequenceNumber <sequence_number>')
