@@ -317,12 +317,10 @@
     <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;RetimedSequence1&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-        <span class="n">reference_clock</span> <span class="o">=</span> <span class="n">get_clock</span><span class="p">(</span><span class="s1">&#39;auto&#39;</span><span class="p">)(</span><span class="n">config</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">RetimingDelayNode</span><span class="p">(</span>
             <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
             <span class="n">document_sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
-            <span class="n">fixed_delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">delay</span><span class="p">,</span>
-            <span class="n">reference_clock</span><span class="o">=</span><span class="n">reference_clock</span><span class="o">.</span><span class="n">component</span>
+            <span class="n">fixed_delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">delay</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
@@ -419,8 +417,7 @@
 
     <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">DistributingNode</span><span class="p">(</span>
-            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-            <span class="n">reference_clock</span><span class="o">=</span><span class="kc">None</span>  <span class="c1"># TODO: FIXME!</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>

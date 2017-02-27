@@ -135,6 +135,7 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.carriage.interface</span> <span class="k">import</span> <span class="n">IConsumerCarriage</span><span class="p">,</span> <span class="n">IProducerCarriage</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">ComponentCompatError</span><span class="p">,</span> <span class="n">DataCompatError</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_INCOMPATIBLE_COMPONENT</span><span class="p">,</span> <span class="n">ERR_INCOMPATIBLE_DATA_EXPECTED</span><span class="p">,</span> <span class="n">ERR_INCOMPATIBLE_DATA_PROVIDED</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">RingBufferWithCallback</span>
 
 
 <span class="k">class</span> <span class="nc">__AbstractNode</span><span class="p">(</span><span class="n">INode</span><span class="p">):</span>
@@ -199,11 +200,30 @@
 <div class="viewcode-block" id="AbstractConsumerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode">[docs]</a><span class="k">class</span> <span class="nc">AbstractConsumerNode</span><span class="p">(</span><span class="n">IConsumerNode</span><span class="p">,</span> <span class="n">__AbstractNode</span><span class="p">):</span>
 
     <span class="n">_consumer_carriage</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_seen_docs</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AbstractConsumerNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">consumer_carriage</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">register_consumer_carriage</span><span class="p">(</span><span class="n">consumer_carriage</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seen_docs</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="AbstractConsumerNode.check_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.check_document">[docs]</a>    <span class="k">def</span> <span class="nf">check_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">document</span><span class="p">:</span>
+            <span class="n">sequence_identifier</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span>
+            <span class="n">sequence_number</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
+
+        <span class="k">if</span> <span class="n">sequence_identifier</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">sequence_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">sequence_identifier</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seen_docs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">sequence_number</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_seen_docs</span><span class="p">[</span><span class="n">sequence_identifier</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_seen_docs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">RingBufferWithCallback</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sequence_number</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 
 <div class="viewcode-block" id="AbstractConsumerNode.register_consumer_carriage"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.register_consumer_carriage">[docs]</a>    <span class="k">def</span> <span class="nf">register_consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">consumer_carriage</span><span class="p">,</span> <span class="n">IConsumerCarriage</span><span class="p">):</span>
