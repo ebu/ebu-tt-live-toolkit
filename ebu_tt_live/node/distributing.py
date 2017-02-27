@@ -10,7 +10,7 @@ class DistributingNode(AbstractCombinedNode):
 
     _reference_clock = None
     _expects = EBUTT3Document
-    _provides = EBUTT3Document
+    _provides = six.text_type
 
     def __init__(self, node_id, reference_clock, producer_carriage=None, consumer_carriage=None, **kwargs):
         super(DistributingNode, self).__init__(
@@ -21,9 +21,13 @@ class DistributingNode(AbstractCombinedNode):
         )
         self._reference_clock = reference_clock
 
-    def process_document(self, document, **kwargs):
+    def process_document(self, document, raw_xml=None, **kwargs):
         if self.check_document(document) is True:
-            self.producer_carriage.emit_data(data=document, **kwargs)
+            if raw_xml is not None:
+                data = raw_xml
+            else:
+                data = document.get_xml()
+            self.producer_carriage.emit_data(data=data, **kwargs)
 
     @property
     def reference_clock(self):

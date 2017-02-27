@@ -5,6 +5,7 @@ from ebu_tt_live.node.distributing import DistributingNode
 from ebu_tt_live.carriage.interface import IProducerCarriage, IConsumerCarriage
 from mock import MagicMock
 from pytest_bdd import scenarios, when, then, given
+import six
 
 scenarios('features/segmentation/splitting_documents.feature')
 scenarios('features/segmentation/segmenting_sequence.feature')
@@ -71,14 +72,11 @@ def when_another_document_arrives(template_dict):
 @given('a processing node')
 def given_processing_node(template_dict):
     producer_carriage = MagicMock(spec=IProducerCarriage)
-    producer_carriage.expects.return_value = EBUTT3Document
-    consumer_carriage = MagicMock(spec=IConsumerCarriage)
-    consumer_carriage.provides.return_value = EBUTT3Document
+    producer_carriage.expects.return_value = six.text_type
     distributor = DistributingNode(
         node_id='test_distrib_processor',
         reference_clock=MagicMock(),
-        producer_carriage=producer_carriage,
-        consumer_carriage=consumer_carriage
+        producer_carriage=producer_carriage
     )
     return distributor
 

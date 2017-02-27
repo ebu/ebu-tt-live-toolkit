@@ -10,7 +10,7 @@ class TestDistributingNode(TestCase):
 
     def test_process_document(self):
         carriage = MagicMock(spec=IProducerCarriage)
-        carriage.expects.return_value = EBUTT3Document
+        carriage.expects.return_value = six.text_type
         reference_clock = MagicMock()
         node = DistributingNode(
             node_id='distributing_node',
@@ -19,4 +19,20 @@ class TestDistributingNode(TestCase):
         )
         document = MagicMock(spec=EBUTT3Document)
         node.process_document(document)
-        carriage.emit_data.assert_called_with(data=document)
+        carriage.emit_data.assert_called_with(data=document.get_xml())
+
+    def test_process_document_raw_xml(self):
+        # In this test there is a raw_xml kwarg passed in. If that parameter is set it is used instead of
+        # document.get_xml()
+        carriage = MagicMock(spec=IProducerCarriage)
+        carriage.expects.return_value = six.text_type
+        reference_clock = MagicMock()
+        node = DistributingNode(
+            node_id='distributing_node',
+            producer_carriage=carriage,
+            reference_clock=reference_clock
+        )
+        document = MagicMock(spec=EBUTT3Document)
+        raw_xml = MagicMock(spec=six.text_type)
+        node.process_document(document=document, raw_xml=raw_xml)
+        carriage.emit_data.assert_called_with(data=raw_xml)

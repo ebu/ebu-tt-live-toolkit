@@ -15,7 +15,7 @@ scenarios('features/nodes/passive_nodes_shall_not_modify_document.feature')
 def distributing_node():
     reference_clock = MagicMock()
     prod_carriage = MagicMock(spec=IProducerCarriage)
-    prod_carriage.expects.return_value = EBUTT3Document
+    prod_carriage.expects.return_value = six.text_type
     node = DistributingNode(
         'test_distributing',
         producer_carriage=prod_carriage,
@@ -55,7 +55,7 @@ def then_delayed_document_identical(buffer_delay_node, test_context):
 def when_processes_document(distributing_node, test_context, template_file):
     xml_file = template_file.render()
     test_context['document'] = xml_file
-    distributing_node.process_document(xml_file)
+    distributing_node.process_document(EBUTT3Document.create_from_xml(xml_file), raw_xml=xml_file)
 
 
 @then('the emitted document is identical to the received one')
