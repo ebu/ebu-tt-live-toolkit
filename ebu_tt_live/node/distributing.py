@@ -28,6 +28,13 @@ class DistributingNode(AbstractCombinedNode):
             else:
                 data = document.get_xml()
             self.producer_carriage.emit_data(data=data, **kwargs)
+        else:
+            log.warning(
+                'Ignoring duplicate document: {}__{}'.format(
+                    document.sequence_identifier,
+                    document.sequence_number
+                )
+            )
 
     @property
     def reference_clock(self):

@@ -184,12 +184,10 @@ class RetimingDelay(ConsumerMixin, ProducerMixin, NodeBase):
     required_config.add_option('sequence_identifier', default='RetimedSequence1')
 
     def _create_component(self, config):
-        reference_clock = get_clock('auto')(config, None)
         self.component = processing_node.RetimingDelayNode(
             node_id=self.config.id,
             document_sequence=self.config.sequence_identifier,
-            fixed_delay=self.config.delay,
-            reference_clock=reference_clock.component
+            fixed_delay=self.config.delay
         )
 
     def __init__(self, config, local_config):

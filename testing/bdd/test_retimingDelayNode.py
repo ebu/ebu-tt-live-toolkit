@@ -76,8 +76,7 @@ def when_retiming_delay(delay, test_context, gen_document):
 
     delay_node = RetimingDelayNode(
         node_id='simple-delay-node',
-        carriage_impl=carriage,
-        reference_clock=reference_clock,
+        producer_carriage=carriage,
         fixed_delay=delay_float,
         document_sequence='delayed_sequence',
     )

@@ -15,7 +15,12 @@ class TestRetimingDelayNode(TestCase):
         reference_clock = MagicMock()
         delay = 2
         document_sequence = 'TestSequence'
-        node = RetimingDelayNode('delay_node', carriage, reference_clock, delay, document_sequence)
+        node = RetimingDelayNode(
+            node_id='delay_node',
+            fixed_delay=delay,
+            document_sequence=document_sequence,
+            producer_carriage=carriage
+        )
         document = MagicMock(spec=EBUTT3Document)
         node.process_document(document)
         carriage.emit_data.assert_called_with(data=document)
@@ -28,7 +33,11 @@ class TestBufferDelayNode(TestCase):
         carriage = MagicMock(spec=IProducerCarriage)
         carriage.expects.return_value = six.text_type
         delay = 2
-        node = BufferDelayNode('delay_node', carriage, delay)
+        node = BufferDelayNode(
+            node_id='delay_node',
+            producer_carriage=carriage,
+            fixed_delay=delay
+        )
         document = MagicMock(spec=EBUTT3Document)
         node.process_document(document)
         carriage.emit_data.assert_called_with(data=document, delay=delay)
