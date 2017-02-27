@@ -3,8 +3,10 @@ from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 from mock import MagicMock
 from pytest_bdd import scenarios, given, when, then
+import pytest
 
 scenarios('features/timing/retimingDelayNode.feature')
 
@@ -64,6 +66,16 @@ def given_span2_end(span2_end, template_dict):
     template_dict['span2_end'] = span2_end
 
 
+@given('it has <sequence_id_1>')
+def given_original_sequence_id(template_dict, sequence_id_1):
+    template_dict['sequence_identifier'] = sequence_id_1
+
+
+@given('it has <authoring_delay>')
+def given_authoring_delay(template_dict, authoring_delay):
+    template_dict['authoring_delay'] = authoring_delay
+
+
 @when('the retiming delay node delays it by <delay>')
 def when_retiming_delay(delay, test_context, gen_document):
 
@@ -85,6 +97,25 @@ def when_retiming_delay(delay, test_context, gen_document):
     # you wanted to be compatible with some pre-existing implemented when statements expecting the
     # document in the test_context fixture.
     test_context['doc'] = gen_document
+
+
+@then('the retiming delay node with <produced_sequence> will reject it')
+def then_retiming_delay_node_rejects(gen_document, produced_sequence):
+    reference_clock = LocalMachineClock()
+    reference_clock.clock_mode = 'local'
+    carriage = MagicMock(spec=IProducerCarriage)
+    carriage.expects.return_value = EBUTT3Document
+
+    delay_float = 5.0
+
+    delay_node = RetimingDelayNode(
+        node_id='simple-delay-node',
+        producer_carriage=carriage,
+        fixed_delay=delay_float,
+        document_sequence=produced_sequence
+    )
+    with pytest.raises(UnexpectedSequenceIdentifierError):
+        delay_node.process_document(gen_document)
 
 
 @then('the delay node outputs the document at <delayed_avail_time>')
@@ -255,3 +286,16 @@ def then_updated_span2_specified_end_time(test_context, updated_span2_end):
         assert test_context['doc'].binding.body.div[0].p[0].span[1].end == updated_span2_end
     else:
         assert test_context['doc'].binding.body.div[0].p[0].span[1].end is None
+
+
+@then('the updated document has <sequence_id_2>')
+def then_updated_seq_id(test_context, sequence_id_2):
+    assert test_context['doc'].sequence_identifier == sequence_id_2
+
+
+@then('the updated document has <authoring_delay>')
+def then_updated_auth_delay(test_context, authoring_delay):
+    if authoring_delay:
+        assert test_context['doc'].binding.authoringDelay == authoring_delay
+    else:
+        assert test_context['doc'].binding.authoringDelay is None

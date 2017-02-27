@@ -1,10 +1,11 @@
 <?xml version="1.0" ?>
 <tt:tt
-  ebuttp:sequenceIdentifier="delayTest"
+  ebuttp:sequenceIdentifier="{% if sequence_identifier %}{{ sequence_identifier }}{% else%}delayTest{%endif%}"
         ebuttp:sequenceNumber="1"
         ttp:timeBase="clock"
         ttp:clockMode="local"
         xml:lang="en-GB"
+        {% if authoring_delay %}ebuttm:authoringDelay="{{authoring_delay}}"{% endif %}
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"
         xmlns:tt="http://www.w3.org/ns/ttml"

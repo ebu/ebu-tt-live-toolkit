@@ -119,14 +119,14 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 | | **Tech3370 Revision 1 (Dec 2016)**| | |
 |R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`ebu_tt_live/documents/test/test_ebutt3sequence.py`|
 |R108|3.2.2.1|When discarding a document with a previously received pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber`, the availability time of the document shall NOT be changed due to such a discard.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
-|R109|2.3.4.1|Buffer and Retiming Delay nodes SHALL accept a non-negative offset value | |
+|R109|2.3.4.1|Buffer and Retiming Delay nodes SHALL accept a non-negative offset value |`bdd/features/timing/bufferDelayNode.feature`|
 |R110|2.3.4.1|~~A Buffer Delay node SHALL NOT alter the sequence identifier~~| Implicit in R119|
 |R111|2.3.4.1|~~A Buffer Delay node SHALL NOT modify times within the document~~|Implicit in R119|
-|R112|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  | |
-|R113|2.3.4.2|A Retiming Delay node SHALL output a sequence with an identifier different to that of the input.  | |
-|R114|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  | |
-|R115|2.3.4.2|A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.||
-|R116|2.3.4.2|~~A Retiming Delay node shall not emit an output sequence with reordered subtitles.~~|Replaced by 'Should'.|
-|R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. ||
+|R112|2.3.4.1|A Buffer Delay node SHALL delay the emission of documents by not less than the offset period  |`bdd/features/timing/bufferDelayNode.feature`|
+|R113|2.3.4.2|A Retiming Delay node SHALL output a sequence with an identifier different to that of the input.  |`bdd/features/timing/retimingDelayNode.feature`|
+|R114|2.3.4.2|A Retiming Delay node SHALL modify each document to result in the document’s computed times being offset by the offset period.  |`bdd/features/timing/retimingDelayNode.feature`|
+|R115|2.3.4.2|~~A Retiming Delay node SHALL NOT delay emission of the stream additionally to the time required to modify the times within the document.~~|Deprecated.|
+|R116|2.3.4.2|~~A Retiming Delay node shall not emit an output sequence with reordered subtitles.~~ |Relaxed to 'Should'|
+|R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. |`bdd/features/timing/retimingDelayNode.feature`|
 |R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.|NOTE: Due to partial support for XQuery functions in the Python libraries that we use, this requirement is not implemented fully in this toolkit. Equality testing in other implementation may produce slightly different results.|
 |R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`|
