@@ -78,7 +78,9 @@ class TestXMLtoEBUTT3Adapter(TestCase):
     _test_data_dir_path = os.path.join(os.path.dirname(__file__), 'test_data')
     _test_xml_path = os.path.join(_test_data_dir_path, _test_xml_file)
     _output_type = documents.EBUTT3Document
-    _expected_keys = []
+    _expected_keys = [
+        'raw_xml'
+    ]
     instance = None
 
     def setUp(self):
@@ -136,6 +138,7 @@ class TestXMLtoEBUTT3Adapter(TestCase):
 class TestXMLtoEBUTTDAdapter(TestCase):
     _output_type = documents.EBUTTDDocument
     _adapter_class = document_data.XMLtoEBUTTDAdapter
+    _expected_keys = []
 
     # TODO: Finish this once we have EBUTT-D parsing
 
@@ -178,6 +181,7 @@ class TestEBUTTDtoXMLAdapter(TestEBUTT3toXMLAdapter):
 class TestEBUTT3toEBUTTDAdapter(TestXMLtoEBUTT3Adapter):
     _adapter_class = document_data.EBUTT3toEBUTTDAdapter
     _output_type = documents.EBUTTDDocument
+    _expected_keys = []
 
     def _get_input(self):
         return documents.EBUTT3Document.create_from_xml(self._get_xml())

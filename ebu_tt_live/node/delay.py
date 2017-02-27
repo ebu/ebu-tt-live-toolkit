@@ -1,5 +1,6 @@
 
 import six
+import logging
 from .base import AbstractCombinedNode
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
@@ -9,20 +10,22 @@ from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 
 
+log = logging.getLogger(__name__)
+
+
 class RetimingDelayNode(AbstractCombinedNode):
 
-    _reference_clock = None
     _document_sequence = None
     _fixed_delay = None
     _expects = EBUTT3Document
     _provides = EBUTT3Document
 
-    def __init__(self, node_id, carriage_impl, reference_clock, fixed_delay, document_sequence):
+    def __init__(self, node_id, fixed_delay, document_sequence, consumer_carriage=None, producer_carriage=None):
         super(RetimingDelayNode, self).__init__(
             node_id=node_id,
-            producer_carriage=carriage_impl
+            producer_carriage=producer_carriage,
+            consumer_carriage=consumer_carriage
         )
-        self._reference_clock = reference_clock
         self._fixed_delay = fixed_delay
         self._document_sequence = document_sequence
 
@@ -31,19 +34,28 @@ class RetimingDelayNode(AbstractCombinedNode):
         if document.sequence_identifier == self._document_sequence:
             raise UnexpectedSequenceIdentifierError()
 
-        # change the sequence identifier
-        document.sequence_identifier = self._document_sequence
+        if self.check_document(document=document):
+            # change the sequence identifier
+            document.sequence_identifier = self._document_sequence
+        
 
-        # TODO: add an ebuttm:appliedProcessing element to the document metadata
+            # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
-        if has_a_leaf_with_no_timing_path(document.binding.body):
-            update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+            if has_a_leaf_with_no_timing_path(document.binding.body):
+                update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
 
+            else:
+                update_children_timing(document.binding, document.time_base, self._fixed_delay)
+
+            document.validate()
+            self.producer_carriage.emit_data(data=document, **kwargs)
         else:
-            update_children_timing(document.binding, document.time_base, self._fixed_delay)
-
-        document.validate()
-        self.producer_carriage.emit_data(data=document, **kwargs)
+            log.warning(
+                'Ignoring duplicate document: {}__{}'.format(
+                    document.sequence_identifier,
+                    document.sequence_number
+                )
+            )
 
 
 class BufferDelayNode(AbstractCombinedNode):
@@ -52,10 +64,11 @@ class BufferDelayNode(AbstractCombinedNode):
     _expects = six.text_type
     _provides = six.text_type
 
-    def __init__(self, node_id, producer_carriage, fixed_delay):
+    def __init__(self, node_id, fixed_delay, consumer_carriage=None, producer_carriage=None):
         super(BufferDelayNode, self).__init__(
             node_id=node_id,
-            producer_carriage=producer_carriage
+            producer_carriage=producer_carriage,
+            consumer_carriage=consumer_carriage
         )
         self._fixed_delay = fixed_delay
 

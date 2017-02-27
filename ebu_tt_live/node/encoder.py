@@ -19,7 +19,8 @@ class EBUTTDEncoder(AbstractCombinedNode):
         super(EBUTTDEncoder, self).__init__(
             producer_carriage=producer_carriage,
             consumer_carriage=consumer_carriage,
-            node_id=node_id
+            node_id=node_id,
+            **kwargs
         )
         self._default_ns = default_ns
         media_clock = MediaClock()
@@ -36,4 +37,4 @@ class EBUTTDEncoder(AbstractCombinedNode):
         converted_doc = EBUTTDDocument.create_from_raw_binding(
             self._ebuttd_converter.convert_document(document.binding)
         )
-        self.producer_carriage.emit_data(converted_doc, sequence_identifier='default', **kwargs)
+        self.producer_carriage.emit_data(data=converted_doc, sequence_identifier='default', **kwargs)

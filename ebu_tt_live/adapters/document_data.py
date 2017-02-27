@@ -19,6 +19,7 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
 
     def convert_data(self, data, availability_time=None, sequence_identifier=None, **kwargs):
         doc = EBUTT3Document.create_from_xml(data, availability_time=availability_time)
+        kwargs['raw_xml'] = data
         if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
             log.error(
                 'Sequence identifier mismatch found: {} != {}'.format(sequence_identifier, doc.sequence_identifier)

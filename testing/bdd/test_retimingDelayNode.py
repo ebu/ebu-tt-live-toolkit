@@ -88,8 +88,7 @@ def when_retiming_delay(delay, test_context, gen_document):
 
     delay_node = RetimingDelayNode(
         node_id='simple-delay-node',
-        carriage_impl=carriage,
-        reference_clock=reference_clock,
+        producer_carriage=carriage,
         fixed_delay=delay_float,
         document_sequence='delayed_sequence',
     )
@@ -111,10 +110,9 @@ def then_retiming_delay_node_rejects(gen_document, produced_sequence):
 
     delay_node = RetimingDelayNode(
         node_id='simple-delay-node',
-        carriage_impl=carriage,
-        reference_clock=reference_clock,
+        producer_carriage=carriage,
         fixed_delay=delay_float,
-        document_sequence=produced_sequence,
+        document_sequence=produced_sequence
     )
     with pytest.raises(UnexpectedSequenceIdentifierError):
         delay_node.process_document(gen_document)
