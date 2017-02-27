@@ -95,6 +95,16 @@ def when_document_processed(test_context, given_processing_node):
     given_processing_node.producer_carriage.reset_mock()
 
 
+@when('the document has availability time <avail_time_1>')
+def when_document_availability_time(test_context, avail_time_1):
+    test_context['document'].availability_time = FullClockTimingType(avail_time_1).timedelta
+
+
+@then('the document has availability time <avail_time_1>')
+def then_document_availability_time(test_context, avail_time_1):
+    assert test_context['document'].availability_time == FullClockTimingType(avail_time_1).timedelta
+
+
 @then('the document is not processed')
 def then_document_not_processed(test_context, given_processing_node):
     given_processing_node.process_document(document=test_context['document'])
