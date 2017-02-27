@@ -69,6 +69,7 @@ def when_seq_num_2(template_dict, seq_n_2):
 def when_another_document_arrives(template_dict):
     template_dict.clear()
 
+
 @given('a processing node')
 def given_processing_node(template_dict):
     producer_carriage = MagicMock(spec=IProducerCarriage)
@@ -79,6 +80,7 @@ def given_processing_node(template_dict):
         producer_carriage=producer_carriage
     )
     return distributor
+
 
 @then('the document is processed')
 def then_document_processed(test_context, given_processing_node):

@@ -79,7 +79,8 @@ class RingBufferWithCallback(collections.deque):
 
     def append(self, item):
         if len(self) >= self.maxlen:
-            self._callback(self.popleft())
+            if self._callback is not None:
+                self._callback(self.popleft())
         super(RingBufferWithCallback, self).append(item)
 
 

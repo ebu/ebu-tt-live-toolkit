@@ -2,7 +2,7 @@ from .interface import INode, IConsumerNode, IProducerNode
 from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
 from ebu_tt_live.errors import ComponentCompatError, DataCompatError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
-from Queue import deque
+from ebu_tt_live.utils import RingBufferWithCallback
 
 
 class __AbstractNode(INode):
@@ -87,7 +87,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
             if sequence_number in self._seen_docs[sequence_identifier]:
                 return False
 
-        self._seen_docs.setdefault(sequence_identifier, deque()).append(sequence_number)
+        self._seen_docs.setdefault(sequence_identifier, RingBufferWithCallback(maxlen=100)).append(sequence_number)
 
         return True
 
