@@ -284,8 +284,7 @@ class Distributor(ConsumerMixin, ProducerMixin, NodeBase):
 
     def _create_component(self, config):
         self.component = processing_node.DistributingNode(
-            node_id=self.config.id,
-            reference_clock=None  # TODO: FIXME!
+            node_id=self.config.id
         )
 
     def __init__(self, config, local_config):

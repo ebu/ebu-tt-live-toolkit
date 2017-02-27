@@ -4,6 +4,7 @@ from ebu_tt_live.bindings import tt, ttd, tt_type, d_tt_type, body_type, d_body_
 import copy
 import logging
 from pyxb.binding.basis import NonElementContent, ElementContent
+from pyxb import BIND
 
 
 log = logging.getLogger(__name__)
@@ -109,8 +110,12 @@ class EBUTT3EBUTTDConverter(object):
                 adjusted_style.lineHeight = ebuttdt.PercentageLineHeightType(
                     computed_line_height.vertical / computed_font_size.vertical * 100
                 )
-
-            celem.style.insert(0, adjusted_style.id)
+            if celem.style is None:
+                celem.style = [
+                    adjusted_style.id
+                ]
+            else:
+                celem.style.insert(0, adjusted_style.id)
 
     def _link_adjusted_fonts_styling(self, adjusted_fonts, root_element):
         if not adjusted_fonts:

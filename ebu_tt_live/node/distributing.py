@@ -12,14 +12,13 @@ class DistributingNode(AbstractCombinedNode):
     _expects = EBUTT3Document
     _provides = six.text_type
 
-    def __init__(self, node_id, reference_clock, producer_carriage=None, consumer_carriage=None, **kwargs):
+    def __init__(self, node_id, producer_carriage=None, consumer_carriage=None, **kwargs):
         super(DistributingNode, self).__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage,
             producer_carriage=producer_carriage,
             **kwargs
         )
-        self._reference_clock = reference_clock
 
     def process_document(self, document, raw_xml=None, **kwargs):
         if self.check_document(document) is True:
@@ -35,11 +34,3 @@ class DistributingNode(AbstractCombinedNode):
                     document.sequence_number
                 )
             )
-
-    @property
-    def reference_clock(self):
-        return self._reference_clock
-
-    @reference_clock.setter
-    def reference_clock(self, value):
-        self._reference_clock = value
