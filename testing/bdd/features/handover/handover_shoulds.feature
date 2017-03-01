@@ -1,4 +1,5 @@
-#  The Handover Manager may include the parameters ebuttp:authorsGroupIdentifier, ebuttp:authorsGroupControlToken and ebuttm:authorsGroupControlRequest from the currently selected input sequence within its output sequence. 
+# The Handover Manager may include the parameters ebuttp:authorsGroupIdentifier, ebuttp:authorsGroupControlToken and
+# ebuttm:authorsGroupControlRequest from the currently selected input sequence within its output sequence. 
 
 Feature: Include handover paramters in output    
 

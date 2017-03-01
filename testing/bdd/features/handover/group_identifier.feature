@@ -5,7 +5,7 @@ Feature: authorsGroupIdentifier consistent within a sequence
   | handover.xml |  
 
   
-  # SPEC-CONFROMANCE.md #24
+  # SPEC-CONFROMANCE.md R24
   # All documents within a sequence that contain the element ebuttp:authorsGroupIdentifier shall have the same ebuttp:authorsGroupIdentifier.
   Scenario: Invalid authorsGroupIdentifier
     Given a test sequence
