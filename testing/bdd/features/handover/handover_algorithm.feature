@@ -15,7 +15,7 @@ Feature: Handover algorithm
   | handover.xml |  
 
   
-  # SPEC-CONFROMANCE.md #23, #25
+  # SPEC-CONFROMANCE.md R23, R25
   # When a document is received with a higher value ebuttp:authorsGroupControlToken than that most recently received 
   # in the currently selected sequence, the Handover Manager shall switch to that document's sequence without delay.
   Scenario: Switch to higher value token
