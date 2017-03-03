@@ -19,9 +19,10 @@ class INode(object):
         """
         The central hook that is meant to implement the main functionality of the node.
         A node must implement this method.
-        :param **kwargs: Extra parameters
+
+        :param kwargs: Extra parameters
         :param document: Can be XML, Document object...etc. depending on the carriage implementation
-        :return:
+
         """
         raise NotImplementedError()
 
