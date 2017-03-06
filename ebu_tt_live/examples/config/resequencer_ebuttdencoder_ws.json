@@ -1,0 +1,41 @@
+{
+  "nodes":  {
+    "node1": {
+      "id": "resequencer1",
+      "type": "resequencer",
+      "sequence_identifier": "ReSequenced1",
+      "segment_length": "2.0",
+      "input": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:9001"
+        }
+      },
+      "output": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:9001"
+        }
+      }
+    },
+    "node2": {
+      "id": "encoder1",
+      "type": "ebuttd-encoder",
+      "input": {
+        "carriage": {
+          "type": "websocket",
+          "connect": [
+            "ws://localhost:9001/ReSequenced1/subscribe"
+          ]
+        }
+      },
+      "output": {
+        "carriage": {
+          "type": "filesystem-simple",
+          "folder": "ebuttd-export",
+          "rotating_buf": 50
+        }
+      }
+    }
+  }
+}
