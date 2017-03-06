@@ -19,7 +19,7 @@ Feature: Handover algorithm
   # SPEC-CONFROMANCE.md R23, R25
   # When a document is received with a higher value ebuttp:authorsGroupControlToken than that most recently received 
   # in the currently selected sequence, the Handover Manager shall switch to that document's sequence without delay.
-  Scenario: Switch to higher value token
+  Scenario: Switch to higher value token and ignore lower value token
     Given a handover node with <authors_group_identifier> and <sequence_identifier>
     And an xml file <xml_file> 
     When it has <sequence_identifier1> and <sequence_number1>
@@ -42,22 +42,6 @@ Feature: Handover algorithm
     | seq1                 | 1                |                              | seq2                 | 1                | 1                            | 1                 |
     # token updated if in the same sequence
     | seq1                 | 1                | 2                            | seq1                 | 2                | 1                            | 2                 |
+    | seq1                 | 1                | 2                            | seq2                 | 1                | 1                            | 1                 |
+    | seq1                 | 1                | 2                            | seq2                 | 1                | 2                            | 1                 |
 
-
-@skip
- Scenario: Ignore lower value token
-    Given a test sequence
-    And a handover node with <authors_group_identifier> and <sequence_identifier>
-    And an xml file <xml_file> 
-    And it has <sequenceIdentifier1>
-    And it has <authorsGroupControlToken1>
-    And doc1 is added to the sequence
-    When a new document arrives
-    And it has <sequenceIdentifier2>
-    And it has <authorsGroupControlToken2>
-    Then doc2 is not added to the sequence 
-
-    Examples:
-    | sequenceIdentifier1 | authorsGroupControlToken1 | sequenceIdentifier2 | authorsGroupControlToken2 |  
-    | seq1                | 1                         | seq2                | 0                         |  
-    | seq1                | 0                         | seq1                | 0                         |  
