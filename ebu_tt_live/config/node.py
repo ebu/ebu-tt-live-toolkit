@@ -296,6 +296,10 @@ class Distributor(ConsumerMixin, ProducerMixin, NodeBase):
 
 class Handover(ConsumerMixin, ProducerMixin, NodeBase):
 
+    required_config = Namespace()
+    required_config.add_option('authors_group_identifier')
+    required_config.add_option('sequence_identifier')
+
     def _create_component(self, config):
         self.component = processing_node.HandoverNode(
             node_id=self.config.node_id,
