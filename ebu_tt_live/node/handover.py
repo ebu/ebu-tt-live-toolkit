@@ -42,12 +42,14 @@ class HandoverNode(SwitcherNode):
             - If authorsGroupIdentifier is the right one
 
               - If the token is higher than our current one or one is not set the document should be emitted
-              - If token is lower than the our current one the document should be ignored
+              - If token is lower than the our current one or missing the document should be ignored
 
           - If the document should be emitted
 
-            - Set/update selected sequenceIdentifier from the one in the document
-            - Set/update authorsGroupControlToken if specified
+            - Set/update SELECTED sequenceIdentifier in the node from the one in the document
+            - Set/update tracked authorsGroupControlToken
+            - Reassign document to output sequenceIdentifier
+            - Assign new sequenceNumber to document
             - Emit document
 
         :param document:
@@ -56,15 +58,14 @@ class HandoverNode(SwitcherNode):
         """
         emit = False
 
-        if document.sequence_identifier == self._current_selected_input_sequence_id:
-            # Maintain selection
-            emit = True
-        else:
-            if document.authors_group_identifier == self._authors_group_identifier:
-                if self._current_token is None or self._current_token < document.authors_group_control_token:
-                    # Switch input
-                    self._current_selected_input_sequence_id = document.sequence_identifier
-                    emit = True
+        if document.authors_group_identifier == self._authors_group_identifier \
+                and document.authors_group_control_token is not None:
+            if self._current_token is None or self._current_token < document.authors_group_control_token:
+                # Switch input
+                self._current_selected_input_sequence_id = document.sequence_identifier
+                emit = True
+            elif self._current_selected_input_sequence_id == document.sequence_identifier:
+                emit = True
 
         if emit is True:
             if document.authors_group_control_token is not None:

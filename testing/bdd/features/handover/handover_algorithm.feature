@@ -41,7 +41,7 @@ Feature: Handover algorithm
     | seq1                 | 1                | 2                            | seq2                 | 1                | 3                            | 2                 |
     | seq1                 | 1                |                              | seq2                 | 1                | 1                            | 1                 |
     # token updated if in the same sequence
-    | seq1                 | 1                | 1                            | seq1                 | 2                | 0                            | 2                 |
+    | seq1                 | 1                | 2                            | seq1                 | 2                | 1                            | 2                 |
 
 
 @skip
