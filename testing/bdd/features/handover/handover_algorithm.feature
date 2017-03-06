@@ -44,4 +44,6 @@ Feature: Handover algorithm
     | seq1                 | 1                | 2                            | seq1                 | 2                | 1                            | 2                 |
     | seq1                 | 1                | 2                            | seq2                 | 1                | 1                            | 1                 |
     | seq1                 | 1                | 2                            | seq2                 | 1                | 2                            | 1                 |
+    | seq1                 | 1                | 2                            | seq1                 | 1                | 2                            | 1                 |
+    | seq1                 | 1                |                              | seq1                 | 1                | 2                            | 0                 |
 

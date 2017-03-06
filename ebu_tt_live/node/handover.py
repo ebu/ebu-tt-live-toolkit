@@ -58,7 +58,8 @@ class HandoverNode(SwitcherNode):
         """
         emit = False
 
-        if document.authors_group_identifier == self._authors_group_identifier \
+        if self.check_document(document=document) is True \
+                and document.authors_group_identifier == self._authors_group_identifier \
                 and document.authors_group_control_token is not None:
             if self._current_token is None or self._current_token < document.authors_group_control_token:
                 # Switch input
