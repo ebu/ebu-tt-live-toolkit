@@ -160,13 +160,9 @@ class BufferDelay(ConsumerMixin, ProducerMixin, NodeBase):
     required_config.add_option('delay', default=0.0)
 
     def _create_component(self, config):
-        reference_clock = get_clock('auto')(config, None)
         self.component = processing_node.BufferDelayNode(
             node_id=self.config.id,
-            document_sequence=None,
-            carriage_impl=None,
             fixed_delay=self.config.delay,
-            reference_clock=reference_clock.component
         )
 
     def __init__(self, config, local_config):
