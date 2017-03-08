@@ -15,7 +15,7 @@
                return;
             }
 
-            wsuri = host_input.value
+            wsuri = host_input.value + '/' + channel_input.value + '/subscribe';
 
             if ("WebSocket" in window) {
                sock = new WebSocket(wsuri);
@@ -49,22 +49,6 @@
 
          }
 
-         function subscribe() {
-            channel = channel_input.value;
-            data = {
-                subscribe: channel
-            };
-            sock.send(JSON.stringify(data));
-         }
-
-         function unsubscribe() {
-            channel = channel_input.value;
-            data = {
-                unsubscribe: channel
-            };
-            sock.send(JSON.stringify(data));
-         }
-
          window.onload = function() {
 
             var wsuri;
@@ -84,14 +68,12 @@
       <h1>EBU-TT-Live WebSocket Broadcast Demo</h1>
       <noscript>You must enable JavaScript</noscript>
       <form>
-         <p>Broadcast Message: <input id="host_input" type="text" size="50" maxlength="50" value="ws://localhost:9000"></p>
+         <p>WebSocket server: <input id="host_input" type="text" size="50" maxlength="50" value="ws://localhost:9000"></p>
       </form>
-      <button id="connect_button" onclick='connect();'>Connect</button>
       <form>
          <p>Sequence Identifier: <input id="channel_input" type="text" size="50" maxlength="50" value="TestSequence1"></p>
       </form>
-      <button id="subscribe_button" onclick="subscribe();">Subscribe</button>
-      <button id="unsubscribe_button" onclick="unsubscribe();">Unsubscribe</button>
+      <button id="connect_button" onclick='connect();'>Connect</button>
       <pre id="log" style="height: 30em; overflow-y: scroll; background-color: #faa;"></pre>
    </body>
 </html>
