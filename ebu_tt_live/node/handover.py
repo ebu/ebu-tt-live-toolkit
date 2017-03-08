@@ -35,22 +35,24 @@ class HandoverNode(SwitcherNode):
         The specified functionality is met by keeping the following priorities in mind when processing an
         incoming document:
 
-          - If sequenceIdentifier matches the one selected the document should be emitted
-          - If sequenceIdentifier does not match the one selected or one is not selected
+          - If this is a new sequence_identifier+sequence_number pair and
+            authorsGroupIdentifier+authorsGroupControlToken are defined and authorsGroupIdentifier matches the
+            configuration
 
-            - If authorsGroupIdentifier is not matching the one set in the initializer ignore the document
-            - If authorsGroupIdentifier is the right one
+            - If sequenceIdentifier matches the one selected the document should be emitted
+            - If sequenceIdentifier does not match the one selected or one is not selected
 
               - If the token is higher than our current one or one is not set the document should be emitted
               - If token is lower than the our current one or missing the document should be ignored
 
-          - If the document should be emitted
+            - If the document should be emitted
 
-            - Set/update SELECTED sequenceIdentifier in the node from the one in the document
-            - Set/update tracked authorsGroupControlToken
-            - Reassign document to output sequenceIdentifier
-            - Assign new sequenceNumber to document
-            - Emit document
+              - Set/update current sequenceIdentifier in the node from the one in the document
+              - Set/update current authorsGroupControlToken in the node
+              - Reassign document to output sequenceIdentifier
+              - Assign new sequenceNumber to document
+              - Emit document
+
 
         :param document:
         :param kwargs:
@@ -69,11 +71,11 @@ class HandoverNode(SwitcherNode):
                 emit = True
 
         if emit is True:
-            if document.authors_group_control_token is not None:
-                # Update token
-                self._current_token = document.authors_group_control_token  # So are we going to error here?
-
+            # Update token
+            self._current_token = document.authors_group_control_token  # So are we going to error here?
             self._last_sequence_number += 1
+
+            document.sequence_identifier = self._sequence_identifier
             document.sequence_number = self._last_sequence_number
             self.producer_carriage.emit_data(
                 data=document,

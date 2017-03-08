@@ -302,7 +302,7 @@ class Handover(ConsumerMixin, ProducerMixin, NodeBase):
 
     def _create_component(self, config):
         self.component = processing_node.HandoverNode(
-            node_id=self.config.node_id,
+            node_id=self.config.id,
             authors_group_identifier=self.config.authors_group_identifier,
             sequence_identifier=self.config.sequence_identifier
         )
@@ -312,6 +312,8 @@ class Handover(ConsumerMixin, ProducerMixin, NodeBase):
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
+
+        self.backend.register_component_start(self)
 
 
 nodes_by_type = {
