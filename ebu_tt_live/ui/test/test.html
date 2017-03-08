@@ -79,9 +79,15 @@
             ellog.scrollTop = 0;
          };
       </script>
+      <link rel="stylesheet" href="../assets/css/bootstrap.css" media="screen">
+      <link rel="stylesheet" href="../assets/css/custom.min.css" media="screen">
+      <link rel="stylesheet" href="../assets/css/test-style.css" media="screen">
    </head>
    <body>
-      <h1>EBU-TT-Live WebSocket Broadcast Demo</h1>
+     <div id="header">
+       <a href="https://tech.ebu.ch/home"><img src="../assets/img/ebu-logo-relaunch.png"/></a>
+       <h1>EBU-TT-Live WebSocket Broadcast Demo</h1>
+     </div>
       <noscript>You must enable JavaScript</noscript>
       <form>
          <p>Broadcast Message: <input id="host_input" type="text" size="50" maxlength="50" value="ws://localhost:9000"></p>
