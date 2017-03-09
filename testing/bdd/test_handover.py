@@ -63,3 +63,12 @@ def new_document(test_context, given_handover_node):
 @then('handover node emits <emitted_documents> documents')
 def then_handover_node_emits(given_handover_node, emitted_documents):
     assert given_handover_node.producer_carriage.emit_data.call_count == int(emitted_documents)
+
+
+@then('the emitted documents belong to <sequence_identifier> and use consecutive sequence numbering from 1')
+def then_handover_node_produces_sequence(given_handover_node, sequence_identifier):
+    counter = 1
+    for pos_args, kw_args in given_handover_node.producer_carriage.emit_data.call_args_list:
+        assert kw_args['data'].sequence_identifier == sequence_identifier
+        assert kw_args['data'].sequence_number == counter
+        counter += 1
