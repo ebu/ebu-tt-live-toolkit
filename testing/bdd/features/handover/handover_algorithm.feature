@@ -35,6 +35,7 @@ Feature: Handover algorithm
     And handover node processes document
     Then handover node emits <emitted_documents> documents
     And the emitted documents belong to <sequence_identifier> and use consecutive sequence numbering from 1
+    And the emitted documents have <authors_group_identifier> and they specify a token
 
     Examples:
     | sequence_identifier1 | sequence_number1 | authors_group_control_token1 | sequence_identifier2 | sequence_number2 | authors_group_control_token2 | emitted_documents |

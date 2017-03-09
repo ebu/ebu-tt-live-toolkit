@@ -72,3 +72,10 @@ def then_handover_node_produces_sequence(given_handover_node, sequence_identifie
         assert kw_args['data'].sequence_identifier == sequence_identifier
         assert kw_args['data'].sequence_number == counter
         counter += 1
+
+
+@then('the emitted documents have <authors_group_identifier> and they specify a token')
+def then_handover_parameter_passthrough(given_handover_node, authors_group_identifier):
+    for pos_args, kw_args in given_handover_node.producer_carriage.emit_data.call_args_list:
+        assert kw_args['data'].authors_group_identifier == authors_group_identifier
+        assert kw_args['data'].authors_group_control_token is not None
