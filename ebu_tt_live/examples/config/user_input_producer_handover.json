@@ -5,7 +5,7 @@
 			"id": "handover1",
 			"type": "handover",
 			"authors_group_identifier": "TestGroup1",
-			"sequence_identifier": "TestSequence1",
+			"sequence_identifier": "HandoverSequence1",
 			"input": {
 				"carriage": {
 					"type": "websocket",
