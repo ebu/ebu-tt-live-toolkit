@@ -557,35 +557,6 @@
                }
             };
 
-            var xmlstring = `<?xml version="1.0" ?>
-<tt:tt ebuttp:sequenceIdentifier="testSequence001" ebuttp:sequenceNumber="1" ttp:cellResolution="32 15" ttp:clockMode="local" ttp:timeBase="clock" tts:extent="800px 600px" xml:lang="en-GB" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xml="http://www.w3.org/XML/1998/namespace">
-  <tt:head>
-    <tt:metadata>
-      <ebuttm:documentMetadata/>
-    </tt:metadata>
-    <tt:styling>
-      <tt:style tts:fontSize="12px" xml:id="style1"/>
-      <tt:style tts:fontSize="15px" xml:id="style2"/>
-      <tt:style tts:color="red" tts:fontSize="12px" xml:id="style3"/>
-      <tt:style tts:backgroundColor="blue" xml:id="style4"/>
-    </tt:styling>
-    <tt:layout>
-      <tt:region style="style3" tts:extent="300px 150px" tts:origin="200px 450px" xml:id="region1"/>
-    </tt:layout>
-  </tt:head>
-  <tt:body begin="00:00:00.500" dur="00:00:05" style="style2">
-    <tt:div region="region1" style="style1">
-      <tt:p xml:id="ID005">
-        <tt:span begin="00:00:01" end="00:00:02" style="style4" xml:id="span1">Some example text...</tt:span>
-        <tt:br/>
-        <tt:span begin="00:00:03" end="00:00:04" xml:id="span2">And another line</tt:span>
-      </tt:p>
-    </tt:div>
-  </tt:body>
-</tt:tt>
-`;
-            $('#result-view-pre').text(xmlstring);
-
             $('#result-view-pre').click(function(e) {
                 $('#result-list').show();
                 $('#result-view-pre').hide();
