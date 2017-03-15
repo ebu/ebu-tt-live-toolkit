@@ -409,7 +409,7 @@
                template_data["sequence_number"] = sequence_numbers[sequence_identifier];
                var time_base = all_sequences[sequence_identifier]["time_base"]
                var authors_group_identifier = all_sequences[sequence_identifier]["authors_group_identifier"];
-               var authors_group_control_token = all_sequences[sequence_identifier]["authors_group_control-token"];
+               var authors_group_control_token = $('#ag-token-input').val();
                template_data["time_base"] = time_base;
                if (time_base == "clock") {
                   template_data["clock_mode"] = all_sequences[sequence_identifier]["clock_mode"];

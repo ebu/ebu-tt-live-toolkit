@@ -51,17 +51,14 @@ body {
 
 .left-side {
     flex: 2 48%;
-    background: red;
 }
 
 .right-side {
     flex: 2 48%;
-    background: lightblue;
 }
 
 .footer {
     flex: 3 100%;
-    background: yellow;
 }
 
 .control-section-div {
