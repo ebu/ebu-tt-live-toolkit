@@ -177,6 +177,34 @@
                $("#new-sequence-notification-span").text("");
             }
 
+            function createDocumentListItem(xmldata) {
+                /* Parse XML to extract important handover information */
+                var parser = new DOMParser();
+                var parsedXml = parser.parseFromString(xmldata, "text/xml");
+                var tt = parsedXml.getElementsByTagName('tt')[0];
+
+                /* Clone template list item and fill in the details */
+                var clonedElement = $('#result-list .result-list-item-template').clone();
+                clonedElement.find('.seqNum-value').text(
+                    tt.getAttributeNS('urn:ebu:tt:parameters','sequenceNumber')
+                );
+                clonedElement.find('.autGID-value').text(
+                    tt.getAttributeNS('urn:ebu:tt:parameters','authorsGroupIdentifier')
+                );
+                clonedElement.find('.autGCT-value').text(
+                    tt.getAttributeNS('urn:ebu:tt:parameters','authorsGroupControlToken')
+                );
+                clonedElement.removeClass('result-list-item-template');
+                clonedElement.addClass('result-list-item');
+
+                clonedElement.data('xml', xmldata);
+
+                $('#result-list').append(clonedElement);
+
+                /* if over 10 items discard the oldest */
+                $('#result-list .result-list-item').slice(0,-10).remove();
+
+            }
 
             /******************************************* Websocket logic ***********************************************/
 
@@ -227,7 +255,7 @@
             }
 
             function subWebsocketOnMessage(e) {
-                $('#result-view-pre').text(e.data);
+                createDocumentListItem(e.data);
             }
 
             function subWebsocketOnClose(e) {
@@ -557,13 +585,14 @@
                }
             };
 
-            $('#result-view-pre').click(function(e) {
+            $('#result-view-div').on('click', '#result-view-pre', function(e) {
                 $('#result-list').show();
                 $('#result-view-pre').hide();
             });
 
-            $('.result-list-item').click(function(e) {
+            $('#result-list').on('click', '.result-list-item', function(e) {
                 $('#result-list').hide();
+                $('#result-view-pre').text($(e.currentTarget).data('xml'));
                 $('#result-view-pre').show();
             });
 

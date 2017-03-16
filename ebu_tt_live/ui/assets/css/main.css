@@ -83,10 +83,26 @@ body {
 div {margin-top: 1%;}
 
 .result-list {
+    display: block;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.result-list .result-list-item-template {
     display: none;
+}
+
+.result-list .result-list-item {
+    border: 1px solid lightgrey;
+	border-radius: 3px;
+	background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #result-view-pre {
     white-space: pre-wrap;
+    display: none;
 }
 
