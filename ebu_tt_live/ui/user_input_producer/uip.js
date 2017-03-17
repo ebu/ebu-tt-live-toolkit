@@ -539,7 +539,7 @@ $(document).ready(function() {
         if (doc == null)
         rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
         else
-        rendered_document = doc
+        rendered_document = doc;
         if (socket.websocket) {
             socket.websocket.send(rendered_document);
         } else {
