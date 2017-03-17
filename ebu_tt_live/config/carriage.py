@@ -81,16 +81,16 @@ class SimpleFilesystemOutput(FileOutputCommon):
 
     def __init__(self, config, local_config):
         super(SimpleFilesystemOutput, self).__init__(config, local_config)
-        if self.config.rotating_buf:
+        if config.rotating_buf:
             self.component = filesystem.RotatingFolderExport(
-                dir_path=self.config.folder,
-                file_name_pattern=self.config.filename_pattern,
-                circular_buf_size=self.config.rotating_buf
+                dir_path=config.folder,
+                file_name_pattern=config.filename_pattern,
+                circular_buf_size=config.rotating_buf
             )
         else:
             self.component = filesystem.SimpleFolderExport(
-                dir_path=self.config.folder,
-                file_name_pattern=self.config.filename_pattern
+                dir_path=config.folder,
+                file_name_pattern=config.filename_pattern
             )
 
 

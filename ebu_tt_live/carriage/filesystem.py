@@ -1,5 +1,5 @@
 from .base import AbstractProducerCarriage, AbstractConsumerCarriage
-from ebu_tt_live.documents import EBUTT3Document, EBUTTDDocument
+from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.utils import RotatingFileBuffer
 from datetime import timedelta
@@ -169,7 +169,6 @@ class SimpleFolderExport(AbstractProducerCarriage):
     _dir_path = None
     _file_name_pattern = None
     _counter = None
-    _expects = EBUTTDDocument
 
     def __init__(self, dir_path, file_name_pattern):
         self._dir_path = dir_path
