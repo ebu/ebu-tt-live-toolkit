@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:xml="http://www.w3.org/XML/1998/namespace"
+           xmlns:ebulm="urn:ebu:tt:livemessage"
+           targetNamespace="urn:ebu:tt:livemessage" elementFormDefault="qualified"
+           xml:lang="en">
+
+    <xs:complexType name="message_header_type">
+        <xs:annotation>
+            <xs:documentation>Message header to help a recipient identify the purpose of the message
+            and decide whether it is relevant to them and if so what type of payload it contai if any
+            and how to process that payload</xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="from" type="xs:ID" minOccurs="0" />
+            <xs:element name="to" type="xs:ID" minOccurs="0" />
+            <xs:element name="type" type="xs:ID" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="message_type">
+        <xs:annotation>
+            <xs:documentation>The message container type that can be used as a root document element
+            to create a new message. It shall specify its header and it could speficy a payload.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="header" type="ebulm:message_header_type" />
+            <xs:element name="payload" type="xs:anyType" />
+        </xs:sequence>
+
+    </xs:complexType>
+    <xs:element name="message" type="ebulm:message_type" />
+
+</xs:schema>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tt="http://www.w3.org/ns/ttml"
     targetNamespace="http://www.w3.org/ns/ttml"
+    xmlns:ebulm="urn:ebu:tt:livemessage"
     xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
     <xs:include schemaLocation="ebutt_live.xsd"/>
     <xs:include schemaLocation="ebutt_d.xsd"/>
+    <xs:import namespace="urn:ebu:tt:livemessage" schemaLocation="ebutt_livemessage.xsd"/>
     
     <!-- Now everyone hold on this is going to be a bumpy ride... -->
 </xs:schema>
