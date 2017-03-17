@@ -181,7 +181,7 @@
                 /* Parse XML to extract important handover information */
                 var parser = new DOMParser();
                 var parsedXml = parser.parseFromString(xmldata, "text/xml");
-                var tt = parsedXml.getElementsByTagName('tt')[0];
+                var tt = parsedXml.documentElement;
 
                 /* Clone template list item and fill in the details */
                 var clonedElement = $('#result-list .result-list-item-template').clone();
