@@ -30,7 +30,7 @@ $(document).ready(function() {
         $("#running-media-clock").html("");
         if (interval_running_clock != null) {
             clearInterval(interval_running_clock);
-            interval_running_clock = null;
+            interval_running_clock = null; //ask Tom what his comment meant...
         }
     }
 
@@ -57,7 +57,7 @@ $(document).ready(function() {
             if (authors_group_control_token) {
                 $("#ag-token-input").html(authors_group_control_token);
             } else {
-                $("#ag-token-input").html("");
+                $("#ag-token-input").empty();
             }
         }
     }
@@ -112,18 +112,24 @@ $(document).ready(function() {
         var minutes = Math.floor(current_media_clock_time / 60000) % 60;
         var seconds = Math.floor(current_media_clock_time / 1000) % 60;
         var clock_str = "";
-        if (hours < 10)
-        clock_str += "0";
-        clock_str += hours.toString();
-        clock_str += ":";
-        if (minutes < 10)
-        clock_str += "0";
-        clock_str += minutes.toString();
-        clock_str += ":";
-        if (seconds < 10)
-        clock_str += "0";
-        clock_str += seconds.toString();
-        $("#running-clock").html(clock_str);
+
+        if (hours < 10) {
+          clock_str += "0";
+          clock_str += hours.toString();
+          clock_str += ":";
+        }
+
+        if (minutes < 10) {
+          clock_str += "0";
+          clock_str += minutes.toString();
+          clock_str += ":";
+        }
+
+        if (seconds < 10) {
+          clock_str += "0";
+          clock_str += seconds.toString();
+          $("#running-clock").html(clock_str);
+        }
     }
 
     function updateRunningClockLocal() {
@@ -132,18 +138,24 @@ $(document).ready(function() {
         var minutes = current_clock_time.getMinutes();
         var seconds = current_clock_time.getSeconds();
         var clock_str = "";
-        if (hours < 10)
-        clock_str += "0";
-        clock_str += hours.toString();
-        clock_str += ":";
-        if (minutes < 10)
-        clock_str += "0";
-        clock_str += minutes.toString();
-        clock_str += ":";
-        if (seconds < 10)
-        clock_str += "0";
-        clock_str += seconds.toString();
-        $("#running-clock").html(clock_str);
+
+        if (hours < 10) {
+          clock_str += "0";
+          clock_str += hours.toString();
+          clock_str += ":";
+        }
+
+        if (minutes < 10) {
+          clock_str += "0";
+          clock_str += minutes.toString();
+          clock_str += ":";
+        }
+
+        if (seconds < 10) {
+          clock_str += "0";
+          clock_str += seconds.toString();
+          $("#running-clock").html(clock_str);
+        }
     }
 
 
@@ -192,13 +204,13 @@ $(document).ready(function() {
         /* Clone template list item and fill in the details */
         var clonedElement = $('#result-list .result-list-item-template').clone();
         clonedElement.find('.seqNum-value').text(
-            tt.getAttributeNS('urn:ebu:tt:parameters', 'sequenceNumber')
+            tt.getAttributeNS('urn:ebu:tt:parameters', 'sequenceNumber');
         );
         clonedElement.find('.autGID-value').text(
-            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupIdentifier')
+            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupIdentifier');
         );
         clonedElement.find('.autGCT-value').text(
-            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupControlToken')
+            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupControlToken');
         );
         clonedElement.removeClass('result-list-item-template');
         clonedElement.addClass('result-list-item');
@@ -313,12 +325,12 @@ $(document).ready(function() {
             var sequence = {};
             var sequence_identifier = $("#new-sequence-identifier-input").val();
             var authors_group_identifier = $("#ag-identifier-input").val();
-            $("#sequence-selector")
-            .append($("<option></option>")
-            .attr("value", sequence_identifier)
+            $("#sequence-selector");
+            .append($("<option></option>");
+            .attr("value", sequence_identifier);
             .text(sequence_identifier));
             if (authors_group_identifier) {
-                sequence["authors_group_identifier"] = authors_group_identifier
+                sequence["authors_group_identifier"] = authors_group_identifier;
             }
             var time_base = $("#time-base-selector").val();
             sequence["time_base"] = time_base;
@@ -392,13 +404,9 @@ $(document).ready(function() {
         }
     });
 
-    $("#time-base-selector").change(function() {
-        handleTimeBaseDependingOptions();
-    });
+    $("#time-base-selector").change(handleTimeBaseDependingOptions);
 
-    $("#sequence-selector").change(function() {
-        handleSequenceSelected();
-    });
+    $("#sequence-selector").change(handleSequenceSelected;
 
     $("input[name=sending-type-radio-input").click(function() {
         if ($(this).is(':checked')) {
@@ -406,9 +414,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#scheduled-send-clock-selector").change(function() {
-        handleScheduledSendSetupDependingOptions();
-    });
+    $("#scheduled-send-clock-selector").change(handleScheduledSendSetupDependingOptions);
 
     $("#synchronize-media-clock-button").click(function() {
         scheduled_send_media_clock_offset = Date.now();
@@ -443,13 +449,16 @@ $(document).ready(function() {
 
     function createTemplateDict() {
         var template_data = {};
+
         sequence_identifier = $("#sequence-selector").val();
-        template_data["sequence_identifier"] = sequence_identifier
+        template_data["sequence_identifier"] = sequence_identifier;
         template_data["sequence_number"] = sequence_numbers[sequence_identifier];
-        var time_base = all_sequences[sequence_identifier]["time_base"]
+
+        var time_base = all_sequences[sequence_identifier]["time_base"];
         var authors_group_identifier = all_sequences[sequence_identifier]["authors_group_identifier"];
         var authors_group_control_token = $('#ag-token-input').val();
         template_data["time_base"] = time_base;
+
         if (time_base == "clock") {
             template_data["clock_mode"] = all_sequences[sequence_identifier]["clock_mode"];
         } else if (time_base == "smpte") {
@@ -460,10 +469,10 @@ $(document).ready(function() {
             template_data["drop_mode"] = all_sequences[sequence_identifier]["drop_mode"];
         }
         if (authors_group_identifier) {
-            template_data["authors_group_identifier"] = authors_group_identifier
+            template_data["authors_group_identifier"] = authors_group_identifier;
         }
         if (authors_group_control_token) {
-            template_data["authors_group_control_token"] = authors_group_control_token
+            template_data["authors_group_control_token"] = authors_group_control_token;
         }
         template_data["body_content"] = $("#subtitle-content-textarea").val().replace(/\r?\n|\r/g, "<tt:br/>");
         template_data["body_begin"] = $("#body-begin-input").val();
@@ -479,23 +488,25 @@ $(document).ready(function() {
             var scheduled_time = new Date(Date.now());
             scheduled_time_input = $("#scheduled-time-input").val();
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
-            if (scheduled_time_parsed == null)
-            return 0;
-            scheduled_time.setHours(scheduled_time_parsed[1]);
-            scheduled_time.setMinutes(scheduled_time_parsed[2]);
-            scheduled_time.setSeconds(scheduled_time_parsed[3]);
-            timeout = scheduled_time.getTime() - Date.now();
+            if (scheduled_time_parsed == null) {
+              return 0;
+              scheduled_time.setHours(scheduled_time_parsed[1]);
+              scheduled_time.setMinutes(scheduled_time_parsed[2]);
+              scheduled_time.setSeconds(scheduled_time_parsed[3]);
+              timeout = scheduled_time.getTime() - Date.now();
+            }
         } else {
             var scheduled_time = new Date(0).getTime();
             scheduled_time_input = $("#scheduled-time-input").val();
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
-            if (scheduled_time_parsed == null)
-            return 0;
-            scheduled_time += parseInt(scheduled_time_parsed[1]) * 3600000;
-            scheduled_time += parseInt(scheduled_time_parsed[2]) * 60000;
-            scheduled_time += parseInt(scheduled_time_parsed[3]) * 1000;
-            timeout = scheduled_send_media_clock_offset + scheduled_time;
-            timeout = timeout - Date.now();
+            if (scheduled_time_parsed == null) {
+              return 0;
+              scheduled_time += parseInt(scheduled_time_parsed[1]) * 3600000;
+              scheduled_time += parseInt(scheduled_time_parsed[2]) * 60000;
+              scheduled_time += parseInt(scheduled_time_parsed[3]) * 1000;
+              timeout = scheduled_send_media_clock_offset + scheduled_time;
+              timeout = timeout - Date.now();
+            }
         }
         return timeout;
     }
@@ -508,14 +519,18 @@ $(document).ready(function() {
             */
             var media_offset = null;
             var scheduled_send_clock_type = $("#scheduled-send-clock-selector").val();
-            if (scheduled_send_clock_type == "media")
-            media_offset = scheduled_send_media_clock_offset;
-            var timeout = computeScheduledSendTimeout(media_offset);
-            var template_data = createTemplateDict();
-            var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-            setTimeout(renderSendDocument, timeout, rendered_document);
-            notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
-            sequence_numbers[sequence_identifier] += 1;
+            if (scheduled_send_clock_type == "media") {
+              media_offset = scheduled_send_media_clock_offset;
+
+              var timeout = computeScheduledSendTimeout(media_offset);
+              var template_data = createTemplateDict();
+              var rendered_document =
+
+              nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+              setTimeout(renderSendDocument, timeout, rendered_document);
+              notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
+              sequence_numbers[sequence_identifier] += 1;
+            }
         } else {
             renderSendDocument();
             sequence_numbers[sequence_identifier] += 1;
@@ -536,15 +551,17 @@ $(document).ready(function() {
         var rendered_document = null;
         // If doc in not null then it was already rendered (needed for scheduled times : the document
         // has to be rendered when the sending is scheduled not at effective sending time.
-        if (doc == null)
-        rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-        else
-        rendered_document = doc
-        if (socket.websocket) {
-            socket.websocket.send(rendered_document);
+        if (doc == null) {
+          rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+        }
+        else {
+          rendered_document = doc;
+          if (socket.websocket) {
+              socket.websocket.send(rendered_document);
         } else {
             notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
         }
+      }
     }
 
     function sendDocument() {
@@ -589,8 +606,9 @@ $(document).ready(function() {
     // In the special case that max-lines is 1 clear the text area on Enter key up otherwise
     // an extra unwanted carriage return line feed pair is added at the beginning.
     $("#subtitle-content-textarea").keyup(function(evt) {
-        if (evt.which == 13 && $("#max-lines").val() == 1)
-        document.getElementById('subtitle-content-textarea').value = "";
+        if (evt.which == 13 && $("#max-lines").val() == 1) {
+          document.getElementById('subtitle-content-textarea').value = "";
+        }
     });
 
     // Workaround for jquery val() stripping out carriage returns from text areas
