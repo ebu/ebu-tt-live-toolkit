@@ -16,13 +16,8 @@ body {
 
 #header {
     padding: 10px;
-    background: rgb(255,255,255); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(237,238,244,1) 6%, rgba(210,218,224,1) 49%, rgba(242,244,247,1) 96%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(237,238,244,1) 6%,rgba(210,218,224,1) 49%,rgba(242,244,247,1) 96%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(237,238,244,1) 6%,rgba(210,218,224,1) 49%,rgba(242,244,247,1) 96%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
-    box-shadow: 0 0 8px 2px rgba(0,0,0,0.1);
     flex: 1 100%;
+    margin-top: 0;
 }
 
 #header h1 {
@@ -47,6 +42,7 @@ body {
 .wrapper {
   display: flex;
   flex-flow: row wrap;
+  margin-top: 0;
 }
 
 .left-side {
@@ -96,9 +92,11 @@ div {margin-top: 1%;}
     border: 1px solid lightgrey;
 	border-radius: 3px;
 	background: rgb(255,255,255); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,1) 0%,
+        rgba(229,229,229,1) 100%
+    ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 #result-view-pre {
