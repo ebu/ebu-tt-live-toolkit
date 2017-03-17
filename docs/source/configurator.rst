@@ -116,6 +116,10 @@ Node type dependent options for [nodeN] : ::
    ├─delay : delay in seconds, default 0
    └─sequence_identifier : sequence identifier, default "RetimedSequence1"
 
+   type="handover"
+   ├─authors_group_identifier : the authors' group to follow, default "AuthorsGroup1"
+   └─sequence_identifier : sequence identifier, default "HandoverSequence1"
+
    type="distributor" : No options
 
 Output carriage type dependent options for "carriage": ::
