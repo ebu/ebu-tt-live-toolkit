@@ -141,21 +141,22 @@ $(document).ready(function() {
 
         if (hours < 10) {
           clock_str += "0";
-          clock_str += hours.toString();
-          clock_str += ":";
         }
+        clock_str += hours.toString();
+        clock_str += ":";
 
         if (minutes < 10) {
           clock_str += "0";
-          clock_str += minutes.toString();
-          clock_str += ":";
         }
+        clock_str += minutes.toString();
+        clock_str += ":";
 
         if (seconds < 10) {
           clock_str += "0";
-          clock_str += seconds.toString();
-          $("#running-clock").html(clock_str);
         }
+        clock_str += seconds.toString();
+
+        $("#running-clock").html(clock_str);
     }
 
 
