@@ -30,7 +30,7 @@ $(document).ready(function() {
         $("#running-media-clock").html("");
         if (interval_running_clock != null) {
             clearInterval(interval_running_clock);
-            interval_running_clock = null; //ask Tom what his comment meant...
+            interval_running_clock = null;
         }
     }
 
@@ -326,12 +326,19 @@ $(document).ready(function() {
             var sequence = {};
             var sequence_identifier = $("#new-sequence-identifier-input").val();
             var authors_group_identifier = $("#ag-identifier-input").val();
-            $("#sequence-selector").append($("<option></option>").attr("value", sequence_identifier).text(sequence_identifier));
+
+            $("#sequence-selector")
+              .append($("<option></option>")
+              .attr("value", sequence_identifier)
+              .text(sequence_identifier));
+
             if (authors_group_identifier) {
                 sequence["authors_group_identifier"] = authors_group_identifier;
             }
+
             var time_base = $("#time-base-selector").val();
             sequence["time_base"] = time_base;
+
             if (time_base == "clock") {
                 sequence["clock_mode"] = $("#clock-mode-selector").val();
             } else if (time_base == "smpte") {
@@ -486,31 +493,30 @@ $(document).ready(function() {
             var scheduled_time = new Date(Date.now());
             scheduled_time_input = $("#scheduled-time-input").val();
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
-            if (scheduled_time_parsed == null) {
-              return 0;
+            if (scheduled_time_parsed != null) {
+              scheduled_time.setHours(scheduled_time_parsed[1]);
+              scheduled_time.setMinutes(scheduled_time_parsed[2]);
+              scheduled_time.setSeconds(scheduled_time_parsed[3]);
+              timeout = scheduled_time.getTime() - Date.now();
             }
-            scheduled_time.setHours(scheduled_time_parsed[1]);
-            scheduled_time.setMinutes(scheduled_time_parsed[2]);
-            scheduled_time.setSeconds(scheduled_time_parsed[3]);
-            timeout = scheduled_time.getTime() - Date.now();
         } else {
             var scheduled_time = new Date(0).getTime();
             scheduled_time_input = $("#scheduled-time-input").val();
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
-            if (scheduled_time_parsed == null) {
-              return 0;
+            if (scheduled_time_parsed != null) {
+              scheduled_time += parseInt(scheduled_time_parsed[1]) * 3600000;
+              scheduled_time += parseInt(scheduled_time_parsed[2]) * 60000;
+              scheduled_time += parseInt(scheduled_time_parsed[3]) * 1000;
+              timeout = scheduled_send_media_clock_offset + scheduled_time;
+              timeout = timeout - Date.now();
             }
-            scheduled_time += parseInt(scheduled_time_parsed[1]) * 3600000;
-            scheduled_time += parseInt(scheduled_time_parsed[2]) * 60000;
-            scheduled_time += parseInt(scheduled_time_parsed[3]) * 1000;
-            timeout = scheduled_send_media_clock_offset + scheduled_time;
-            timeout = timeout - Date.now();
         }
         return timeout;
     }
 
     function submitDocument() {
         var sending_type = $("input[name=sending-type-radio-input]:checked").val();
+
         if (sending_type == "scheduled_send") {
             /* If we are using sheduled time to send documents we must actually compute a timeout
             * value which is the difference between the scheduled time and the current time.
@@ -519,15 +525,18 @@ $(document).ready(function() {
             var scheduled_send_clock_type = $("#scheduled-send-clock-selector").val();
             if (scheduled_send_clock_type == "media") {
               media_offset = scheduled_send_media_clock_offset;
-            }
 
-            var timeout = computeScheduledSendTimeout(media_offset);
-            var template_data = createTemplateDict();
-            var rendered_document =
-              nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-            setTimeout(renderSendDocument, timeout, rendered_document);
-            notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
-            sequence_numbers[sequence_identifier] += 1;
+              var timeout = computeScheduledSendTimeout(media_offset);
+              var template_data = createTemplateDict();
+              var rendered_document = nunjucks.render(
+                'ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml',
+                template_data
+              );
+
+              setTimeout(renderSendDocument, timeout, rendered_document);
+              notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
+              sequence_numbers[sequence_identifier] += 1;
+            }
         } else {
             renderSendDocument();
             sequence_numbers[sequence_identifier] += 1;
