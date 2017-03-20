@@ -223,7 +223,7 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
             payload=binding.payload
         )
 
-
+# Register the class in the base class
 EBUTT3ObjectBase.message_type_mapping[EBUTTAuthorsGroupControlRequest.message_type_id] = EBUTTAuthorsGroupControlRequest
 
 
