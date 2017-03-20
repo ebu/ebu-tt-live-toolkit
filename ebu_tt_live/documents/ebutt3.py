@@ -4,6 +4,7 @@ from .ebutt3_segmentation import EBUTT3Segmenter
 from .ebutt3_splicer import EBUTT3Splicer
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
+from ebu_tt_live.bindings._ebulm import message as live_message
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
@@ -149,7 +150,69 @@ class TimelineUtilMixin(object):
         return affected_elements
 
 
-class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
+class EBUTT3ObjectBase(object):
+
+    def get_xml(self):
+        raise NotImplementedError()
+
+    def get_dom(self):
+        raise NotImplementedError()
+
+    @classmethod
+    def create_from_xml(cls, xml, **kwargs):
+        pass
+
+    @classmethod
+    def create_from_raw_binding(cls, **kwargs):
+        raise NotImplementedError()
+
+
+class EBUTTLiveMessage(EBUTT3ObjectBase):
+
+    _sender = None
+    _recipient = None
+    _payload = None
+
+    @property
+    def payload(self):
+        return self._payload
+
+    @property
+    def sender(self):
+        return self._sender
+
+    @property
+    def recipient(self):
+        return self._recipient
+
+
+class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
+
+    def __init__(self, payload, sender=None, recipient=None):
+        self._payload = payload,
+        self._sender = sender
+        self._recipient = recipient
+
+    def get_dom(self):
+        return live_message(
+            header=BIND(
+                sender=self._sender,
+                recipient=self._recipient,
+                _strict_keywords=False
+            ),
+            payload=self._payload,
+            _strict_keywords=False
+        ).toDOM()
+
+    def get_xml(self):
+        return self.get_dom().toprettyxml(indent='  ')
+
+    @classmethod
+    def create_from_raw_binding(cls, **kwargs):
+        pass
+
+
+class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
     """
     This class wraps the binding object representation of the XML and provides the features the applications in the
     specification require. e.g:availability time.

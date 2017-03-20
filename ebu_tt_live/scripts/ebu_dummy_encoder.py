@@ -86,7 +86,6 @@ def main():
     tt.head = head_elem
     tt.body = body_elem
 
-
     document = EBUTT3Document.create_from_raw_binding(tt)
 
     document.validate()
