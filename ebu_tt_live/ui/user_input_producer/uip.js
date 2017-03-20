@@ -556,10 +556,11 @@ $(document).ready(function() {
         }
         else {
           rendered_document = doc;
-          if (socket.websocket) {
-              socket.websocket.send(rendered_document);
+        }
+        if (socket.websocket) {
+          socket.websocket.send(rendered_document);
         } else {
-            notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
+          notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
         }
       }
     }
