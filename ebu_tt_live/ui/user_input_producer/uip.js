@@ -115,21 +115,21 @@ $(document).ready(function() {
 
         if (hours < 10) {
           clock_str += "0";
-          clock_str += hours.toString();
-          clock_str += ":";
         }
+        clock_str += hours.toString();
+        clock_str += ":";
 
         if (minutes < 10) {
           clock_str += "0";
-          clock_str += minutes.toString();
-          clock_str += ":";
         }
+        clock_str += minutes.toString();
+        clock_str += ":";
 
         if (seconds < 10) {
           clock_str += "0";
-          clock_str += seconds.toString();
-          $("#running-clock").html(clock_str);
         }
+        clock_str += seconds.toString();
+        $("#running-clock").html(clock_str);
     }
 
     function updateRunningClockLocal() {
@@ -325,10 +325,7 @@ $(document).ready(function() {
             var sequence = {};
             var sequence_identifier = $("#new-sequence-identifier-input").val();
             var authors_group_identifier = $("#ag-identifier-input").val();
-            $("#sequence-selector");
-            .append($("<option></option>");
-            .attr("value", sequence_identifier);
-            .text(sequence_identifier));
+            $("#sequence-selector").append($("<option></option>").attr("value", sequence_identifier).text(sequence_identifier));
             if (authors_group_identifier) {
                 sequence["authors_group_identifier"] = authors_group_identifier;
             }
@@ -490,23 +487,23 @@ $(document).ready(function() {
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
             if (scheduled_time_parsed == null) {
               return 0;
-              scheduled_time.setHours(scheduled_time_parsed[1]);
-              scheduled_time.setMinutes(scheduled_time_parsed[2]);
-              scheduled_time.setSeconds(scheduled_time_parsed[3]);
-              timeout = scheduled_time.getTime() - Date.now();
             }
+            scheduled_time.setHours(scheduled_time_parsed[1]);
+            scheduled_time.setMinutes(scheduled_time_parsed[2]);
+            scheduled_time.setSeconds(scheduled_time_parsed[3]);
+            timeout = scheduled_time.getTime() - Date.now();
         } else {
             var scheduled_time = new Date(0).getTime();
             scheduled_time_input = $("#scheduled-time-input").val();
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
             if (scheduled_time_parsed == null) {
               return 0;
-              scheduled_time += parseInt(scheduled_time_parsed[1]) * 3600000;
-              scheduled_time += parseInt(scheduled_time_parsed[2]) * 60000;
-              scheduled_time += parseInt(scheduled_time_parsed[3]) * 1000;
-              timeout = scheduled_send_media_clock_offset + scheduled_time;
-              timeout = timeout - Date.now();
             }
+            scheduled_time += parseInt(scheduled_time_parsed[1]) * 3600000;
+            scheduled_time += parseInt(scheduled_time_parsed[2]) * 60000;
+            scheduled_time += parseInt(scheduled_time_parsed[3]) * 1000;
+            timeout = scheduled_send_media_clock_offset + scheduled_time;
+            timeout = timeout - Date.now();
         }
         return timeout;
     }
@@ -521,16 +518,16 @@ $(document).ready(function() {
             var scheduled_send_clock_type = $("#scheduled-send-clock-selector").val();
             if (scheduled_send_clock_type == "media") {
               media_offset = scheduled_send_media_clock_offset;
-
-              var timeout = computeScheduledSendTimeout(media_offset);
-              var template_data = createTemplateDict();
-              var rendered_document =
-
-              nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-              setTimeout(renderSendDocument, timeout, rendered_document);
-              notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
-              sequence_numbers[sequence_identifier] += 1;
             }
+
+            var timeout = computeScheduledSendTimeout(media_offset);
+            var template_data = createTemplateDict();
+            var rendered_document =
+
+            nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+            setTimeout(renderSendDocument, timeout, rendered_document);
+            notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
+            sequence_numbers[sequence_identifier] += 1;
         } else {
             renderSendDocument();
             sequence_numbers[sequence_identifier] += 1;
