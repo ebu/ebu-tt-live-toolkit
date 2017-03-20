@@ -115,21 +115,22 @@ $(document).ready(function() {
 
         if (hours < 10) {
           clock_str += "0";
-          clock_str += hours.toString();
-          clock_str += ":";
         }
+        clock_str += hours.toString();
+        clock_str += ":";
 
         if (minutes < 10) {
           clock_str += "0";
-          clock_str += minutes.toString();
-          clock_str += ":";
         }
+        clock_str += minutes.toString();
+        clock_str += ":";
 
         if (seconds < 10) {
           clock_str += "0";
-          clock_str += seconds.toString();
-          $("#running-clock").html(clock_str);
         }
+        clock_str += seconds.toString();
+
+        $("#running-clock").html(clock_str);
     }
 
     function updateRunningClockLocal() {
@@ -141,21 +142,22 @@ $(document).ready(function() {
 
         if (hours < 10) {
           clock_str += "0";
-          clock_str += hours.toString();
-          clock_str += ":";
         }
+        clock_str += hours.toString();
+        clock_str += ":";
 
         if (minutes < 10) {
           clock_str += "0";
-          clock_str += minutes.toString();
-          clock_str += ":";
         }
+        clock_str += minutes.toString();
+        clock_str += ":";
 
         if (seconds < 10) {
           clock_str += "0";
-          clock_str += seconds.toString();
-          $("#running-clock").html(clock_str);
         }
+        clock_str += seconds.toString();
+
+        $("#running-clock").html(clock_str);
     }
 
 
@@ -498,7 +500,7 @@ $(document).ready(function() {
               scheduled_time.setSeconds(scheduled_time_parsed[3]);
               timeout = scheduled_time.getTime() - Date.now();
             }
-        } else {
+        } else { // media offset is not null
             var scheduled_time = new Date(0).getTime();
             scheduled_time_input = $("#scheduled-time-input").val();
             var scheduled_time_parsed = scheduled_time_input.match(/(\d\d):(\d\d):(\d\d)/);
