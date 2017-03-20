@@ -325,15 +325,19 @@ $(document).ready(function() {
             var sequence = {};
             var sequence_identifier = $("#new-sequence-identifier-input").val();
             var authors_group_identifier = $("#ag-identifier-input").val();
-            $("#sequence-selector");
-            .append($("<option></option>");
-            .attr("value", sequence_identifier);
-            .text(sequence_identifier));
+
+            $("#sequence-selector")
+              .append($("<option></option>")
+              .attr("value", sequence_identifier)
+              .text(sequence_identifier));
+
             if (authors_group_identifier) {
                 sequence["authors_group_identifier"] = authors_group_identifier;
             }
+
             var time_base = $("#time-base-selector").val();
             sequence["time_base"] = time_base;
+
             if (time_base == "clock") {
                 sequence["clock_mode"] = $("#clock-mode-selector").val();
             } else if (time_base == "smpte") {
@@ -511,6 +515,7 @@ $(document).ready(function() {
 
     function submitDocument() {
         var sending_type = $("input[name=sending-type-radio-input]:checked").val();
+
         if (sending_type == "scheduled_send") {
             /* If we are using sheduled time to send documents we must actually compute a timeout
             * value which is the difference between the scheduled time and the current time.
