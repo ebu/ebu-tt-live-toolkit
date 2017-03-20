@@ -524,8 +524,7 @@ $(document).ready(function() {
             var timeout = computeScheduledSendTimeout(media_offset);
             var template_data = createTemplateDict();
             var rendered_document =
-
-            nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+              nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
             setTimeout(renderSendDocument, timeout, rendered_document);
             notifySuccess($("#scheduled-confirmation-span"), "Scheduled...", true);
             sequence_numbers[sequence_identifier] += 1;
