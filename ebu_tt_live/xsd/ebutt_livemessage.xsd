@@ -14,9 +14,9 @@
         </xs:annotation>
 
         <xs:sequence>
-            <xs:element name="from" type="xs:ID" minOccurs="0" />
-            <xs:element name="to" type="xs:ID" minOccurs="0" />
-            <xs:element name="type" type="xs:ID" />
+            <xs:element name="sender" type="xs:NCName" minOccurs="0" />
+            <xs:element name="recipient" type="xs:NCName" minOccurs="0" />
+            <xs:element name="type" type="xs:NCName" />
         </xs:sequence>
     </xs:complexType>
     
