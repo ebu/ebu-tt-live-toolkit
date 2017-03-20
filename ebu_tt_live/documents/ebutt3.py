@@ -4,7 +4,7 @@ from .ebutt3_segmentation import EBUTT3Segmenter
 from .ebutt3_splicer import EBUTT3Splicer
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
-from ebu_tt_live.bindings._ebulm import message as live_message
+from ebu_tt_live.bindings._ebulm import message as live_message, message_type
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
@@ -152,6 +152,8 @@ class TimelineUtilMixin(object):
 
 class EBUTT3ObjectBase(object):
 
+    message_type_mapping = {}
+
     def get_xml(self):
         raise NotImplementedError()
 
@@ -160,7 +162,11 @@ class EBUTT3ObjectBase(object):
 
     @classmethod
     def create_from_xml(cls, xml, **kwargs):
-        pass
+        instance = bindings.CreateFromDocument(
+            xml_text=xml
+        )
+        if isinstance(instance, message_type):
+            return cls.message_type_mapping[instance.header.type].create_from_raw_binding(instance)
 
     @classmethod
     def create_from_raw_binding(cls, **kwargs):
@@ -188,6 +194,8 @@ class EBUTTLiveMessage(EBUTT3ObjectBase):
 
 class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
 
+    message_type_id = 'authorsGroupControlRequest'
+
     def __init__(self, payload, sender=None, recipient=None):
         self._payload = payload,
         self._sender = sender
@@ -208,8 +216,15 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
         return self.get_dom().toprettyxml(indent='  ')
 
     @classmethod
-    def create_from_raw_binding(cls, **kwargs):
-        pass
+    def create_from_raw_binding(cls, binding, **kwargs):
+        return cls(
+            sender=binding.header.sender,
+            recipient=binding.header.recipient,
+            payload=binding.payload
+        )
+
+
+EBUTT3ObjectBase.message_type_mapping[EBUTTAuthorsGroupControlRequest.message_type_id] = EBUTTAuthorsGroupControlRequest
 
 
 class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):

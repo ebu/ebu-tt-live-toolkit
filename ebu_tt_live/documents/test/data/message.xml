@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<ebulm:message
+    xmlns:ebulm="urn:ebu:tt:livemessage" >
+    <ebulm:header>
+        <ebulm:sender>testsender</ebulm:sender>
+        <ebulm:recipient>testrecipient</ebulm:recipient>
+        <ebulm:type>authorsGroupControlRequest</ebulm:type>
+    </ebulm:header>
+    <ebulm:payload>This is a message for unittesting this messaging class.</ebulm:payload>
+</ebulm:message>
