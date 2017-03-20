@@ -560,13 +560,14 @@ $(document).ready(function() {
         // has to be rendered when the sending is scheduled not at effective sending time.
         if (doc == null) {
           rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
-        }
-        else {
-          rendered_document = doc;
-          if (socket.websocket) {
-              socket.websocket.send(rendered_document);
         } else {
-            notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
+          rendered_document = doc;
+        }
+        
+        if (socket.websocket) {
+          socket.websocket.send(rendered_document);
+        } else {
+          notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
         }
       }
     }
