@@ -48,10 +48,10 @@ class TestDistributingNode(TestCase):
         )
         seq_id = 'testSequence01'
         for item in xrange(100):
-            node.check_document(sequence_identifier=seq_id, sequence_number=item)
+            node.check_if_document_seen(sequence_identifier=seq_id, sequence_number=item)
 
         # It should still be here
-        self.assertFalse(node.check_document(sequence_identifier=seq_id, sequence_number=0))
+        self.assertFalse(node.check_if_document_seen(sequence_identifier=seq_id, sequence_number=0))
         # the 101 should push the first element (0) out of the fifo.
-        node.check_document(sequence_identifier=seq_id, sequence_number=101)
-        self.assertTrue(node.check_document(sequence_identifier=seq_id, sequence_number=0))
+        node.check_if_document_seen(sequence_identifier=seq_id, sequence_number=101)
+        self.assertTrue(node.check_if_document_seen(sequence_identifier=seq_id, sequence_number=0))

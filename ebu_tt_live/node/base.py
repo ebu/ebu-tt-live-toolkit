@@ -75,7 +75,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
             self.register_consumer_carriage(consumer_carriage)
         self._seen_docs = {}
 
-    def check_document(self, document=None, sequence_identifier=None, sequence_number=None):
+    def check_if_document_seen(self, document=None, sequence_identifier=None, sequence_number=None):
         if document:
             sequence_identifier = document.sequence_identifier
             sequence_number = document.sequence_number
@@ -90,7 +90,6 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
         self._seen_docs.setdefault(sequence_identifier, RingBufferWithCallback(maxlen=100)).append(sequence_number)
 
         return True
-
 
     def register_consumer_carriage(self, consumer_carriage):
         if not isinstance(consumer_carriage, IConsumerCarriage):

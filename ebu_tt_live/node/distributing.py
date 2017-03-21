@@ -21,7 +21,7 @@ class DistributingNode(AbstractCombinedNode):
         )
 
     def process_document(self, document, raw_xml=None, **kwargs):
-        if self.check_document(document) is True:
+        if self.check_if_document_seen(document) is True:
             if raw_xml is not None:
                 data = raw_xml
             else:
