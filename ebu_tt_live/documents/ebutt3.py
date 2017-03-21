@@ -212,9 +212,7 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
             header.sender = self.sender
         return ebuttlm.message(
             header=header,
-            payload=BIND(
-                self._payload
-            ),
+            payload=self._payload,
             _strict_keywords=False
         )
 

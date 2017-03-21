@@ -78,3 +78,4 @@ class TestEBUTT3Document(TestCase):
         re_xml = instance.get_xml()
 
         self.assertIsInstance(re_xml, six.text_type)
+        self.assertTrue(compare_xml(xml, re_xml))
