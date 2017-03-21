@@ -4,7 +4,7 @@ from .ebutt3_segmentation import EBUTT3Segmenter
 from .ebutt3_splicer import EBUTT3Splicer
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
-from ebu_tt_live.bindings._ebulm import message as live_message, message_type
+from ebu_tt_live.bindings import _ebuttlm as ebuttlm
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
@@ -83,6 +83,7 @@ class TimingEventEnd(TimingEvent):
             self.when,
             self.element
         )
+
 
 class TimelineUtilMixin(object):
     """
@@ -165,7 +166,7 @@ class EBUTT3ObjectBase(object):
         instance = bindings.CreateFromDocument(
             xml_text=xml
         )
-        if isinstance(instance, message_type):
+        if isinstance(instance, ebuttlm.message_type):
             return cls.message_type_mapping[instance.header.type].create_from_raw_binding(instance)
 
     @classmethod
@@ -201,19 +202,27 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
         self._sender = sender
         self._recipient = recipient
 
-    def get_dom(self):
-        return live_message(
-            header=BIND(
-                sender=self._sender,
-                recipient=self._recipient,
-                _strict_keywords=False
+    def _create_binding(self):
+        header = ebuttlm.message_header_type(
+            type=self.message_type_id
+        )
+        if self.recipient:
+            header.recipient = self.recipient
+        if self.sender:
+            header.sender = self.sender
+        return ebuttlm.message(
+            header=header,
+            payload=BIND(
+                self._payload
             ),
-            payload=self._payload,
             _strict_keywords=False
-        ).toDOM()
+        )
+
+    def get_dom(self):
+        return self._create_binding().toDOM()
 
     def get_xml(self):
-        return self.get_dom().toprettyxml(indent='  ')
+        return self._create_binding().toxml()
 
     @classmethod
     def create_from_raw_binding(cls, binding, **kwargs):

@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://www.w3.org/1999/xhtml"
            xmlns:xml="http://www.w3.org/XML/1998/namespace"
-           xmlns:ebulm="urn:ebu:tt:livemessage"
+           xmlns:ebuttlm="urn:ebu:tt:livemessage"
            targetNamespace="urn:ebu:tt:livemessage" elementFormDefault="qualified"
            xml:lang="en">
 
@@ -28,11 +28,11 @@
         </xs:annotation>
 
         <xs:sequence>
-            <xs:element name="header" type="ebulm:message_header_type" />
+            <xs:element name="header" type="ebuttlm:message_header_type" />
             <xs:element name="payload" type="xs:anyType" />
         </xs:sequence>
 
     </xs:complexType>
-    <xs:element name="message" type="ebulm:message_type" />
+    <xs:element name="message" type="ebuttlm:message_type" />
 
 </xs:schema>

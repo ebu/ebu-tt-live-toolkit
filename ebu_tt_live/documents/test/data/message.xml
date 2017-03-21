@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
-<ebulm:message
-    xmlns:ebulm="urn:ebu:tt:livemessage" >
-    <ebulm:header>
-        <ebulm:sender>testsender</ebulm:sender>
-        <ebulm:recipient>testrecipient1</ebulm:recipient>
-        <ebulm:recipient>testrecipient2</ebulm:recipient>
-        <ebulm:type>authorsGroupControlRequest</ebulm:type>
-    </ebulm:header>
-    <ebulm:payload>This is a message for unittesting this messaging class.</ebulm:payload>
-</ebulm:message>
+<ebuttlm:message
+    xmlns:ebuttlm="urn:ebu:tt:livemessage" >
+    <ebuttlm:header>
+        <ebuttlm:sender>testsender</ebuttlm:sender>
+        <ebuttlm:recipient>testrecipient1</ebuttlm:recipient>
+        <ebuttlm:recipient>testrecipient2</ebuttlm:recipient>
+        <ebuttlm:type>authorsGroupControlRequest</ebuttlm:type>
+    </ebuttlm:header>
+    <ebuttlm:payload>This is a message for unittesting this messaging class.</ebuttlm:payload>
+</ebuttlm:message>

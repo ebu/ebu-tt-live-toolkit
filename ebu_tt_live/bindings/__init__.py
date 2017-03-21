@@ -5,6 +5,7 @@ from . import raw
 # Let's import customizations
 from . import _ebuttdt as ebuttdt
 from . import _ebuttm as ebuttm
+from . import _ebuttlm as ebuttlm
 from . import _ebuttp as ebuttp
 from . import _ebutts as ebutts
 from . import _ttm as ttm
@@ -43,7 +44,8 @@ namespace_prefix_map = {
     'ttm': ttm.Namespace,
     'ebuttm': ebuttm.Namespace,
     'ebutts': ebutts.Namespace,
-    'ebuttp': ebuttp.Namespace
+    'ebuttp': ebuttp.Namespace,
+    'ebuttlm': ebuttlm.Namespace
 }
 
 
