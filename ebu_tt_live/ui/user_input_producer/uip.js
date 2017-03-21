@@ -206,13 +206,13 @@ $(document).ready(function() {
         /* Clone template list item and fill in the details */
         var clonedElement = $('#result-list .result-list-item-template').clone();
         clonedElement.find('.seqNum-value').text(
-            tt.getAttributeNS('urn:ebu:tt:parameters', 'sequenceNumber');
+            tt.getAttributeNS('urn:ebu:tt:parameters', 'sequenceNumber')
         );
         clonedElement.find('.autGID-value').text(
-            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupIdentifier');
+            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupIdentifier')
         );
         clonedElement.find('.autGCT-value').text(
-            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupControlToken');
+            tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupControlToken')
         );
         clonedElement.removeClass('result-list-item-template');
         clonedElement.addClass('result-list-item');
@@ -412,7 +412,7 @@ $(document).ready(function() {
 
     $("#time-base-selector").change(handleTimeBaseDependingOptions);
 
-    $("#sequence-selector").change(handleSequenceSelected;
+    $("#sequence-selector").change(handleSequenceSelected);
 
     $("input[name=sending-type-radio-input").click(function() {
         if ($(this).is(':checked')) {
@@ -569,7 +569,6 @@ $(document).ready(function() {
         } else {
           notifyError($("#subtitle-form-notification-div"), "Error: there is no connection to the websocket server !", false);
         }
-      }
     }
 
     function sendDocument() {
