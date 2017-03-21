@@ -61,4 +61,9 @@ class TestEBUTT3Document(TestCase):
         with open(file_path) as xml_file:
             xml = xml_file.read()
         instance = EBUTT3ObjectBase.create_from_xml(xml)
-        print instance
+
+        self.assertIsInstance(instance, EBUTTAuthorsGroupControlRequest)
+        self.assertEqual(instance.sender, 'testsender')
+        self.assertEqual(instance.recipient, ['testrecipient1', 'testrecipient2'])
+        self.assertEqual(instance.payload, 'This is a message for unittesting this messaging class.')
+

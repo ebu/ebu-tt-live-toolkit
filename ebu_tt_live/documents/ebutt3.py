@@ -197,7 +197,7 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
     message_type_id = 'authorsGroupControlRequest'
 
     def __init__(self, payload, sender=None, recipient=None):
-        self._payload = payload,
+        self._payload = payload
         self._sender = sender
         self._recipient = recipient
 
@@ -220,7 +220,8 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
         return cls(
             sender=binding.header.sender,
             recipient=binding.header.recipient,
-            payload=binding.payload
+            payload=binding.payload.orderedContent()[0].value  # anyType is considered complex type
+            # so orderedContent is needed and indexing the first component.
         )
 
 # Register the class in the base class

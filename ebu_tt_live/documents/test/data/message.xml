@@ -3,7 +3,8 @@
     xmlns:ebulm="urn:ebu:tt:livemessage" >
     <ebulm:header>
         <ebulm:sender>testsender</ebulm:sender>
-        <ebulm:recipient>testrecipient</ebulm:recipient>
+        <ebulm:recipient>testrecipient1</ebulm:recipient>
+        <ebulm:recipient>testrecipient2</ebulm:recipient>
         <ebulm:type>authorsGroupControlRequest</ebulm:type>
     </ebulm:header>
     <ebulm:payload>This is a message for unittesting this messaging class.</ebulm:payload>
