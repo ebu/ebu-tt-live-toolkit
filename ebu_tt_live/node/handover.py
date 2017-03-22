@@ -60,23 +60,29 @@ class HandoverNode(SwitcherNode):
         """
         emit = False
 
-        if self.check_document(document=document) is True \
-                and document.authors_group_identifier == self._authors_group_identifier \
-                and document.authors_group_control_token is not None:
-            if self._current_token is None or self._current_token < document.authors_group_control_token:
-                # Switch input
-                self._current_selected_input_sequence_id = document.sequence_identifier
-                emit = True
-            elif self._current_selected_input_sequence_id == document.sequence_identifier:
-                emit = True
+        if self.is_document(document):
+            if self.check_if_document_seen(document=document) is True \
+                    and document.authors_group_identifier == self._authors_group_identifier \
+                    and document.authors_group_control_token is not None:
+                if self._current_token is None or self._current_token < document.authors_group_control_token:
+                    # Switch input
+                    self._current_selected_input_sequence_id = document.sequence_identifier
+                    emit = True
+                elif self._current_selected_input_sequence_id == document.sequence_identifier:
+                    emit = True
 
-        if emit is True:
-            # Update token
-            self._current_token = document.authors_group_control_token  # So are we going to error here?
-            self._last_sequence_number += 1
+            if emit is True:
+                # Update token
+                self._current_token = document.authors_group_control_token  # So are we going to error here?
+                self._last_sequence_number += 1
 
-            document.sequence_identifier = self._sequence_identifier
-            document.sequence_number = self._last_sequence_number
+                document.sequence_identifier = self._sequence_identifier
+                document.sequence_number = self._last_sequence_number
+                self.producer_carriage.emit_data(
+                    data=document,
+                    **kwargs
+                )
+        else:
             self.producer_carriage.emit_data(
                 data=document,
                 **kwargs
