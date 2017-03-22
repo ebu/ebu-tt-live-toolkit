@@ -3,7 +3,7 @@ from ebu_tt_live.node import HandoverNode
 from unittest import TestCase
 from mock import MagicMock
 from ebu_tt_live.carriage.interface import IProducerCarriage
-from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.documents import EBUTT3Document, EBUTTAuthorsGroupControlRequest
 
 
 class HandoverUnittests(TestCase):
@@ -100,3 +100,20 @@ class HandoverUnittests(TestCase):
             data=doc1,
             bla=4
         )
+
+    def test_control_request_passthrough(self):
+        message = EBUTTAuthorsGroupControlRequest(
+            sender='testSender',
+            recipient=[
+                'rec1',
+                'rec2'
+            ],
+            payload='This is a test request'
+        )
+
+        self.handover.process_document(document=message)
+
+        self.handover.producer_carriage.emit_data.assert_called_with(
+            data=message
+        )
+
