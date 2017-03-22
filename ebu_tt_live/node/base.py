@@ -3,6 +3,7 @@ from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
 from ebu_tt_live.errors import ComponentCompatError, DataCompatError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
 from ebu_tt_live.utils import RingBufferWithCallback
+from ebu_tt_live.documents import SubtitleDocument
 
 
 class __AbstractNode(INode):
@@ -74,6 +75,12 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
         if consumer_carriage is not None:
             self.register_consumer_carriage(consumer_carriage)
         self._seen_docs = {}
+
+    def is_document(self, document):
+        if isinstance(document, SubtitleDocument):
+            return True
+        else:
+            return False
 
     def check_if_document_seen(self, document=None, sequence_identifier=None, sequence_number=None):
         if document:

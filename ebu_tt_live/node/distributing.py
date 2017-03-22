@@ -21,16 +21,19 @@ class DistributingNode(AbstractCombinedNode):
         )
 
     def process_document(self, document, raw_xml=None, **kwargs):
-        if self.check_if_document_seen(document) is True:
-            if raw_xml is not None:
-                data = raw_xml
+        if self.is_document(document):
+            if self.check_if_document_seen(document) is True:
+                if raw_xml is not None:
+                    data = raw_xml
+                else:
+                    data = document.get_xml()
+                self.producer_carriage.emit_data(data=data, **kwargs)
             else:
-                data = document.get_xml()
-            self.producer_carriage.emit_data(data=data, **kwargs)
-        else:
-            log.warning(
-                'Ignoring duplicate document: {}__{}'.format(
-                    document.sequence_identifier,
-                    document.sequence_number
+                log.warning(
+                    'Ignoring duplicate document: {}__{}'.format(
+                        document.sequence_identifier,
+                        document.sequence_number
+                    )
                 )
-            )
+        else:
+            self.producer_carriage.emit_data(data=document.get_xml(), **kwargs)

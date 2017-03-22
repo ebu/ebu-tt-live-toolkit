@@ -27,31 +27,32 @@ class SimpleConsumer(AbstractConsumerNode):
         self._verbose = verbose
 
     def process_document(self, document, **kwargs):
-        if self._sequence is None:
-            # Create sequence from document
-            log.info('Creating document sequence from first document {}'.format(
-                document
-            ))
-            self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
-            if self._reference_clock is None:
-                self._reference_clock = self._sequence.reference_clock
-        if document.availability_time is None:
-            document.availability_time = self._reference_clock.get_time()
+        if self.is_document(document):
+            if self._sequence is None:
+                # Create sequence from document
+                log.info('Creating document sequence from first document {}'.format(
+                    document
+                ))
+                self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
+                if self._reference_clock is None:
+                    self._reference_clock = self._sequence.reference_clock
+            if document.availability_time is None:
+                document.availability_time = self._reference_clock.get_time()
 
-        document_logger.info(DOC_RECEIVED.format(
-            sequence_number=document.sequence_number,
-            sequence_identifier=document.sequence_identifier,
-            computed_begin_time=document.computed_begin_time,
-            computed_end_time=document.computed_end_time
-        ))
-        try:
-            self._sequence.add_document(document)
-        except SequenceNumberCollisionError:
-            log.info(
-                'Consumer ignoring duplicate seq number: {}'.format(
-                    document.sequence_number
+            document_logger.info(DOC_RECEIVED.format(
+                sequence_number=document.sequence_number,
+                sequence_identifier=document.sequence_identifier,
+                computed_begin_time=document.computed_begin_time,
+                computed_end_time=document.computed_end_time
+            ))
+            try:
+                self._sequence.add_document(document)
+            except SequenceNumberCollisionError:
+                log.info(
+                    'Consumer ignoring duplicate seq number: {}'.format(
+                        document.sequence_number
+                    )
                 )
-            )
 
     @property
     def reference_clock(self):
