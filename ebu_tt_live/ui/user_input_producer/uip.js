@@ -5,7 +5,7 @@ $(document).ready(function() {
     var interval_send = null;
     var scheduled_send_media_clock_offset = null;
     var interval_running_clock = null;
-    var clock_time = null;
+    //var clock_time = null;
 
     if (typeof(Storage) === "undefined") {
         window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences.");
@@ -107,8 +107,8 @@ $(document).ready(function() {
 
     handleScheduledSendSetupDependingOptions();
 
-    function runningClockMethod() {
-      /*if (clock_time == null) {
+    /*function runningClockMethod() {
+      if (clock_time == null) {
         if (scheduled_send_media_clock_offset === null) {
           clock_time = new Date(Date.now());
         }
@@ -142,19 +142,22 @@ $(document).ready(function() {
       }
       clock_str += seconds.toString();
 
-      $("#running-clock").html(clock_str);*/
-
-      var time = moment().format('HH:mm:ss');
-        $('#running-clock').html(time);
-      setTimeout(displayTime, 500);
-    }
+      $("#running-clock").html(clock_str);
+    }*/
 
     function updateRunningClockMedia() {
-      runningClockMethod();
+      var curTime = moment().milliseconds();
+      var offset = moment(curTime).subtract(scheduled_send_media_clock_offset);
+      var mediaTime = moment(offset).format('HH:mm:ss');
+
+      $('#running-clock').html(mediaTime);
     }
 
     function updateRunningClockLocal() {
-      runningClockMethod();
+      var time = moment().format('HH:mm:ss');
+
+      $('#running-clock').html(time);
+      setInterval(updateRunningClockLocal, 500);
     }
 
     /************************************************** Helper functions ******************************************/
@@ -419,7 +422,7 @@ $(document).ready(function() {
     $("#scheduled-send-clock-selector").change(handleScheduledSendSetupDependingOptions);
 
     $("#synchronize-media-clock-button").click(function() {
-        scheduled_send_media_clock_offset = new Date(0);
+        scheduled_send_media_clock_offset = moment().milliseconds();
         stopResetRunningClock();
         interval_running_clock = setInterval(updateRunningClockMedia, 500);
         notifySuccess($("#scheduled-send-status-span"), "Synchronized", true);
