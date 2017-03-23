@@ -4,6 +4,7 @@
       <meta charset="UTF-8"></meta>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       <script src="template/user_input_producer_template.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
       <script src="nunjucks.js"></script>
       <script src="uip.js"></script>
       <link rel="stylesheet" href="../assets/css/bootstrap.css" media="screen">
@@ -25,7 +26,7 @@
       <div id="content-producer-div" class="left-side">
       <div id="sequence-selector-div" class="control-section-div">
          <span class="control-section-header-span">Manage Sequences</span>
-         <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
+         <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
          <div id="new-sequence-div" style="display: none">
                <label for="new-sequence-identifier-input">Sequence Identifier: </label>
                <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
@@ -35,7 +36,7 @@
                <select id="time-base-selector" name="time-base-selector">
                   <option value="clock" selected="selected">Clock</option>
                   <option value="media">Media</option>
-                  <!-- Disabling for demo 
+                  <!-- Disabling for demo
                   <option value="smpte">SMPTE</option>
                   -->
                </select>
@@ -90,7 +91,7 @@
          <span class="control-section-header-span">Send Document </span>
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Now!</button>
          <span>&nbsp;&nbsp;</span>
-         <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> on enter, space and escape 
+         <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> on enter, space and escape
          &nbsp;
          <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> on scheduled time
          &nbsp;

@@ -5,6 +5,7 @@ $(document).ready(function() {
     var interval_send = null;
     var scheduled_send_media_clock_offset = null;
     var interval_running_clock = null;
+    var clock_time = null;
 
     if (typeof(Storage) === "undefined") {
         window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences.");
@@ -27,7 +28,7 @@ $(document).ready(function() {
     /********************************************************** Options to show or not depending on other options and general purpose functions****************************/
 
     function stopResetRunningClock() {
-        $("#running-media-clock").html("");
+        $("#running-clock").empty();
         if (interval_running_clock != null) {
             clearInterval(interval_running_clock);
             interval_running_clock = null;
@@ -106,60 +107,55 @@ $(document).ready(function() {
 
     handleScheduledSendSetupDependingOptions();
 
+    function runningClockMethod() {
+      /*if (clock_time == null) {
+        if (scheduled_send_media_clock_offset === null) {
+          clock_time = new Date(Date.now());
+        }
+        else {
+          clock_time = scheduled_send_media_clock_offset;
+        }
+      }
+      else {
+        clock_time = null;
+      }
+
+      var hours = clock_time.getHours();
+      var minutes = clock_time.getMinutes();
+      var seconds = clock_time.getSeconds();
+      var clock_str = "";
+
+      if (hours < 10) {
+        clock_str += "0";
+      }
+      clock_str += hours.toString();
+      clock_str += ":";
+
+      if (minutes < 10) {
+        clock_str += "0";
+      }
+      clock_str += minutes.toString();
+      clock_str += ":";
+
+      if (seconds < 10) {
+        clock_str += "0";
+      }
+      clock_str += seconds.toString();
+
+      $("#running-clock").html(clock_str);*/
+
+      var time = moment().format('HH:mm:ss');
+        $('#running-clock').html(time);
+      setTimeout(displayTime, 500);
+    }
+
     function updateRunningClockMedia() {
-        var current_media_clock_time = Date.now() - scheduled_send_media_clock_offset;
-        var hours = Math.floor(current_media_clock_time / 3600000);
-        var minutes = Math.floor(current_media_clock_time / 60000) % 60;
-        var seconds = Math.floor(current_media_clock_time / 1000) % 60;
-        var clock_str = "";
-
-        if (hours < 10) {
-          clock_str += "0";
-        }
-        clock_str += hours.toString();
-        clock_str += ":";
-
-        if (minutes < 10) {
-          clock_str += "0";
-        }
-        clock_str += minutes.toString();
-        clock_str += ":";
-
-        if (seconds < 10) {
-          clock_str += "0";
-        }
-        clock_str += seconds.toString();
-
-        $("#running-clock").html(clock_str);
+      runningClockMethod();
     }
 
     function updateRunningClockLocal() {
-        var current_clock_time = new Date(Date.now());
-        var hours = current_clock_time.getHours();
-        var minutes = current_clock_time.getMinutes();
-        var seconds = current_clock_time.getSeconds();
-        var clock_str = "";
-
-        if (hours < 10) {
-          clock_str += "0";
-        }
-        clock_str += hours.toString();
-        clock_str += ":";
-
-        if (minutes < 10) {
-          clock_str += "0";
-        }
-        clock_str += minutes.toString();
-        clock_str += ":";
-
-        if (seconds < 10) {
-          clock_str += "0";
-        }
-        clock_str += seconds.toString();
-
-        $("#running-clock").html(clock_str);
+      runningClockMethod();
     }
-
 
     /************************************************** Helper functions ******************************************/
     function notifyError(element, notification, fade_out) {
@@ -423,7 +419,7 @@ $(document).ready(function() {
     $("#scheduled-send-clock-selector").change(handleScheduledSendSetupDependingOptions);
 
     $("#synchronize-media-clock-button").click(function() {
-        scheduled_send_media_clock_offset = Date.now();
+        scheduled_send_media_clock_offset = new Date(0);
         stopResetRunningClock();
         interval_running_clock = setInterval(updateRunningClockMedia, 500);
         notifySuccess($("#scheduled-send-status-span"), "Synchronized", true);
@@ -563,7 +559,7 @@ $(document).ready(function() {
         } else {
           rendered_document = doc;
         }
-        
+
         if (socket.websocket) {
           socket.websocket.send(rendered_document);
         } else {
