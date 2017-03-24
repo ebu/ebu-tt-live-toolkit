@@ -103,6 +103,7 @@ class HandoverUnittests(TestCase):
 
     def test_control_request_passthrough(self):
         message = EBUTTAuthorsGroupControlRequest(
+            sequence_identifier='TestSequence',
             sender='testSender',
             recipient=[
                 'rec1',

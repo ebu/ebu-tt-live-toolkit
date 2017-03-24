@@ -64,6 +64,7 @@ class TestEBUTT3Document(TestCase):
         instance = EBUTT3ObjectBase.create_from_xml(xml)
 
         self.assertIsInstance(instance, EBUTTAuthorsGroupControlRequest)
+        self.assertEqual(instance.sequence_identifier, 'TestSequence')
         self.assertEqual(instance.sender, 'testsender')
         self.assertEqual(instance.recipient, ['testrecipient1', 'testrecipient2'])
         self.assertEqual(instance.payload, 'This is a message for unittesting this messaging class.')

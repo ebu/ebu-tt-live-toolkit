@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 <ebuttlm:message
-    xmlns:ebuttlm="urn:ebu:tt:livemessage" >
+        ebuttp:sequenceIdentifier="TestSequence"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:ebuttlm="urn:ebu:tt:livemessage" >
     <ebuttlm:header>
         <ebuttlm:sender>testsender</ebuttlm:sender>
         <ebuttlm:recipient>testrecipient1</ebuttlm:recipient>

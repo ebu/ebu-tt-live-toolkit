@@ -179,6 +179,11 @@ class EBUTTLiveMessage(EBUTT3ObjectBase):
     _sender = None
     _recipient = None
     _payload = None
+    _sequence_identifier = None
+
+    @property
+    def sequence_identifier(self):
+        return self._sequence_identifier
 
     @property
     def payload(self):
@@ -197,7 +202,8 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
 
     message_type_id = 'authorsGroupControlRequest'
 
-    def __init__(self, payload, sender=None, recipient=None):
+    def __init__(self, sequence_identifier, payload, sender=None, recipient=None):
+        self._sequence_identifier = sequence_identifier
         self._payload = payload
         self._sender = sender
         self._recipient = recipient
@@ -211,6 +217,7 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
         if self.sender:
             header.sender = self.sender
         return ebuttlm.message(
+            sequenceIdentifier=self.sequence_identifier,
             header=header,
             payload=self._payload,
             _strict_keywords=False
@@ -225,6 +232,7 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
     @classmethod
     def create_from_raw_binding(cls, binding, **kwargs):
         return cls(
+            sequence_identifier=binding.sequenceIdentifier,
             sender=binding.header.sender,
             recipient=binding.header.recipient,
             payload=binding.payload.orderedContent()[0].value  # anyType is considered complex type

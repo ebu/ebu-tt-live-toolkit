@@ -28,6 +28,7 @@ class TestRetimingDelayNode(TestCase):
     def test_control_request_passthrough(self):
         # It should pass through
         message = EBUTTAuthorsGroupControlRequest(
+            sequence_identifier='TestSequence',
             sender='testSender',
             recipient=[
                 'rec1',
@@ -66,6 +67,7 @@ class TestBufferDelayNode(TestCase):
     def test_control_request_passthrough(self):
         # It should pass through
         message = EBUTTAuthorsGroupControlRequest(
+            sequence_identifier='TestSequence',
             sender='testSender',
             recipient=[
                 'rec1',

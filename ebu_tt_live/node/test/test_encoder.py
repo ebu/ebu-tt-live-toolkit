@@ -113,6 +113,7 @@ class TestEBUTTDEncoderSuccess(TestCase):
     def test_control_request(self):
         # The message should not pass through the encoder
         message = EBUTTAuthorsGroupControlRequest(
+            sequence_identifier='TestSequence',
             sender='sender',
             recipient=['one', 'two'],
             payload='Test payload'

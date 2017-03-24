@@ -2,9 +2,11 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns="http://www.w3.org/1999/xhtml"
            xmlns:xml="http://www.w3.org/XML/1998/namespace"
+           xmlns:ebuttp="urn:ebu:tt:parameters"
            xmlns:ebuttlm="urn:ebu:tt:livemessage"
            targetNamespace="urn:ebu:tt:livemessage" elementFormDefault="qualified"
            xml:lang="en">
+    <xs:import namespace="urn:ebu:tt:parameters" schemaLocation="ebutt_parameters.xsd"/>
 
     <xs:complexType name="message_header_type">
         <xs:annotation>
@@ -31,6 +33,8 @@
             <xs:element name="header" type="ebuttlm:message_header_type" />
             <xs:element name="payload" type="xs:anyType" />
         </xs:sequence>
+
+        <xs:attribute ref="ebuttp:sequenceIdentifier" use="required"/>
 
     </xs:complexType>
     <xs:element name="message" type="ebuttlm:message_type" />

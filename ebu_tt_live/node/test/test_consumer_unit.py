@@ -37,6 +37,7 @@ class TestSimpleConsumerUnit(TestCase):
         # The message must be ignored
 
         message = EBUTTAuthorsGroupControlRequest(
+            sequence_identifier='TestSequence',
             sender='sender',
             recipient=['one', 'two'],
             payload='Test payload'
