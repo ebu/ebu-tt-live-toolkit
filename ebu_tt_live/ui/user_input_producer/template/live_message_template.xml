@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<ebuttlm:message
+        ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:ebuttlm="urn:ebu:tt:livemessage" >
+    <ebuttlm:header>
+      {% if sender %}
+        <ebuttlm:sender>{{ sender }}</ebuttlm:sender>
+      {% endif %}
+      {% if recipient %}
+      {% for item in recipient %}
+        <ebuttlm:recipient>{{ item }}</ebuttlm:recipient>
+      {% endfor %}
+      {% endif %}
+        <ebuttlm:type>authorsGroupControlRequest</ebuttlm:type>
+    </ebuttlm:header>
+    <ebuttlm:payload>{{ payload }}</ebuttlm:payload>
+</ebuttlm:message>
