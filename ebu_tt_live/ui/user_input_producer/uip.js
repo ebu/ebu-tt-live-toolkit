@@ -5,7 +5,6 @@ $(document).ready(function() {
     var interval_send = null;
     var scheduled_send_media_clock_offset = null;
     var interval_running_clock = null;
-    //var clock_time = null;
 
     if (typeof(Storage) === "undefined") {
         window.alert("You are using an old browser that does not allow to save data between session. Do not reload this page or you will lose your defined sequences.");
@@ -99,6 +98,8 @@ $(document).ready(function() {
         stopResetRunningClock();
         if (selected_clock_type == "local") {
             $("#synchronize-media-clock-button").hide();
+            $('#running-clock').show();
+            $('#running-clock-media').hide();
             interval_running_clock = setInterval(updateRunningClockLocal, 500);
         } else {
             $("#synchronize-media-clock-button").show();
@@ -385,7 +386,9 @@ $(document).ready(function() {
 
     $("#synchronize-media-clock-button").click(function() {
         scheduled_send_media_clock_offset = moment();
-        stopResetRunningClock();
+        //stopResetRunningClock();
+        $('#running-clock').hide();
+        $('#running-clock-media').show();
         interval_running_clock = setInterval(updateRunningClockMedia, 500);
         notifySuccess($("#scheduled-send-status-span"), "Synchronized", true);
     });
