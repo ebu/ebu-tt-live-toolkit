@@ -27,7 +27,7 @@ $(document).ready(function() {
     /********************************************************** Options to show or not depending on other options and general purpose functions****************************/
 
     function stopResetRunningClock() {
-        $("#running-media-clock").html("");
+        //$("#running-clock").empty();
         if (interval_running_clock != null) {
             clearInterval(interval_running_clock);
             interval_running_clock = null;
@@ -98,6 +98,8 @@ $(document).ready(function() {
         stopResetRunningClock();
         if (selected_clock_type == "local") {
             $("#synchronize-media-clock-button").hide();
+            $('#running-clock').show();
+            $('#running-clock-media').hide();
             interval_running_clock = setInterval(updateRunningClockLocal, 500);
         } else {
             $("#synchronize-media-clock-button").show();
@@ -107,59 +109,19 @@ $(document).ready(function() {
     handleScheduledSendSetupDependingOptions();
 
     function updateRunningClockMedia() {
-        var current_media_clock_time = Date.now() - scheduled_send_media_clock_offset;
-        var hours = Math.floor(current_media_clock_time / 3600000);
-        var minutes = Math.floor(current_media_clock_time / 60000) % 60;
-        var seconds = Math.floor(current_media_clock_time / 1000) % 60;
-        var clock_str = "";
+      var diff = moment().diff(scheduled_send_media_clock_offset);
+      var offset = moment(diff).format('HH:mm:ss');
 
-        if (hours < 10) {
-          clock_str += "0";
-        }
-        clock_str += hours.toString();
-        clock_str += ":";
-
-        if (minutes < 10) {
-          clock_str += "0";
-        }
-        clock_str += minutes.toString();
-        clock_str += ":";
-
-        if (seconds < 10) {
-          clock_str += "0";
-        }
-        clock_str += seconds.toString();
-
-        $("#running-clock").html(clock_str);
+      $('#running-clock-media').html(offset);
+      setTimeout(updateRunningClockMedia, 500);
     }
 
     function updateRunningClockLocal() {
-        var current_clock_time = new Date(Date.now());
-        var hours = current_clock_time.getHours();
-        var minutes = current_clock_time.getMinutes();
-        var seconds = current_clock_time.getSeconds();
-        var clock_str = "";
+      var time = moment().format('HH:mm:ss');
 
-        if (hours < 10) {
-          clock_str += "0";
-        }
-        clock_str += hours.toString();
-        clock_str += ":";
-
-        if (minutes < 10) {
-          clock_str += "0";
-        }
-        clock_str += minutes.toString();
-        clock_str += ":";
-
-        if (seconds < 10) {
-          clock_str += "0";
-        }
-        clock_str += seconds.toString();
-
-        $("#running-clock").html(clock_str);
+      $('#running-clock').html(time);
+      setTimeout(updateRunningClockLocal, 500);
     }
-
 
     /************************************************** Helper functions ******************************************/
     function notifyError(element, notification, fade_out) {
@@ -423,8 +385,10 @@ $(document).ready(function() {
     $("#scheduled-send-clock-selector").change(handleScheduledSendSetupDependingOptions);
 
     $("#synchronize-media-clock-button").click(function() {
-        scheduled_send_media_clock_offset = Date.now();
+        scheduled_send_media_clock_offset = moment();
         stopResetRunningClock();
+        $('#running-clock').hide();
+        $('#running-clock-media').show();
         interval_running_clock = setInterval(updateRunningClockMedia, 500);
         notifySuccess($("#scheduled-send-status-span"), "Synchronized", true);
     });
@@ -563,7 +527,7 @@ $(document).ready(function() {
         } else {
           rendered_document = doc;
         }
-        
+
         if (socket.websocket) {
           socket.websocket.send(rendered_document);
         } else {
