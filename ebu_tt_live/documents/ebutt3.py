@@ -227,6 +227,18 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         self._ebutt3_content.sequenceIdentifier = value
 
     @property
+    def authors_group_control_token(self):
+        return self._ebutt3_content.authorsGroupControlToken
+
+    @property
+    def authors_group_identifier(self):
+        return self._ebutt3_content.authorsGroupIdentifier
+
+    @property
+    def authors_group_control_request(self):
+        return self._ebutt3_content.authorsGroupControlRequest
+
+    @property
     def lang(self):
         return self._ebutt3_content.lang
 
