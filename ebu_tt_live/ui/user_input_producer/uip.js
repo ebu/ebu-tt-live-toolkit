@@ -27,7 +27,7 @@ $(document).ready(function() {
     /********************************************************** Options to show or not depending on other options and general purpose functions****************************/
 
     function stopResetRunningClock() {
-        $("#running-clock").empty();
+        //$("#running-clock").empty();
         if (interval_running_clock != null) {
             clearInterval(interval_running_clock);
             interval_running_clock = null;
@@ -386,7 +386,7 @@ $(document).ready(function() {
 
     $("#synchronize-media-clock-button").click(function() {
         scheduled_send_media_clock_offset = moment();
-        //stopResetRunningClock();
+        stopResetRunningClock();
         $('#running-clock').hide();
         $('#running-clock-media').show();
         interval_running_clock = setInterval(updateRunningClockMedia, 500);
