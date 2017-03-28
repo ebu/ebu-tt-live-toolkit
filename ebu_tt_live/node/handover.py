@@ -76,6 +76,7 @@ class HandoverNode(SwitcherNode):
                 self._current_token = document.authors_group_control_token  # So are we going to error here?
                 self._last_sequence_number += 1
 
+                document.authors_group_selected_sequence_identifier = document.sequence_identifier
                 document.sequence_identifier = self._sequence_identifier
                 document.sequence_number = self._last_sequence_number
                 self.producer_carriage.emit_data(

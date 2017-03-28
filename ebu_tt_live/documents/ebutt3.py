@@ -333,8 +333,12 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
         return self._ebutt3_content.authorsGroupIdentifier
 
     @property
-    def authors_group_control_request(self):
-        return self._ebutt3_content.authorsGroupControlRequest
+    def authors_group_selected_sequence_identifier(self):
+        return self._ebutt3_content.authorsGroupSelectedSequenceIdentifier
+
+    @authors_group_selected_sequence_identifier.setter
+    def authors_group_selected_sequence_identifier(self, value):
+        self._ebutt3_content.authorsGroupSelectedSequenceIdentifier = value
 
     @property
     def lang(self):
