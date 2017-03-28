@@ -197,14 +197,25 @@ $(document).ready(function() {
         $("#new-sequence-notification-span").text("");
     }
 
-    function createDocumentListItem(xmldata) {
-        /* Parse XML to extract important handover information */
-        var parser = new DOMParser();
-        var parsedXml = parser.parseFromString(xmldata, "text/xml");
-        var tt = parsedXml.documentElement;
+    function createMessageListItem(message) {
+        var clonedElement = $('#result-list .message-item-template').clone();
+        clonedElement.find('.sender-value').text(
+            message.getElementsByTagNameNS(
+                'urn:ebu:tt:livemessage', 'header'
+            )[0].getElementsByTagNameNS(
+                'urn:ebu:tt:livemessage', 'sender'
+            )[0].firstChild.nodeValue
+        );
 
+        clonedElement.removeClass('message-item-template');
+        clonedElement.addClass('result-list-item');
+
+        return clonedElement;
+    }
+
+    function createDocumentListItem(tt) {
         /* Clone template list item and fill in the details */
-        var clonedElement = $('#result-list .result-list-item-template').clone();
+        var clonedElement = $('#result-list .doc-item-template').clone();
         clonedElement.find('.seqNum-value').text(
             tt.getAttributeNS('urn:ebu:tt:parameters', 'sequenceNumber')
         );
@@ -214,8 +225,25 @@ $(document).ready(function() {
         clonedElement.find('.autGCT-value').text(
             tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupControlToken')
         );
-        clonedElement.removeClass('result-list-item-template');
+        clonedElement.removeClass('doc-item-template');
         clonedElement.addClass('result-list-item');
+
+        return clonedElement;
+    }
+
+    function createListItem(xmldata) {
+        /* Parse XML to extract important handover information */
+        var parser = new DOMParser();
+        var parsedXml = parser.parseFromString(xmldata, "text/xml");
+        var item = parsedXml.documentElement;
+        var clonedElement = '';
+
+        // Create 2 different list item types
+        if (item.namespaceURI != 'urn:ebu:tt:livemessage') {
+            clonedElement = createDocumentListItem(item);
+        } else {
+            clonedElement = createMessageListItem(item);
+        }
 
         clonedElement.data('xml', xmldata);
 
@@ -223,7 +251,6 @@ $(document).ready(function() {
 
         /* if over 10 items discard the oldest */
         $('#result-list .result-list-item').slice(0, -10).remove();
-
     }
 
     /******************************************* Websocket logic ***********************************************/
@@ -279,7 +306,7 @@ $(document).ready(function() {
     }
 
     function subWebsocketOnMessage(e) {
-        createDocumentListItem(e.data);
+        createListItem(e.data);
     }
 
     function subWebsocketOnClose(e) {
