@@ -83,6 +83,7 @@ class HandoverNode(SwitcherNode):
                     **kwargs
                 )
         else:
+            document.sequence_identifier = self._sequence_identifier
             self.producer_carriage.emit_data(
                 data=document,
                 **kwargs

@@ -487,6 +487,35 @@ $(document).ready(function() {
         return template_data;
     }
 
+    function createHandoverMessageTemplateDict(request_message) {
+        var template_data = {}
+
+        template_data['sender'] = $("#sequence-selector").val();  // TODO: Change this to something more sensible
+        template_data['sequence_identifier'] = $("#sequence-selector").val();
+        template_data['recipient'] = [];  // TODO: This is probably not needed but part of message header
+        template_data['payload'] = request_message;
+
+        return template_data;
+    }
+
+    function renderHandoverMessageTemplate(template_data) {
+        var rendered_document = nunjucks.render(
+          'ebu_tt_live/ui/user_input_producer/template/live_message_template.xml',
+          template_data
+        );
+        return rendered_document;
+    }
+
+    function sendHandoverMessage(message_obj) {
+        if (socket.connected) {
+            socket.websocket.send(
+                message_obj
+            );
+            return true;
+        }
+        return false;
+    }
+
     function computeScheduledSendTimeout(media_offset = null) {
         var timeout = 0;
         // if the media offset is not set we suppose that we are running in local clock mode.
@@ -636,4 +665,24 @@ $(document).ready(function() {
         $('#result-view-pre').show();
     });
 
+    $('#submit-ag-control-request-button').click(function(e) {
+        var message = $('#ag-control-request-input').val();
+
+        var success = sendHandoverMessage(
+            renderHandoverMessageTemplate(
+                createHandoverMessageTemplateDict(message)
+            )
+        );
+
+        if (success) {
+            $('#ag-control-request-input').val('');
+        }
+    });
+
+    $('#ag-control-request-input').keydown(function(evt) {
+        var keyCode = evt.which;
+        if (keyCode == 13) {
+            $("#submit-ag-control-request-button").trigger('click');
+        }
+    });
 });

@@ -185,6 +185,10 @@ class EBUTTLiveMessage(EBUTT3ObjectBase):
     def sequence_identifier(self):
         return self._sequence_identifier
 
+    @sequence_identifier.setter
+    def sequence_identifier(self, value):
+        self._sequence_identifier = value
+
     @property
     def payload(self):
         return self._payload
