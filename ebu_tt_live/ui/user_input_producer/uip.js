@@ -193,6 +193,16 @@ $(document).ready(function() {
         return clonedElement;
     }
 
+    function checkOnAir(tt) {
+        if(tt.getAttributeNS(
+            'urn:ebu:tt:metadata', 'authorsGroupSelectedSequenceIdentifier'
+        ) == $("#sequence-selector").val()) {
+            $('#on-air-span').addClass('selected');
+        } else {
+            $('#on-air-span').removeClass('selected');
+        }
+    }
+
     function createListItem(xmldata) {
         /* Parse XML to extract important handover information */
         var parser = new DOMParser();
@@ -203,6 +213,7 @@ $(document).ready(function() {
         // Create 2 different list item types
         if (item.namespaceURI != 'urn:ebu:tt:livemessage') {
             clonedElement = createDocumentListItem(item);
+            checkOnAir(item);
         } else {
             clonedElement = createMessageListItem(item);
         }

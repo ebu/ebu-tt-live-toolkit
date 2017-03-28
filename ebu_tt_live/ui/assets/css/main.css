@@ -114,3 +114,11 @@ div {margin-top: 1%;}
     display: none;
 }
 
+#on-air-span {
+    color: white;
+    font-weight: bold;
+}
+
+#on-air-span.selected {
+    background: red;
+}
