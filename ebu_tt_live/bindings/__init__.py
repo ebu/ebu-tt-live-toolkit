@@ -472,7 +472,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             authoringDelay=self.authoringDelay,
             authorsGroupIdentifier=self.authorsGroupIdentifier,
             authorsGroupControlToken=self.authorsGroupControlToken,
-            authorsGroupControlRequest=self.authorsGroupControlRequest,
+            authorsGroupSelectedSequenceIdentifier=self.authorsGroupSelectedSequenceIdentifier,
             referenceClockIdentifier=self.referenceClockIdentifier,
             _strict_keywords=False
         )
