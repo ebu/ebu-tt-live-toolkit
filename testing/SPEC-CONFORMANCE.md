@@ -31,7 +31,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R21|2.3.4|~~A Delay node shall NOT emit an output sequence with reordered subtitles.~~|Replaced by a 'should' for a retiming delay node|
 |R22|2.3.4|~~A Delay node shall NOT update the value of `ebuttm:authoringDelay`.~~|Replaced by R117 and R119.|
 |R23|2.4|The Handover Manager node shall use a 'who claimed control most recently' algorithm for selecting the sequence, based on a control token parameter within each document.| |
-|R24|2.4.1|All documents within a sequence that contain the element `ebuttp:authorsGroupIdentifier` shall have the same `ebuttp:authorsGroupIdentifier`.| |
+|R24|2.4.1|Within a single sequence, all documents that contain the element `ebuttp:authorsGroupIdentifier` shall have the same `ebuttp:authorsGroupIdentifier`.| |
 |R25|2.4.1|when a document is received with a higher value `ebuttp:authorsGroupControlToken` than that most recently received in the currently selected sequence the Handover Manager shall switch to that document's sequence, i.e. it shall emit a document in its output sequence corresponding to the received document with the new control token without delay.| |
 |R26|2.5|it is an error to apply more than one `facet` with the same term identifier to the same content element, where the term identifier is the combination of the term name and the link attribute's value.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
 |R27|2.5.1|If all the content in a document has a `facet` then the summary shall be `"all\_has"`.| `bdd/features/validation/facet.feature` `(In)valid term identifier`|
