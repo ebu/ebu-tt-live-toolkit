@@ -129,7 +129,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R116|2.3.4.2|~~A Retiming Delay node shall not emit an output sequence with reordered subtitles.~~ |Relaxed to 'Should'|
 |R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`. |`bdd/features/timing/retimingDelayNode.feature`|
 |R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.|NOTE: Due to partial support for XQuery functions in the Python libraries that we use, this requirement is not implemented fully in this toolkit. Equality testing in other implementation may produce slightly different results.|
-|R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`||
-||| ** March 2017 **|||
+|R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`|
+||| ** March 2017 **||
 |R120|2.4.1|The Handover Manager shall include within each output document the metadata attribute `authorsGroupSelectedSequenceIdentifier` set to the value of the source sequence's identifier for that document.||
 |R121|2.4.1|The Handover Manager shall not emit any documents derived from documents that do not contain both the parameters `ebuttp:authorsGroupIdentifier` and `ebuttp:authorsGroupControlToken`.||
