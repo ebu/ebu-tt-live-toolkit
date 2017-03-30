@@ -5,24 +5,24 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 ## SHALL requirements
 
 |ID|Section|Statement|Feature file path and Scenario name|
-|--|-------|---------|-----------------------------------|
-| | **Tech3370**| | |
-| R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
-| R2|2.2 |If no document is active, or if a document with no content is active, no content shall be displayed. | |
-| R3|2.2 |Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
-| R4|2.2 |Every distinct sequence shall have a unique sequence identifier.| |
-| R5|2.2 |A document shall be associated with exactly one sequence.| |
-| R6|2.2 |the sequence identifier shall be present within every document|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
-| R7|2.2 |Documents with the same sequence identifier shall contain a sequence number.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
-| R8|2.2 |~~Every distinct document with the same sequence identifier shall have a different sequence number.~~|Deprecated. See R107|
-| R9|2.2 |Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
-|R10|2.2 |Every document in a sequence shall be valid and self-contained.| |
-|R11|2.2 |Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. ~~(Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)~~ SMPTE Deprecated.|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
-|R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.| |
-|R12|2.2 |A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s). See R118 for a definition of identity.|`bdd/nodes/passive_nodes_shall_not_modify_documents.feature`|
-|R13|2.2 |At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.|`/bdd/features/timing/resolved_times.feature`|
+|--|---|---|---------|-----------------------------------|
+| | | **Tech3370**| | |
+|R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
+|R2|2.2 |If no document is active, or if a document with no content is active, no content shall be displayed. | |
+|R3|2.2|Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
+|R4|2.2|Every distinct sequence shall have a unique sequence identifier.| |
+|R5|2.2|A document shall be associated with exactly one sequence.| |
+|R6|2.2|the sequence identifier shall be present within every document|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
+|R7|2.2|Documents with the same sequence identifier shall contain a sequence number.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
+|R8|2.2|~~Every distinct document with the same sequence identifier shall have a different sequence number.~~|Deprecated. See R107|
+|R9|2.2|Sequence numbers shall increase with the passage of time for each new document that is made available.|`../ebu\_tt\_live/documents/test/test\_ebutt3sequence.py` `test\_increasing\_sequence\_number`|
+|R10|2.2|Every document in a sequence shall be valid and self-contained.| |
+|R11|2.2|Every document in a sequence shall have an identical timing model as defined by using the same values for the `ttp:timeBase` and `ttp:clockMode` attributes. ~~(Note issue to add `frameRate`, `frameRateMultiplier` and `dropMode` to this attribute set)~~ SMPTE Deprecated.|`bdd/features/validation/sequence\_identical\_timing\_model.feature` `(Not) compatible document`|
+|R15|2.3.1|The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.| |
+|R12|2.2|A passive node shall NOT modify input sequences and shall only emit sequences that are identical (including the sequence numbers) to the input sequence(s). See R118 for a definition of identity.|`bdd/nodes/passive_nodes_shall_not_modify_documents.feature`|
+|R13|2.2|At any moment in the presentation of a sequence by a node exactly zero or one document shall be temporally active.|`/bdd/features/timing/resolved_times.feature`|
 |R14|2.3.1|At any single moment in time during the presentation of a sequence either zero documents or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
-|R15|2.3.1 |The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.|`/bdd/features/timing/resolved_times.feature`|
+|R15|2.3.1|The period during which a document is active begins at the document resolved begin time and ends at the document resolved end time.|`/bdd/features/timing/resolved_times.feature`|
 |R16|2.3.1.1|The document resolved begin time shall be the later of (a) the document availability time, (b) the earliest computed begin time in the document and (c) any externally specified document activation begin time, such as the beginning of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
 |R17|2.3.1.2|The document resolved end time shall be the earlier of (a) the earliest document resolved begin time of all available documents in the sequence with a greater sequence number, (b) the document resolved begin time plus the value of the `dur` attribute, if and only if the `dur` attribute is present, (c) the latest computed end time in the document and (d) any externally specified document deactivation time, such as the end of sequence presentation.|`bdd/features/timing/resolved\_times.feature`|
 |R18|2.3.1.3|When no document is active a presentation processor shall NOT render any content.| |
@@ -76,7 +76,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R66|3.2.2.6.1|Each distinctly identified facet shall have a separate `facet` element, where facets are identified by combination of the text content and the link attribute.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
 |R67|3.2.2.6.1|Elements shall NOT contain more than one `facet` element referring to the same term.|`bdd/features/validation/facet.feature` `(In)valid term identifier`|
 |R68|3.3.1| `ebuttdt:delayTimingType` The content shall be constrained to a signed (positive or negative) number with an optional decimal fraction, followed by a time metric being one of: "h" (hours), "m" (minutes), "s" (seconds), "ms" (milliseconds).|`bdd/features/delayTimingType.feature` `(In)valid delayTimingType format`|
-| | **Tech3350 v1.1**| | |
+| | | **Tech3350 v1.1**| |
 |R69|3|~~If `ttp:timeBase="smpte"` then the time expression of `begin` and `end`  SHALL have the format hh:mm:ss:ff~~ SMPTE Deprecated.|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
 |R70|3|If `ttp:timeBase="media"` then the time expression of `begin` and `end` attributes SHALL have one of the following formats: (1) hh:mm:ss followed by an optional decimal fraction (full-clock value). The number of hours SHALL NOT be restricted. (2) Non-negative number followed by an optional decimal fraction followed by one of the symbols h, m, s, ms (time-count value)|`bdd/features/validation/timeBase\_timeformat\_constraints.feature`|
 |R71|3|~~If `timebase="smpte"` then the attributes `ttp:markerMode`, `ttp:frameRate` and `ttp:dropMode` SHALL be specified on `tt:tt`~~|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
@@ -116,8 +116,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R104|3.2.2.3.3|~~`span` `end` attribute: If the timebase is "smpte" the type shall be `ebuttdt:smpteTimingType`. ~~ SMPTE Deprecated.|`bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span` |
 |R105|3.2.2.3.3|`span` `end` attribute: If the timebase is "media" the type shall be `ebuttdt:mediaTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
 |R106|3.2.2.3.3|`span` `end` attribute: If the timebase is "clock" the type shall be `ebuttdt:clockTimingType`. | `bdd/features/validation/timeBase\_timeformat\_constraints.feature` `(In)valid times according to timeBase in span`|
-| | **Tech3370 Revision 1 (Dec 2016)**| | |
-|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in a previously received document.|`ebu_tt_live/documents/test/test_ebutt3sequence.py`|
+| |  | **Tech3370 Revision 1 (Dec 2016)**||
+|R107|3.2.2.1|Processors shall discard documents whose pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber` are identical to those in ~~a previously received document~~ its document cache.|`ebu_tt_live/documents/test/test_ebutt3sequence.py`|
 |R108|3.2.2.1|When discarding a document with a previously received pair of `ebuttp:sequenceIdentifier` and `ebuttp:sequenceNumber`, the availability time of the document shall NOT be changed due to such a discard.|`bdd/features/segmentation/duplicate_sequence_id+nun.feature`|
 |R109|2.3.4.1|Buffer and Retiming Delay nodes SHALL accept a non-negative offset value |`bdd/features/timing/bufferDelayNode.feature`|
 |R110|2.3.4.1|~~A Buffer Delay node SHALL NOT alter the sequence identifier~~| Implicit in R119|
