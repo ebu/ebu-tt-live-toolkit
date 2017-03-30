@@ -16,7 +16,6 @@ Feature: Handover algorithm
     And it has authorsGroupControlToken <token_1>
     And the document is generated
     And the document is processed 
-    # ^^^ ASSUMING THIS STEP COVERS CACHED TOKENS, IE THE SECOND DOCUMENTS DOESN'T HAVE TO FOLLOW IMMEDIATELY 
     And another document arrives 
     And it has sequence identifier <seq_id_2>
     And it has authorsGroupControlToken <token_2>
