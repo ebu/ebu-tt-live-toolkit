@@ -11,11 +11,9 @@ class TestDistributingNode(TestCase):
     def setUp(self):
         carriage = MagicMock(spec=IProducerCarriage)
         carriage.expects.return_value = six.text_type
-        reference_clock = MagicMock()
         self.distributing_node = DistributingNode(
             node_id='distributing_node',
-            producer_carriage=carriage,
-            reference_clock=reference_clock
+            producer_carriage=carriage
         )
 
     def test_process_document(self):
@@ -27,7 +25,8 @@ class TestDistributingNode(TestCase):
             sequence_identifier=document.sequence_identifier,
             sequence_number=document.sequence_number,
             time_base=document.time_base,
-            availability_time=document.availability_time
+            availability_time=document.availability_time,
+            clock_mode=document.clock_mode
         )
 
     def test_process_document_raw_xml(self):
@@ -41,7 +40,8 @@ class TestDistributingNode(TestCase):
             sequence_identifier=document.sequence_identifier,
             sequence_number=document.sequence_number,
             time_base=document.time_base,
-            availability_time=document.availability_time
+            availability_time=document.availability_time,
+            clock_mode=document.clock_mode
         )
 
     def test_check_document_buffer_overflow(self):

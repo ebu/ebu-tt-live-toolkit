@@ -217,11 +217,13 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
 
     message_type_id = 'authorsGroupControlRequest'
 
-    def __init__(self, sequence_identifier, payload, sender=None, recipient=None):
+    def __init__(self, sequence_identifier, payload, availability_time=None, sender=None, recipient=None):
         self._sequence_identifier = sequence_identifier
         self._payload = payload
         self._sender = sender
         self._recipient = recipient
+        if availability_time is not None:
+            self._availability_time = availability_time
 
     def _create_binding(self):
         header = ebuttlm.message_header_type(
@@ -245,7 +247,7 @@ class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
         return self._create_binding().toxml()
 
     @classmethod
-    def create_from_raw_binding(cls, binding, **kwargs):
+    def create_from_raw_binding(cls, binding, availability_time=None, **kwargs):
         return cls(
             sequence_identifier=binding.sequenceIdentifier,
             sender=binding.header.sender,

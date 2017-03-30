@@ -32,7 +32,8 @@ class DistributingNode(AbstractCombinedNode):
                     sequence_identifier=document.sequence_identifier,
                     sequence_number=document.sequence_number,
                     time_base=document.time_base,
-                    availability_time=document.availability_time
+                    availability_time=document.availability_time,
+                    clock_mode=document.clock_mode
                 ))
                 self.producer_carriage.emit_data(
                     data=data,

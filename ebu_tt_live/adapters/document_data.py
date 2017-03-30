@@ -27,7 +27,10 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
             )
         else:
             # If not an ebutt live document then a message
-            doc = EBUTTAuthorsGroupControlRequest.create_from_raw_binding(binding_inst)
+            doc = EBUTTAuthorsGroupControlRequest.create_from_raw_binding(
+                binding_inst,
+                availability_time=availability_time
+            )
 
         if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
             log.error(
@@ -76,7 +79,8 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
                 'sequence_identifier': data.sequence_identifier,
                 'sequence_number': data.sequence_number,
                 'availability_time': data.availability_time,
-                'time_base': data.time_base
+                'time_base': data.time_base,
+                'clock_mode': data.clock_mode
             })
         else:
             kwargs.update({
