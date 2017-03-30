@@ -5,7 +5,7 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 ## SHALL requirements
 
 |ID|Section|Statement|Feature file path and Scenario name|
-|--|---|---|---------|-----------------------------------|
+|--|-------|---------|-----------------------------------|
 | | | **Tech3370**| | |
 |R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
 |R2|2.2 |If no document is active, or if a document with no content is active, no content shall be displayed. | |
