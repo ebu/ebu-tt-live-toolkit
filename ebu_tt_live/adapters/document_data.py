@@ -28,12 +28,15 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
         else:
             # If not an ebutt live document then a message
             doc = EBUTTAuthorsGroupControlRequest.create_from_raw_binding(binding_inst)
-        kwargs['raw_xml'] = data
+
         if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
             log.error(
                 'Sequence identifier mismatch found: {} != {}'.format(sequence_identifier, doc.sequence_identifier)
             )
             raise UnexpectedSequenceIdentifierError()
+        kwargs.update(dict(
+            raw_xml=data
+        ))
         return doc, kwargs
 
 
@@ -77,8 +80,8 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
             })
         else:
             kwargs.update({
-                'sequence_identifier': data.sequence_identifier
-                #'availability_time': data.availability_time,
+                'sequence_identifier': data.sequence_identifier,
+                'availability_time': data.availability_time,
             })
         instance = data.get_xml()
         return instance, kwargs

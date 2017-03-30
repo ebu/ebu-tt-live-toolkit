@@ -180,6 +180,7 @@ class EBUTTLiveMessage(EBUTT3ObjectBase):
     _recipient = None
     _payload = None
     _sequence_identifier = None
+    _availability_time = None
 
     @property
     def sequence_identifier(self):
@@ -200,6 +201,16 @@ class EBUTTLiveMessage(EBUTT3ObjectBase):
     @property
     def recipient(self):
         return self._recipient
+
+    @property
+    def availability_time(self):
+        return self._availability_time
+
+    @availability_time.setter
+    def availability_time(self, value):
+        if not isinstance(value, timedelta):
+            raise TypeError
+        self._availability_time = value
 
 
 class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):

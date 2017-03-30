@@ -27,7 +27,17 @@ class DistributingNode(AbstractCombinedNode):
                     data = raw_xml
                 else:
                     data = document.get_xml()
-                self.producer_carriage.emit_data(data=data, **kwargs)
+
+                kwargs.update(dict(
+                    sequence_identifier=document.sequence_identifier,
+                    sequence_number=document.sequence_number,
+                    time_base=document.time_base,
+                    availability_time=document.availability_time
+                ))
+                self.producer_carriage.emit_data(
+                    data=data,
+                    **kwargs
+                )
             else:
                 log.warning(
                     'Ignoring duplicate document: {}__{}'.format(
@@ -36,4 +46,11 @@ class DistributingNode(AbstractCombinedNode):
                     )
                 )
         else:
-            self.producer_carriage.emit_data(data=document.get_xml(), **kwargs)
+            kwargs.update(dict(
+                sequence_identifier=document.sequence_identifier,
+                availability_time=document.availability_time
+            ))
+            self.producer_carriage.emit_data(
+                data=document.get_xml(),
+                **kwargs
+            )
