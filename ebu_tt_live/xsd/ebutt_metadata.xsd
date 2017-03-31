@@ -526,14 +526,18 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:documentation>
 		</xs:annotation>
 	</xs:attribute>
-	
-	<xs:attribute name="authorsGroupControlRequest" type="xs:string">
+
+	<xs:attribute name="authorsGroupSelectedSequenceIdentifier">
 		<xs:annotation>
 			<xs:documentation>
-				Allows an author to signal their intent to continue providing a stream, or to request that another author begins creating
-				output with a higher ebuttp:authorsGroupControlToken value.
+				The selected sequenceIdentifier is to be moved here by the handover node.
 			</xs:documentation>
 		</xs:annotation>
+		<xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:minLength value="1"></xs:minLength>
+            </xs:restriction>
+        </xs:simpleType>
 	</xs:attribute>
 	
     <xs:complexType name="sourceMediaIdentifier_type">

@@ -40,6 +40,11 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
                 should select documents when generating its output sequence.
             </xs:documentation>
         </xs:annotation>
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:minLength value="1"></xs:minLength>
+            </xs:restriction>
+        </xs:simpleType>
     </xs:attribute>
     
     <xs:attribute name="authorsGroupControlToken" type="xs:positiveInteger">

@@ -52,3 +52,6 @@ DOC_TRIMMED = gettext('Document {sequence_identifier}__{sequence_number} activat
 DOC_RECEIVED = gettext('Document {sequence_identifier}__{sequence_number} received. Calculated activation: [{computed_begin_time}; {computed_end_time}]')
 DOC_REQ_SEGMENT = gettext('{sequence_identifier}__{sequence_number}: requesting segment ({begin} - {end})')
 DOC_SEQ_REQ_SEGMENT = gettext('{sequence_identifier}: requesting segment ({begin} - {end})')
+
+FS_DEFAULT_CLOCK_USED = gettext('Availability time not provided, creating default clock for sequence: {sequence_identifier}')
+FS_MISSING_AVAILABILITY = gettext('Could not resolve availability time for item in sequence: {sequence_identifier}. Item discarded.')

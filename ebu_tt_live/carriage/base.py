@@ -1,5 +1,6 @@
 from .interface import IProducerCarriage, IConsumerCarriage
 from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
+from ebu_tt_live.documents import SubtitleDocument
 from ebu_tt_live.errors import ComponentCompatError, DataCompatError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, \
     ERR_INCOMPATIBLE_DATA_PROVIDED
@@ -8,7 +9,16 @@ from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DAT
 # ================
 
 
-class AbstractProducerCarriage(IProducerCarriage):
+class AbstractCarriage(object):
+
+    def is_document(self, document):
+        if isinstance(document, SubtitleDocument):
+            return True
+        else:
+            return False
+
+
+class AbstractProducerCarriage(IProducerCarriage, AbstractCarriage):
 
     _producer_node = None
 
@@ -38,7 +48,7 @@ class AbstractProducerCarriage(IProducerCarriage):
         self.producer_node.resume_producing()
 
 
-class AbstractConsumerCarriage(IConsumerCarriage):
+class AbstractConsumerCarriage(IConsumerCarriage, AbstractCarriage):
 
     _consumer_node = None
 

@@ -150,7 +150,8 @@ class TestEBUTT3toXMLAdapter(TestXMLtoEBUTT3Adapter):
         'sequence_identifier',
         'sequence_number',
         'availability_time',
-        'time_base'
+        'time_base',
+        'clock_mode'
     ]
 
     def _get_input(self):
