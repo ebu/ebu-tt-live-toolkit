@@ -24,11 +24,31 @@ Feature: Handover algorithm
     Then the emitted document has <authorsGroupSelectedSequenceIdentifier> 
 
     Examples:
-    | seq_id_1   | token_1         | seq_id_2   | token_2         | authorsGroupSelectedSequenceIdentifier |  
-    | sequence_a | 12345           | sequence_b | 12346           | sequence_b                             |  
-    | sequence_a | 1               | sequence_b | 0               | sequence_a                             |  
-    | sequence_a | 0               | sequence_b |                 | sequence_a                             |  
-    | sequence_a | 999999999999999 | sequence_b | 999999999999998 | sequence_a                             |  
+    | seq_id_1   | token_1   | seq_id_2   | token_2   | authorsGroupSelectedSequenceIdentifier |  
+    | sequence_a | 12345     | sequence_b | 12346     | sequence_b                             |  
+    | sequence_a | 999999999 | sequence_b | 999999998 | sequence_a                             |  
+    | sequence_a |           | sequence_b | 1         | sequence_b                             |  
+
+
+  Scenario: Document with lower value token not emitted
+    Given an xml file <xml_file>
+    And a handover node
+    When it has sequence identifier <seq_id_1>
+    And it has authorsGroupControlToken <token_1>
+    And the document is generated
+    And the document is processed 
+    And another document arrives 
+    And it has sequence identifier <seq_id_2>
+    And it has authorsGroupControlToken <token_2>
+    And the document is generated
+    And the document is processed
+    Then no document is emitted 
+
+    Examples:
+    | seq_id_1   | token_1   | seq_id_2   | token_2   |  
+    | sequence_a | 2         | sequence_b | 1         |  
+    | sequence_a | 999999999 | sequence_b | 999999998 |  
+
 
 
   # SPEC-CONFORMANCE: R24
