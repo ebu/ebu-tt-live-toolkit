@@ -4,8 +4,8 @@ Feature: Handover algorithm
 # a document in its output sequence corresponding to the received document with the new control token without delay.
 
     Examples:
-    | xml_file            |   
-    | handover_algorithm.xml |   
+    | xml_file               |  
+    | handover_algorithm.xml |  
     
 
   # SPEC-CONFORMANCE: R23, R25, 120
