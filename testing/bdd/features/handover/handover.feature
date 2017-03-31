@@ -4,8 +4,8 @@ Feature: Handover algorithm
 # a document in its output sequence corresponding to the received document with the new control token without delay.
 
     Examples:
-    | xml_file            |   
-    | handover_algorithm.xml |   
+    | xml_file               |  
+    | handover_algorithm.xml |  
     
 
   # SPEC-CONFORMANCE: R23, R25, 120
@@ -99,15 +99,11 @@ Feature: Handover algorithm
   # SPEC-CONFORMANCE: R122
   Scenario: Invalid group identifier
     Given an xml file <xml_file>
-    And a handover node
     When it has authorsGroupIdentifier <group_1>
     Then adding the document to the sequence results in an error
 
     Examples:
     | group_1 |  
-    | 0       |  
-    | -1      |  
-    | 1.0     |  
     |         |  
     # ^^^ HERE WE MEAN AN EMPTY STRING!
 
