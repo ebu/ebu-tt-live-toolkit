@@ -18,9 +18,9 @@
          It streams a sequence of Part 3 documents on a WebSocket connection.
       </div>
 
-      <div id="sequence-slector-div" class="control-section-div">
+      <div id="sequence-selector-div" class="control-section-div">
          <span class="control-section-header-span">Manage Sequences</span>
-         <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>      
+         <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
          <div id="new-sequence-div" style="display: none">
                <label for="new-sequence-identifier-input">Sequence Identifier: </label>
                <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
@@ -28,7 +28,7 @@
                <select id="time-base-selector" name="time-base-selector">
                   <option value="clock" selected="selected">Clock</option>
                   <option value="media">Media</option>
-                  <!-- Disabling for demo 
+                  <!-- Disabling for demo
                   <option value="smpte">SMPTE</option>
                   -->
                </select>
@@ -83,7 +83,7 @@
          <span class="control-section-header-span">Send Document </span>
          <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Now!</button>
          <span>&nbsp;&nbsp;</span>
-         <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> on enter, space and escape 
+         <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> on enter, space and escape
          &nbsp;
          <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> on scheduled time
          &nbsp;
@@ -343,7 +343,7 @@
                // We are not expecting any messages back - close the connection!
                socket.websocket.close();
 
-               notifyError($('#subtitle-form-notification-div'), "Unexpected message from server!", false); 
+               notifyError($('#subtitle-form-notification-div'), "Unexpected message from server!", false);
             }
 
 
@@ -601,14 +601,14 @@
 
             // keyboard shortcut: Enter, space and escape send a document, escape also clears the text box.
             // Enter, space and escape send a document only in "Send button" mode.
-            // Escape always clears. Enter removes previous lines according to the max-lines setting, after sending. 
+            // Escape always clears. Enter removes previous lines according to the max-lines setting, after sending.
             // Not tested in Safari
             $("#subtitle-content-textarea").keydown( function(evt) {
                 var keyCode = evt.which;
                 var isSendButton =  document.getElementById('radio_send').checked;
                 if (isSendButton){
                   if (keyCode == 13 || keyCode == 32 || keyCode == 27) {sendDocument();}
-                } 
+                }
                 if (keyCode == 27) {
                   // Escape clears the text area
                      document.getElementById('subtitle-content-textarea').value = "";
@@ -619,9 +619,9 @@
                   var new_text_arr = $("#subtitle-content-textarea").val().split(/\r?\n|\r/);
                   while (new_text_arr.length >= max_lines) { new_text_arr.shift(); };
                   $("#subtitle-content-textarea").val(new_text_arr.join('\r\n'));
-                  }                  
+                  }
                 });
-            
+
             // In the special case that max-lines is 1 clear the text area on Enter key up otherwise
             // an extra unwanted carriage return line feed pair is added at the beginning.
             $("#subtitle-content-textarea").keyup( function(evt) {
