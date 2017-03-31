@@ -159,14 +159,25 @@ $(document).ready(function() {
         $("#new-sequence-notification-span").text("");
     }
 
-    function createDocumentListItem(xmldata) {
-        /* Parse XML to extract important handover information */
-        var parser = new DOMParser();
-        var parsedXml = parser.parseFromString(xmldata, "text/xml");
-        var tt = parsedXml.documentElement;
+    function createMessageListItem(message) {
+        var clonedElement = $('#result-list .message-item-template').clone();
+        clonedElement.find('.sender-value').text(
+            message.getElementsByTagNameNS(
+                'urn:ebu:tt:livemessage', 'header'
+            )[0].getElementsByTagNameNS(
+                'urn:ebu:tt:livemessage', 'sender'
+            )[0].firstChild.nodeValue
+        );
 
+        clonedElement.removeClass('message-item-template');
+        clonedElement.addClass('result-list-item');
+
+        return clonedElement;
+    }
+
+    function createDocumentListItem(tt) {
         /* Clone template list item and fill in the details */
-        var clonedElement = $('#result-list .result-list-item-template').clone();
+        var clonedElement = $('#result-list .doc-item-template').clone();
         clonedElement.find('.seqNum-value').text(
             tt.getAttributeNS('urn:ebu:tt:parameters', 'sequenceNumber')
         );
@@ -176,8 +187,36 @@ $(document).ready(function() {
         clonedElement.find('.autGCT-value').text(
             tt.getAttributeNS('urn:ebu:tt:parameters', 'authorsGroupControlToken')
         );
-        clonedElement.removeClass('result-list-item-template');
+        clonedElement.removeClass('doc-item-template');
         clonedElement.addClass('result-list-item');
+
+        return clonedElement;
+    }
+
+    function checkOnAir(tt) {
+        if(tt.getAttributeNS(
+            'urn:ebu:tt:metadata', 'authorsGroupSelectedSequenceIdentifier'
+        ) == $("#sequence-selector").val()) {
+            $('#on-air-span').addClass('selected');
+        } else {
+            $('#on-air-span').removeClass('selected');
+        }
+    }
+
+    function createListItem(xmldata) {
+        /* Parse XML to extract important handover information */
+        var parser = new DOMParser();
+        var parsedXml = parser.parseFromString(xmldata, "text/xml");
+        var item = parsedXml.documentElement;
+        var clonedElement = '';
+
+        // Create 2 different list item types
+        if (item.namespaceURI != 'urn:ebu:tt:livemessage') {
+            clonedElement = createDocumentListItem(item);
+            checkOnAir(item);
+        } else {
+            clonedElement = createMessageListItem(item);
+        }
 
         clonedElement.data('xml', xmldata);
 
@@ -185,7 +224,6 @@ $(document).ready(function() {
 
         /* if over 10 items discard the oldest */
         $('#result-list .result-list-item').slice(0, -10).remove();
-
     }
 
     /******************************************* Websocket logic ***********************************************/
@@ -241,7 +279,7 @@ $(document).ready(function() {
     }
 
     function subWebsocketOnMessage(e) {
-        createDocumentListItem(e.data);
+        createListItem(e.data);
     }
 
     function subWebsocketOnClose(e) {
@@ -451,6 +489,35 @@ $(document).ready(function() {
         return template_data;
     }
 
+    function createHandoverMessageTemplateDict(request_message) {
+        var template_data = {}
+
+        template_data['sender'] = $("#sequence-selector").val();  // TODO: Change this to something more sensible
+        template_data['sequence_identifier'] = $("#sequence-selector").val();
+        template_data['recipient'] = [];  // TODO: This is probably not needed but part of message header
+        template_data['payload'] = request_message;
+
+        return template_data;
+    }
+
+    function renderHandoverMessageTemplate(template_data) {
+        var rendered_document = nunjucks.render(
+          'ebu_tt_live/ui/user_input_producer/template/live_message_template.xml',
+          template_data
+        );
+        return rendered_document;
+    }
+
+    function sendHandoverMessage(message_obj) {
+        if (socket.connected) {
+            socket.websocket.send(
+                message_obj
+            );
+            return true;
+        }
+        return false;
+    }
+
     function computeScheduledSendTimeout(media_offset = null) {
         var timeout = 0;
         // if the media offset is not set we suppose that we are running in local clock mode.
@@ -600,4 +667,24 @@ $(document).ready(function() {
         $('#result-view-pre').show();
     });
 
+    $('#submit-ag-control-request-button').click(function(e) {
+        var message = $('#ag-control-request-input').val();
+
+        var success = sendHandoverMessage(
+            renderHandoverMessageTemplate(
+                createHandoverMessageTemplateDict(message)
+            )
+        );
+
+        if (success) {
+            $('#ag-control-request-input').val('');
+        }
+    });
+
+    $('#ag-control-request-input').keydown(function(evt) {
+        var keyCode = evt.which;
+        if (keyCode == 13) {
+            $("#submit-ag-control-request-button").trigger('click');
+        }
+    });
 });

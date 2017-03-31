@@ -361,7 +361,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		<xs:attribute ref="ebuttm:authoringDelay" use="optional"/>
 		<xs:attribute ref="ebuttp:authorsGroupIdentifier" use="optional"/>
 		<xs:attribute ref="ebuttp:authorsGroupControlToken" use="optional"/>
-		<xs:attribute ref="ebuttm:authorsGroupControlRequest" use="optional"/>
+		<xs:attribute ref="ebuttm:authorsGroupSelectedSequenceIdentifier" use="optional"/>
 		<xs:attribute ref="ebuttp:referenceClockIdentifier" use="optional"/>
 		<xs:attribute ref="tts:extent" use="optional">
 			<xs:annotation>

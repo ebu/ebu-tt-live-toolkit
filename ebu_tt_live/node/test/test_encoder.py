@@ -1,4 +1,4 @@
-from ebu_tt_live.documents import EBUTT3Document, EBUTTDDocument
+from ebu_tt_live.documents import EBUTT3Document, EBUTTDDocument, EBUTTAuthorsGroupControlRequest
 from ebu_tt_live.node.encoder import EBUTTDEncoder
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live import bindings
@@ -90,17 +90,35 @@ class TestEBUTTDEncoderSuccess(TestCase):
         doc = EBUTT3Document.create_from_xml(raw_xml)
         return doc
 
-    def test_basic_operation(self):
+    def setUp(self):
         carriage = MagicMock(spec=IProducerCarriage)
         carriage.expects.return_value = EBUTTDDocument
 
-        encoder = EBUTTDEncoder(
+        self.encoder = EBUTTDEncoder(
             node_id='testEncoder',
             producer_carriage=carriage,
             media_time_zero=timedelta(hours=11, minutes=32)
         )
+
+    def test_basic_operation(self):
         doc = self._create_test_document()
 
-        encoder.process_document(document=doc)
-        carriage.emit_data.assert_called_once()
-        self.assertIsInstance(carriage.emit_data.call_args[1]['data'], EBUTTDDocument)
+        self.encoder.process_document(document=doc)
+        self.encoder.producer_carriage.emit_data.assert_called_once()
+        self.assertIsInstance(
+            self.encoder.producer_carriage.emit_data.call_args[1]['data'],
+            EBUTTDDocument
+        )
+
+    def test_control_request(self):
+        # The message should not pass through the encoder
+        message = EBUTTAuthorsGroupControlRequest(
+            sequence_identifier='TestSequence',
+            sender='sender',
+            recipient=['one', 'two'],
+            payload='Test payload'
+        )
+
+        self.encoder.process_document(document=message)
+
+        self.encoder.producer_carriage.emit_data.assert_not_called()

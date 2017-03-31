@@ -34,7 +34,8 @@ class EBUTTDEncoder(AbstractCombinedNode):
 
     def process_document(self, document, **kwargs):
         # Convert each received document into EBU-TT-D
-        converted_doc = EBUTTDDocument.create_from_raw_binding(
-            self._ebuttd_converter.convert_document(document.binding)
-        )
-        self.producer_carriage.emit_data(data=converted_doc, sequence_identifier='default', **kwargs)
+        if self.is_document(document):
+            converted_doc = EBUTTDDocument.create_from_raw_binding(
+                self._ebuttd_converter.convert_document(document.binding)
+            )
+            self.producer_carriage.emit_data(data=converted_doc, sequence_identifier='default', **kwargs)

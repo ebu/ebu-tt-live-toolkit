@@ -1,8 +1,9 @@
 
 from .base import IDocumentDataAdapter
-from ebu_tt_live.documents import EBUTT3EBUTTDConverter, EBUTTDDocument, EBUTT3Document
+from ebu_tt_live.documents import EBUTT3EBUTTDConverter, EBUTTDDocument, EBUTT3Document, EBUTTAuthorsGroupControlRequest
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
+from ebu_tt_live.bindings import CreateFromDocument, tt_type
 import six
 import logging
 
@@ -18,7 +19,15 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     _provides = EBUTT3Document
 
     def convert_data(self, data, availability_time=None, sequence_identifier=None, **kwargs):
-        doc = EBUTT3Document.create_from_xml(data, availability_time=availability_time)
+        binding_inst = CreateFromDocument(xml_text=data)
+        if isinstance(binding_inst, tt_type):
+            doc = EBUTT3Document.create_from_raw_binding(
+                binding_inst,
+                availability_time=availability_time
+            )
+        else:
+            # If not an ebutt live document then a message
+            doc = EBUTTAuthorsGroupControlRequest.create_from_raw_binding(binding_inst)
         kwargs['raw_xml'] = data
         if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
             log.error(
@@ -59,12 +68,18 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
     _provides = six.text_type
 
     def convert_data(self, data, **kwargs):
-        kwargs.update({
-            'sequence_identifier': data.sequence_identifier,
-            'sequence_number': data.sequence_number,
-            'availability_time': data.availability_time,
-            'time_base': data.time_base
-        })
+        if isinstance(data, EBUTT3Document):
+            kwargs.update({
+                'sequence_identifier': data.sequence_identifier,
+                'sequence_number': data.sequence_number,
+                'availability_time': data.availability_time,
+                'time_base': data.time_base
+            })
+        else:
+            kwargs.update({
+                'sequence_identifier': data.sequence_identifier
+                #'availability_time': data.availability_time,
+            })
         instance = data.get_xml()
         return instance, kwargs
 

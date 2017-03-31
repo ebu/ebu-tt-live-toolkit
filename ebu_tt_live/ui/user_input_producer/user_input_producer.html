@@ -4,6 +4,7 @@
       <meta charset="UTF-8"></meta>
       <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
       <script src="template/user_input_producer_template.js"></script>
+      <script src="template/live_message_template.js"></script>
       <script src="moment.js"></script>
       <script src="nunjucks.js"></script>
       <script src="uip.js"></script>
@@ -123,6 +124,15 @@
          </div>
          </div>
 
+         <div id="ag-control-request-div" class="control-section-div">
+            <span class="control-section-header-span">Handover request </span>
+            <span id="ag-control-request-content-span">
+               <input type="text" id="ag-control-request-input" name="ag-control-request-input" />
+               <button type="button" name="submit-ag-control-request-button" id="submit-ag-control-request-button">Send</button>
+            </span>
+            <span id="on-air-span">ON AIR</span>
+         </div>
+
          <div id="subtitle-content-div" class="control-section-div">
          <span class="control-section-header-span">Document </span>
          <span id="max-lines-span">
@@ -160,10 +170,13 @@
          <div id="result-container" class="control-section-div">
             <span class="control-section-header-span">Received documents</span>
             <div id="result-list" class="result-list">
-               <div class="result-list-item-template">
+               <div class="doc-item-template doc-item">
                   <span>Seq.Num.: </span><span class="seqNum-value"></span><span>  --  </span>
                   <span>Au.G.Id.: </span><span class="autGID-value"></span><span>  --  </span>
                   <span>Au.G.C.Token: </span><snap class="autGCT-value"></snap>
+               </div>
+               <div class="message-item-template message-item">
+                  <span>Message from sender: </span><span class="sender-value"></span>
                </div>
             </div>
             <div id="result-view-div">
