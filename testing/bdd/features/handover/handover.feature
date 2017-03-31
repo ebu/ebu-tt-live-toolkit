@@ -19,7 +19,7 @@ Feature: Handover algorithm
     And the document is processed 
     And another document arrives 
     And it has sequence identifier <seq_id_2>
-    And it has authorsGroupIdentifier <group_1>
+    And it has authorsGroupIdentifier <group_2>
     And it has authorsGroupControlToken <token_2>
     And the document is generated
     And the document is processed
@@ -27,9 +27,8 @@ Feature: Handover algorithm
 
     Examples:
     | seq_id_1   | group_1 | token_1   | seq_id_2   | group_2 | token_2   | authorsGroupSelectedSequenceIdentifier |  
-    | sequence_a | 1       | 12345     | sequence_b | 1       | 12345     | sequence_b                             |  
-    | sequence_a | a       | 999999999 | sequence_b | a       | 999999999 | sequence_a                             |  
-    | sequence_a | a       |           | sequence_b | a       |           | sequence_b                             |  
+    | sequence_a | 1       | 12345     | sequence_b | 1       | 12346     | sequence_b                             |  
+    | sequence_a | a       | 999999999 | sequence_b | a       | 999999998 | sequence_a                             |  
     | sequence_a | a       | 3         | sequence_a | a       | 3         | sequence_a                             |  
 
 
@@ -54,7 +53,7 @@ Feature: Handover algorithm
 
 
 
-  # SPEC-CONFORMANCE: R24
+  # SPEC-CONFORMANCE: R24, R122
   # Within a single sequence, all documents that contain  ebuttp:authorsGroupIdentifier shall have the same ebuttp:authorsGroupIdentifier
   Scenario: Different group identifiers in a sequence 
     Given a test sequence
@@ -74,22 +73,6 @@ Feature: Handover algorithm
     |                          | 1                        |  
     # ^^^ Assuming NULL means authordGroupIdentifier is present but empty (if the attribute doesn't exist the document is valid!)
 
-  Scenario: Missing group identifiers in a sequence 
-    Given a test sequence
-    And an xml file <xml_file>
-    When it has sequenceNumber 1
-    And it has <authorsGroupIdentifier_1>
-    And doc1 is added to the sequence
-    And we create a new document
-    And it has sequenceNumber 1
-    And it does not have attribute authorsGroupIdentifier
-    Then doc2 is added to the sequence
-
-    Examples:
-    | authorsGroupIdentifier_1 | 
-    | 1                        | 
-
-
 
   # SPEC-CONFORMANCE: R121
   # The Handover Manager shall not emit any documents derived from documents that do not contain both the parameters 
@@ -104,7 +87,7 @@ Feature: Handover algorithm
   Scenario: Documents with missing group identifier
     Given an xml file <xml_file>
     And a handover node
-    When it does not have attribute authorsGroupControlToken 
+    When it does not have attribute authorsGroupIdentifier 
     Then the document is not added to sequence
 
   Scenario: Documents with missing token
@@ -113,5 +96,19 @@ Feature: Handover algorithm
     When it does not have attribute authorsGroupControlToken 
     Then the document is not added to sequence
 
+  # SPEC-CONFORMANCE: R122
+  Scenario: Invalid group identifier
+    Given an xml file <xml_file>
+    And a handover node
+    When it has authorsGroupIdentifier <group_1>
+    Then adding the document to the sequence results in an error
+
+    Examples:
+    | group_1 |  
+    | 0       |  
+    | -1      |  
+    | 1.0     |  
+    |         |  
+    # ^^^ HERE WE MEAN AN EMPTY STRING!
 
 
