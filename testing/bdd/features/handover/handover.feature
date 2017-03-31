@@ -96,7 +96,7 @@ Feature: Handover algorithm
     When it does not have attribute authorsGroupControlToken 
     Then the document is not added to sequence
 
-  # SPEC-CONFORMANCE: R122
+  # SPEC-CONFORMANCE: R125
   Scenario: Invalid group identifier
     Given an xml file <xml_file>
     When it has authorsGroupIdentifier <group_1>
