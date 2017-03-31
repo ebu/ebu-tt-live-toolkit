@@ -12,6 +12,12 @@
         ttp:markerMode="{{ marker_mode }}"
         ttp:dropMode="{{ drop_mode}}"
       {% endif %}
+      {% if authors_group_identifier %}
+        ebuttp:authorsGroupIdentifier="{{authors_group_identifier}}"
+      {% endif %}
+      {% if authors_group_control_token %}
+        ebuttp:authorsGroupControlToken="{{authors_group_control_token}}"
+      {% endif %}
         xml:lang="en-GB"
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"

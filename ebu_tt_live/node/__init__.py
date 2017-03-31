@@ -5,3 +5,4 @@ from .consumer import SimpleConsumer, ReSequencer
 from .encoder import EBUTTDEncoder
 from .delay import BufferDelayNode, RetimingDelayNode
 from .distributing import DistributingNode
+from .handover import HandoverNode

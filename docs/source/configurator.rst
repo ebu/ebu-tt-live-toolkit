@@ -65,7 +65,7 @@ The more detailed options are: ::
 
     nodes
     ├─[nodeN] : a node to configure - any from node1 to node9
-    │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay" | "distributor"]
+    │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay" | "distributor" | "handover"]
     │ ├─output : the output settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to get incoming documents
     │ │ │ ├─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket" | "websocket-legacy"]
@@ -115,6 +115,10 @@ Node type dependent options for [nodeN] : ::
    type="retiming-delay"
    ├─delay : delay in seconds, default 0
    └─sequence_identifier : sequence identifier, default "RetimedSequence1"
+
+   type="handover"
+   ├─authors_group_identifier : the authors' group to follow, default "AuthorsGroup1"
+   └─sequence_identifier : sequence identifier, default "HandoverSequence1"
 
    type="distributor" : No options
 

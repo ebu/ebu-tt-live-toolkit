@@ -53,7 +53,7 @@ Feature: Handover algorithm
 
 
 
-  # SPEC-CONFORMANCE: R24, R122
+  # SPEC-CONFORMANCE: R24, R125
   # Within a single sequence, all documents that contain  ebuttp:authorsGroupIdentifier shall have the same ebuttp:authorsGroupIdentifier
   Scenario: Different group identifiers in a sequence 
     Given a test sequence
@@ -71,7 +71,7 @@ Feature: Handover algorithm
     | 1                        | 0                        |  
     | 0                        | 1                        |  
     |                          | 1                        |  
-    # ^^^ Assuming NULL means authordGroupIdentifier is present but empty (if the attribute doesn't exist the document is valid!)
+    # ^^^ Assuming NULL means authorsGroupIdentifier is present but empty (if the attribute doesn't exist the document is valid!)
 
 
   # SPEC-CONFORMANCE: R121
@@ -106,5 +106,3 @@ Feature: Handover algorithm
     | group_1 |  
     |         |  
     # ^^^ HERE WE MEAN AN EMPTY STRING!
-
-
