@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.w3.org/1999/xhtml"
            xmlns:xml="http://www.w3.org/XML/1998/namespace"
            xmlns:ebuttp="urn:ebu:tt:parameters"
            xmlns:ebuttlm="urn:ebu:tt:livemessage"
