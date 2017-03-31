@@ -4,6 +4,7 @@ from .ebutt3_segmentation import EBUTT3Segmenter
 from .ebutt3_splicer import EBUTT3Splicer
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata, TimingValidationMixin
+from ebu_tt_live.bindings import _ebuttlm as ebuttlm
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
@@ -83,6 +84,7 @@ class TimingEventEnd(TimingEvent):
             self.element
         )
 
+
 class TimelineUtilMixin(object):
     """
     This mixin is responsible for managing the shared timeline functionality
@@ -149,7 +151,116 @@ class TimelineUtilMixin(object):
         return affected_elements
 
 
-class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
+class EBUTT3ObjectBase(object):
+
+    message_type_mapping = {}
+
+    def get_xml(self):
+        raise NotImplementedError()
+
+    def get_dom(self):
+        raise NotImplementedError()
+
+    @classmethod
+    def create_from_xml(cls, xml, **kwargs):
+        instance = bindings.CreateFromDocument(
+            xml_text=xml
+        )
+        if isinstance(instance, ebuttlm.message_type):
+            return cls.message_type_mapping[instance.header.type].create_from_raw_binding(instance)
+
+    @classmethod
+    def create_from_raw_binding(cls, **kwargs):
+        raise NotImplementedError()
+
+
+class EBUTTLiveMessage(EBUTT3ObjectBase):
+
+    _sender = None
+    _recipient = None
+    _payload = None
+    _sequence_identifier = None
+    _availability_time = None
+
+    @property
+    def sequence_identifier(self):
+        return self._sequence_identifier
+
+    @sequence_identifier.setter
+    def sequence_identifier(self, value):
+        self._sequence_identifier = value
+
+    @property
+    def payload(self):
+        return self._payload
+
+    @property
+    def sender(self):
+        return self._sender
+
+    @property
+    def recipient(self):
+        return self._recipient
+
+    @property
+    def availability_time(self):
+        return self._availability_time
+
+    @availability_time.setter
+    def availability_time(self, value):
+        if not isinstance(value, timedelta):
+            raise TypeError
+        self._availability_time = value
+
+
+class EBUTTAuthorsGroupControlRequest(EBUTTLiveMessage):
+
+    message_type_id = 'authorsGroupControlRequest'
+
+    def __init__(self, sequence_identifier, payload, availability_time=None, sender=None, recipient=None):
+        self._sequence_identifier = sequence_identifier
+        self._payload = payload
+        self._sender = sender
+        self._recipient = recipient
+        if availability_time is not None:
+            self._availability_time = availability_time
+
+    def _create_binding(self):
+        header = ebuttlm.message_header_type(
+            type=self.message_type_id
+        )
+        if self.recipient:
+            header.recipient = self.recipient
+        if self.sender:
+            header.sender = self.sender
+        return ebuttlm.message(
+            sequenceIdentifier=self.sequence_identifier,
+            header=header,
+            payload=self._payload,
+            _strict_keywords=False
+        )
+
+    def get_dom(self):
+        return self._create_binding().toDOM()
+
+    def get_xml(self):
+        return self._create_binding().toxml()
+
+    @classmethod
+    def create_from_raw_binding(cls, binding, availability_time=None, **kwargs):
+        return cls(
+            sequence_identifier=binding.sequenceIdentifier,
+            sender=binding.header.sender,
+            recipient=binding.header.recipient,
+            payload=binding.payload.orderedContent()[0].value  # anyType is considered complex type
+            # so orderedContent is needed and indexing the first component.
+        )
+
+# Register the class in the base class
+EBUTT3ObjectBase.message_type_mapping[EBUTTAuthorsGroupControlRequest.message_type_id] = EBUTTAuthorsGroupControlRequest
+
+
+class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
     """
     This class wraps the binding object representation of the XML and provides the features the applications in the
     specification require. e.g:availability time.
@@ -235,8 +346,12 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument):
         return self._ebutt3_content.authorsGroupIdentifier
 
     @property
-    def authors_group_control_request(self):
-        return self._ebutt3_content.authorsGroupControlRequest
+    def authors_group_selected_sequence_identifier(self):
+        return self._ebutt3_content.authorsGroupSelectedSequenceIdentifier
+
+    @authors_group_selected_sequence_identifier.setter
+    def authors_group_selected_sequence_identifier(self, value):
+        self._ebutt3_content.authorsGroupSelectedSequenceIdentifier = value
 
     @property
     def lang(self):

@@ -9,6 +9,7 @@ else
 	npm update nunjucks
 endif
 	node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
+	node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/live_message_template.xml > ebu_tt_live/ui/user_input_producer/template/live_message_template.js
 
 initnpm:
 ifeq ("$(wildcard node_modules)","")

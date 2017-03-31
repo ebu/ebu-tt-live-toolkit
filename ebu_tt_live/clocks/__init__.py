@@ -16,6 +16,8 @@ def get_clock(time_base, **kwargs):
         return media.MediaClock()
     elif time_base == 'smpte':
         return media.SMPTEClock()
+    else:
+        return None
 
 
 def get_clock_from_document(document):

@@ -2,7 +2,7 @@
 Feature: Sequence ID and Sequence Number
   Both are mandatory parameters and the sequence number has to be a number (no letters)
 
-  # SPEC-CONFORMANCE: R6 R7 R34 R35 R36
+  # SPEC-CONFORMANCE: R6 R7 R34 R35 R36 R124
   Scenario: Invalid Sequence head attributes
     Given an xml file <xml_file>
     When it has sequence identifier <seq_id>
@@ -10,12 +10,14 @@ Feature: Sequence ID and Sequence Number
     Then document is invalid
 
     Examples:
-    | xml_file            | seq_id   | seq_n |
-    | sequence_id_num.xml |          | 5     |
-    | sequence_id_num.xml | testSeq1 | a     |
-    | sequence_id_num.xml | testSeq1 | -5    |
-    | sequence_id_num.xml | testSeq1 |       |
-    | sequence_id_num.xml |          |       |
+    | xml_file            | seq_id    | seq_n |
+    | sequence_id_num.xml |           | 5     |
+    | sequence_id_num.xml | testSeq1  | a     |
+    | sequence_id_num.xml | testSeq1  | -5    |
+    | sequence_id_num.xml | testSeq1  |       |
+    | sequence_id_num.xml |           |       |
+    | sequence_id_num.xml | *?Empty?* |       |
+    | sequence_id_num.xml | *?Empty?* | 5     |
 
   # SPEC-CONFORMANCE: R6 R7 R34 R35 R36
   Scenario: Valid Sequence head attributes
@@ -29,4 +31,3 @@ Feature: Sequence ID and Sequence Number
     | sequence_id_num.xml | testSeq1 | 5         |
     | sequence_id_num.xml | a        | 10        |
     | sequence_id_num.xml | testSeq1 | 999999999 |
-

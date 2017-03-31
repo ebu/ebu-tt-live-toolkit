@@ -20,3 +20,4 @@ call npm update nunjucks
 call npm install nunjucks
 )
 call node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
+call node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/live_message_template.xml > ebu_tt_live/ui/user_input_producer/template/live_message_template.js

@@ -1,7 +1,9 @@
 from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
+from ebu_tt_live.clocks import get_clock
 from ebu_tt_live.utils import RotatingFileBuffer
+from ebu_tt_live.strings import FS_DEFAULT_CLOCK_USED, FS_MISSING_AVAILABILITY
 from datetime import timedelta
 import logging
 import six
@@ -12,28 +14,19 @@ import time
 log = logging.getLogger(__name__)
 
 
-def timedelta_to_str_manifest(timed, time_base):
-    if time_base == 'clock' or time_base == 'media':
+def timedelta_to_str_manifest(timed):
         hours, seconds = divmod(timed.seconds, 3600)
         hours += timed.days * 24
         minutes, seconds = divmod(seconds, 60)
         milliseconds, _ = divmod(timed.microseconds, 1000)
         return '{:02d}:{:02d}:{:02d}.{:03d}'.format(hours, minutes, seconds, milliseconds)
-    elif time_base == 'smpte':
-        raise NotImplementedError()
-    else:
-        raise ValueError()
 
 
-def timestr_manifest_to_timedelta(timestr, time_base):
-    if time_base == 'clock' or time_base == 'media':
+def timestr_manifest_to_timedelta(timestr):
         hours, minutes, rest = timestr.split(":")
         seconds, milliseconds = rest.split(".")
         return timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds), milliseconds=int(milliseconds))
-    elif time_base == 'smpte':
-        raise NotImplementedError()
-    else:
-        raise ValueError()
+
 
 
 class FilesystemProducerImpl(AbstractProducerCarriage):
@@ -66,12 +59,52 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
     _manifest_content = None
     _manifest_time_format = None
     _expects = six.text_type
+    _default_clocks = None
+    _msg_counter = None
 
     def __init__(self, dirpath):
         self._dirpath = dirpath
         if not os.path.exists(self._dirpath):
             os.makedirs(self._dirpath)
         self._manifest_content = ''
+        # Get a set of default clocks
+        self._default_clocks = {}
+        self._msg_counter = 0
+
+    def _get_default_clock(self, sequence_identifier, time_base, clock_mode=None):
+        clock_obj = self._default_clocks.get(sequence_identifier, None)
+        if clock_obj is None:
+            clock_obj = get_clock(time_base=time_base, clock_mode=clock_mode)
+            if clock_obj is not None:
+                log.warning(FS_DEFAULT_CLOCK_USED.format(sequence_identifier=sequence_identifier))
+                self._default_clocks[sequence_identifier] = clock_obj
+        return clock_obj
+
+    def check_availability_time(
+            self, sequence_identifier, time_base=None, clock_mode=None, availability_time=None):
+        """
+        Make sure we have a suitable timedelta value sent down from upstream as availability_time. 
+        If the value is None or unusable use the default clock to derive an availability time 
+        for the current document. (This does not check if the value is within valid range)
+        
+        :param sequence_identifier: remember default clock used per sequence
+        :param time_base: document time base
+        :param clock_mode: in clock timebase this parameter is needed
+        :param availability_time: provided availability_time from upstream
+        :return: a valid availability_time (timedelta)
+        
+        """
+
+        if not isinstance(availability_time, timedelta):
+            availability_time = None
+            # If availability time is not provided a default clock should be used
+            clock_obj = self._get_default_clock(
+                sequence_identifier=sequence_identifier, time_base=time_base, clock_mode=clock_mode
+            )
+            if clock_obj is not None:
+                availability_time = clock_obj.get_real_clock_time()
+
+        return availability_time
 
     def resume_producing(self):
         while True:
@@ -81,24 +114,42 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                 break
 
     def emit_data(self, data, sequence_identifier=None, sequence_number=None,
-                  time_base=None, availability_time=None, delay=None, **kwargs):
+                  time_base=None, availability_time=None, delay=None, clock_mode=None, **kwargs):
+        # NOTE: This is nasty
+        availability_time = self.check_availability_time(
+            sequence_identifier=sequence_identifier,
+            time_base=time_base,
+            clock_mode=clock_mode,
+            availability_time=availability_time
+        )
+
+        if availability_time is None:
+            # This is a possibility with a live messages as first document. They don't contain enough timing info.
+            log.warning(
+                FS_MISSING_AVAILABILITY.format(sequence_identifier=sequence_identifier)
+            )
+            # Without availability time we can not create manifest file.
+            return
+
         if self._manifest_path is None:
             manifest_filename = "manifest_" + sequence_identifier + ".txt"
             self._manifest_path = os.path.join(self._dirpath, manifest_filename)
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
-        filename = '{}_{}.xml'.format(sequence_identifier, sequence_number)
+        if sequence_number is None:
+            # This means that it isn't a document. It can be a message.
+            self._msg_counter += 1
+            filename = '{}_msg_{}.xml'.format(sequence_identifier, self._msg_counter)
+        else:
+            filename = '{}_{}.xml'.format(sequence_identifier, sequence_number)
         filepath = os.path.join(self._dirpath, filename)
         with open(filepath, 'w') as f:
             f.write(data)
-        # To be able to format the output we need a datetime.time object and
-        # not a datetime.timedelta. The next line serves as a converter (adding
-        # a time with a timedelta gives a time)
         time_base = time_base
         availability_time = availability_time
         if delay is not None:
             availability_time += timedelta(seconds=delay)
-        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time, time_base), filename)
+        new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time), filename)
         self._manifest_content += new_manifest_line
         with open(self._manifest_path, 'a') as f:
             f.write(new_manifest_line)
@@ -116,8 +167,7 @@ class FilesystemConsumerImpl(AbstractConsumerCarriage):
         availability_time_str, xml_content = data
 
         if xml_content:
-            # TODO: Defaulting to media time parsing because that is the broadest. Figure out a nicer solution!
-            availability_time = timestr_manifest_to_timedelta(availability_time_str, 'media')
+            availability_time = timestr_manifest_to_timedelta(availability_time_str)
             self.consumer_node.process_document(xml_content, availability_time=availability_time)
 
 
