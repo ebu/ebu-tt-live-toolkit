@@ -133,3 +133,4 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 ||| ** March 2017 **||
 |R120|2.4.1|The Handover Manager shall include within each output document the metadata attribute `authorsGroupSelectedSequenceIdentifier` set to the value of the source sequence's identifier for that document.||
 |R121|2.4.1|The Handover Manager shall not emit any documents derived from documents that do not contain both the parameters `ebuttp:authorsGroupIdentifier` and `ebuttp:authorsGroupControlToken`.||
+|R122|Annex A|The value of `ebuttp:authorsGroupControlToken` shall be a non-negative integer.||
