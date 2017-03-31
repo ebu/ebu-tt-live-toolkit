@@ -10,7 +10,7 @@
     <xs:complexType name="message_header_type">
         <xs:annotation>
             <xs:documentation>Message header to help a recipient identify the purpose of the message
-            and decide whether it is relevant to them and if so what type of payload it contai if any
+            and decide whether it is relevant to them and if so what type of payload it contains if any
             and how to process that payload</xs:documentation>
         </xs:annotation>
 
@@ -24,7 +24,7 @@
     <xs:complexType name="message_type">
         <xs:annotation>
             <xs:documentation>The message container type that can be used as a root document element
-            to create a new message. It shall specify its header and it could speficy a payload.
+            to create a new message. It shall specify its header and it could specify a payload.
             </xs:documentation>
         </xs:annotation>
 
