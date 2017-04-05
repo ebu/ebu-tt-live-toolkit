@@ -26,6 +26,7 @@ class HandoverUnittests(TestCase):
         doc = MagicMock(spec=EBUTT3Document)
         doc.sequence_identifier = sequence_identifier
         doc.sequence_number = sequence_number
+        doc.time_base = 'media'
         doc.authors_group_identifier = authors_group_identifier
         doc.authors_group_control_token = authors_group_control_token
         doc.authors_group_control_request = authors_group_control_request

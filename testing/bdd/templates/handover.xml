@@ -6,13 +6,18 @@
         ttp:timeBase="clock"
         xml:lang="en-GB"
 {% if authors_group_identifier %}
+    {% if authors_group_identifier == "*?Empty?*" %}
+        ebuttp:authorsGroupIdentifier=""
+    {% else %}
         ebuttp:authorsGroupIdentifier="{{ authors_group_identifier }}"
+    {% endif %}
 {% endif %}
 {% if authors_group_control_token %}
+    {% if authors_group_control_token == "*?Empty?*" %}
+		ebuttp:authorsGroupControlToken=""
+    {% else %}
 		ebuttp:authorsGroupControlToken="{{ authors_group_control_token }}"
-{% endif %}
-{% if authors_group_control_request %}
-		ebuttm:authorsGroupControlRequest="{{ authors_group_control_request }}"
+    {% endif %}
 {% endif %}
         xmlns:ebuttm="urn:ebu:tt:metadata"
         xmlns:ebuttp="urn:ebu:tt:parameters"

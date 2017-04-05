@@ -1,6 +1,6 @@
 
 from .switcher import SwitcherNode
-from ebu_tt_live.documents import EBUTT3Document
+from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
 
 
 class HandoverNode(SwitcherNode):
@@ -17,6 +17,7 @@ class HandoverNode(SwitcherNode):
     _current_token = None
     _current_selected_input_sequence_id = None
     _last_sequence_number = None
+    _known_sequences = None
 
     def __init__(self, node_id, authors_group_identifier, sequence_identifier, consumer_carriage=None, producer_carriage=None, **kwargs):
         super(HandoverNode, self).__init__(
@@ -29,6 +30,7 @@ class HandoverNode(SwitcherNode):
         self._sequence_identifier = sequence_identifier
         self._current_sequence_id = None
         self._last_sequence_number = 0
+        self._known_sequences = {}
 
     def process_document(self, document, **kwargs):
         """
@@ -61,6 +63,10 @@ class HandoverNode(SwitcherNode):
         emit = False
 
         if self.is_document(document):
+            # This step is necessary to ensure that the authors group does not change in a sequence
+            self._known_sequences.setdefault(
+                document.sequence_identifier, EBUTT3DocumentSequence.create_from_document(document=document)
+            ).is_compatible(document=document)
             if self.check_if_document_seen(document=document) is True \
                     and document.authors_group_identifier == self._authors_group_identifier \
                     and document.authors_group_control_token is not None:
