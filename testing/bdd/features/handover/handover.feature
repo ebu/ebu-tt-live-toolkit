@@ -45,11 +45,12 @@ Feature: Handover algorithm
     Then handover node emits <emitted_documents> documents
 
     Examples:
-    | sequence_identifier1 | sequence_number1 | authors_group_identifier1 | authors_group_control_token1 | emitted_documents |
-    | seq1                 | 1                |                           | 10                           | 0                 |
-    | seq1                 | 1                | foo                       |                              | 0                 |
-    | seq1                 | 1                |                           |                              | 0                 |
-
+    | sequence_identifier1 | sequence_number1 | authors_group_identifier1 | authors_group_control_token1 | emitted_documents |  
+    | seq1                 | 1                |                           | 10                           | 0                 |  
+    | seq1                 | 1                | foo                       |                              | 0                 |  
+    | seq1                 | 1                |                           |                              | 0                 |  
+    | seq1                 | 1                | handoverTest01            |                              | 0                 |  
+   
 
   # SPEC-CONFORMANCE: R122
   Scenario: Invalid group identifier
