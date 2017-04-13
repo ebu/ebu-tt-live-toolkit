@@ -28,7 +28,7 @@ Feature: Handover algorithm
 
     Examples:
     | sequence_identifier1 | sequence_number1 | authors_group_identifier1 | authors_group_control_token1 | sequence_identifier2 | sequence_number2 | authors_group_identifier2 | authors_group_control_token2 |
-    | seq1                 | 1                | foo                       | 1                            | seq1                 | 1                | bar                       | 2                            |
+    | seq1                 | 1                | foo                       | 1                            | seq1                 | 2                | bar                       | 2                            |
 
 
   # SPEC-CONFORMANCE: R121
