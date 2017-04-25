@@ -3,7 +3,6 @@ from pytest_bdd import when, scenarios
 
 scenarios('features/validation/applied-processing.feature')
 
-
 @when('applied processing element has process attribute <action>')
 def when_applied_processing_process_attribute(process, template_dict):
     template_dict["process"] = process
