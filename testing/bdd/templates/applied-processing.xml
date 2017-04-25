@@ -4,11 +4,11 @@
     <tt:metadata>
       <ebuttm:documentMetadata>
         <ebuttm:trace
-{% if action %}
-  {% if action == "*?Empty?*" %}
-              action=""
+{% if process %}
+  {% if process == "*?Empty?*" %}
+              process=""
   {% else %}
-              action="{{action}}"
+              process="{{process}}"
   {% endif %}
 {% endif %}
 {% if generated_by %}

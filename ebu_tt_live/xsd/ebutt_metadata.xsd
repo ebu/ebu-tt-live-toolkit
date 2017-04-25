@@ -2,7 +2,7 @@
 <!-- Copyright 2016, EBU, www.ebu.ch -->
 <!-- Version of XML Schema: 0.9 -->
 <!-- Creation: 05/04/2016 -->
-<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9. 
+<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9.
 Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:ebu:tt:metadata"
 	xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttdt="urn:ebu:tt:datatypes"
@@ -56,7 +56,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 					</xs:attribute>
 				</xs:extension>
 			</xs:simpleContent>
-		
+
 	</xs:complexType>
 	<xs:complexType name="documentMetadata">
 		<xs:annotation>
@@ -249,15 +249,6 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 						<xs:attribute name="type" type="xs:string"/>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="appliedProcessing" minOccurs="0">
-					<xs:complexType mixed="true">
-						<xs:sequence>
-							<xs:any namespace="##other" processContents="lax" minOccurs="0"
-								maxOccurs="unbounded"/>
-						</xs:sequence>
-						<xs:attribute name="appliedDateTime" type="xs:dateTime"/>
-					</xs:complexType>
-				</xs:element>
 				<xs:element name="relatedMediaDuration" type="ebuttdt:mediaTimingType" minOccurs="0"/>
 				<xs:element name="documentBeginDate" type="xs:date" minOccurs="0"/>
 				<xs:element name="localTimeOffset" minOccurs="0"/>
@@ -421,13 +412,23 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 						</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-			    <xs:element name="documentFacet" type="ebuttm:documentFacet_type" minOccurs="0" maxOccurs="unbounded"/>
-			    <xs:element name="trace" type="ebuttm:trace_type" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="documentFacet" type="ebuttm:documentFacet_type" minOccurs="0"/>
+				<xs:element name="appliedProcessing" minOccurs="0">
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="process" type="xs:string" use="required"/>
+						<xs:attribute name="generatedBy" type="xs:anyURI" use="required"/>
+						<xs:attribute name="sourceId" type="xs:anyURI" use="optional"/>
+						<xs:attribute name="appliedDateTime" type="xs:dateTime"/>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
-		
-		
+
+
 	</xs:complexType>
-	
+
     <xs:complexType name="facet_type">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
@@ -444,19 +445,19 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	
+
     <xs:complexType name="documentFacet_type">
 		<xs:annotation>
 			<xs:documentation>
-				The documentFacet element indicates a document level summary of a facet that applies to the document's content 
-				as defined by the facet element. The value may be the name of a term in a classification scheme, 
-				whose term should be identified by the link attribute. Each distinctly identified facet that is summarised 
+				The documentFacet element indicates a document level summary of a facet that applies to the document's content
+				as defined by the facet element. The value may be the name of a term in a classification scheme,
+				whose term should be identified by the link attribute. Each distinctly identified facet that is summarised
 				shall have a separate documentFacet element. Empty documentFacet elements should have a link attribute.
 				Documents shall NOT contain more than one documentFacet element referring to the same term,
 				where the term is identified by the combination of the element contents and the value of the link attribute.
 			</xs:documentation>
 		</xs:annotation>
-		
+
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
 				<xs:attribute name="link" type="xs:anyURI" use="optional"/>
@@ -472,26 +473,11 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				</xs:attribute>
 			</xs:extension>
 		</xs:simpleContent>
-		
+
 	</xs:complexType>
-	
-    <xs:complexType name="trace_type">
-		<xs:annotation>
-			<xs:documentation>
-				The trace element may be used to indicate processing that has been applied during the creation process of a document; 
-				multiple trace elements may be used to indicate a chain of processing.
-			</xs:documentation>
-		</xs:annotation>
-		
-		<xs:simpleContent>
-			<xs:extension base="xs:string">
-				<xs:attribute name="action" type="xs:string" use="required"/>
-				<xs:attribute name="generatedBy" type="xs:anyURI" use="required"/>
-				<xs:attribute name="sourceId" type="xs:anyURI" use="optional"/>
-			</xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-	
+
+
+
     <xs:complexType name="font_type">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
@@ -503,7 +489,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	
+
     <xs:complexType name="authoringTechnique_type">
 			<xs:simpleContent>
 				<xs:extension base="xs:string">
@@ -516,11 +502,11 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 				</xs:extension>
 			</xs:simpleContent>
 	</xs:complexType>
-		
+
 	<xs:attribute name="authoringDelay" type="ebuttdt:authoringDelayType">
 		<xs:annotation>
 			<xs:documentation>
-				The authoring delay associated with the timed content within this document may be indicated using the ebuttm:authoringDelay attribute. 
+				The authoring delay associated with the timed content within this document may be indicated using the ebuttm:authoringDelay attribute.
 				NOTE: This delay may be estimated or measured, and is intended to represent the duration between when the subitle authoring tool
 				received the instantaneous media for which subtitles were authored and the moment that the authoring tool emitted those subtitles.
 			</xs:documentation>
@@ -539,7 +525,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
             </xs:restriction>
         </xs:simpleType>
 	</xs:attribute>
-	
+
     <xs:complexType name="sourceMediaIdentifier_type">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
@@ -547,7 +533,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	
+
     <xs:complexType name="documentTransitionStyle_type">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
@@ -556,7 +542,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	
+
     <xs:complexType name="anyMetadata_type">
 		<xs:annotation>
 			<xs:documentation>Container for metadata information.</xs:documentation>
@@ -565,14 +551,14 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:any namespace="not http://www.w3.org/ns/ttml urn:ebu:tt" minOccurs="0" maxOccurs="unbounded" processContents="lax"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="metadataBase_type">
 		<xs:sequence>
 			<xs:element ref="ttm:title" minOccurs="0"/>
 			<xs:element ref="ttm:desc" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="headMetadata_type">
 		<xs:complexContent>
 		    <xs:extension base="ebuttm:metadataBase_type">
@@ -603,7 +589,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="divMetadata_type">
 		<xs:complexContent>
 		    <xs:extension base="ebuttm:metadataBase_type">
@@ -617,7 +603,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="pMetadata_type">
 		<xs:complexContent>
 		    <xs:extension base="ebuttm:metadataBase_type">
@@ -641,7 +627,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="stylingMetadata_type">
 		<xs:complexContent>
 		    <xs:extension base="ebuttm:metadataBase_type">
@@ -652,5 +638,5 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 </xs:schema>
