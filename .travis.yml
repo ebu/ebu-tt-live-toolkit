@@ -2,7 +2,7 @@ language: python
 
 python:
   - '2.7'
-  
+
 branches:
   except:
   - gh-pages
@@ -21,7 +21,7 @@ before_install:
   - git fetch origin -f gh-pages:gh-pages
 
 install:
-  - pip install pip==8.1.2
+  - pip install pip==9.0.1
   - make
   - python setup.py develop
   - pip install coveralls
