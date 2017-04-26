@@ -3,7 +3,7 @@
   <tt:head>
     <tt:metadata>
       <ebuttm:documentMetadata>
-        <ebuttm:trace
+        <ebuttm:appliedProcessing
 {% if process %}
   {% if process == "*?Empty?*" %}
               process=""

@@ -5,9 +5,9 @@ Feature: Applied processing element constrainst
   # SPEC-CONFORMANCE : R31 R42 R43
   Scenario: Invalid applied processing attributes
     Given an xml file <xml_file>
-    When trace element has process attribute <process>
-    And trace element has generatedBy attribute <generated_by>
-    And trace element has sourceId attribute <source_id>
+    When appliedProcessing element has process attribute <process>
+    And appliedProcessing element has generatedBy attribute <generated_by>
+    And appliedProcessing element has sourceId attribute <source_id>
     Then document is invalid
 
     Examples:
@@ -19,9 +19,9 @@ Feature: Applied processing element constrainst
 
 Scenario: Valid applied process attributes
     Given an xml file <xml_file>
-    When trace element has process attribute <process>
-    And trace element has generatedBy attribute <generated_by>
-    And trace element has sourceId attribute <source_id>
+    When appliedProcessing element has process attribute <process>
+    And appliedProcessing element has generatedBy attribute <generated_by>
+    And appliedProcessing element has sourceId attribute <source_id>
     Then document is valid
 
     Examples:
