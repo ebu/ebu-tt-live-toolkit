@@ -1,6 +1,6 @@
 @validation @syntax @metadata
 Feature: Document metadata elements order
-  Order of metadata elements (if present) in ebuttm:documentMetadata is: ebuttm:originalSourceServiceIdentifier, 
+  Order of metadata elements (if present) in ebuttm:documentMetadata is: ebuttm:originalSourceServiceIdentifier,
   ebuttm:intendedDestinationServiceIdentifier, ebuttm:documentFacet, ebuttm:trace
 
   Examples:
@@ -18,11 +18,11 @@ Feature: Document metadata elements order
 
     Examples:
     | document_metadata_1                  | document_metadata_2                  | document_metadata_3 | document_metadata_4 |
-    | originalSourceServiceIdentifier      | intendedDestinationServiceIdentifier | documentFacet       | trace               |
-    | intendedDestinationServiceIdentifier | documentFacet                        | trace               |                     |
-    | documentFacet                        | trace                                |                     |                     |
-    | trace                                |                                      |                     |                     |
-    | documentIdentifier                   | trace                                |                     |                     |
+    | originalSourceServiceIdentifier      | intendedDestinationServiceIdentifier | documentFacet       | appliedProcessing   |
+    | intendedDestinationServiceIdentifier | documentFacet                        | appliedProcessing   |                     |
+    | documentFacet                        | appliedProcessing                    |                     |                     |
+    | appliedProcessing                    |                                      |                     |                     |
+    | documentIdentifier                   | appliedProcessing                    |                     |                     |
 
 
   # SPEC-CONFORMANCE: R38 R39
@@ -36,8 +36,8 @@ Feature: Document metadata elements order
 
     Examples:
     | document_metadata_1                  | document_metadata_2                  | document_metadata_3                  | document_metadata_4             |
-    | intendedDestinationServiceIdentifier | originalSourceServiceIdentifier      | documentFacet                        | trace                           |
-    | originalSourceServiceIdentifier      | intendedDestinationServiceIdentifier | trace                                | documentFacet                   |
-    | originalSourceServiceIdentifier      | documentFacet                        | intendedDestinationServiceIdentifier | trace                           |
-    | trace                                | intededDestinationServiceIdentifier  | documentFacet                        | originalSourceServiceIdentifier |
+    | intendedDestinationServiceIdentifier | originalSourceServiceIdentifier      | documentFacet                        | appliedProcessing               |
+    | originalSourceServiceIdentifier      | intendedDestinationServiceIdentifier | appliedProcessing                    | documentFacet                   |
+    | originalSourceServiceIdentifier      | documentFacet                        | intendedDestinationServiceIdentifier | appliedProcessing               |
+    | appliedProcessing                    | intededDestinationServiceIdentifier  | documentFacet                        | originalSourceServiceIdentifier |
     | originalSourceServiceIdentifier      | documentIdentifier                   |                                      |                                 |
