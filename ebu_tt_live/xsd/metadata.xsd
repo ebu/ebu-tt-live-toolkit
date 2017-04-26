@@ -6,6 +6,7 @@
 Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
 	targetNamespace="http://www.w3.org/ns/ttml#metadata">
 	<xs:attribute name="agent" type="xs:IDREFS"/>
 	<xs:attribute name="role" type="xs:NMTOKENS"/>
@@ -27,32 +28,18 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
                 </xs:restriction>
               </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="id" type="xs:IDREF"/>
-            <xs:attribute name="lang" type="xs:string"/>
-            <xs:attribute name="space">
-              <xs:simpleType>
-                <xs:restriction base="xs:string">
-                  <xs:enumeration value="default"/>
-                  <xs:enumeration value="preserve"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute ref="xml:id"/>
+            <xs:attribute ref="xml:lang"/>
+            <xs:attribute ref="xml:space"/>
           </xs:complexType>
         </xs:element>
         
         <xs:element name="actor">
           <xs:complexType>
             <xs:attribute name="type" type="xs:IDREF"/>
-            <xs:attribute name="id" type="xs:IDREF"/>
-            <xs:attribute name="lang" type="xs:string"/>
-            <xs:attribute name="space">
-              <xs:simpleType>
-                <xs:restriction base="xs:string">
-                  <xs:enumeration value="default"/>
-                  <xs:enumeration value="preserve"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute ref="xml:id"/>
+            <xs:attribute ref="xml:lang"/>
+            <xs:attribute ref="xml:space"/>
           </xs:complexType>
         </xs:element>
         
@@ -69,16 +56,9 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
           </xs:restriction>
         </xs:simpleType>
       </xs:attribute>
-      <xs:attribute name="id" type="xs:IDREF"/>
-      <xs:attribute name="lang" type="xs:string"/>
-      <xs:attribute name="space">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="default"/>
-            <xs:enumeration value="preserve"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
+      <xs:attribute ref="xml:id"/>
+      <xs:attribute ref="xml:lang"/>
+      <xs:attribute ref="xml:space"/>
     </xs:complexType>
   </xs:element>
   
