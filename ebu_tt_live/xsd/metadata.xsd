@@ -15,7 +15,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
     <xs:complexType>
       <xs:sequence>
         
-        <xs:element name="name">
+        <xs:element name="name" minOccurs="0" maxOccurs="unbounded">
           <xs:complexType mixed="true">
             <xs:attribute name="type">
               <xs:simpleType>
