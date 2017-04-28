@@ -32,7 +32,7 @@ Feature: Handover
     | seq1                 | 1                | 1                         | 1                            | seq1                 | 2                |                           | 2                            |  
 
 
-  # SPEC-CONFORMANCE: R121
+  # NO SEPARATE REQUIREMENT IN SPEC-CONFORMANCE BUT PART OF THE ALGORITH DEFINITION 
   # The Handover Manager shall not emit any documents derived from documents that do not contain both the parameters
   # ebuttp:authorsGroupIdentifier and ebuttp:authorsGroupControlToken.
   Scenario: Documents with missing group identifier and token
