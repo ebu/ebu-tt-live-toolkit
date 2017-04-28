@@ -9,19 +9,19 @@
 # either by setting the control token value to an explicit lower number or by omitting it in
 # subsequent documents and relying on the initial value of "0".
 
-Feature: Handover algorithm  
+Feature: Handover algorithm
 
   Examples:
   | xml_file     | sequence_identifier | authors_group_identifier |
   | handover.xml | handoverOutputSeq   | handoverTest01           |
 
-  
-  # SPEC-CONFROMANCE.md R23, R24, R25
-  # When a document is received with a higher value ebuttp:authorsGroupControlToken than that most recently received 
+
+  # SPEC-CONFROMANCE.md R23, R24, R25, R120
+  # When a document is received with a higher value ebuttp:authorsGroupControlToken than that most recently received
   # in the currently selected sequence, the Handover Manager shall switch to that document's sequence without delay.
   Scenario: Switch to higher value token and ignore lower value token
     Given a handover node with <authors_group_identifier> and <sequence_identifier>
-    And an xml file <xml_file> 
+    And an xml file <xml_file>
     When it has <sequence_identifier1> and <sequence_number1>
     And it has <authors_group_identifier>
     And it has <authors_group_control_token1>
