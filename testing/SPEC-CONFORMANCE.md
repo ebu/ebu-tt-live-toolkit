@@ -134,4 +134,4 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R121|3.2.2.1|The data type of `ebuttp:authorsGroupControlToken` shall be a positive integer.|`xsd/ebutt_parameters.xsd`|
 |R122|3.2.2.1|The data type of `ebuttp:sequenceNumber` shall be a positive integer.|`xsd/ebutt_parameters.xsd`|
 |R123|3.2.2.1|The data type of `ebuttp:sequenceIdentifier` shall be a string of length >= 1.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
-|R124|3.2.2.1|The data type of `ebuttp:authorsGroupIdentifier` shall be a string of length >= 1.|xsd/ebutt_parameters.xsd|
+|R124|3.2.2.1|The data type of `ebuttp:authorsGroupIdentifier` shall be a string of length >= 1.|`bdd/features/handover/handover.feature`|
