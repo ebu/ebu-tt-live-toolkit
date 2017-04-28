@@ -1,6 +1,9 @@
 
 from pytest import fixture, raises
-from ebu_tt_live.config import AppConfig
+from ebu_tt_live.config import AppConfig, UniversalNodes
+import ebu_tt_live.config.node as node_config
+import ebu_tt_live.config.carriage as carriage_config
+import ebu_tt_live.node as processing_node
 from ebu_tt_live.config.common import ConfigurableComponent
 from ebu_tt_live.errors import ConfigurationError
 
@@ -38,6 +41,92 @@ def test_simple_producer():
     )
 
     app.start()
+
+
+def test_handover_conf():
+
+    val_source = {
+        "nodes": {
+            "node1": {
+                "id": "handover1",
+                "type": "handover",
+                "authors_group_identifier": "TestGroup1",
+                "sequence_identifier": "TestSequence1",
+                "input": {
+                    "carriage": {
+                        "type": "direct",
+                        "id": "default_in"
+                    }
+                },
+                "output": {
+                    "carriage": {
+                        "type": "direct",
+                        "id": "default_out"
+                    }
+                }
+            }
+        },
+        "backend": {
+            "type": "dummy"
+        }
+    }
+
+    app = AppConfig(
+        values_source_list=[val_source]
+    )
+
+    app.start()
+
+    created_node_configurator = app.get_node("node1")
+
+    assert isinstance(created_node_configurator, node_config.Handover)
+    assert isinstance(created_node_configurator.component, processing_node.HandoverNode)
+    assert created_node_configurator.component._sequence_identifier == 'TestSequence1'
+    assert created_node_configurator.component._authors_group_identifier == 'TestGroup1'
+    assert isinstance(created_node_configurator._input.carriage, carriage_config.DirectInput)
+    assert isinstance(created_node_configurator.output.carriage, carriage_config.DirectOutput)
+
+
+def test_handover_default_conf():
+
+    val_source = {
+        "nodes": {
+            "node1": {
+                "id": "handover1",
+                "type": "handover",
+                "input": {
+                    "carriage": {
+                        "type": "direct",
+                        "id": "default_in"
+                    }
+                },
+                "output": {
+                    "carriage": {
+                        "type": "direct",
+                        "id": "default_out"
+                    }
+                }
+            }
+        },
+        "backend": {
+            "type": "dummy"
+        }
+    }
+
+    app = AppConfig(
+        values_source_list=[val_source]
+    )
+
+    app.start()
+
+    created_node_configurator = app.get_node("node1")
+
+    assert isinstance(created_node_configurator, node_config.Handover)
+    assert isinstance(created_node_configurator.component, processing_node.HandoverNode)
+    assert created_node_configurator.component._sequence_identifier == 'HandoverSequence1'
+    assert created_node_configurator.component._authors_group_identifier == 'AuthorsGroup1'
+    assert isinstance(created_node_configurator._input.carriage, carriage_config.DirectInput)
+    assert isinstance(created_node_configurator.output.carriage, carriage_config.DirectOutput)
 
 
 def test_simple_producer_wrong_backend():

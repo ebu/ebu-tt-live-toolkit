@@ -290,6 +290,28 @@ class Distributor(ConsumerMixin, ProducerMixin, NodeBase):
         self._create_output(config)
 
 
+class Handover(ConsumerMixin, ProducerMixin, NodeBase):
+
+    required_config = Namespace()
+    required_config.add_option('authors_group_identifier', default='AuthorsGroup1')
+    required_config.add_option('sequence_identifier', default='HandoverSequence1')
+
+    def _create_component(self, config):
+        self.component = processing_node.HandoverNode(
+            node_id=self.config.id,
+            authors_group_identifier=self.config.authors_group_identifier,
+            sequence_identifier=self.config.sequence_identifier
+        )
+
+    def __init__(self, config, local_config):
+        super(Handover, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
+
+        self.backend.register_component_start(self)
+
+
 nodes_by_type = {
     'simple-consumer': SimpleConsumer,
     'simple-producer': SimpleProducer,
@@ -297,7 +319,8 @@ nodes_by_type = {
     'ebuttd-encoder': EBUTTDEncoder,
     'buffer-delay': BufferDelay,
     'retiming-delay': RetimingDelay,
-    'distributor': Distributor
+    'distributor': Distributor,
+    'handover': Handover
 }
 
 

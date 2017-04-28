@@ -23,11 +23,11 @@ packages=[
 
 setup(
     name="ebu-tt-live",
-    version="2.0.1",
+    version="2.1",
     description="EBU-TT Part 3 library implementing Specification EBU-3370",
     install_requires=[
         "PyXB",
-        "ipdb",  # This will eventually be removed from here
+        "ipdb>=0.10.1,<0.10.3",  # This will eventually be removed from here
         "configobj",
         "pyyaml",
         "twisted",

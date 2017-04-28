@@ -1,0 +1,30 @@
+{
+	"nodes" :
+	{
+	    "node1": 
+	    {
+			"id": "distributor1",
+			"type": "distributor",
+			"input": 
+			{
+				"carriage": 
+				{
+					"type": "websocket",
+					"listen": "ws://localhost:9001"
+				}
+			},
+			"output": 
+			{
+				"carriage": 
+				{
+					"type": "filesystem",
+					"folder": "filesystem_export"
+				}
+			}
+	    }
+	},
+	"backend" : 
+	{
+		"type": "twisted"
+	}
+}
