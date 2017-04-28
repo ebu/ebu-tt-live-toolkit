@@ -50,7 +50,6 @@ class TimingValidationMixin(object):
 
     def _pre_assign_end(self, proposed_end):
         self._semantic_dataset['timing_end_stack'].append(proposed_end)
-        self._semantic_dataset['timing_end_limit'] = max(self._semantic_dataset.get('timing_end_limt', timedelta()), proposed_end)
         self._computed_end_time = proposed_end
 
     def _pre_calculate_end(self):
