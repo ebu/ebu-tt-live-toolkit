@@ -6,21 +6,12 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 
 |ID|Section|Statement|Feature file path and Scenario name|
 |--|-------|---------|-----------------------------------|
-<<<<<<< HEAD
 | | | **Tech3370 v0.9**| | |
 |R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
-|R2|2.2 |If no document is active, or if a document with no content is active, no content shall be displayed.|Implicit in R15-R17|
+|R2|2.2|If no document is active, or if a document with no content is active, no content shall be displayed.|Implicit in R15-R17|
 |R3|2.2|Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.|Definition (untestable)|
 |R4|2.2|Every distinct sequence shall have a unique sequence identifier.|Implicit in R5-R7|
 |R5|2.2|A document shall be associated with exactly one sequence.|`bdd/features/validation/sequence\_id\_num.feature (In)valid Sequence head attributes`|
-=======
-| | |**Tech3370**| | |
-|R1|2.2|When presenting a sequence of documents, at each moment in time exactly zero or one document shall be active.|`/bdd/features/timing/resolved_times.feature`|
-|R2|2.2|If no document is active, or if a document with no content is active, no content shall be displayed.| |
-|R3|2.2|Sequences shall be considered distinct if they have had processing applied, even if the result of that processing is no change other than a known difference in state, for example if the processing has checked the spelling of the text content.| |
-|R4|2.2|Every distinct sequence shall have a unique sequence identifier.| |
-|R5|2.2|A document shall be associated with exactly one sequence.| |
->>>>>>> release/2.1
 |R6|2.2|the sequence identifier shall be present within every document|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R7|2.2|Documents with the same sequence identifier shall contain a sequence number.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R8|2.2|~~Every distinct document with the same sequence identifier shall have a different sequence number.~~|Deprecated. See R107|
@@ -91,13 +82,8 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R72|3|~~If `timebase="smpte"` then `ttp:markerMode` SHALL be specified and shall have the value `continuous` or the value `discontinuous`.~~ SMPTE Deprecated.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|
 |R73a|3|~~If `timebase="smpte"` and the calculation of the frame rate from  `ttp:frameRate` and `ttp:frameRateMultiplier` results in an integer, then the value of `ttp:dropMode` SHALL be `nonDrop`.~~ SMPTE Deprecated.|`bdd/features/validation/smpte\_constraints.feature` `(In)valid SMPTE head attributes`|   
 |R73b|3|If `ttp:timeBase="clock"` then `ttp:clockMode` SHALL be specified|`bdd/features/validation/timeBase_clock_clockMode_mandatory.feature` `(In)valid clock ttp:clockMode`|
-<<<<<<< HEAD
 |R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.|NOTE: not tested directly but `ebu_tt_live/xsd/parameter.xsd` defines this default.|
 |R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified. ||
-=======
-|R74|3|`ttp:cellResolution` SHALL have the default value `32 15`.||
-|R75|3|If the `cell` unit is used, `ttp:cellResolution` SHALL be specified.||
->>>>>>> release/2.1
 |R76|3|If the `pixel` unit is used, `tts:extent` SHALL be specified on `tt:tt`||
 |R77|3|`xml:lang` SHALL be specified on `tt:tt`|`bdd/features/validation/xml\_lang\_attribute.feature` `(In)valid xml:lang attribute`|
 |R78|3.1.1.1.8|If `ebuttm:documentTargetActiveFormatDescriptor` is specified then `ebuttm:documentTargetAspectRatio` SHALL be specified with one of the values `4:3` or `16:9`||
@@ -143,19 +129,9 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R117|2.3.4.2|A Retiming Delay node shall not update the value of `ebuttm:authoringDelay`.|`bdd/features/timing/retimingDelayNode.feature`|
 |R118|2.2|Two documents are considered identical if the result of the fn:deep-equal function [XFUNC] is true when both documents are provided as operands.|NOTE: Due to partial support for XQuery functions in the Python libraries that we use, this requirement is not implemented fully in this toolkit. Equality testing in other implementation may produce slightly different results.|
 |R119|2.3.4.1|A Buffer Delay node is a passive node. Therefore the output documents shall be identical to the input documents.|`bdd/features/nodes/passive\_nodes\_shall\_not\_modify\_document.feature`|
-<<<<<<< HEAD
 ||| **Tech 3370 v1.0**||
 |R120|2.4.2|The Handover Manager shall maintain all of the following variables: a token equal to the value of the `ebuttp:authorsGroupControlToken` of the most recently emitted document, or a null value if no document has been emitted; a record of the sequence identifier of the source sequence used to generate the most recently emitted document, known as the selected sequence, initially a null value until a sequence is selected; a record of the configured authors group identifier; an output sequence identifier.|Tested implicitly as part of the algorithm in `bdd/features/handover/handover_algorithm.feature`|
 |R121|3.2.2.1|The data type of `ebuttp:authorsGroupControlToken` shall be a positive integer.|`xsd/ebutt_parameters.xsd`|
 |R122|3.2.2.1|The data type of `ebuttp:sequenceNumber` shall be a positive integer.|`xsd/ebutt_parameters.xsd`|
 |R123|3.2.2.1|The data type of `ebuttp:sequenceIdentifier` shall be a string of length >= 1.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R124|3.2.2.1|The data type of `ebuttp:authorsGroupIdentifier` shall be a string of length >= 1.|`bdd/features/handover/handover.feature`|
-=======
-||| **March 2017**||
-|R120|2.4.1|The Handover Manager shall include within each output document the metadata attribute `authorsGroupSelectedSequenceIdentifier` set to the value of the source sequence's identifier for that document.||
-|R121|2.4.1|The Handover Manager shall not emit any documents derived from documents that do not contain both the parameters `ebuttp:authorsGroupIdentifier` and `ebuttp:authorsGroupControlToken`.||
-|R122|3.2.2.1|The value of `ebuttp:authorsGroupControlToken` shall be a positive integer.||
-|R123|3.2.2.1|The value of `ebuttp:sequenceNumber` shall be a positive integer.||
-|R124|3.2.2.1|The value of `ebuttp:sequenceIdentifier` shall be a string of length >= 1.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
-|R125|3.2.2.1|The value of `ebuttp:authorsGroupIdentifier` shall be a string of length >= 1.||
->>>>>>> release/2.1
