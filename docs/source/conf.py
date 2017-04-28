@@ -69,7 +69,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'EBU-TT-Live Toolkit'
-copyright = u'2016, European Broadcasting Union'
+copyright = u'2017, European Broadcasting Union'
 author = u'European Broadcasting Union'
 
 # The version info for the project you're documenting, acts as replacement for
