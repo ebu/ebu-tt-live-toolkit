@@ -53,7 +53,7 @@ Feature: Handover
     | seq1                 | 1                | handoverTest01            |                              | 0                 |
 
 
-  # SPEC-CONFORMANCE: R122
+  # SPEC-CONFORMANCE: R124
   Scenario: Invalid group identifier
     Given a handover node with <authors_group_identifier> and <sequence_identifier>  # This is line is not needed by the test but otherwise the BDD framework complains of mismatching variables
     And an xml file <xml_file>
