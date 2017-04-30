@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xml="http://www.w3.org/XML/1998/namespace"
+           xmlns:ebuttp="urn:ebu:tt:parameters"
+           xmlns:ebuttlm="urn:ebu:tt:livemessage"
+           targetNamespace="urn:ebu:tt:livemessage" elementFormDefault="qualified"
+           xml:lang="en">
+    <xs:import namespace="urn:ebu:tt:parameters" schemaLocation="ebutt_parameters.xsd"/>
+
+    <xs:complexType name="message_header_type">
+        <xs:annotation>
+            <xs:documentation>Message header to help a recipient identify the purpose of the message
+            and decide whether it is relevant to them and if so what type of payload it contains if any
+            and how to process that payload</xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="sender" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="recipient" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="type" type="xs:NCName" />
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="message_type">
+        <xs:annotation>
+            <xs:documentation>The message container type that can be used as a root document element
+            to create a new message. It shall specify its header and it could specify a payload.
+            </xs:documentation>
+        </xs:annotation>
+
+        <xs:sequence>
+            <xs:element name="header" type="ebuttlm:message_header_type" />
+            <xs:element name="payload" type="xs:anyType" />
+        </xs:sequence>
+
+        <xs:attribute ref="ebuttp:sequenceIdentifier" use="required"/>
+
+    </xs:complexType>
+    <xs:element name="message" type="ebuttlm:message_type" />
+
+</xs:schema>

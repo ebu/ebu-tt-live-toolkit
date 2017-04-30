@@ -30,32 +30,34 @@ class RetimingDelayNode(AbstractCombinedNode):
         self._document_sequence = document_sequence
 
     def process_document(self, document, **kwargs):
+        if self.is_document(document):
+            if document.sequence_identifier == self._document_sequence:
+                raise UnexpectedSequenceIdentifierError()
 
-        if document.sequence_identifier == self._document_sequence:
-            raise UnexpectedSequenceIdentifierError()
+            if self.check_if_document_seen(document=document):
+                # change the sequence identifier
+                document.sequence_identifier = self._document_sequence
 
-        if self.check_document(document=document):
-            # change the sequence identifier
-            document.sequence_identifier = self._document_sequence
-        
 
-            # TODO: add an ebuttm:appliedProcessing element to the document metadata
+                # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
-            if has_a_leaf_with_no_timing_path(document.binding.body):
-                update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
+                if has_a_leaf_with_no_timing_path(document.binding.body):
+                    update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
 
+                else:
+                    update_children_timing(document.binding, document.time_base, self._fixed_delay)
+
+                document.validate()
+                self.producer_carriage.emit_data(data=document, **kwargs)
             else:
-                update_children_timing(document.binding, document.time_base, self._fixed_delay)
-
-            document.validate()
-            self.producer_carriage.emit_data(data=document, **kwargs)
-        else:
-            log.warning(
-                'Ignoring duplicate document: {}__{}'.format(
-                    document.sequence_identifier,
-                    document.sequence_number
+                log.warning(
+                    'Ignoring duplicate document: {}__{}'.format(
+                        document.sequence_identifier,
+                        document.sequence_number
+                    )
                 )
-            )
+        else:
+            self.producer_carriage.emit_data(data=document, **kwargs)
 
 
 class BufferDelayNode(AbstractCombinedNode):
