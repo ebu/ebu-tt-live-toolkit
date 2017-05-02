@@ -1,0 +1,25 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "resequencer1",
+      "type": "resequencer",
+      "sequence_identifier": "ReSequenced1",
+      "segment_length": "5.0",
+      "clock":  {
+        "type": "local"
+      },
+      "input": {
+        "carriage": {
+          "type": "filesystem",
+            "manifest_file": "export/manifest_TestSequence1.txt",
+            "tail": "true"
+        }
+      },
+      "output": {
+        "carriage": {
+          "type": "filesystem"
+        }
+      }
+    }
+  }
+}

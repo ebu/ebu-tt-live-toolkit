@@ -1,0 +1,14 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "consumer1",
+      "type": "simple-consumer",
+      "input": {
+        "carriage": {
+          "type": "filesystem",
+          "manifest_file": "export/manifest_TestSequence1.txt"
+        }
+      }
+    }
+  }
+}
