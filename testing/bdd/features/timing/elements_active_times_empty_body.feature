@@ -5,8 +5,8 @@ Feature: Computed element active begin and end times
 
   # Given a parent element with one child element, the computed active parent and child begin and active parent end times are valid:
   Examples:
-  | xml_file                           | sequence_identifier | sequence_number | time_base |
-  | elements_active_time_semantics.xml | testSeq             | 1               | media     |
+  | xml_file                                      | sequence_identifier | sequence_number | time_base |  
+  | elements_active_time_semantics_empty_body.xml | testSeq             | 1               | media     |  
 
 
   Scenario: Parent with no child element
@@ -45,9 +45,9 @@ Feature: Computed element active begin and end times
     And body active end time is <body_active_end>
 
     Examples:
-    | body_begin | body_dur | body_end | availability_time | body_active_begin | body_active_end | div_active_begin | div_active_end |
-    |            |          |          |                   | 00:00:00          | undefined       | 00:00:00         | undefined      |
-    |            |          |          | 00:00:05          | 00:00:05          | undefined       | 00:00:05         | undefined      |
-    |            | 00:01:00 |          |                   | 00:00:00          | 00:01:00        | 00:00:00         | 00:01:00       |
-    |            | 00:01:00 |          | 00:00:05          | 00:00:05          | 00:01:05        | 00:00:05         | 00:01:05       |
-    |            | 00:01:00 | 00:00:50 |                   | 00:00:00          | 00:00:50        | 00:00:00         | 00:00:50       |
+    | body_begin | body_dur | body_end | availability_time | body_active_begin | body_active_end |
+    |            |          |          |                   | 00:00:00          | undefined       |
+    |            |          |          | 00:00:05          | 00:00:05          | undefined       |
+    |            | 00:01:00 |          |                   | 00:00:00          | 00:01:00        |
+    |            | 00:01:00 |          | 00:00:05          | 00:00:05          | 00:01:05        |
+    |            | 00:01:00 | 00:00:50 |                   | 00:00:00          | 00:00:50        |
