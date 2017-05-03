@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="TestSequence1" ebuttp:sequenceNumber="3" ttp:cellResolution="32 15" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:ebutts="urn:ebu:tt:style" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="defaultStyle1"/>
+    </tt:styling>
+    <tt:layout>
+      <tt:region tts:displayAlign="after" tts:extent="71.25% 24%" tts:origin="14.375% 60%" tts:overflow="visible" tts:writingMode="lrtb" xml:id="bottomRegion"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body begin="16:39:19.194" dur="00:00:01">
+    <tt:div region="bottomRegion">
+      <tt:p xml:id="ID001">
+        <tt:span style="defaultStyle1">16:39:19.194</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
