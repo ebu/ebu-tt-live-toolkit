@@ -1,4 +1,0 @@
-16:39:14.244,TestSequence1_1.xml
-16:39:16.216,TestSequence1_2.xml
-16:39:18.221,TestSequence1_3.xml
-16:39:20.218,TestSequence1_4.xml
