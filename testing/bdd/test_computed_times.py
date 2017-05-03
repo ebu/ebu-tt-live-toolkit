@@ -1,6 +1,7 @@
 from pytest_bdd import scenarios, given
 
 scenarios('features/timing/computed_times.feature')
+scenarios('features/timing/computed_times_empty_doc.feature')
 
 
 @given('it has timeBase <time_base>')
