@@ -108,8 +108,8 @@ class FilesystemInput(ConfigurableComponent):
         super(FilesystemInput, self).__init__(config, local_config)
         self.component = filesystem.FilesystemConsumerImpl()
         self._fs_reader = filesystem.FilesystemReader(
-            manifest_path=config.manifest_file,
-            do_tail=config.tail,
+            manifest_path=self.config.manifest_file,
+            do_tail=self.config.tail,
             custom_consumer=self.component
         )
         self.backend.register_component_start(self)
