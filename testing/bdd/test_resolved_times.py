@@ -3,7 +3,7 @@ from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimin
 from pytest_bdd import scenarios, then, when, parsers
 
 scenarios('features/timing/resolved_times.feature')
-
+scenarios('features/timing/resolved_times_no_body.feature')
 
 def timestr_to_timedelta(time_str, time_base):
     if time_base == 'clock':
