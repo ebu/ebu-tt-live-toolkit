@@ -6,7 +6,9 @@ creates an EBUTTDDocument from an EBUTT3Document using the helper class
 :py:class:`ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter`.
 
 This class manages various possible complications, including a significant set
-of constraints about font size.
+of constraints about font size. 
+
+Note that conversion to EBU-TT-D was not in scope for this project and therefore it was not implemented fully.  
 
 Here's some documentation from the coding process that captures some of our
 internal conversation about how to map font sizes, to give an idea of the
@@ -20,17 +22,19 @@ Convert an EBU-TT part 3 document to EBU-TT-D
 EBU-TT part 3 uses fonSize in 3 datatypes: cells, pixels and percentage.
 EBU-TT-D uses percentage fontSize only and prohibits pixels.
 
+Percent values relate to the parent element or the cell size. 
+
 In order to be converted the sizes need to be translated from pixels/cells to
-percentages. Percentages vs. pixels/cells
+percentages.
 
 The relationship between parent and child element is important when percentages
-are used as the child modulates the computed fontSize of the parent container,
-however it is an override when it comes to the other 2 types. In order to be
-converted an absolute size needs to be calculated. According to TTML the
+are used becuase the child modulates the computed fontSize of the parent container.
+However, it is an override when it comes to the other two data types. In order to be
+converted, an absolute size needs to be calculated. According to TTML the
 computed fontSize value is an absolute value such as pixel. This poses a problem
-of the ``tts:extent`` attribute of the ``tt:tt`` element not always being
-available to us. ``ttp:cellResolution`` is available, because it has a default
-value and ``ttp:pixelAspectRatio`` is available as it has a default value.
+because the ``tts:extent`` attribute of the ``tt:tt`` element is not always available to us. 
+But ``ttp:cellResolution`` and ``ttp:pixelAspectRatio`` are available because they have 
+a default value that is available.
 
 Percentages and the EM square
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,7 +44,7 @@ region). If it is a percentage value of ``"100%"`` then the EM square's
 horizontal and vertical size are both the *height* of the cell whose size is
 defined by the  ``ttp:cellResolution`` attribute of the ``tt:tt`` element.
 However if it is a a percentage value of ``"100% 100%"`` then the EM square's
-horizontal size is the *width* of a cell and its vertical size is the height of
+horizontal size is the *width* of a cell and its vertical size is the *height* of
 a cell. Then any  derived size, say a ``tts:fontSize`` attribute specified on a
 ``style`` element  referenced by a ``tt:p`` element, is scaled in proportion to
 its parent element's  font size (default is ``"100%"`` as defined above. See
@@ -68,15 +72,16 @@ Let's assume we have the following styles at hand: ::
   <style id="S1c1c" fontSize="1c 1c"/>
   <style id="S50p" fontSize="50%"/>
   <style id="S20p50p" fontSize="20% 50%"/>
-
+  
 Example 1: ::
 
   <div style="S50p">
     <p style="S20p50p">Test text</p>
   </div>
 
-This is a clear case of the default EM Square going to half of its height and
-half its width and then anamorphically scaled to 20%:50%
+In this case, the EM square is first scaled to half height and
+half width (in the ``<div>``) and then anamorphically scaled (in the ``<p>``) 
+again to 20%:50% of the size defined in the parent.
 
 Example 2: ::
 
@@ -84,7 +89,8 @@ Example 2: ::
     <p style="S20p50p">Test text</p>
   </div>
 
-This is 2 anamorphic scaling steps quite clear.
+Here the ``<div>`` overrides any value with absolute cell size.
+The child ``<p>`` anamorphically resizes relatively to the parent. 
 
 Example 3: ::
 
@@ -92,24 +98,23 @@ Example 3: ::
     <p style="S20p50p">Test text</p>
   </div>
 
-Here we have a default EM square of a 1c
-tall glyph that is going to be scaled in the ratio 20:50. 
+Here the parent element defines an EM square of 1c.
+The child element defines a tall glyph that is going to be scaled in the ratio 20%:50% of a cell. 
 
 **What if we could figure out width from height**
 
-This seems to be an obvious wish by now if we could work out a way to normalize
-our sizing to be always 2 dimensional and have simple algorithms deal with them
-without having to cater for edge cases of S100p being completely different from
-S1c. 
+The obvious solution would be to work out a way to normalize font sizing
+to be always 2 dimensional and have simple algorithms deal with them
+(without having to cater for edge cases of S100p being completely different from
+S1c). 
 
-In order for us to do that the following values are all required: ::
+This solution would require knowing all these valies: ::
 
   extent(in pixels), cellResolution, pixelAspectRatio
 
-In a processing pipeline where we would like to convert subtitle formats from
-one format to another having to know about the presentation context of a
-rendering engine is not quite ideal. The solution here is not obvious but
-this clearly creates a problem. 
+But in a processing pipeline where we need to convert from
+one format to another, having to know the presentation context of a
+rendering engine is not ideal. So the solution must make no assumptions about the final presentation size.  
 
 The solution
 ------------
