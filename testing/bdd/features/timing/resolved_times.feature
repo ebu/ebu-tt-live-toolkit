@@ -92,9 +92,9 @@ Feature: Resolved times computation in sequence
     And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc1_no_body | doc2_no_body | doc3_no_body | doc3_avail_time | doc3_begin | doc3_end   | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc3 | r_end_doc3 |  
-    |              |              |              | 00:00:02.0      | 00:00:25.0 | 00:01:00.0 |          | 00:00:10.0   | 00:00:20.0 | 00:00:25.0   | 00:01:00.0 |  
-    |              |              |              | 00:00:15.0      | 00:00:16.0 | 00:00:35.0 |          | 00:00:10.0   | 00:00:16.0 | 00:00:16.0   | 00:00:35.0 |  
+    | doc3_avail_time | doc3_begin | doc3_end   | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc3 | r_end_doc3 |  
+    | 00:00:02.0      | 00:00:25.0 | 00:01:00.0 |          | 00:00:10.0   | 00:00:20.0 | 00:00:25.0   | 00:01:00.0 |  
+    | 00:00:15.0      | 00:00:16.0 | 00:00:35.0 |          | 00:00:10.0   | 00:00:16.0 | 00:00:16.0   | 00:00:35.0 |  
 
 
   # SPEC-CONFORMANCE: R15 R16 R17
@@ -132,10 +132,10 @@ Feature: Resolved times computation in sequence
     And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc1_no_body | doc2_no_body | doc3_no_body | doc3_avail_time | doc3_begin  | doc3_end | doc3_dur | r_begin_doc3 | r_end_doc3  |  
-    |              |              |              | 00:00:08.0      | 00:00:09.23 |          | 1h       | 00:00:09.23  | 01:00:09.23 |  
-    |              |              |              | 00:00:00.0      | 00:00:09.0  |          | 1h       | 00:00:09.0   | 01:00:09.0  |  
-    |              |              |              | 00:00:00.0      | 00:00:04.0  |          | 1h       | 00:00:04.0   | 01:00:04.0  |  
+    | doc3_avail_time | doc3_begin  | doc3_end | doc3_dur | r_begin_doc3 | r_end_doc3  |  
+    | 00:00:08.0      | 00:00:09.23 |          | 1h       | 00:00:09.23  | 01:00:09.23 |  
+    | 00:00:00.0      | 00:00:09.0  |          | 1h       | 00:00:09.0   | 01:00:09.0  |  
+    | 00:00:00.0      | 00:00:04.0  |          | 1h       | 00:00:04.0   | 01:00:04.0  |  
 
 
   # SPEC-CONFORMANCE: R16 R17
@@ -176,6 +176,6 @@ Feature: Resolved times computation in sequence
     And doc3 has resolved end time <r_end_doc3>
 
     Examples:
-    | doc1_no_body | doc2_no_body | doc3_no_body | doc3_avail_time | doc3_begin | doc3_end   | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc2 | r_end_doc2 | r_begin_doc3 | r_end_doc3 |  
-    |              |              |              | 00:00:03.0      | 00:00:50.0 | 00:01:00.0 |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |  
-    |              |              |              | 00:00:03.0      | 00:00:38.0 | 00:01:00.0 |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:38.0 | 00:00:38.0   | 00:01:00.0 |  
+    | doc3_avail_time | doc3_begin | doc3_end   | doc3_dur | r_begin_doc1 | r_end_doc1 | r_begin_doc2 | r_end_doc2 | r_begin_doc3 | r_end_doc3 |  
+    | 00:00:03.0      | 00:00:50.0 | 00:01:00.0 |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:40.0 | 00:00:50.0   | 00:01:00.0 |  
+    | 00:00:03.0      | 00:00:38.0 | 00:01:00.0 |          | 00:00:10.0   | 00:00:20.0 | 00:00:30.0   | 00:00:38.0 | 00:00:38.0   | 00:01:00.0 |  
