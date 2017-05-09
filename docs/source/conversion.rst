@@ -28,7 +28,7 @@ In order to be converted the sizes need to be translated from pixels/cells to
 percentages.
 
 The relationship between parent and child element is important when percentages
-are used becuase the child modulates the computed fontSize of the parent container.
+are used because the child modulates the computed fontSize of the parent container.
 However, it is an override when it comes to the other two data types. In order to be
 converted, an absolute size needs to be calculated. According to TTML the
 computed fontSize value is an absolute value such as pixel. This poses a problem
