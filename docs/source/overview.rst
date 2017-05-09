@@ -17,3 +17,4 @@ The components mimic the nodes and carriage mechanisms defined in the specificat
     user_input_producer
     timing_resolution
     segmentation
+    conversion
