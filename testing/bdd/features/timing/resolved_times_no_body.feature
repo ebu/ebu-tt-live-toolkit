@@ -52,7 +52,8 @@ Feature: Resolved times computation in sequence when there is no body
     | 00:00:00.1      |              | 00:00:10   | 00:00:15 |          | 00:00:00.2      |              | 00:00:20   | 00:00:25 |          | 00:00:00.3      | TRUE         |            |          |          | 00:00:10.0   | 00:00:00.3 | 00:00:20.0   | 00:00:00.3 | 00:00:00.3   | 00:00:00.3 |  
     | 00:00:00        |              | 00:00:00   | 00:00:10 |          | 00:00:05        | TRUE         |            |          |          | 00:00:10        |              | 00:00:10   | 00:00:20 |          | 00:00:00     | 00:00:05   | 00:00:05     | 00:00:05   | 00:00:10     | 00:00:20   |  
     | 00:00:10        | TRUE         |            |          |          | 00:00:05        |              | 00:00:10   | 00:00:20 |          | 00:00:20        |              |            |          |          | 00:00:10     | 00:00:10   | 00:00:10     | 00:00:20   | 00:00:20     |            |  
-    #This example passes only when the resolved doc1_end is NULL instead of 00:00:00. To be investigated. This is probably a bug. 
+    # This example passes only when the resolved doc1_end is NULL instead of 00:00:00. To be investigated. This is probably a bug.
+    # See issue #429 
     | 00:00:00        | TRUE         |            |          |          | 00:00:01.0      | TRUE         |            |          |          | 00:00:03.0      | TRUE         |            |          |          | 00:00:00     |            | 00:00:01.0   | 00:00:01.0 | 00:00:03.0   | 00:00:03.0 |  
     #i.e., this fails:
     @skip
