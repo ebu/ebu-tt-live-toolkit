@@ -5,9 +5,8 @@ Feature: Handover
     | handover.xml | handoverOutputSeq   | handoverTest01           |
 
 
-  # SPEC-CONFORMANCE: R24, R124
+  # SPEC-CONFORMANCE: R24
   # Within a single sequence, all documents that contain ebuttp:authorsGroupIdentifier shall have the same ebuttp:authorsGroupIdentifier
-  # The data type of ebuttp:authorsGroupIdentifier shall be a string of length >= 1.
   # The handover node should throw an error when this happens
   Scenario: Different group identifiers in a sequence
     Given a handover node with <authors_group_identifier> and <sequence_identifier>
@@ -27,9 +26,6 @@ Feature: Handover
     Examples:
     | sequence_identifier1 | sequence_number1 | authors_group_identifier1 | authors_group_control_token1 | sequence_identifier2 | sequence_number2 | authors_group_identifier2 | authors_group_control_token2 |  
     | seq1                 | 1                | handoverTest01            | 1                            | seq1                 | 2                | foo                       | 2                            |  
-    # Length of ebuttp:authorsGroupIdentifier < 1
-    | seq1                 | 1                |                           | 1                            | seq1                 | 2                | foo                       | 2                            |  
-    | seq1                 | 1                | 1                         | 1                            | seq1                 | 2                |                           | 2                            |  
 
 
   # SPEC-CONFORMANCE: R124, R127
