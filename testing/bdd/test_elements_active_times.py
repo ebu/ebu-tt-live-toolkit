@@ -3,6 +3,7 @@ from ebu_tt_live.bindings._ebuttdt import FullClockTimingType
 from pytest_bdd import scenarios, when, then
 
 scenarios('features/timing/elements_active_times.feature')
+scenarios('features/timing/elements_active_times_empty_body.feature')
 
 
 @when('it has timeBase <time_base>')

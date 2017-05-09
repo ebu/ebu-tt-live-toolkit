@@ -1,6 +1,7 @@
 from pytest_bdd import scenarios, given
 
 scenarios('features/timing/computed_times.feature')
+scenarios('features/timing/computed_times_empty_doc.feature')
 
 
 @given('it has timeBase <time_base>')
@@ -17,6 +18,9 @@ def given_seq_id(sequence_identifier, template_dict):
 def given_sequence_number(sequence_number, template_dict):
     template_dict['sequence_number'] = sequence_number
 
+@given('it has body <no_body>')
+def given_no_body(no_body, template_dict):
+    template_dict['no_body'] = no_body
 
 @given('it has body begin time <body_begin>')
 def given_body_begin(body_begin, template_dict):

@@ -23,7 +23,6 @@ import gc
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
-
 class TimingEvent(object):
     """
     This class wraps a document and an associated resolved timing event into an object that can be placed
@@ -505,10 +504,14 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
 
         # Default value for the computed begin time of the document is the active begin time of the body
         # This only changes if the body does not declare a begin time.
-        self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
+        # Same for end time.
+        if self._ebutt3_content.body is not None:
+            self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
+            self._computed_end_time = self._ebutt3_content.body.computed_end_time
+        else:
+            self._computed_begin_time = availability_time
+            self._computed_end_time = availability_time
 
-        # End times
-        self._computed_end_time = self._ebutt3_content.body.computed_end_time
 
     def add_div(self, div):
         body = self._ebutt3_content.body

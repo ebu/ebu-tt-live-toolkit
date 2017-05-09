@@ -3,7 +3,7 @@ from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimin
 from pytest_bdd import scenarios, then, when, parsers
 
 scenarios('features/timing/resolved_times.feature')
-
+scenarios('features/timing/resolved_times_no_body.feature')
 
 def timestr_to_timedelta(time_str, time_base):
     if time_base == 'clock':
@@ -34,6 +34,11 @@ def when_sequence_number(sequence_number, template_dict):
     template_dict['sequence_number'] = sequence_number
 
 
+@when('it has doc1 body <doc1_no_body>')
+def when_doc1_body(doc1_no_body, template_dict):
+    template_dict['body'] = doc1_no_body
+
+
 @when('it has doc1 body begin time <doc1_begin>')
 def when_doc1_body_begin(doc1_begin, template_dict):
     template_dict['body_begin'] = doc1_begin
@@ -49,6 +54,11 @@ def when_doc1_body_dur(doc1_dur, template_dict):
     template_dict['body_dur'] = doc1_dur
 
 
+@when('it has doc2 body <doc2_no_body>')
+def when_doc2_body(doc2_no_body, template_dict):
+    template_dict['body'] = doc2_no_body
+
+
 @when('it has doc2 body begin time <doc2_begin>')
 def when_doc2_body_begin(doc2_begin, template_dict):
     template_dict['body_begin'] = doc2_begin
@@ -62,6 +72,11 @@ def when_doc2_body_end(doc2_end, template_dict):
 @when('it has doc2 body duration <doc2_dur>')
 def when_doc2_body_dur(doc2_dur, template_dict):
     template_dict['body_dur'] = doc2_dur
+
+
+@when('it has doc3 body <doc3_no_body>')
+def when_doc3_body(doc3_no_body, template_dict):
+    template_dict['body'] = doc3_no_body
 
 
 @when('it has doc3 body begin time <doc3_begin>')

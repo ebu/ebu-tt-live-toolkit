@@ -5,8 +5,8 @@ Feature: Computed times computation
   # child elements.
 
   Examples:
-  | xml_file                             | sequence_identifier | sequence_number |
-  | computed_resolved_time_semantics.xml | testSequence1       | 1               |
+  | xml_file                             | sequence_identifier | sequence_number | no_body |  
+  | computed_resolved_time_semantics.xml | testSequence1       | 1               |         |  
 
   # SPEC-CONFORMANCE: R16 R17
   Scenario: Computed times of a document
@@ -14,6 +14,7 @@ Feature: Computed times computation
     And it has sequenceIdentifier <sequence_identifier>
     And it has timeBase <time_base>
     And it has sequenceNumber <sequence_number>
+    And it has body <no_body>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>

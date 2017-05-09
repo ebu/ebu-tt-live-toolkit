@@ -24,6 +24,7 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
+{% if not body %}
   <tt:body 
 {% if body_begin %}
   {% if body_begin == "*?Empty?*" %}
@@ -151,4 +152,5 @@
     </tt:div>
 {% endif %}
   </tt:body>
+{% endif %}
 </tt:tt>
