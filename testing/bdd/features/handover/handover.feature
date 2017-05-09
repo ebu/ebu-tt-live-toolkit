@@ -32,9 +32,7 @@ Feature: Handover
     | seq1                 | 1                | 1                         | 1                            | seq1                 | 2                |                           | 2                            |  
 
 
-  # NO SEPARATE REQUIREMENT IN SPEC-CONFORMANCE BUT PART OF THE ALGORITH DEFINITION 
-  # The Handover Manager shall not emit any documents derived from documents that do not contain both the parameters
-  # ebuttp:authorsGroupIdentifier and ebuttp:authorsGroupControlToken.
+  # SPEC-CONFORMANCE: R124, R127
   Scenario: Documents with missing group identifier and token
     Given a handover node with <authors_group_identifier> and <sequence_identifier>
     And an xml file <xml_file>
@@ -53,7 +51,7 @@ Feature: Handover
     | seq1                 | 1                | handoverTest01            |                              | 0                 |
 
 
-  # SPEC-CONFORMANCE: R124
+  # SPEC-CONFORMANCE: R131
   Scenario: Invalid group identifier
     Given a handover node with <authors_group_identifier> and <sequence_identifier>  # This is line is not needed by the test but otherwise the BDD framework complains of mismatching variables
     And an xml file <xml_file>
