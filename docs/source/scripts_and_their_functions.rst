@@ -15,7 +15,7 @@ This script reads and validates documents in a sequence. It performs both semant
 
 User Input Producer
 -------------------
-This is a web page that adds a user interface and various configurations to the Simple Producer. It needs to connect to either the User Input Consumer or a User Input Forwarder. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
+This is a web page that adds a user interface and various configurations to the Simple Producer. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
 
 User Input Consumer
 -------------------
