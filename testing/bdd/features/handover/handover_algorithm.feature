@@ -33,17 +33,21 @@ Feature: Handover algorithm
     And it has <authors_group_control_token2>
     And the document is generated
     And handover node processes document
-    Then the emitted documents have <authors_group_selected_sequence_identifiers>
+    Then handover node emits <emitted_documents> documents
+    And the emitted documents have <authors_group_selected_sequence_identifiers>
     And the emitted documents belong to <sequence_identifier> and use consecutive sequence numbering from 1
     And the emitted documents have <authors_group_identifier> and they specify a token
 
     Examples:
-    | sequence_identifier1 | sequence_number1 | authors_group_control_token1 | sequence_identifier2 | sequence_number2 | authors_group_control_token2 | authors_group_selected_sequence_identifiers |
-    | seq1                 | 1                | 1                            | seq2                 | 1                | 2                            | seq1,seq2                                   |
-    | seq1                 | 1                | 2                            | seq2                 | 1                | 3                            | seq1,seq2                                   |
-    | seq1                 | 1                |                              | seq2                 | 1                | 1                            | seq2                                        |
+    | sequence_identifier1 | sequence_number1 | authors_group_control_token1 | sequence_identifier2 | sequence_number2 | authors_group_control_token2 | emitted_documents | authors_group_selected_sequence_identifiers |
+    | seq1                 | 1                | 1                            | seq2                 | 1                | 2                            | 2                 | seq1,seq2                                   |
+    | seq1                 | 1                | 2                            | seq2                 | 1                | 3                            | 2                 | seq1,seq2                                   |
+    | seq1                 | 1                |                              | seq2                 | 1                | 1                            | 1                 | seq2                                        |
     # token updated if in the same sequence
-    | seq1                 | 1                | 2                            | seq1                 | 2                | 1                            | seq1,seq1                                   |
-    | seq1                 | 1                | 2                            | seq2                 | 1                | 1                            | seq1                                        |
-    | seq1                 | 1                | 2                            | seq2                 | 1                | 2                            | seq1                                        |
-    | seq1                 | 1                |                              | seq1                 | 1                | 2                            | seq2                                        |
+    | seq1                 | 1                | 2                            | seq1                 | 2                | 1                            | 2                 | seq1,seq1                                   |
+    | seq1                 | 1                | 1                            | seq1                 | 2                | 1                            | 2                 | seq1,seq1                                   |
+    | seq1                 | 1                | 1                            | seq1                 | 2                | 2                            | 2                 | seq1,seq1                                   |
+    | seq1                 | 1                | 2                            | seq2                 | 1                | 1                            | 1                 | seq1                                        |
+    | seq1                 | 1                | 2                            | seq2                 | 1                | 2                            | 1                 | seq1                                        |
+    # fails to emit any documents because second doc has same sequence_number as first one, and is discarded.
+    | seq1                 | 1                |                              | seq1                 | 1                | 2                            | 0                 |                                             |
