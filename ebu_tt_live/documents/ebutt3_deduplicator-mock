@@ -1,0 +1,32 @@
+var stored_element,
+    comparison_element,
+    new_label,
+    stored_attribute,
+    sequence_identifier,
+    sequence_number;
+
+Load test.xml file
+Find first style element or region element
+Copy element to <stored_element>
+Copy next element to <comparison_element>
+
+While <comparison_element> is the same as <stored_element>
+  Then copy the element to an array and assign a <new_label>
+  If the <comparison_element> exists in the array OR <comparison_element> and <stored_element> are not the same
+    Then copy the next element to <comparison_element>
+
+For each element in the array
+  Detect if it is a style or region element
+  Create a new corresponding element
+  Write the contents of the array into the element
+  Replace the xml:id with the value of <new_label>
+
+Find first style attribute or region attribute
+Copy attribute to <stored_attribute>
+Compare <stored_attribute> to xml:id of elements in array
+If the <stored_attribute> matches xml:id of element
+  Then replace value of <stored_attribute> with value of <new_label>
+
+Assign a new <sequence_identifier>
+Assign a new <sequence_number>
+Export the file
