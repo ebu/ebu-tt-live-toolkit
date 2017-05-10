@@ -17,7 +17,6 @@ User Input Producer
 -------------------
 This is a web page that adds a user interface and various configurations to the Simple Producer. It needs to connect to either the User Input Consumer or a User Input Forwarder. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
 
-
 User Input Consumer
 -------------------
 This is very similar to the Simple Consumer. It also performs validation but it does not have a manifest option. It provides a WebSocket connection point for the User Input Producer. You'll need to start either this or the User Input Forwarder before connecting the User Input Producer (but not both).
@@ -25,6 +24,13 @@ This is very similar to the Simple Consumer. It also performs validation but it 
 User Input Forwarder
 --------------------
 This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` argument like this: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file. The User Input Forwarder can also be used as an incoming connection point for WebSocket connections from sources other than the User Input Producer.
+
+Handover Manager
+----------------
+This node implements the 'Who claimed control most recently' algorithm defined in the specification. This algorithm determines the output from multiple input sequences.
+The Handover Manager is a specialised case of the switching node that bases its decisions on handover-related attributes in the document and its previous decisions.
+There is no separate command to run this script. Start it with the ``ebu-run`` script, for example: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json``.
+To see it in action using Websocket transport mechanism, create two or more instances of the User Input Producer, and configure both to publish to port  Handover Manager's input listening port.
 
 EBU-TT-D Encoder
 ----------------
