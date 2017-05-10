@@ -15,7 +15,7 @@ This script reads and validates documents in a sequence. It performs both semant
 
 User Input Producer
 -------------------
-This is a web page that adds a user interface and various configurations to the Simple Producer. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
+This is a web page that adds a user interface and various configurations to the Simple Producer. First, start a consumer or a handover node node (``ebu-user-input-consumer``, ``ebu-user-input-forwarder`` or a handover node from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
 
 User Input Consumer
 -------------------
@@ -29,8 +29,28 @@ Handover Manager
 ----------------
 This node implements the 'Who claimed control most recently' algorithm defined in the specification. This algorithm determines the output from multiple input sequences.
 The Handover Manager is a specialised case of the switching node that bases its decisions on handover-related attributes in the document and its previous decisions.
-There is no separate command to run this script. Start it with the ``ebu-run`` script, for example: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json``.
-To see it in action using Websocket transport mechanism, create two or more instances of the User Input Producer, and configure all to publish to the Handover Manager's input listening port.
+There is no separate command to run this script. Start it with the ``ebu-run`` script.
+
+To see it in action using the Websocket transport mechanism, follow these steps:
+
+* Start the Handover Manager: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json``
+
+* Create two (or more) instances of the User Input Producer by opening ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` in multiple browser tabs/windows.
+
+* In each instance of the UIP, create a sequence with a unique sequence identifier but with identical authors group identifier. If you use the default configuration, this is "TestGroup1".
+
+* Select the sequence you created and connect. The default configuration publishes to ``ws://127.0.0.1:9001``.
+
+* On the right hand side, connect to the result host. The default configuration subscribes to ``ws://127.0.0.1:9001``.
+
+* Enter a positive number in the 'Authors group control token' field.
+
+* Enter subtitle text and send the document.
+
+* Depending on the control token, the sequence currently selected by the Handover Manager will display an "On air" flag.
+
+* The output from the handover node will appear under "Received documents" on the right.
+
 
 EBU-TT-D Encoder
 ----------------
