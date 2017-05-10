@@ -93,3 +93,7 @@ class ConfigurationError(Exception):
 
 class UnexpectedSequenceIdentifierError(Exception):
     pass
+
+
+class UnexpectedAuthorsGroupError(Exception):
+    pass
