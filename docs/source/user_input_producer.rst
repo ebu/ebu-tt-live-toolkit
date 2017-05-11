@@ -28,7 +28,7 @@ Now you are ready to type subtitle text in the `Subtitle text` box. Each time a 
 Handover Manager
 ----------------
 
-To see the UIP in action with a handover node, using the Websocket transport mechanism, follow these steps:
+To see the UIP in action with the Handover Manager node, using the Websocket transport mechanism, follow these steps:
 
 * Start the Handover Manager: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json``
 
@@ -44,13 +44,13 @@ To see the UIP in action with a handover node, using the Websocket transport mec
 
 * Enter subtitle text and send the document.
 
-* Depending on the control token, the sequence currently selected by the Handover Manager will display an "On air" flag.
+* The UIP publishing the sequence currently selected by the Handover Manager will display an "On air" flag. This is derived from the ``ebuttm:authorsGroupSelectedSequenceIdentifier`` metadata.
 
-* The output from the handover node will appear in the "Received documents" panel. Click a row to reveal the document.
+* The output from the handover node will appear in the "Received documents" panel. Click a row to reveal the document or message.
 
 * The output from other UIPs is not output by the Handover Manager until one of then uses a control token higher than the most recently output one.
 
-You can also send messages (not documents) to all subscribers by entering text in the Control Request field.    
+You can also send messages (not documents) to all subscribers by entering text in the Control Request field.
 
 .. note:: More demo scenario examples :
 
