@@ -19,6 +19,7 @@ class RetimingDelayNode(AbstractCombinedNode):
     _fixed_delay = None
     _expects = EBUTT3Document
     _provides = EBUTT3Document
+    _first_input_document_sequence = None
 
     def __init__(self, node_id, fixed_delay, document_sequence, consumer_carriage=None, producer_carriage=None):
         super(RetimingDelayNode, self).__init__(
@@ -31,13 +32,20 @@ class RetimingDelayNode(AbstractCombinedNode):
 
     def process_document(self, document, **kwargs):
         if self.is_document(document):
+
             if document.sequence_identifier == self._document_sequence:
                 raise UnexpectedSequenceIdentifierError()
 
             if self.check_if_document_seen(document=document):
+                
+                if self._first_input_document_sequence is None:
+                    self._first_input_document_sequence = document.sequence_identifier
+
+                if self._first_input_document_sequence != document.sequence_identifier:
+                    raise UnexpectedSequenceIdentifierError()
+
                 # change the sequence identifier
                 document.sequence_identifier = self._document_sequence
-
 
                 # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
