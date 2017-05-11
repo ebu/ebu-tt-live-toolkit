@@ -48,7 +48,7 @@ To see the UIP in action with the Handover Manager node, using the Websocket tra
 
 * The output from the handover node will appear in the "Received documents" panel. Click a row to reveal the document or message.
 
-* The output from other UIPs is not output by the Handover Manager until one of then uses a control token higher than the most recently output one.
+* Non-selected sequences can "take control" by sending a document with a higher control token value than the most recently output document from the Handover Manager, according to the EBU-TT Part 3 specification. To show this, enter a higher number in the Control Token field before sending a document.
 
 You can also send messages (not documents) to all subscribers by entering text in the Control Request field.
 
