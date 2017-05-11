@@ -29,7 +29,7 @@ Handover Manager
 ----------------
 This node implements the 'Who claimed control most recently' algorithm defined in the specification, with added functionality to allow messages to be broadcast between members of the authors group, which may be added to a future specification. This algorithm determines the output from multiple input sequences.
 The Handover Manager is a specialised case of the switching node that bases its decisions on handover-related attributes in the document and its previous decisions.
-There is no separate command to run this script. Start it with the ``ebu-run``, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json`` for the default configuration.
+There is no separate command to run this script. Start it with the ``ebu-run``, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json`` for the default configuration. For detailed instruction on setting up the Handover Manager with the UIP see `<user_input_producer.html>`__.
 
 EBU-TT-D Encoder
 ----------------
