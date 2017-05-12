@@ -1,0 +1,21 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "buffer1",
+      "type": "buffer-delay",
+      "output": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:9000"
+        }
+      },
+      "input": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:9000"
+        }
+      },
+      "delay": 5
+    }
+  }
+}

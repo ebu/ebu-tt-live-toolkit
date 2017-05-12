@@ -1,0 +1,22 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "retiming1",
+      "type": "retiming-delay",
+      "output": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:9000"
+        }
+      },
+      "input": {
+        "carriage": {
+          "type": "websocket",
+          "listen": "ws://localhost:9000"
+        }
+      },
+      "delay": 5,
+      "sequence_identifier": "RetimedSequence1"
+    }
+  }
+}
