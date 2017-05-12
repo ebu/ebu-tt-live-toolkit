@@ -15,7 +15,7 @@ This script reads and validates documents in a sequence. It performs both semant
 
 User Input Producer
 -------------------
-This is a web page that adds a user interface and various configurations to the Simple Producer. First, start a consumer or a handover node node (``ebu-user-input-consumer``, ``ebu-user-input-forwarder`` or a handover node from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
+This is a web page that adds a user interface and various configurations to the Simple Producer. First, start a consumer or a handover node node (``ebu-user-input-consumer``, ``ebu-user-input-forwarder`` or a handover node from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: :doc:`user_input_producer`.
 
 User Input Consumer
 -------------------
@@ -29,7 +29,7 @@ Handover Manager
 ----------------
 This node implements the 'Who claimed control most recently' algorithm defined in the specification, with added functionality to allow messages to be broadcast between members of the authors group, which may be added to a future specification. This algorithm determines the output from multiple input sequences.
 The Handover Manager is a specialised case of the switching node that bases its decisions on handover-related attributes in the document and its previous decisions.
-There is no separate command to run this script. Start it with the ``ebu-run``, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json`` for the default configuration. For detailed instruction on setting up the Handover Manager with the UIP see `<user_input_producer.html>`__.
+There is no separate command to run this script. Start it with the ``ebu-run``, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json`` for the default configuration. For detailed instruction on setting up the Handover Manager with the UIP see :doc:`user_input_producer`.
 
 EBU-TT-D Encoder
 ----------------
