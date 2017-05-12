@@ -37,12 +37,12 @@ class RetimingDelayNode(AbstractCombinedNode):
                 raise UnexpectedSequenceIdentifierError()
 
             if self.check_if_document_seen(document=document):
-                
+
                 if self._first_input_document_sequence is None:
                     self._first_input_document_sequence = document.sequence_identifier
 
                 if self._first_input_document_sequence != document.sequence_identifier:
-                    raise UnexpectedSequenceIdentifierError()
+                    raise UnexpectedSequenceIdentifierError('Rejecting new sequence identifier')
 
                 # change the sequence identifier
                 document.sequence_identifier = self._document_sequence
