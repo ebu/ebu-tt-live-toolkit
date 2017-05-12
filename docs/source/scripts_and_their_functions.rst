@@ -17,7 +17,6 @@ User Input Producer
 -------------------
 This is a web page that adds a user interface and various configurations to the Simple Producer. It needs to connect to either the User Input Consumer or a User Input Forwarder. First, start ``ebu-user-input-consumer`` or ``ebu-user-input-forwarder`` from the command line. Then, in your browser, open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You should see the documents arriving in the command line window where ``ebu-user-input-consumer`` is listening. See detailed instructions here: `<user_input_producer.html>`__.
 
-
 User Input Consumer
 -------------------
 This is very similar to the Simple Consumer. It also performs validation but it does not have a manifest option. It provides a WebSocket connection point for the User Input Producer. You'll need to start either this or the User Input Forwarder before connecting the User Input Producer (but not both).
@@ -26,10 +25,17 @@ User Input Forwarder
 --------------------
 This script mimics a distribution node. It listens to documents coming from the User Input Producer on ``ws://127.0.0.1:9001`` and forwards them to any consumer listening on ``ws://127.0.0.1:9000``. Like the Simple Producer, it can also save the documents it receives to the file system. First, run it with the ``--folder-export`` argument like this: ``ebu-user-input-forwarder --folder-export myFolder``. Then launch the User Input Producer and connect. The sequence will be saved to ``myFolder`` along with the manifest file. The User Input Forwarder can also be used as an incoming connection point for WebSocket connections from sources other than the User Input Producer.
 
+Buffer Delay Node
+-----------------
+This script buffers each received Document and emits it after a fixed non-negative delay offset period. Since this is a passive node, essentially equivalent to a longer carriage latency, no modification to the documents is required. The Buffer Delay Node is primarily intended for delaying implicitly timed documents for resynchronisation. Use ``ebu-run`` to start this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer-delay.json
+
+Retiming Delay Node
+-------------------
+This script modifies the times within each Document and issues them without further emission delay as part of a new sequence with a new sequence identifier. The times are modified such that all of the computed begin and end times within the document are increased by a non-negative fixed delay offset period. The Retiming Delay Node is primarily intended for delaying explicitly timed documents. Use ``ebu-run`` to start this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer-delay.json
+
 EBU-TT-D Encoder
 ----------------
-This script is an extension of simple consumer and is responsible for resegmenting and converting the incoming
-EBU-TT Live documents into EBU-TT-D documents that can be later used to be embedded in video streams such as DASH.
+This script is an extension of simple consumer and is responsible for resegmenting and converting the incoming EBU-TT Live documents into EBU-TT-D documents that can be later used to be embedded in video streams such as DASH.
 The script launches with the ``ebu-ebuttd-encoder`` command. There are switches to control the mediatime conversion
 reference point and the segmentation interval. Please run ``ebu-ebuttd-encoder --help`` to find our more.
 
