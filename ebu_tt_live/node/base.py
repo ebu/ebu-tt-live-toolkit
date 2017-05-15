@@ -1,9 +1,12 @@
 from .interface import INode, IConsumerNode, IProducerNode
 from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
-from ebu_tt_live.errors import ComponentCompatError, DataCompatError
+from ebu_tt_live.errors import ComponentCompatError, DataCompatError, UnexpectedSequenceIdentifierError
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
 from ebu_tt_live.utils import RingBufferWithCallback
 from ebu_tt_live.documents import SubtitleDocument
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class __AbstractNode(INode):
@@ -69,6 +72,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
 
     _consumer_carriage = None
     _seen_docs = None
+    _first_input_document_sequence = None
 
     def __init__(self, node_id, consumer_carriage=None, **kwargs):
         super(AbstractConsumerNode, self).__init__(node_id=node_id, **kwargs)
@@ -81,6 +85,16 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
             return True
         else:
             return False
+
+    def limit_sequence_to_one(self, document):
+        if self._first_input_document_sequence is None:
+            self._first_input_document_sequence = document.sequence_identifier
+
+        if self._first_input_document_sequence != document.sequence_identifier:
+            log.error(
+                'Sequences limited to one: expecting: {}, received: {}'.format(self._first_input_document_sequence, document.sequence_identifier)
+            )
+            raise UnexpectedSequenceIdentifierError('Rejecting new sequence identifier')
 
     def check_if_document_seen(self, document=None, sequence_identifier=None, sequence_number=None):
         if document:
