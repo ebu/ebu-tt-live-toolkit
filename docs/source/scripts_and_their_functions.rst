@@ -27,11 +27,11 @@ This script mimics a distribution node. It listens to documents coming from the 
 
 Buffer Delay Node
 -----------------
-This script buffers each received Document and emits it after a fixed non-negative delay offset period. Since this is a passive node, essentially equivalent to a longer carriage latency, no modification to the documents is required. The Buffer Delay Node is primarily intended for delaying implicitly timed documents for resynchronisation. Use ``ebu-run`` to start this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer-delay.json
+This script buffers each received Document and emits it after a fixed non-negative delay offset period. Since this is a passive node, essentially equivalent to a longer carriage latency, no modification to the documents is required. The Buffer Delay Node is primarily intended for delaying implicitly timed documents for resynchronisation. Use ``ebu-run`` to start this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer_delay.json
 
 Retiming Delay Node
 -------------------
-This script modifies the times within each Document and issues them without further emission delay as part of a new sequence with a new sequence identifier. The times are modified such that all of the computed begin and end times within the document are increased by a non-negative fixed delay offset period. The Retiming Delay Node is primarily intended for delaying explicitly timed documents. Use ``ebu-run`` to start this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer-delay.json
+This script modifies the times within each Document and issues them without further emission delay as part of a new sequence with a new sequence identifier. The times are modified such that all of the computed begin and end times within the document are increased by a non-negative fixed delay offset period. The Retiming Delay Node is primarily intended for delaying explicitly timed documents. Use ``ebu-run`` to start this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/retiming_delaydelay.json. 
 
 EBU-TT-D Encoder
 ----------------
