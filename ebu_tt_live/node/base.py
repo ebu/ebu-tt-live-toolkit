@@ -4,6 +4,9 @@ from ebu_tt_live.errors import ComponentCompatError, DataCompatError, Unexpected
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
 from ebu_tt_live.utils import RingBufferWithCallback
 from ebu_tt_live.documents import SubtitleDocument
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class __AbstractNode(INode):
@@ -88,6 +91,9 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
             self._first_input_document_sequence = document.sequence_identifier
 
         if self._first_input_document_sequence != document.sequence_identifier:
+            log.error(
+                'Sequences limited to one: expecting: {}, received: {}'.format(self._first_input_document_sequence, document.sequence_identifier)
+            )
             raise UnexpectedSequenceIdentifierError('Rejecting new sequence identifier')
 
     def check_if_document_seen(self, document=None, sequence_identifier=None, sequence_number=None):
