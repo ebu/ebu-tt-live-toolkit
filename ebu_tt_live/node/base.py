@@ -83,7 +83,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
         else:
             return False
 
-    def has_document_sequence_identifier_used(self, document):
+    def limit_sequence_to_one(self, document):
         if self._first_input_document_sequence is None:
             self._first_input_document_sequence = document.sequence_identifier
 

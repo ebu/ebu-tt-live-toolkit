@@ -37,7 +37,7 @@ class RetimingDelayNode(AbstractCombinedNode):
 
             if self.check_if_document_seen(document=document):
 
-                self.has_document_sequence_identifier_used(document)
+                self.limit_sequence_to_one(document)
 
                 # change the sequence identifier
                 document.sequence_identifier = self._document_sequence
