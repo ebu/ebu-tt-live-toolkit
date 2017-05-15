@@ -31,13 +31,16 @@ class RetimingDelayNode(AbstractCombinedNode):
 
     def process_document(self, document, **kwargs):
         if self.is_document(document):
+
             if document.sequence_identifier == self._document_sequence:
                 raise UnexpectedSequenceIdentifierError()
 
             if self.check_if_document_seen(document=document):
+
+                self.limit_sequence_to_one(document)
+
                 # change the sequence identifier
                 document.sequence_identifier = self._document_sequence
-
 
                 # TODO: add an ebuttm:appliedProcessing element to the document metadata
 
