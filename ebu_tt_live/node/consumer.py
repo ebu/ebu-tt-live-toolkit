@@ -28,6 +28,8 @@ class SimpleConsumer(AbstractConsumerNode):
 
     def process_document(self, document, **kwargs):
         if self.is_document(document):
+            self.has_document_sequence_identifier_used(document)
+            
             if self._sequence is None:
                 # Create sequence from document
                 log.info('Creating document sequence from first document {}'.format(
