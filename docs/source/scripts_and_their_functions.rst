@@ -36,13 +36,16 @@ myFolder/manifest_sequence_identifier.txt``.
 User Input Producer
 -------------------
 This is a web page that adds a user interface and various configurations to the
-Simple Producer. First, start a consumer or a handover node node
-(``ebu-user-input-consumer``, ``ebu-user-input-forwarder`` or a handover node
-from the command line. Then, in your browser, open
-``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click
+Simple Producer. It needs to connect to a node that can receive incoming
+``/publish`` style WebSocket connections, for example a Simple Consumer, a
+Distributor or a Handover Manager Node. First, with your virtual environment
+activated and the code build, start one, with a command line such as  ``ebu-run
+--admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json``
+from the command line - this one runs a simple consumer. Then, in your browser,
+open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click
 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You
-should see the documents arriving in the command line window where
-``ebu-user-input-consumer`` is listening. See detailed instructions here:
+should see the documents arriving in the command line window where the simple
+consumer is listening. See detailed instructions here:
 :doc:`user_input_producer`.
 
 User Input Consumer
@@ -77,6 +80,25 @@ with the ``ebu-run``, for example ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json`` for
 the default configuration. For detailed instruction on setting up the Handover
 Manager with the UIP see :doc:`user_input_producer`.
+
+Buffer Delay Node
+-----------------
+This script buffers each received Document and emits it after a fixed
+non-negative delay offset period. Since this is a passive node, essentially
+equivalent to a longer carriage latency, no modification to the documents is
+required. The Buffer Delay Node is primarily intended for delaying implicitly
+timed documents for resynchronisation. Use ``ebu-run`` to start this script, for
+example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer_delay.json``
+
+Retiming Delay Node
+-------------------
+This script modifies the times within each Document and issues them without
+further emission delay as part of a new sequence with a new sequence identifier.
+The times are modified such that all of the computed begin and end times within
+the document are increased by a non-negative fixed delay offset period. The
+Retiming Delay Node is primarily intended for delaying explicitly timed
+documents. Use ``ebu-run`` to start this script, for example ``ebu-run
+--admin.conf=ebu_tt_live/examples/config/retiming_delaydelay.json.`` 
 
 EBU-TT-D Encoder
 ----------------
