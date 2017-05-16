@@ -5,7 +5,7 @@ The ebu-run script
 ------------------
 This script is capable of picking up a structured configuration file and use
 that to create the nodes and carriage mechanism objects that we would like to
-use/ They can be even wired in the same configuration file together so in the
+use. They can be even wired in the same configuration file together so in the
 end a complex system can be modeled using a single json file. Please refer to
 :py:mod:`ebu_tt_live.scripts.ebu_run` as well as :py:mod:`ebu_tt_live.config` to
 learn more about the way the configuration logic works. To get help on permitted
@@ -43,7 +43,7 @@ listens to ``ws://localhost:9000``. To start this default configuration, run
 ``ebu-run --admin.conf=ebu_tt_live/examples/config/simple_consumer.json``.
 You can also point the Simple Consumer to the file system. If you saved the documents
 in a folder (using the folder export configuration option
-of the Simple Producer), you can write a configuration file with as
+of the Simple Producer), you can write a configuration file as
 described in `<configurator.html>`__ and pass this file to ``ebu-run``.
 
 User Input Producer
