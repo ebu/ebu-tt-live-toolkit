@@ -52,14 +52,22 @@ $(document).ready(function() {
 
     function handleSequenceSelected() {
         var sequence_identifier = $("#sequence-selector").val();
-        if (sequence_identifier) {
-            var authors_group_control_token = all_sequences[sequence_identifier]["authors_group_control_token"];
-            if (authors_group_control_token) {
-                $("#ag-token-input").html(authors_group_control_token);
-            } else {
-                $("#ag-token-input").empty();
+          if (sequence_identifier) {
+            if (all_sequences[sequence_identifier]) {
+              var authors_group_control_token = all_sequences[sequence_identifier]["authors_group_control_token"];
+              if (authors_group_control_token) {
+                  $("#ag-token-input").html(authors_group_control_token);
+              } else {
+                  $("#ag-token-input").empty();
+              }
             }
-        }
+            else {
+              // Sometimes we find that an invalid sequence identifier was
+              // selected, so let's fix that...
+              $("#ag-token-input").empty();
+              $("#sequence-selector").empty();
+            }
+          }
     }
 
     handleSequenceSelected();

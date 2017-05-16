@@ -4,6 +4,7 @@ from mock import MagicMock
 from ebu_tt_live.node.delay import RetimingDelayNode, BufferDelayNode
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.documents import EBUTT3Document, EBUTTAuthorsGroupControlRequest
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 
 
 class TestRetimingDelayNode(TestCase):
@@ -43,6 +44,23 @@ class TestRetimingDelayNode(TestCase):
             data=message
         )
 
+    def test_process_two_documents_ignore_second_sequence_id(self):
+
+        first_sequence = MagicMock(spec=EBUTT3Document)
+        first_sequence.sequence_identifier = 'TestSequence1'
+
+        second_sequence = MagicMock(spec=EBUTT3Document)
+        second_sequence.sequence_identifier = 'TestSequence2'
+
+        self.retiming_delay_node.process_document(document=first_sequence)
+        self.retiming_delay_node.producer_carriage.emit_data.assert_called_with(
+            data=first_sequence
+        )
+
+        with self.assertRaises(UnexpectedSequenceIdentifierError) as context:
+            self.retiming_delay_node.process_document(document=second_sequence)
+
+        self.assertTrue('Rejecting new sequence identifier' in context.exception.message)
 
 class TestBufferDelayNode(TestCase):
 
