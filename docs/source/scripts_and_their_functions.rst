@@ -56,13 +56,6 @@ should see the documents arriving in the command line window where
 ``ebu-user-input-consumer`` is listening. You can also view the documents within the UIP page. See detailed instructions here:
 :doc:`user_input_producer`.
 
-User Input Consumer
--------------------
-This is very similar to the Simple Consumer. It also performs validation but it
-does not have a manifest option. It provides a WebSocket connection point for
-the User Input Producer. You'll need to start either this or the User Input
-Forwarder before connecting the User Input Producer (but not both).
-
 Distributor
 -----------
 This script mimics a distribution node. To see it forwarding documents from the Simple Producer the the Simple Consumer using Websocket, run ``ebu-run --admin.conf=ebu_tt_live/examples/config/sproducer_dist_sconsumer_ws.json``. A more interesting scenario is distributing documents from the User Input Producer to two consumer nodes: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers``.
