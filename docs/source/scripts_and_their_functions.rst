@@ -1,6 +1,17 @@
 Scripts and their functions
 ===========================
 
+The ebu-run script
+------------------
+This script is capable of picking up a structured configuration file and use
+that to create the nodes and carriage mechanism objects that we would like to
+use/ They can be even wired in the same configuration file together so in the
+end a complex system can be modeled using a single json file. Please refer to
+:py:mod:`ebu_tt_live.scripts.ebu_run` as well as :py:mod:`ebu_tt_live.config` to
+learn more about the way the configuration logic works. To get help on permitted
+options for the specified node(s) run ``ebu-run`` with a ``--help``. See
+:doc:`configurator`.
+
 Simple Producer
 ---------------
 This script loads static text from a file
@@ -81,15 +92,4 @@ documents that can be later used to be embedded in video streams such as DASH. T
 To see the Encoder in action, using output from the Simple Producer and the 'direct' carriage mechanism, run ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/sproducer_ebuttd_direct.json``.
 
-IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter. Since EBU-TT-D generation was not part of this project, this functionality was implemented only partially and should not be used as reference.       
-
-The ebu-run script
-------------------
-This script is capable of picking up a structured configuration file and use
-that to create the nodes and carriage mechanism objects that we would like to
-use and they can be even wired in the same configuration file together so in the
-end a complex system can be modeled using a single json file. Please refer to
-:py:mod:`ebu_tt_live.scripts.ebu_run` as well as :py:mod:`ebu_tt_live.config` to
-learn more about the way the configuration logic works. To get help on permitted
-options for the specified node(s) run ``ebu-run`` with a ``--help``. See
-:doc:`configurator`.
+IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter. Since EBU-TT-D generation was not part of this project, this functionality was implemented only partially and should not be used as reference.
