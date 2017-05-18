@@ -5,7 +5,7 @@ var stored_element,
     sequence_identifier,
     sequence_number;
 
-Load test.xml file
+Receive input document
 Find first style element or region element
 Copy element to <stored_element>
 Copy next element to <comparison_element>
@@ -29,4 +29,4 @@ If the <stored_attribute> matches xml:id of element
 
 Assign a new <sequence_identifier>
 Assign a new <sequence_number>
-Export the file
+Emit document
