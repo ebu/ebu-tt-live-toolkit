@@ -4,7 +4,7 @@ import logging
 from .base import AbstractCombinedNode
 from datetime import timedelta
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType, FullClockTimingType
-from ebu_tt_live.bindings._ebuttm import documentMetadata
+from ebu_tt_live.bindings._ebuttm import documentMetadata, headMetadata_type
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin
@@ -44,10 +44,13 @@ class RetimingDelayNode(AbstractCombinedNode):
                 document.sequence_identifier = self._document_sequence
 
                 if document.binding.head.metadata is None:
-                    document.binding.head.metadata = documentMetadata()
+                    document.binding.head.metadata = headMetadata_type()
 
-                if document.binding.head.metadata.appliedProcessing is None:
-                    document.binding.head.metadata.appliedProcessing = documentMetadata().appliedProcessing
+                if document.binding.head.metadata.documentMetadata is None:
+                    document.binding.head.metadata.documentMetadata = documentMetadata()
+
+                if document.binding.head.metadata.documentMetadata.appliedProcessing is None:
+                    document.binding.head.metadata.documentMetadata.appliedProcessing = documentMetadata().appliedProcessing
 
                 if has_a_leaf_with_no_timing_path(document.binding.body):
                     update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
