@@ -52,9 +52,9 @@ class RetimingDelayNode(AbstractCombinedNode):
                     document.binding.head.metadata.documentMetadata = metadata.documentMetadata()
 
                 document.binding.head.metadata.documentMetadata.appliedProcessing = metadata.appliedProcessing_type(
-                    process='some process',
-                    generatedBy='ebu_dummy_encoder',
-                    sourceId='me',
+                    process='retimed by ' + str(self._fixed_delay) + 's',
+                    generatedBy='retiming_delay_node_v1.0',
+                    sourceId=self.node_id,
                     appliedDateTime=datetime.now()
                 )
 
