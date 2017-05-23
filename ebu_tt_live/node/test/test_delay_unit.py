@@ -68,7 +68,8 @@ class TestRetimingDelayNode(TestCase):
         def test(data):
             self.assertIsInstance(data.binding.head.metadata, headMetadata_type)
             self.assertIsInstance(data.binding.head.metadata.documentMetadata, documentMetadata)
-            self.assertIsInstance(data.binding.head.metadata.documentMetadata.appliedProcessing, appliedProcessing_type)
+            self.assertEqual(len(data.binding.head.metadata.documentMetadata.appliedProcessing), 1);
+            self.assertIsInstance(data.binding.head.metadata.documentMetadata.appliedProcessing[0], appliedProcessing_type)
 
         self.retiming_delay_node.producer_carriage.emit_data = test
 

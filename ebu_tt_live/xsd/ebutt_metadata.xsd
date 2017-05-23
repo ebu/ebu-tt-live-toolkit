@@ -413,7 +413,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 					</xs:annotation>
 				</xs:element>
 				<xs:element name="documentFacet" type="ebuttm:documentFacet_type" minOccurs="0"/>
-				<xs:element name="appliedProcessing" type="ebuttm:appliedProcessing_type" minOccurs="0"/>
+				<xs:element name="appliedProcessing" type="ebuttm:appliedProcessing_type" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 
 
