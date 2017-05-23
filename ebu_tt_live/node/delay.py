@@ -51,16 +51,14 @@ class RetimingDelayNode(AbstractCombinedNode):
                 if document.binding.head.metadata.documentMetadata is None:
                     document.binding.head.metadata.documentMetadata = metadata.documentMetadata()
 
-                if len(document.binding.head.metadata.documentMetadata.appliedProcessing) == 0:
+                ap_metadata = metadata.appliedProcessing_type(
+                    process='retimed by ' + str(self._fixed_delay) + 's',
+                    generatedBy='retiming_delay_node_v1.0',
+                    sourceId=self.node_id,
+                    appliedDateTime=datetime.now()
+                )
 
-                    ap_metadata = metadata.appliedProcessing_type(
-                        process='retimed by ' + str(self._fixed_delay) + 's',
-                        generatedBy='retiming_delay_node_v1.0',
-                        sourceId=self.node_id,
-                        appliedDateTime=datetime.now()
-                    )
-
-                    document.binding.head.metadata.documentMetadata.appliedProcessing.append(ap_metadata)
+                document.binding.head.metadata.documentMetadata.appliedProcessing.append(ap_metadata)
 
                 if has_a_leaf_with_no_timing_path(document.binding.body):
                     update_body_timing(document.binding.body, document.time_base, self._fixed_delay)
