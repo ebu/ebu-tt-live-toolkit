@@ -1,34 +1,63 @@
 User input producer
 ===================
 
-The user input producer is composed of a user interface written in javascript, the user interface is defined in the file `ebu_tt_live/ui/user_input_producer/user_input_producer.html`. It works with Javascript, JQuery_ and nunjucks_.
+The user input producer is composed of a user interface written in javascript,
+the user interface is defined in the file
+`ebu_tt_live/ui/user_input_producer/user_input_producer.html`. It works with
+Javascript, JQuery_ and nunjucks_.
 
 Demo
 ----
 
-To test the user input producer, setup the environment as indicated in the ``README.md`` file at the root of the project. Then launch a node that can listen for /publish requests - for example ``ebu-run --admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json`` will run the simplest user-input-consumer script listening for a connection on the local host port 9001. Then open the ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` file in your browser.
+To test the user input producer, setup the environment as indicated in the
+``README.md`` file at the root of the project. Then launch a node that can
+listen for /publish requests - for example ``ebu-run --admin.conf
+ebu_tt_live/examples/config/user_input_producer_consumer.json`` will run the
+simplest user-input-consumer script listening for a connection on the local host
+port 9001. Then open the
+``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` file in your
+browser.
 
-If you have no configured sequences or you need to create a new one, click "Create a new sequence", enter the sequence number, what time base and clock mode you want the documents in the sequence to have and click Validate. Assuming all is well you can now use this sequence.
+If you have no configured sequences or you need to create a new one, click
+"Create a new sequence", enter the sequence number, what time base and clock
+mode you want the documents in the sequence to have and click Validate. Assuming
+all is well you can now use this sequence.
 
-Ensure that the correct URL is present and select the sequence you wish to connect to. The default of ``ws://127.0.0.1:9001`` works with the above simple consumer script configuration. Click Connect to establish the connection - you should see "Connected to websocket server" appear if you have successfully connected.
+Ensure that the correct URL is present and select the sequence you wish to
+connect to. The default of ``ws://127.0.0.1:9001`` works with the above simple
+consumer script configuration. Click Connect to establish the connection - you
+should see "Connected to websocket server" appear if you have successfully
+connected.
 
-If for any reason the connection should be closed the text "Connection to websocket server closed." appears next to the Connect button.
+If for any reason the connection should be closed the text "Connection to
+websocket server closed." appears next to the Connect button.
 
 There are three ways to trigger when each document will be sent:
     * `on enter, space and escape` will issue a new document each time you click the "Now!" button or every time you type a space or enter or escape in the subtitle text area.
     * `on scheduled time` displays an input box and a "Schedule" button. You have two options, using a "local" clock, which is the time of your computer or using a "media" clock, which is a clock starting at `00:00:00.0` when you click on "Synchronize" button. Times have to be entered using `hh:mm:ss` format in the "Scheduled time" input. When you click on "Schedule" the current document state is set to be sent at the given time. You can now change any field to schedule a new document without waiting.
     * `asynchronously` will send a new document every `x` seconds, taking your modifications on-the-go.
 
-You can configure the maximum number of lines to allow in the subtitle text area by varying the value in the Maximum lines input area. While typing in the subtitle text box pressing Enter will remove lines so that the next document sent does not exceed the Maximum lines setting. Pressing Escape will clear the text area.
+You can configure the maximum number of lines to allow in the subtitle text area
+by varying the value in the Maximum lines input area. While typing in the
+subtitle text box pressing Enter will remove lines so that the next document
+sent does not exceed the Maximum lines setting. Pressing Escape will clear the
+text area.
 
-Now you are ready to type subtitle text in the `Subtitle text` box. Each time a new document is sent and received it should be logged by the running consumer script.
+Now you are ready to type subtitle text in the `Subtitle text` box. Each time a
+new document is sent and received it should be logged by the running consumer
+script.
 
-.. warning:: Note that the simple configuration above creates a simple consumer that handles the first provided sequence identifier. If the connection is disconnected and a new one made with a different sequence identifier it will reject all documents and close the connection. The workaround to this is to restart the consumer and reconnect.
+.. warning:: Note that the simple configuration above creates a simple consumer
+ that handles the first provided sequence identifier. If the connection is
+ disconnected and a new one made with a different sequence identifier it will
+ reject all documents and close the connection. The workaround to this is to
+ restart the consumer and reconnect.
 
 Handover Manager
 ----------------
 
-To see the UIP in action with the Handover Manager node, using the Websocket transport mechanism, follow these steps:
+To see the UIP in action with the Handover Manager node, using the Websocket
+transport mechanism, follow these steps:
 
 * Start the Handover Manager: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json``
 
@@ -50,7 +79,8 @@ To see the UIP in action with the Handover Manager node, using the Websocket tra
 
 * Non-selected sequences can "take control" by sending a document with a higher control token value than the most recently output document from the Handover Manager, according to the EBU-TT Part 3 specification. To show this, enter a higher number in the Control Token field before sending a document.
 
-You can also send messages (not documents) to all subscribers by entering text in the Control Request field.
+You can also send messages (not documents) to all subscribers by entering text
+in the Control Request field.
 
 .. note:: More demo scenario examples :
 
