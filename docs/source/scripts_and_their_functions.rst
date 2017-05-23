@@ -53,10 +53,10 @@ This is a web page that adds a user interface and various configurations to the
 Simple Producer. It needs to connect to a node that can receive incoming
 ``/publish`` style WebSocket connections, for example a Simple Consumer, a
 Distributor or a Handover Manager Node. First, with your virtual environment
-activated and the code build, start one, with a command line such as  ``ebu-run
---admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json``
-from the command line - this one runs a simple consumer. Then, in your browser,
-open ``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click
+activated and the code built, start one, with a command line such as  ``ebu-run
+--admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json`` -
+this one runs a simple consumer. Then, in your browser, open
+``ebu_tt_live/ui/user_input_producer/user_input_producer.html`` and click
 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You
 should see the documents arriving in the command line window where the simple
 consumer is listening. See detailed instructions here:
