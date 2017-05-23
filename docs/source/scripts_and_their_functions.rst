@@ -106,7 +106,7 @@ The times are modified such that all of the computed begin and end times within
 the document are increased by a non-negative fixed delay offset period. The
 Retiming Delay Node is primarily intended for delaying explicitly timed
 documents. Use ``ebu-run`` to start this script, for example ``ebu-run
---admin.conf=ebu_tt_live/examples/config/retiming_delaydelay.json.`` 
+--admin.conf=ebu_tt_live/examples/config/retiming_delay.json.`` 
 
 EBU-TT-D Encoder
 ----------------
@@ -123,4 +123,4 @@ To see the Encoder in action, using output from the Simple Producer and the
 
 IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter.
 Since EBU-TT-D generation was not part of this project, this functionality was
-implemented only partially and should not be used as reference.
+implemented only partially and should not be used as complete reference.
