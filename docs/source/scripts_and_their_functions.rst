@@ -16,8 +16,9 @@ Simple Producer
 ---------------
 This script loads static text from a file
 (``ebu-tt-live-toolkit/ebu_tt_live/examples/simple_producer.txt``) and breaks it
-into a sequence of EBU-TT Live documents using natural language processing. Use ``ebu-run`` to start it:
-``ebu-run --admin.conf=ebu_tt_live/examples/config/simple_producer.json``
+into a sequence of EBU-TT Live documents using natural language processing. Use
+``ebu-run`` to start it: ``ebu-run
+--admin.conf=ebu_tt_live/examples/config/simple_producer.json``
 
 The default carriage mechanism is WebSocket, so you will need to listen to
 ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just
@@ -28,11 +29,11 @@ also change the identifier for the sequence. The documents should appear in the
 window below.
 
 Alternatively, the Simple Producer can use the file system as the carriage
-mechanism. To do this, create a configuration file and specify the carriage mechanism
-and output folder options as described in `<configurator.html>`__ .
-This saves the documents in the specified output folder together
-with a manifest file that can be used by the Simple Consumer (below). See
-`<filesystem_carriage_mechanism.html>`__ for more details about the file system
+mechanism. To do this, create a configuration file and specify the carriage
+mechanism and output folder options as described in :doc:`configurator` . This
+saves the documents in the specified output folder together with a manifest file
+that can be used by the Simple Consumer (below). See
+:doc:`filesystem_carriage_mechanism` for more details about the file system
 carriage mechanism.
 
 Simple consumer
@@ -44,7 +45,7 @@ listens to ``ws://localhost:9000``. To start this default configuration, run
 You can also point the Simple Consumer to the file system. If you saved the documents
 in a folder (using the folder export configuration option
 of the Simple Producer), you can write a configuration file as
-described in `<configurator.html>`__ and pass this file to ``ebu-run``.
+described in :doc:`configurator` and pass this file to ``ebu-run``.
 
 User Input Producer
 -------------------
@@ -63,9 +64,16 @@ consumer is listening. See detailed instructions here:
 
 Distributor
 -----------
-This script mimics a distribution node. To see it forwarding documents from the Simple Producer the the Simple Consumer using Websocket, run ``ebu-run --admin.conf=ebu_tt_live/examples/config/sproducer_dist_sconsumer_ws.json``. A more interesting scenario is distributing documents from the User Input Producer to two consumer nodes: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers``.
+This script mimics a distribution node. To see it forwarding documents from the
+Simple Producer the the Simple Consumer using Websocket, run ``ebu-run
+--admin.conf=ebu_tt_live/examples/config/sproducer_dist_sconsumer_ws.json``. A
+more interesting scenario is distributing documents from the User Input Producer
+to two consumer nodes: ``ebu-run
+--admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers``.
 
-Like the Simple Producer, the Distributor can also save the documents it receives to the file system. To do that, create you own configuration file as described in `<configurator.html>`__ and pass this file to ``ebu-run``.
+Like the Simple Producer, the Distributor can also save the documents it
+receives to the file system. To do that, create you own configuration file as
+described in :doc:`configurator` and pass this file to ``ebu-run``.
 
 Handover Manager
 ----------------
@@ -104,9 +112,15 @@ EBU-TT-D Encoder
 ----------------
 This script is an extension of simple consumer and is responsible for
 resegmenting and converting the incoming EBU-TT Live documents into EBU-TT-D
-documents that can be later used to be embedded in video streams such as DASH. There are configuration file options for controlling the media time conversion reference point and the segmentation interval; these are described in `<configurator.html>`__.
+documents that can be later used to be embedded in video streams such as DASH.
+There are configuration file options for controlling the media time conversion
+reference point and the segmentation interval; these are described in
+:doc:`configurator`.
 
-To see the Encoder in action, using output from the Simple Producer and the 'direct' carriage mechanism, run ``ebu-run
+To see the Encoder in action, using output from the Simple Producer and the
+'direct' carriage mechanism, run ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/sproducer_ebuttd_direct.json``.
 
-IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter. Since EBU-TT-D generation was not part of this project, this functionality was implemented only partially and should not be used as reference.
+IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter.
+Since EBU-TT-D generation was not part of this project, this functionality was
+implemented only partially and should not be used as reference.
