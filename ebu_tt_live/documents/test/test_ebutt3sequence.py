@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
-from ebu_tt_live.errors import SequenceNumberCollisionError
+from ebu_tt_live.errors import SequenceNumberCollisionError, UnexpectedAuthorsGroupError
 
 
 class TestEBUTT3Sequence(TestCase):
@@ -100,3 +100,42 @@ class TestEBUTT3Sequence(TestCase):
     def test_increasing_sequence_number(self):
         self.assertGreater(self.document2.sequence_number, self.document1.sequence_number)
         self.assertGreater(self.document3.sequence_number, self.document2.sequence_number)
+
+    def test_authors_groups_success_addition(self):
+
+        self.assertIsNone(self.sequence.authors_group_identifier)
+
+        self.document1.binding.authorsGroupIdentifier = None  # making sure it is actually None
+        self.sequence.add_document(self.document1)
+
+        self.assertIsNone(self.sequence.authors_group_identifier)
+
+        self.document2.binding.authorsGroupIdentifier = 'foo'
+
+        self.sequence.add_document(self.document2)
+
+        self.assertEqual(self.sequence.authors_group_identifier, 'foo')
+
+        self.document3.binding.authorsGroupIdentifier = 'bar'
+
+        self.assertRaises(
+            UnexpectedAuthorsGroupError,
+            self.sequence.add_document,
+            self.document3
+        )
+
+        self.document3.binding.authorsGroupIdentifier = None
+
+        self.sequence.add_document(
+            self.document3
+        )
+
+    def test_authors_groups_success_check_only(self):
+        self.sequence.is_compatible(self.document1)
+
+        self.assertIsNone(self.sequence.authors_group_identifier)
+
+        self.document2.binding.authorsGroupIdentifier = 'foo'
+        self.sequence.is_compatible(self.document2)
+
+        self.assertEqual(self.sequence.authors_group_identifier, 'foo')

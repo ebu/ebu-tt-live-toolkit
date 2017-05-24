@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<ebuttlm:message
+        ebuttp:sequenceIdentifier="TestSequence"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:ebuttlm="urn:ebu:tt:livemessage" >
+    <ebuttlm:header>
+        <ebuttlm:sender>testsender</ebuttlm:sender>
+        <ebuttlm:recipient>testrecipient1</ebuttlm:recipient>
+        <ebuttlm:recipient>testrecipient2</ebuttlm:recipient>
+        <ebuttlm:type>authorsGroupControlRequest</ebuttlm:type>
+    </ebuttlm:header>
+    <ebuttlm:payload>This is a message for unittesting this messaging class.</ebuttlm:payload>
+</ebuttlm:message>

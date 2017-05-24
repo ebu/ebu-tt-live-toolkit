@@ -5,6 +5,7 @@ from . import raw
 # Let's import customizations
 from . import _ebuttdt as ebuttdt
 from . import _ebuttm as ebuttm
+from . import _ebuttlm as ebuttlm
 from . import _ebuttp as ebuttp
 from . import _ebutts as ebutts
 from . import _ttm as ttm
@@ -43,7 +44,8 @@ namespace_prefix_map = {
     'ttm': ttm.Namespace,
     'ebuttm': ebuttm.Namespace,
     'ebutts': ebutts.Namespace,
-    'ebuttp': ebuttp.Namespace
+    'ebuttp': ebuttp.Namespace,
+    'ebuttlm': ebuttlm.Namespace
 }
 
 
@@ -470,7 +472,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             authoringDelay=self.authoringDelay,
             authorsGroupIdentifier=self.authorsGroupIdentifier,
             authorsGroupControlToken=self.authorsGroupControlToken,
-            authorsGroupControlRequest=self.authorsGroupControlRequest,
+            authorsGroupSelectedSequenceIdentifier=self.authorsGroupSelectedSequenceIdentifier,
             referenceClockIdentifier=self.referenceClockIdentifier,
             _strict_keywords=False
         )
@@ -611,8 +613,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         dataset['timing_begin_stack'] = []
         dataset['timing_end_stack'] = []
         dataset['timing_syncbase'] = timedelta()
-        dataset['timing_end_limit'] = None
-        dataset['timing_begin_limit'] = None
         dataset['tt_element'] = self
         dataset['styles_stack'] = []
         self._elements_by_id = {}

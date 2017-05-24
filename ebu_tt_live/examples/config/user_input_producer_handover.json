@@ -1,0 +1,27 @@
+{
+	"nodes" :
+	{
+		"node1": {
+			"id": "handover1",
+			"type": "handover",
+			"authors_group_identifier": "TestGroup1",
+			"sequence_identifier": "HandoverSequence1",
+			"input": {
+				"carriage": {
+					"type": "websocket",
+					"listen" : "ws://127.0.0.1:9001"
+				}
+			},
+			"output": {
+				"carriage": {
+					"type": "websocket",
+					"listen" : "ws://127.0.0.1:9001"
+				}
+			}
+		}
+	},
+	"backend" : 
+	{
+		"type": "twisted"
+	}
+}

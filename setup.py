@@ -23,7 +23,7 @@ packages=[
 
 setup(
     name="ebu-tt-live",
-    version="2.0.1",
+    version="2.1",
     description="EBU-TT Part 3 library implementing Specification EBU-3370",
     install_requires=[
         "PyXB",

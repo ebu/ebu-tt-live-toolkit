@@ -1,0 +1,16 @@
+{"nodes": {
+    "node1": {
+        "id": "buffer1",
+        "type": "buffer-delay",
+        "input": {"carriage": {
+            "type": "websocket",
+            "listen": "ws://localhost:9001"
+        }},
+        "output": {"carriage": {
+            "type": "websocket",
+            "listen": "ws://localhost:9001"
+        }},
+        "delay": 5
+    },
+    "backend": {"type": "twisted"}
+}}

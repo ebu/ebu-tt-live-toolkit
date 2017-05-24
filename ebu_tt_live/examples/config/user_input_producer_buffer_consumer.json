@@ -1,0 +1,25 @@
+{"nodes": {
+    "node1": {
+        "id": "buffer1",
+        "type": "buffer-delay",
+        "input": {"carriage": {
+            "type": "websocket",
+            "listen": "ws://localhost:9001"
+        }},
+        "output": {"carriage": {
+            "type": "websocket",
+            "listen": "ws://localhost:9001"
+        }},
+        "delay": 5
+    },
+    "node2": {
+        "id": "consumer1",
+        "type": "simple-consumer",
+        "verbose": true,
+        "input": {"carriage": {
+            "type": "websocket",
+            "connect": ["ws://127.0.0.1:9001/TestSequence1/subscribe"]
+        }}
+    },
+    "backend": {"type": "twisted"}
+}}

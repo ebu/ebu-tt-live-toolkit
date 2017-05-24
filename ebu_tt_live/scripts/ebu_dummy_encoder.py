@@ -5,7 +5,7 @@ from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings import _ebuttdt as datatypes
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from pyxb import BIND
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 log = logging.getLogger('ebu_dummy_encoder')
 
@@ -83,9 +83,20 @@ def main():
         style=['style2']
     )
 
+    applied_proc1 = metadata.appliedProcessing_type(
+        process='Creation',
+        generatedBy='ebu_dummy_encoder',
+        appliedDateTime=datetime.now())
+    
+    applied_proc2 = metadata.appliedProcessing_type(
+        process='Validation',
+        generatedBy='ebu_dummy_encoder',
+        appliedDateTime=datetime.now())
+    
+    head_elem.metadata.documentMetadata.appliedProcessing.append(applied_proc1)
+    head_elem.metadata.documentMetadata.appliedProcessing.append(applied_proc2)
     tt.head = head_elem
     tt.body = body_elem
-
 
     document = EBUTT3Document.create_from_raw_binding(tt)
 

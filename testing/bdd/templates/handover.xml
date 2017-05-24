@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
+        ebuttp:sequenceNumber="{{ sequence_number }}"
+        ttp:clockMode="local"
+        ttp:timeBase="clock"
+        xml:lang="en-GB"
+{% if authors_group_identifier %}
+    {% if authors_group_identifier == "*?Empty?*" %}
+        ebuttp:authorsGroupIdentifier=""
+    {% else %}
+        ebuttp:authorsGroupIdentifier="{{ authors_group_identifier }}"
+    {% endif %}
+{% endif %}
+{% if authors_group_control_token %}
+    {% if authors_group_control_token == "*?Empty?*" %}
+		ebuttp:authorsGroupControlToken=""
+    {% else %}
+		ebuttp:authorsGroupControlToken="{{ authors_group_control_token }}"
+    {% endif %}
+{% endif %}
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:f="urn:foreign">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+      <f:foreignMetadata>Fake metadata</f:foreignMetadata>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+  <tt:body begin="500ms" dur="00:00:05">
+    <tt:div>
+      <tt:p begin="500ms" end="3420ms" xml:id="ID005">
+        <tt:span>Some example text...</tt:span>
+        <tt:br/>
+        <tt:span>And another line</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

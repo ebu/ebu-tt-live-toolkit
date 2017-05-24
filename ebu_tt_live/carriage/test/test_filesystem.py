@@ -1,5 +1,6 @@
 from unittest import TestCase, skip
 from mock import patch, MagicMock
+from ebu_tt_live.clocks.base import Clock
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, timestr_manifest_to_timedelta, timedelta_to_str_manifest
 from ebu_tt_live.errors import EndOfData, XMLParsingFailed
 from ebu_tt_live.documents import EBUTT3Document
@@ -48,11 +49,86 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage.register_producer_node(node)
         fs_carriage.resume_producing()
         fs_carriage.emit_data(data, availability_time=test_time, sequence_identifier='testSeq',
-                              sequence_number=1, time_base='clock')
+                              sequence_number=1, time_base='clock', clock_mode='local')
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
         manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
         assert os.path.exists(manifest_path)
+        assert fs_carriage._default_clocks == {}
+
+    def test_doc_missing_availability(self):
+        data = 'test document without availability time'
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        fs_carriage.register_producer_node(node)
+        fs_carriage.emit_data(data, sequence_identifier='testSeq',
+                              sequence_number=1, time_base='clock', clock_mode='local')
+        exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
+        assert os.path.exists(exported_document_path)
+        manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
+        assert os.path.exists(manifest_path)
+        assert isinstance(fs_carriage._default_clocks['testSeq'], Clock)
+
+    def test_msg_first_item_missing_availability(self):
+        data = 'live message without availability time'
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        fs_carriage.register_producer_node(node)
+        fs_carriage.emit_data(data, sequence_identifier='testSeq')
+        assert os.listdir(self.test_dir_path) == []
+        assert fs_carriage._default_clocks == {}
+
+    def test_msg_mid_sequence_missing_availability(self):
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        fs_carriage.register_producer_node(node)
+        data = 'document without availability'
+        fs_carriage.emit_data(data, sequence_identifier='testSeq',
+                              sequence_number=1, time_base='clock', clock_mode='local')
+        data = 'live message without availability time'
+        fs_carriage.emit_data(data, sequence_identifier='testSeq')
+        assert len(os.listdir(self.test_dir_path)) == 3  # document, message and manifest
+        exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
+        assert os.path.exists(exported_document_path)
+        exported_message_path = os.path.join(self.test_dir_path, 'testSeq_msg_1.xml')
+        assert os.path.exists(exported_message_path)
+        manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
+        assert os.path.exists(manifest_path)
+
+    def test_msg_mid_sequence_partial_missing_availability(self):
+        # This is a quirky edge case that should never really happen
+        # An acceptable workaround could be to take the the last received availability time - local clock
+        # offset for the sequence and compute an estimate using the local clock
+        #
+        # Since this was not a requirement the message gets discarded...
+        #
+        # There are also an unsettling number of odd defined/not defined combinations of arguments at this
+        # level, none of which is specified to trigger a particular response: such as receiving
+        # availability_time but no time_base...etc.
+
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path)
+        fs_carriage.register_producer_node(node)
+        test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
+        data = 'document with availability'
+        fs_carriage.emit_data(data, sequence_identifier='testSeq', availability_time=test_time,
+                              sequence_number=1, time_base='clock', clock_mode='local')
+        data = 'live message without availability time'
+        # This message does not have enough information to produce a reference clock by itself
+        fs_carriage.emit_data(data, sequence_identifier='testSeq')
+        assert len(os.listdir(self.test_dir_path)) == 2  # document, message and manifest
+        exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
+        assert os.path.exists(exported_document_path)
+        exported_message_path = os.path.join(self.test_dir_path, 'testSeq_msg_1.xml')
+        assert not os.path.exists(exported_message_path)
+        manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
+        assert os.path.exists(manifest_path)
+
+
 
 
 class TestFilesystemConsumerImpl(TestCase):
@@ -100,15 +176,11 @@ class TestManifestTimedeltaConversion(TestCase):
     def test_timedelta_to_str_manifest(self):
         test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=0)
         expected_time_str = "42:42:42.000"
-        test_time_str = timedelta_to_str_manifest(test_time, 'clock')
+        test_time_str = timedelta_to_str_manifest(test_time)
         self.assertEqual(test_time_str, expected_time_str)
-        test_time_str = timedelta_to_str_manifest(test_time, 'media')
-        self.assertEqual(test_time_str, expected_time_str)
-        self.assertRaises(ValueError, lambda: timedelta_to_str_manifest(test_time, 'test'))
 
     def test_timestr_manifest_to_timedelta(self):
         test_time_str = "199:12:24.059"
         expected_timedelta = timedelta(hours=199, minutes=12, seconds=24, milliseconds=59)
-        test_timedelta = timestr_manifest_to_timedelta(test_time_str, 'media')
+        test_timedelta = timestr_manifest_to_timedelta(test_time_str)
         self.assertEqual(test_timedelta, expected_timedelta)
-        self.assertRaises(ValueError, lambda: timestr_manifest_to_timedelta(test_time_str, 'test'))

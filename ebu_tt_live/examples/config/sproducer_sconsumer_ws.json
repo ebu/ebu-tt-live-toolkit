@@ -20,7 +20,7 @@
           "type": "websocket",
           "connect": [
             "ws://localhost:9000/TestSequence1/subscribe"
-            ]
+          ]
         }
       }
     }
