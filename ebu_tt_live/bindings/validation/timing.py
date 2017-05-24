@@ -198,7 +198,7 @@ class TimingValidationMixin(object):
 
         if begin_timedelta is not None \
         and end_timedelta is not None \
-        and begin_timedelta > end_timedelta:
+        and begin_timedelta >= end_timedelta:
             self._computed_end_time = None
             self._computed_begin_time = timedelta(0)
 
