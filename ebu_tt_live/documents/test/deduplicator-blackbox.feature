@@ -6,10 +6,12 @@ Feature: Deduplicator removes duplicated style and region elements
 
   #Everything goes right
   Scenario: The deduplicator successfully removes instances of element duplication from a file
-    Given the deduplicator receives one file
-    Then it replaces instances of duplicated style elements
-    And instances of duplicated region elements with new labels
-    And outputs a new file with a new sequenceIdentifier and sequenceNumber
+    Given the deduplicator receives an <xml_file>
+    Then it compares <style_element> with <style_compared_against>
+    And it assigns a <new_style_label>
+    Then it compares <region_element> with <region_compared_against>
+    And it assigns a <new_region_label>
+    And outputs a new file with a new <sequence_identifier> and <sequence_number>
 
       Examples:
         | style_element                                                                                                                                       | style_compared_against                                                                                                                              | new_style_label | region_element                                                                                                                                      | region_compared_against                                                                                                                             | new_region_label | sequenceID                                | sequenceNum               |

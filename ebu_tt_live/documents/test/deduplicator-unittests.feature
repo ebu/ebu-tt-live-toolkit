@@ -6,7 +6,7 @@ Feature: Deduplicator removes duplicated elements
       | test_file.xml |
 
   Scenario: assign new label to an element
-    Then the id is replaced by <new_label>
+    Then the <xml_id> is replaced by <new_label>
 
       Examples:
         | xml_id              | new_label     |

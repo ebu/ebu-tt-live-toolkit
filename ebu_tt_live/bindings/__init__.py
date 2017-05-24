@@ -39,7 +39,7 @@ log = logging.getLogger(__name__)
 namespace_prefix_map = {
     'tt': raw.Namespace,
     'ebuttdt': ebuttdt.Namespace,
-    'ttp': ttp.Namespace, , hn n nn
+    'ttp': ttp.Namespace,
     'tts': tts.Namespace,
     'ttm': ttm.Namespace,
     'ebuttm': ebuttm.Namespace,
@@ -882,25 +882,10 @@ class style_attr(IDMixin, RegionedElementMixin, LiveStyledElementMixin,
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
     def is_empty(self):
-        if len(self.style):
-            return False
-
-        if len(self.span):
-            return False
-
-        if len(self.region):
-            return False
-
-        if len(self.div):
-            return False
-
-        return True
+        return !(len(self.style) || len(self.span) || len(self.region) || len(self.div))
 
     def is_same(self):
-        if source_style.id == element_style.style:
-            return True
-
-        return False
+        return source_style.id == element_style.style
 
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         copied_instance._assert_empty_container()
