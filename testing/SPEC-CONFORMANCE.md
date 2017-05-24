@@ -142,4 +142,4 @@ The conformance requirements for EBU-TT Part 3 derive from the specification its
 |R129|3.2.2.1|The data type of `ebuttp:sequenceNumber` shall be a positive integer.|`xsd/ebutt_parameters.xsd`|
 |R130|3.2.2.1|The data type of `ebuttp:sequenceIdentifier` shall be a string of length >= 1.|`bdd/features/validation/sequence\_id\_num.feature` `(In)valid Sequence head attributes`|
 |R131|3.2.2.1|The data type of `ebuttp:authorsGroupIdentifier` shall be a string of length >= 1.|`bdd/features/handover/handover.feature`|
-|R132|2.3.1.1| Elements with both begin and end attributes whose begin is greater or equal to end shall be excluded from claculation of computed begin and end times.|`bdd/features/timing/resolved\_times.feature`|
+|R132|2.3.1.1| Elements with both begin and end attributes whose begin is greater or equal to end shall be excluded from the calculation of computed begin and end times.|`bdd/features/timing/computed\_times.feature`|
