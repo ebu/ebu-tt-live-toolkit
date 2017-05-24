@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>raw Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>raw Package &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
         <link rel="up" title="bindings Package" href="ebu_tt_live.bindings.html"/>
         <link rel="next" title="validation package" href="ebu_tt_live.bindings.validation.html"/>
         <link rel="prev" title="bindings Package" href="ebu_tt_live.bindings.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -1466,16 +1466,9 @@ the element has not yet been assigned a value.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw.tt_type.authoringDelay">
 <code class="descname">authoringDelay</code><a class="headerlink" href="#ebu_tt_live.bindings.raw.tt_type.authoringDelay" title="Permalink to this definition">¶</a></dt>
-<dd><p>The authoring delay associated with the timed content within this document may be indicated using the ebuttm:authoringDelay attribute. 
+<dd><p>The authoring delay associated with the timed content within this document may be indicated using the ebuttm:authoringDelay attribute.
 NOTE: This delay may be estimated or measured, and is intended to represent the duration between when the subitle authoring tool
 received the instantaneous media for which subtitles were authored and the moment that the authoring tool emitted those subtitles.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw.tt_type.authorsGroupControlRequest">
-<code class="descname">authorsGroupControlRequest</code><a class="headerlink" href="#ebu_tt_live.bindings.raw.tt_type.authorsGroupControlRequest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allows an author to signal their intent to continue providing a stream, or to request that another author begins creating
-output with a higher ebuttp:authorsGroupControlToken value.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1490,6 +1483,12 @@ The input sequence whose document has the greatest ebuttp:authorsGroupControlTok
 <code class="descname">authorsGroupIdentifier</code><a class="headerlink" href="#ebu_tt_live.bindings.raw.tt_type.authorsGroupIdentifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identifies the group of authors whose sequences relate to the same content and amongst which a Handover Manager
 should select documents when generating its output sequence.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw.tt_type.authorsGroupSelectedSequenceIdentifier">
+<code class="descname">authorsGroupSelectedSequenceIdentifier</code><a class="headerlink" href="#ebu_tt_live.bindings.raw.tt_type.authorsGroupSelectedSequenceIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The selected sequenceIdentifier is to be moved here by the handover node.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1520,7 +1519,7 @@ columns.</p>
 <dd><p>The attribute specifies constraints on the interpretation and use of
 frame counts that correspond with time expressions of type ebuttdt:smpteTimingType.
 The attribute shall be specified when the value of the ttp:timebase attribute is
-&#8220;smpte&#8221;.</p>
+“smpte”.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1563,15 +1562,15 @@ the element has not yet been assigned a value.</p>
 <code class="descname">markerMode</code><a class="headerlink" href="#ebu_tt_live.bindings.raw.tt_type.markerMode" title="Permalink to this definition">¶</a></dt>
 <dd><p>If the timebase is “smpte” ttp:markerMode shall be specified. 
 The value “discontinuous” implies that because of the marker mode of operation no assumption 
-may be made regarding linearity or monotonicity of time coordinates. The value &#8220;continuous&#8221; implies
+may be made regarding linearity or monotonicity of time coordinates. The value “continuous” implies
 that we assume linearity and monotonicity of time coordinates.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw.tt_type.referenceClockIdentifier">
 <code class="descname">referenceClockIdentifier</code><a class="headerlink" href="#ebu_tt_live.bindings.raw.tt_type.referenceClockIdentifier" title="Permalink to this definition">¶</a></dt>
-<dd><p>Allows the reference clock source to be identified. Permitted only when ttp:timebase=&#8221;clock&#8221; AND ttp:clockMode=&#8221;local&#8221;
-OR when ttp:timeBase=&#8221;smpte&#8221;.</p>
+<dd><p>Allows the reference clock source to be identified. Permitted only when ttp:timebase=”clock” AND ttp:clockMode=”local”
+OR when ttp:timeBase=”smpte”.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -1638,7 +1637,7 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.STD_ANON.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.STD_ANON.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.STD_ANON.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1706,97 +1705,97 @@ the document was obtained.</p>
 <p>Simple type that is a union of rgbHexColorType, rgbaHexColorType, rgbColorType, rgbaColorType, namedColorType.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.aqua">
-<code class="descname">aqua</code><em class="property"> = u'aqua'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.aqua" title="Permalink to this definition">¶</a></dt>
+<code class="descname">aqua</code><em class="property"> = u’aqua’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.aqua" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.black">
-<code class="descname">black</code><em class="property"> = u'black'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.black" title="Permalink to this definition">¶</a></dt>
+<code class="descname">black</code><em class="property"> = u’black’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.black" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.blue">
-<code class="descname">blue</code><em class="property"> = u'blue'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.blue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">blue</code><em class="property"> = u’blue’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.blue" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.cyan">
-<code class="descname">cyan</code><em class="property"> = u'cyan'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.cyan" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cyan</code><em class="property"> = u’cyan’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.cyan" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.fuchsia">
-<code class="descname">fuchsia</code><em class="property"> = u'fuchsia'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.fuchsia" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fuchsia</code><em class="property"> = u’fuchsia’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.fuchsia" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.gray">
-<code class="descname">gray</code><em class="property"> = u'gray'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.gray" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gray</code><em class="property"> = u’gray’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.gray" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.green">
-<code class="descname">green</code><em class="property"> = u'green'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.green" title="Permalink to this definition">¶</a></dt>
+<code class="descname">green</code><em class="property"> = u’green’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.green" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.lime">
-<code class="descname">lime</code><em class="property"> = u'lime'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.lime" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lime</code><em class="property"> = u’lime’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.lime" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.magenta">
-<code class="descname">magenta</code><em class="property"> = u'magenta'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.magenta" title="Permalink to this definition">¶</a></dt>
+<code class="descname">magenta</code><em class="property"> = u’magenta’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.magenta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.maroon">
-<code class="descname">maroon</code><em class="property"> = u'maroon'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.maroon" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maroon</code><em class="property"> = u’maroon’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.maroon" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.navy">
-<code class="descname">navy</code><em class="property"> = u'navy'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.navy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">navy</code><em class="property"> = u’navy’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.navy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.olive">
-<code class="descname">olive</code><em class="property"> = u'olive'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.olive" title="Permalink to this definition">¶</a></dt>
+<code class="descname">olive</code><em class="property"> = u’olive’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.olive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.purple">
-<code class="descname">purple</code><em class="property"> = u'purple'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.purple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">purple</code><em class="property"> = u’purple’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.purple" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.red">
-<code class="descname">red</code><em class="property"> = u'red'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.red" title="Permalink to this definition">¶</a></dt>
+<code class="descname">red</code><em class="property"> = u’red’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.red" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.silver">
-<code class="descname">silver</code><em class="property"> = u'silver'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.silver" title="Permalink to this definition">¶</a></dt>
+<code class="descname">silver</code><em class="property"> = u’silver’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.silver" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.teal">
-<code class="descname">teal</code><em class="property"> = u'teal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.teal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">teal</code><em class="property"> = u’teal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.teal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.transparent">
-<code class="descname">transparent</code><em class="property"> = u'transparent'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.transparent" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transparent</code><em class="property"> = u’transparent’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.transparent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.white">
-<code class="descname">white</code><em class="property"> = u'white'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.white" title="Permalink to this definition">¶</a></dt>
+<code class="descname">white</code><em class="property"> = u’white’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.white" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.colorType.yellow">
-<code class="descname">yellow</code><em class="property"> = u'yellow'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.yellow" title="Permalink to this definition">¶</a></dt>
+<code class="descname">yellow</code><em class="property"> = u’yellow’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.colorType.yellow" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1836,12 +1835,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.fontStyleType.italic">
-<code class="descname">italic</code><em class="property"> = u'italic'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontStyleType.italic" title="Permalink to this definition">¶</a></dt>
+<code class="descname">italic</code><em class="property"> = u’italic’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontStyleType.italic" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.fontStyleType.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontStyleType.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontStyleType.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1853,12 +1852,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.fontWeightType.bold">
-<code class="descname">bold</code><em class="property"> = u'bold'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontWeightType.bold" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bold</code><em class="property"> = u’bold’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontWeightType.bold" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.fontWeightType.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontWeightType.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.fontWeightType.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1898,7 +1897,7 @@ the document was obtained.</p>
 <p>Simple type that is a union of percentageLineHeightType, cellLineHeightType, pixelLineHeightType, STD_ANON.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.lineHeightType.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.lineHeightType.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.lineHeightType.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1917,97 +1916,97 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.aqua">
-<code class="descname">aqua</code><em class="property"> = u'aqua'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.aqua" title="Permalink to this definition">¶</a></dt>
+<code class="descname">aqua</code><em class="property"> = u’aqua’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.aqua" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.black">
-<code class="descname">black</code><em class="property"> = u'black'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.black" title="Permalink to this definition">¶</a></dt>
+<code class="descname">black</code><em class="property"> = u’black’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.black" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.blue">
-<code class="descname">blue</code><em class="property"> = u'blue'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.blue" title="Permalink to this definition">¶</a></dt>
+<code class="descname">blue</code><em class="property"> = u’blue’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.blue" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.cyan">
-<code class="descname">cyan</code><em class="property"> = u'cyan'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.cyan" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cyan</code><em class="property"> = u’cyan’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.cyan" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.fuchsia">
-<code class="descname">fuchsia</code><em class="property"> = u'fuchsia'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.fuchsia" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fuchsia</code><em class="property"> = u’fuchsia’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.fuchsia" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.gray">
-<code class="descname">gray</code><em class="property"> = u'gray'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.gray" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gray</code><em class="property"> = u’gray’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.gray" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.green">
-<code class="descname">green</code><em class="property"> = u'green'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.green" title="Permalink to this definition">¶</a></dt>
+<code class="descname">green</code><em class="property"> = u’green’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.green" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.lime">
-<code class="descname">lime</code><em class="property"> = u'lime'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.lime" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lime</code><em class="property"> = u’lime’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.lime" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.magenta">
-<code class="descname">magenta</code><em class="property"> = u'magenta'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.magenta" title="Permalink to this definition">¶</a></dt>
+<code class="descname">magenta</code><em class="property"> = u’magenta’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.magenta" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.maroon">
-<code class="descname">maroon</code><em class="property"> = u'maroon'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.maroon" title="Permalink to this definition">¶</a></dt>
+<code class="descname">maroon</code><em class="property"> = u’maroon’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.maroon" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.navy">
-<code class="descname">navy</code><em class="property"> = u'navy'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.navy" title="Permalink to this definition">¶</a></dt>
+<code class="descname">navy</code><em class="property"> = u’navy’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.navy" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.olive">
-<code class="descname">olive</code><em class="property"> = u'olive'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.olive" title="Permalink to this definition">¶</a></dt>
+<code class="descname">olive</code><em class="property"> = u’olive’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.olive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.purple">
-<code class="descname">purple</code><em class="property"> = u'purple'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.purple" title="Permalink to this definition">¶</a></dt>
+<code class="descname">purple</code><em class="property"> = u’purple’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.purple" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.red">
-<code class="descname">red</code><em class="property"> = u'red'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.red" title="Permalink to this definition">¶</a></dt>
+<code class="descname">red</code><em class="property"> = u’red’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.red" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.silver">
-<code class="descname">silver</code><em class="property"> = u'silver'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.silver" title="Permalink to this definition">¶</a></dt>
+<code class="descname">silver</code><em class="property"> = u’silver’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.silver" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.teal">
-<code class="descname">teal</code><em class="property"> = u'teal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.teal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">teal</code><em class="property"> = u’teal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.teal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.transparent">
-<code class="descname">transparent</code><em class="property"> = u'transparent'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.transparent" title="Permalink to this definition">¶</a></dt>
+<code class="descname">transparent</code><em class="property"> = u’transparent’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.transparent" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.white">
-<code class="descname">white</code><em class="property"> = u'white'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.white" title="Permalink to this definition">¶</a></dt>
+<code class="descname">white</code><em class="property"> = u’white’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.white" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.namedColorType.yellow">
-<code class="descname">yellow</code><em class="property"> = u'yellow'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.yellow" title="Permalink to this definition">¶</a></dt>
+<code class="descname">yellow</code><em class="property"> = u’yellow’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.namedColorType.yellow" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2152,27 +2151,27 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.block">
-<code class="descname">block</code><em class="property"> = u'block'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.block" title="Permalink to this definition">¶</a></dt>
+<code class="descname">block</code><em class="property"> = u’block’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.block" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.groupOfWords">
-<code class="descname">groupOfWords</code><em class="property"> = u'groupOfWords'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.groupOfWords" title="Permalink to this definition">¶</a></dt>
+<code class="descname">groupOfWords</code><em class="property"> = u’groupOfWords’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.groupOfWords" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.line">
-<code class="descname">line</code><em class="property"> = u'line'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.line" title="Permalink to this definition">¶</a></dt>
+<code class="descname">line</code><em class="property"> = u’line’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.line" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.partOfWord">
-<code class="descname">partOfWord</code><em class="property"> = u'partOfWord'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.partOfWord" title="Permalink to this definition">¶</a></dt>
+<code class="descname">partOfWord</code><em class="property"> = u’partOfWord’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.partOfWord" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.word">
-<code class="descname">word</code><em class="property"> = u'word'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.word" title="Permalink to this definition">¶</a></dt>
+<code class="descname">word</code><em class="property"> = u’word’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttdt.transitionStyleAttributeType.word" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2227,10 +2226,16 @@ scheme.</p>
 <dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">CTD_ANON_3</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#CTD_ANON_3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
-<p>Complex type [anonymous] with content type MIXED</p>
+<p>Complex type [anonymous] with content type EMPTY</p>
 <dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3.appliedDateTime">
-<code class="descname">appliedDateTime</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3.appliedDateTime" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3.serviceBegin">
+<code class="descname">serviceBegin</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3.serviceBegin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3.serviceEnd">
+<code class="descname">serviceEnd</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_3.serviceEnd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the value of the attribute from the instance.</p>
 </dd></dl>
 
@@ -2240,25 +2245,6 @@ scheme.</p>
 <dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">CTD_ANON_4</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#CTD_ANON_4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
-<p>Complex type [anonymous] with content type EMPTY</p>
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.serviceBegin">
-<code class="descname">serviceBegin</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.serviceBegin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the attribute from the instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.serviceEnd">
-<code class="descname">serviceEnd</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.serviceEnd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the attribute from the instance.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">CTD_ANON_5</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#CTD_ANON_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
 <p>When an ebuttm:documentTargetActiveFormatDescriptor
 element is used in an EBU-TT document, an
 ebuttm:documentIntendedTargetBarData element may be used whenever the
@@ -2267,8 +2253,8 @@ values 0000 and 0100). The Bar Data shall be specified in accordance
 with SMPTE ST 2016 1:2009 “Format for Active Format Description and Bar
 Data” Table 3.</p>
 <dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.lineNumberEndOfTopBar">
-<code class="descname">lineNumberEndOfTopBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.lineNumberEndOfTopBar" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.lineNumberEndOfTopBar">
+<code class="descname">lineNumberEndOfTopBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.lineNumberEndOfTopBar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Last line of a horizontal letter box bar
 area at the top of the reconstructed frame. Designation
 of line numbers shall be based on the video standards
@@ -2279,8 +2265,8 @@ system.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.lineNumberStartOfBottomBar">
-<code class="descname">lineNumberStartOfBottomBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.lineNumberStartOfBottomBar" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.lineNumberStartOfBottomBar">
+<code class="descname">lineNumberStartOfBottomBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.lineNumberStartOfBottomBar" title="Permalink to this definition">¶</a></dt>
 <dd><p>First line of a horizontal letter box bar
 area at the bottom of the reconstructed frame.
 Designation of line numbers shall be based on the video
@@ -2291,8 +2277,8 @@ system.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.pixelNumberEndOfLeftBar">
-<code class="descname">pixelNumberEndOfLeftBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.pixelNumberEndOfLeftBar" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.pixelNumberEndOfLeftBar">
+<code class="descname">pixelNumberEndOfLeftBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.pixelNumberEndOfLeftBar" title="Permalink to this definition">¶</a></dt>
 <dd><p>Last horizontal luminance sample of a
 vertical pillar box bar area at the left side of the
 reconstructed frame. Pixels shall be numbered from zero,
@@ -2302,8 +2288,8 @@ SMPTE ST 2016 1:2009.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.pixelNumberStartOfRightBar">
-<code class="descname">pixelNumberStartOfRightBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.pixelNumberStartOfRightBar" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.pixelNumberStartOfRightBar">
+<code class="descname">pixelNumberStartOfRightBar</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.pixelNumberStartOfRightBar" title="Permalink to this definition">¶</a></dt>
 <dd><p>First horizontal luminance sample of a
 vertical pillar box bar area at the right side of the
 reconstructed frame. Pixels shall be numbered from zero,
@@ -2313,8 +2299,8 @@ SMPTE ST 2016 1:2009.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.position">
-<code class="descname">position</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_5.position" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.position">
+<code class="descname">position</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.CTD_ANON_4.position" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bar Data is defined in pairs, either top
 and bottom bars or left and right bars, but not both
 pairs at once. Bars may be unequal in size. One bar of a
@@ -2356,7 +2342,7 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON.BASE64">
-<code class="descname">BASE64</code><em class="property"> = u'BASE64'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON.BASE64" title="Permalink to this definition">¶</a></dt>
+<code class="descname">BASE64</code><em class="property"> = u’BASE64’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON.BASE64" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2368,7 +2354,7 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_.v1_0">
-<code class="descname">v1_0</code><em class="property"> = u'v1.0'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_.v1_0" title="Permalink to this definition">¶</a></dt>
+<code class="descname">v1_0</code><em class="property"> = u’v1.0’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_.v1_0" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2380,12 +2366,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_2.leftRight">
-<code class="descname">leftRight</code><em class="property"> = u'leftRight'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_2.leftRight" title="Permalink to this definition">¶</a></dt>
+<code class="descname">leftRight</code><em class="property"> = u’leftRight’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_2.leftRight" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_2.topBottom">
-<code class="descname">topBottom</code><em class="property"> = u'topBottom'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_2.topBottom" title="Permalink to this definition">¶</a></dt>
+<code class="descname">topBottom</code><em class="property"> = u’topBottom’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_2.topBottom" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2397,12 +2383,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_3.live">
-<code class="descname">live</code><em class="property"> = u'live'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_3.live" title="Permalink to this definition">¶</a></dt>
+<code class="descname">live</code><em class="property"> = u’live’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_3.live" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_3.prepared">
-<code class="descname">prepared</code><em class="property"> = u'prepared'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_3.prepared" title="Permalink to this definition">¶</a></dt>
+<code class="descname">prepared</code><em class="property"> = u’prepared’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_3.prepared" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2414,17 +2400,17 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.has">
-<code class="descname">has</code><em class="property"> = u'has'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.has" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has</code><em class="property"> = u’has’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.has" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.has_not">
-<code class="descname">has_not</code><em class="property"> = u'has_not'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.has_not" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has_not</code><em class="property"> = u’has_not’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.has_not" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.unknown">
-<code class="descname">unknown</code><em class="property"> = u'unknown'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.unknown" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unknown</code><em class="property"> = u’unknown’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_4.unknown" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -2436,24 +2422,31 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.all_has">
-<code class="descname">all_has</code><em class="property"> = u'all_has'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.all_has" title="Permalink to this definition">¶</a></dt>
+<code class="descname">all_has</code><em class="property"> = u’all_has’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.all_has" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.all_has_not">
-<code class="descname">all_has_not</code><em class="property"> = u'all_has_not'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.all_has_not" title="Permalink to this definition">¶</a></dt>
+<code class="descname">all_has_not</code><em class="property"> = u’all_has_not’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.all_has_not" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.mixed">
-<code class="descname">mixed</code><em class="property"> = u'mixed'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.mixed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">mixed</code><em class="property"> = u’mixed’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.mixed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.unspecified">
-<code class="descname">unspecified</code><em class="property"> = u'unspecified'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.unspecified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">unspecified</code><em class="property"> = u’unspecified’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_5.unspecified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.STD_ANON_6">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">STD_ANON_6</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#STD_ANON_6"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.STD_ANON_6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
+<p>An atomic simple type.</p>
 </dd></dl>
 
 <dl class="class">
@@ -2461,6 +2454,37 @@ the document was obtained.</p>
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">anyMetadata_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#anyMetadata_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.anyMetadata_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
 <p>Container for metadata information.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">appliedProcessing_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#appliedProcessing_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
+<p>Complex type {<a class="reference external" href="urn:ebu:tt:metadata">urn:ebu:tt:metadata</a>}appliedProcessing_type with content type ELEMENT_ONLY</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.appliedDateTime">
+<code class="descname">appliedDateTime</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.appliedDateTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.generatedBy">
+<code class="descname">generatedBy</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.generatedBy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.process">
+<code class="descname">process</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.sourceId">
+<code class="descname">sourceId</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.appliedProcessing_type.sourceId" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -2593,9 +2617,9 @@ the element has not yet been assigned a value.</p>
 <dt id="ebu_tt_live.bindings.raw._ebuttm.documentFacet_type">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">documentFacet_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#documentFacet_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentFacet_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
-<p>The documentFacet element indicates a document level summary of a facet that applies to the document&#8217;s content 
-as defined by the facet element. The value may be the name of a term in a classification scheme, 
-whose term should be identified by the link attribute. Each distinctly identified facet that is summarised 
+<p>The documentFacet element indicates a document level summary of a facet that applies to the document’s content
+as defined by the facet element. The value may be the name of a term in a classification scheme,
+whose term should be identified by the link attribute. Each distinctly identified facet that is summarised
 shall have a separate documentFacet element. Empty documentFacet elements should have a link attribute.
 Documents shall NOT contain more than one documentFacet element referring to the same term,
 where the term is identified by the combination of the element contents and the value of the link attribute.</p>
@@ -2695,14 +2719,14 @@ instance.</p>
 <dt id="ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentEditorsContactDetails">
 <code class="descname">documentEditorsContactDetails</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentEditorsContactDetails" title="Permalink to this definition">¶</a></dt>
 <dd><p>Information about the editor named in the metadata element
-documentEditorsName. STL mapping: Editor&#8217;s Contact Details (ECD).</p>
+documentEditorsName. STL mapping: Editor’s Contact Details (ECD).</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentEditorsName">
 <code class="descname">documentEditorsName</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentEditorsName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Name of the editor of the subtitle list. STL mapping:
-Editor&#8217;s Name (EN).</p>
+Editor’s Name (EN).</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -2869,14 +2893,14 @@ Translated Programme Title (TPT).</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentTranslatorsContactDetails">
 <code class="descname">documentTranslatorsContactDetails</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentTranslatorsContactDetails" title="Permalink to this definition">¶</a></dt>
-<dd><p>The translator&#8217;s contact details. STL mapping:
-Translator&#8217;s Contact Details (TCD).</p>
+<dd><p>The translator’s contact details. STL mapping:
+Translator’s Contact Details (TCD).</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentTranslatorsName">
 <code class="descname">documentTranslatorsName</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentMetadata.documentTranslatorsName" title="Permalink to this definition">¶</a></dt>
-<dd><p>Name of the translator. STL mapping: Translator&#8217;s Name
+<dd><p>Name of the translator. STL mapping: Translator’s Name
 (TN).</p>
 </dd></dl>
 
@@ -2968,14 +2992,6 @@ the element has not yet been assigned a value.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebuttm.documentMetadata.subtitleZero">
 <code class="descname">subtitleZero</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentMetadata.subtitleZero" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the value for this use within the given instance.</p>
-<p>Note that this is the L{resetValue()}, not the L{defaultValue()}, if
-the element has not yet been assigned a value.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.documentMetadata.trace">
-<code class="descname">trace</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.documentMetadata.trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the value for this use within the given instance.</p>
 <p>Note that this is the L{resetValue()}, not the L{defaultValue()}, if
 the element has not yet been assigned a value.</p>
@@ -3186,32 +3202,6 @@ the element has not yet been assigned a value.</p>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.trace_type">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttm.</code><code class="descname">trace_type</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttm.html#trace_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.trace_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
-<p>The trace element may be used to indicate processing that has been applied during the creation process of a document; 
-multiple trace elements may be used to indicate a chain of processing.</p>
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.trace_type.action">
-<code class="descname">action</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.trace_type.action" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the attribute from the instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.trace_type.generatedBy">
-<code class="descname">generatedBy</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.trace_type.generatedBy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the attribute from the instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ebu_tt_live.bindings.raw._ebuttm.trace_type.sourceId">
-<code class="descname">sourceId</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttm.trace_type.sourceId" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the value of the attribute from the instance.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-ebu_tt_live.bindings.raw._ebuttp">
 <span id="ebuttp-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">_ebuttp</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.raw._ebuttp" title="Permalink to this headline">¶</a></h2>
@@ -3255,6 +3245,13 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ebuttp.STD_ANON_2">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ebuttp.</code><code class="descname">STD_ANON_2</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ebuttp.html#STD_ANON_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebuttp.STD_ANON_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.string</span></code></p>
+<p>An atomic simple type.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ebu_tt_live.bindings.raw._ebutts">
 <span id="ebutts-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">_ebutts</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.raw._ebutts" title="Permalink to this headline">¶</a></h2>
@@ -3291,22 +3288,22 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebutts.STD_ANON.auto">
-<code class="descname">auto</code><em class="property"> = u'auto'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.auto" title="Permalink to this definition">¶</a></dt>
+<code class="descname">auto</code><em class="property"> = u’auto’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.auto" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebutts.STD_ANON.center">
-<code class="descname">center</code><em class="property"> = u'center'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.center" title="Permalink to this definition">¶</a></dt>
+<code class="descname">center</code><em class="property"> = u’center’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.center" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebutts.STD_ANON.end">
-<code class="descname">end</code><em class="property"> = u'end'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.end" title="Permalink to this definition">¶</a></dt>
+<code class="descname">end</code><em class="property"> = u’end’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.end" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ebutts.STD_ANON.start">
-<code class="descname">start</code><em class="property"> = u'start'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.start" title="Permalink to this definition">¶</a></dt>
+<code class="descname">start</code><em class="property"> = u’start’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ebutts.STD_ANON.start" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3321,6 +3318,115 @@ the document was obtained.</p>
 </div>
 <div class="section" id="module-ebu_tt_live.bindings.raw._ttm">
 <span id="ttm-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">_ttm</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.bindings.raw._ttm" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ttm.</code><code class="descname">CTD_ANON</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ttm.html#CTD_ANON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
+<p>Complex type [anonymous] with content type EMPTY</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON.agent">
+<code class="descname">agent</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON.agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON.id">
+<code class="descname">id</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON.lang">
+<code class="descname">lang</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON.lang" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON.space">
+<code class="descname">space</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON.space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ttm.</code><code class="descname">CTD_ANON_</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ttm.html#CTD_ANON_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
+<p>Complex type [anonymous] with content type ELEMENT_ONLY</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_.actor">
+<code class="descname">actor</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_.actor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for this use within the given instance.</p>
+<p>Note that this is the L{resetValue()}, not the L{defaultValue()}, if
+the element has not yet been assigned a value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_.id">
+<code class="descname">id</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_.lang">
+<code class="descname">lang</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_.lang" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_.name">
+<code class="descname">name</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the value for this use within the given instance.</p>
+<p>Note that this is the L{resetValue()}, not the L{defaultValue()}, if
+the element has not yet been assigned a value.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_.space">
+<code class="descname">space</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_.space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_.type">
+<code class="descname">type</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_2">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ttm.</code><code class="descname">CTD_ANON_2</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ttm.html#CTD_ANON_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.complexTypeDefinition</span></code></p>
+<p>Complex type [anonymous] with content type MIXED</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.id">
+<code class="descname">id</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.lang">
+<code class="descname">lang</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.lang" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.space">
+<code class="descname">space</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.type">
+<code class="descname">type</code><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CTD_ANON_2.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the attribute from the instance.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="ebu_tt_live.bindings.raw._ttm.CreateFromDOM">
 <code class="descclassname">ebu_tt_live.bindings.raw._ttm.</code><code class="descname">CreateFromDOM</code><span class="sig-paren">(</span><em>node</em>, <em>default_namespace=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ttm.html#CreateFromDOM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.CreateFromDOM" title="Permalink to this definition">¶</a></dt>
@@ -3345,6 +3451,70 @@ this function will be used.</p>
 L{pyxb.utils.utility.Location} instances associated with events and
 objects handled by the parser.  You might pass the URI from which
 the document was obtained.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ttm.</code><code class="descname">STD_ANON</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ttm.html#STD_ANON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.token</span></code>, <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.enumeration_mixin</span></code></p>
+<p>An atomic simple type.</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON.alias">
+<code class="descname">alias</code><em class="property"> = u’alias’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON.alias" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON.family">
+<code class="descname">family</code><em class="property"> = u’family’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON.family" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON.full">
+<code class="descname">full</code><em class="property"> = u’full’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON.full" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON.given">
+<code class="descname">given</code><em class="property"> = u’given’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON.given" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON.other">
+<code class="descname">other</code><em class="property"> = u’other’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON.other" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON_">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.raw._ttm.</code><code class="descname">STD_ANON_</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/raw/_ttm.html#STD_ANON_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.datatypes.token</span></code>, <code class="xref py py-class docutils literal"><span class="pre">pyxb.binding.basis.enumeration_mixin</span></code></p>
+<p>An atomic simple type.</p>
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON_.character">
+<code class="descname">character</code><em class="property"> = u’character’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON_.character" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON_.group">
+<code class="descname">group</code><em class="property"> = u’group’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON_.group" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON_.organization">
+<code class="descname">organization</code><em class="property"> = u’organization’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON_.organization" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON_.other">
+<code class="descname">other</code><em class="property"> = u’other’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON_.other" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.bindings.raw._ttm.STD_ANON_.person">
+<code class="descname">person</code><em class="property"> = u’person’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttm.STD_ANON_.person" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
@@ -3383,17 +3553,17 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON.dropNTSC">
-<code class="descname">dropNTSC</code><em class="property"> = u'dropNTSC'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON.dropNTSC" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dropNTSC</code><em class="property"> = u’dropNTSC’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON.dropNTSC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON.dropPAL">
-<code class="descname">dropPAL</code><em class="property"> = u'dropPAL'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON.dropPAL" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dropPAL</code><em class="property"> = u’dropPAL’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON.dropPAL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON.nonDrop">
-<code class="descname">nonDrop</code><em class="property"> = u'nonDrop'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON.nonDrop" title="Permalink to this definition">¶</a></dt>
+<code class="descname">nonDrop</code><em class="property"> = u’nonDrop’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON.nonDrop" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3405,17 +3575,17 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON_.gps">
-<code class="descname">gps</code><em class="property"> = u'gps'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_.gps" title="Permalink to this definition">¶</a></dt>
+<code class="descname">gps</code><em class="property"> = u’gps’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_.gps" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON_.local">
-<code class="descname">local</code><em class="property"> = u'local'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_.local" title="Permalink to this definition">¶</a></dt>
+<code class="descname">local</code><em class="property"> = u’local’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_.local" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON_.utc">
-<code class="descname">utc</code><em class="property"> = u'utc'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_.utc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">utc</code><em class="property"> = u’utc’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_.utc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3434,12 +3604,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON_3.continuous">
-<code class="descname">continuous</code><em class="property"> = u'continuous'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_3.continuous" title="Permalink to this definition">¶</a></dt>
+<code class="descname">continuous</code><em class="property"> = u’continuous’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_3.continuous" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.STD_ANON_3.discontinuous">
-<code class="descname">discontinuous</code><em class="property"> = u'discontinuous'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_3.discontinuous" title="Permalink to this definition">¶</a></dt>
+<code class="descname">discontinuous</code><em class="property"> = u’discontinuous’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.STD_ANON_3.discontinuous" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3452,17 +3622,17 @@ the document was obtained.</p>
 expressions in EBU-TT.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.timeBaseType.clock">
-<code class="descname">clock</code><em class="property"> = u'clock'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.timeBaseType.clock" title="Permalink to this definition">¶</a></dt>
+<code class="descname">clock</code><em class="property"> = u’clock’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.timeBaseType.clock" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.timeBaseType.media">
-<code class="descname">media</code><em class="property"> = u'media'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.timeBaseType.media" title="Permalink to this definition">¶</a></dt>
+<code class="descname">media</code><em class="property"> = u’media’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.timeBaseType.media" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._ttp.timeBaseType.smpte">
-<code class="descname">smpte</code><em class="property"> = u'smpte'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.timeBaseType.smpte" title="Permalink to this definition">¶</a></dt>
+<code class="descname">smpte</code><em class="property"> = u’smpte’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._ttp.timeBaseType.smpte" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3503,12 +3673,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON.ltr">
-<code class="descname">ltr</code><em class="property"> = u'ltr'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON.ltr" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ltr</code><em class="property"> = u’ltr’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON.ltr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON.rtl">
-<code class="descname">rtl</code><em class="property"> = u'rtl'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON.rtl" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rtl</code><em class="property"> = u’rtl’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON.rtl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3520,27 +3690,27 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_.center">
-<code class="descname">center</code><em class="property"> = u'center'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.center" title="Permalink to this definition">¶</a></dt>
+<code class="descname">center</code><em class="property"> = u’center’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.center" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_.end">
-<code class="descname">end</code><em class="property"> = u'end'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.end" title="Permalink to this definition">¶</a></dt>
+<code class="descname">end</code><em class="property"> = u’end’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.end" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_.left">
-<code class="descname">left</code><em class="property"> = u'left'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.left" title="Permalink to this definition">¶</a></dt>
+<code class="descname">left</code><em class="property"> = u’left’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.left" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_.right">
-<code class="descname">right</code><em class="property"> = u'right'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.right" title="Permalink to this definition">¶</a></dt>
+<code class="descname">right</code><em class="property"> = u’right’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.right" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_.start">
-<code class="descname">start</code><em class="property"> = u'start'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.start" title="Permalink to this definition">¶</a></dt>
+<code class="descname">start</code><em class="property"> = u’start’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_.start" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3552,12 +3722,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_10.hidden">
-<code class="descname">hidden</code><em class="property"> = u'hidden'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_10.hidden" title="Permalink to this definition">¶</a></dt>
+<code class="descname">hidden</code><em class="property"> = u’hidden’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_10.hidden" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_10.visible">
-<code class="descname">visible</code><em class="property"> = u'visible'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_10.visible" title="Permalink to this definition">¶</a></dt>
+<code class="descname">visible</code><em class="property"> = u’visible’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_10.visible" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3569,12 +3739,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_2.italic">
-<code class="descname">italic</code><em class="property"> = u'italic'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_2.italic" title="Permalink to this definition">¶</a></dt>
+<code class="descname">italic</code><em class="property"> = u’italic’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_2.italic" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_2.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_2.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_2.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3586,12 +3756,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_3.bold">
-<code class="descname">bold</code><em class="property"> = u'bold'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_3.bold" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bold</code><em class="property"> = u’bold’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_3.bold" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_3.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_3.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_3.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3603,12 +3773,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_4.none">
-<code class="descname">none</code><em class="property"> = u'none'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_4.none" title="Permalink to this definition">¶</a></dt>
+<code class="descname">none</code><em class="property"> = u’none’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_4.none" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_4.underline">
-<code class="descname">underline</code><em class="property"> = u'underline'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_4.underline" title="Permalink to this definition">¶</a></dt>
+<code class="descname">underline</code><em class="property"> = u’underline’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_4.underline" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3620,17 +3790,17 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_5.bidiOverride">
-<code class="descname">bidiOverride</code><em class="property"> = u'bidiOverride'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_5.bidiOverride" title="Permalink to this definition">¶</a></dt>
+<code class="descname">bidiOverride</code><em class="property"> = u’bidiOverride’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_5.bidiOverride" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_5.embed">
-<code class="descname">embed</code><em class="property"> = u'embed'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_5.embed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">embed</code><em class="property"> = u’embed’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_5.embed" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_5.normal">
-<code class="descname">normal</code><em class="property"> = u'normal'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_5.normal" title="Permalink to this definition">¶</a></dt>
+<code class="descname">normal</code><em class="property"> = u’normal’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_5.normal" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3642,12 +3812,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_6.noWrap">
-<code class="descname">noWrap</code><em class="property"> = u'noWrap'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_6.noWrap" title="Permalink to this definition">¶</a></dt>
+<code class="descname">noWrap</code><em class="property"> = u’noWrap’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_6.noWrap" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_6.wrap">
-<code class="descname">wrap</code><em class="property"> = u'wrap'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_6.wrap" title="Permalink to this definition">¶</a></dt>
+<code class="descname">wrap</code><em class="property"> = u’wrap’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_6.wrap" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3659,17 +3829,17 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_7.after">
-<code class="descname">after</code><em class="property"> = u'after'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_7.after" title="Permalink to this definition">¶</a></dt>
+<code class="descname">after</code><em class="property"> = u’after’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_7.after" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_7.before">
-<code class="descname">before</code><em class="property"> = u'before'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_7.before" title="Permalink to this definition">¶</a></dt>
+<code class="descname">before</code><em class="property"> = u’before’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_7.before" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_7.center">
-<code class="descname">center</code><em class="property"> = u'center'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_7.center" title="Permalink to this definition">¶</a></dt>
+<code class="descname">center</code><em class="property"> = u’center’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_7.center" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3681,37 +3851,37 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.lr">
-<code class="descname">lr</code><em class="property"> = u'lr'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.lr" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lr</code><em class="property"> = u’lr’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.lr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.lrtb">
-<code class="descname">lrtb</code><em class="property"> = u'lrtb'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.lrtb" title="Permalink to this definition">¶</a></dt>
+<code class="descname">lrtb</code><em class="property"> = u’lrtb’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.lrtb" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.rl">
-<code class="descname">rl</code><em class="property"> = u'rl'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.rl" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rl</code><em class="property"> = u’rl’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.rl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.rltb">
-<code class="descname">rltb</code><em class="property"> = u'rltb'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.rltb" title="Permalink to this definition">¶</a></dt>
+<code class="descname">rltb</code><em class="property"> = u’rltb’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.rltb" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.tb">
-<code class="descname">tb</code><em class="property"> = u'tb'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.tb" title="Permalink to this definition">¶</a></dt>
+<code class="descname">tb</code><em class="property"> = u’tb’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.tb" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.tblr">
-<code class="descname">tblr</code><em class="property"> = u'tblr'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.tblr" title="Permalink to this definition">¶</a></dt>
+<code class="descname">tblr</code><em class="property"> = u’tblr’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.tblr" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_8.tbrl">
-<code class="descname">tbrl</code><em class="property"> = u'tbrl'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.tbrl" title="Permalink to this definition">¶</a></dt>
+<code class="descname">tbrl</code><em class="property"> = u’tbrl’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_8.tbrl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3723,12 +3893,12 @@ the document was obtained.</p>
 <p>An atomic simple type.</p>
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_9.always">
-<code class="descname">always</code><em class="property"> = u'always'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_9.always" title="Permalink to this definition">¶</a></dt>
+<code class="descname">always</code><em class="property"> = u’always’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_9.always" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.raw._tts.STD_ANON_9.whenActive">
-<code class="descname">whenActive</code><em class="property"> = u'whenActive'</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_9.whenActive" title="Permalink to this definition">¶</a></dt>
+<code class="descname">whenActive</code><em class="property"> = u’whenActive’</em><a class="headerlink" href="#ebu_tt_live.bindings.raw._tts.STD_ANON_9.whenActive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -3758,7 +3928,7 @@ the document was obtained.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -3780,7 +3950,7 @@ the document was obtained.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

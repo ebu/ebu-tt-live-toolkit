@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings._ebuttdt &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.bindings._ebuttdt &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
         <link rel="up" title="ebu_tt_live.bindings" href="../bindings.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -315,8 +315,8 @@
     <span class="n">_1dim_format</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_2dim_format</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="TwoDimSizingMixin.as_tuple"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.as_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">as_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoDimSizingMixin.as_tuple"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.as_tuple">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">as_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_2dim_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
@@ -325,8 +325,8 @@
             <span class="n">second</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">first</span><span class="p">),</span> <span class="n">second</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="TwoDimSizingMixin.from_tuple"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.from_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">from_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="TwoDimSizingMixin.from_tuple"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.from_tuple">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_2dim_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">SimpleTypeValueError</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ERR_1DIM_ONLY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -396,8 +396,8 @@
         <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;clock&#39;</span><span class="p">,</span> <span class="s1">&#39;media&#39;</span><span class="p">]</span>
     <span class="p">}</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="TimecountTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TimecountTimingType.as_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="TimecountTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TimecountTimingType.as_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Group expression with regex than switch on unit to create timedelta.</span>
 <span class="sd">        :param instance:</span>
@@ -416,8 +416,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SimpleTypeValueError</span><span class="p">()</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="TimecountTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TimecountTimingType.from_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="TimecountTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TimecountTimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert to one dimensional value.</span>
 <span class="sd">        Find the smallest unit and create value using that.</span>
@@ -468,12 +468,12 @@
     <span class="p">}</span>
     <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?&#39;</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="FullClockTimingType.compatible_timebases"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.compatible_timebases">[docs]</a>    <span class="k">def</span> <span class="nf">compatible_timebases</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="FullClockTimingType.compatible_timebases"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.compatible_timebases">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">compatible_timebases</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_compatible_timebases</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="FullClockTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.as_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="FullClockTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.as_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Using regex parse value and create timedelta</span>
 <span class="sd">        :param instance:</span>
@@ -485,8 +485,8 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="FullClockTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.from_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="FullClockTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate full clock type from timedelta</span>
 <span class="sd">        :param instance:</span>
@@ -523,8 +523,8 @@
     <span class="p">}</span>
     <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?&#39;</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="LimitedClockTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.LimitedClockTimingType.as_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="LimitedClockTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.LimitedClockTimingType.as_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Using regex parse value and create timedelta</span>
 <span class="sd">        :param instance:</span>
@@ -536,8 +536,8 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="LimitedClockTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.LimitedClockTimingType.from_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="LimitedClockTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.LimitedClockTimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate limited clock type from timedelta</span>
 <span class="sd">        :param instance:</span>
@@ -579,13 +579,13 @@
         <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;smpte&#39;</span><span class="p">]</span>
     <span class="p">}</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="SMPTETimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.as_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="SMPTETimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.as_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="c1"># TODO: implement SMPTE</span>
         <span class="k">return</span> <span class="n">timedelta</span><span class="p">()</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="SMPTETimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.from_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+<div class="viewcode-block" id="SMPTETimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
         <span class="c1"># TODO: implement SMPTE</span>
         <span class="k">return</span> <span class="n">SMPTETimingType</span><span class="p">(</span><span class="s1">&#39;00:00:00:00&#39;</span><span class="p">)</span></div></div>
 
@@ -855,7 +855,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -877,7 +877,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

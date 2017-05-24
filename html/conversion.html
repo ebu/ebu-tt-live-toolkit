@@ -1,0 +1,358 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Conversion of EBU-TT-Live documents to EBU-TT-D documents &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
+        <link rel="next" title="Source code reference" href="ebu_tt_live.html"/>
+        <link rel="prev" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-problem">The problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#percentages-and-the-em-square">Percentages and the EM square</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#the-solution">The solution</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">EBU-TT-Live Toolkit</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
+        
+      <li>Conversion of EBU-TT-Live documents to EBU-TT-D documents</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/conversion.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="conversion-of-ebu-tt-live-documents-to-ebu-tt-d-documents">
+<h1>Conversion of EBU-TT-Live documents to EBU-TT-D documents<a class="headerlink" href="#conversion-of-ebu-tt-live-documents-to-ebu-tt-d-documents" title="Permalink to this headline">¶</a></h1>
+<p>The <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.converters.ebutt3_to_ebuttd" title="ebu_tt_live.documents.converters.ebutt3_to_ebuttd"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.documents.converters.ebutt3_to_ebuttd()</span></code></a> function
+creates an EBUTTDDocument from an EBUTT3Document using the helper class
+<a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter" title="ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter</span></code></a>.</p>
+<p>This class manages various possible complications, including a significant set
+of constraints about font size.</p>
+<p>Note that conversion to EBU-TT-D was not in scope for this project and therefore it was not implemented fully.</p>
+<p>Here’s some documentation from the coding process that captures some of our
+internal conversation about how to map font sizes, to give an idea of the
+complexity.</p>
+<div class="section" id="the-problem">
+<h2>The problem<a class="headerlink" href="#the-problem" title="Permalink to this headline">¶</a></h2>
+<p>Convert an EBU-TT part 3 document to EBU-TT-D</p>
+<p>EBU-TT part 3 uses fonSize in 3 datatypes: cells, pixels and percentage.
+EBU-TT-D uses percentage fontSize only and prohibits pixels.</p>
+<p>Percent values relate to the parent element or the cell size.</p>
+<p>In order to be converted the sizes need to be translated from pixels/cells to
+percentages.</p>
+<p>The relationship between parent and child element is important when percentages
+are used because the child modulates the computed fontSize of the parent container.
+However, it is an override when it comes to the other two data types. In order to be
+converted, an absolute size needs to be calculated. According to TTML the
+computed fontSize value is an absolute value such as pixel. This poses a problem
+because the <code class="docutils literal"><span class="pre">tts:extent</span></code> attribute of the <code class="docutils literal"><span class="pre">tt:tt</span></code> element is not always available to us.
+But <code class="docutils literal"><span class="pre">ttp:cellResolution</span></code> and <code class="docutils literal"><span class="pre">ttp:pixelAspectRatio</span></code> are available because they have
+a default value that is available.</p>
+<div class="section" id="percentages-and-the-em-square">
+<h3>Percentages and the EM square<a class="headerlink" href="#percentages-and-the-em-square" title="Permalink to this headline">¶</a></h3>
+<p>Consider how the top level <code class="docutils literal"><span class="pre">tts:fontSize</span></code> attribute is evaluated (say on the
+region). If it is a percentage value of <code class="docutils literal"><span class="pre">&quot;100%&quot;</span></code> then the EM square’s
+horizontal and vertical size are both the <em>height</em> of the cell whose size is
+defined by the  <code class="docutils literal"><span class="pre">ttp:cellResolution</span></code> attribute of the <code class="docutils literal"><span class="pre">tt:tt</span></code> element.
+However if it is a a percentage value of <code class="docutils literal"><span class="pre">&quot;100%</span> <span class="pre">100%&quot;</span></code> then the EM square’s
+horizontal size is the <em>width</em> of a cell and its vertical size is the <em>height</em> of
+a cell. Then any  derived size, say a <code class="docutils literal"><span class="pre">tts:fontSize</span></code> attribute specified on a
+<code class="docutils literal"><span class="pre">style</span></code> element  referenced by a <code class="docutils literal"><span class="pre">tt:p</span></code> element, is scaled in proportion to
+its parent element’s  font size (default is <code class="docutils literal"><span class="pre">&quot;100%&quot;</span></code> as defined above. See
+<a class="reference external" href="http://w3c.github.io/ttml2/spec/ttml2.html#style-attribute-fontSize">http://w3c.github.io/ttml2/spec/ttml2.html#style-attribute-fontSize</a> for the
+definitive explanation in TTML2 (this is the same as TTML1 but with more recent
+editorial additions).</p>
+<p>Let’s look at <code class="docutils literal"><span class="pre">&quot;1c</span> <span class="pre">1c&quot;</span></code>. In general the cell is not square. In fact the only
+case when it would be square would be if the ratio of the cell resolution’s
+horizontal and vertical components were the same as the ratio of the height and
+the width of the rendering area. In pixels this would an equal height and width
+if the pixels are square. If we see <code class="docutils literal"><span class="pre">&quot;1c&quot;</span></code> then the same anamorphic scaling is
+applied as above. <code class="docutils literal"><span class="pre">&quot;1c</span> <span class="pre">1c&quot;</span></code> is equivalent to <code class="docutils literal"><span class="pre">&quot;100%</span> <span class="pre">100%&quot;</span></code> on the <code class="docutils literal"><span class="pre">region</span></code>
+element.</p>
+<p>At this point there is a big difference of the default value assumption.
+Depending on what unit I assume the default value in the results are different.</p>
+<p><strong>More complications around children wth percentages</strong></p>
+<p>Let’s assume we have the following styles at hand:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">style</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;S1c&quot;</span> <span class="n">fontSize</span><span class="o">=</span><span class="s2">&quot;1c&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="n">style</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;S100p&quot;</span> <span class="n">fontSize</span><span class="o">=</span><span class="s2">&quot;100%&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="n">style</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;S1c1c&quot;</span> <span class="n">fontSize</span><span class="o">=</span><span class="s2">&quot;1c 1c&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="n">style</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;S50p&quot;</span> <span class="n">fontSize</span><span class="o">=</span><span class="s2">&quot;50%&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="n">style</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;S20p50p&quot;</span> <span class="n">fontSize</span><span class="o">=</span><span class="s2">&quot;20</span><span class="si">% 50%</span><span class="s2">&quot;</span><span class="o">/&gt;</span>
+</pre></div>
+</div>
+<p>Example 1:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;S50p&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">p</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;S20p50p&quot;</span><span class="o">&gt;</span><span class="n">Test</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>In this case, the EM square is first scaled to half height and
+half width (in the <code class="docutils literal"><span class="pre">&lt;div&gt;</span></code>) and then anamorphically scaled (in the <code class="docutils literal"><span class="pre">&lt;p&gt;</span></code>)
+again to 20%:50% of the size defined in the parent.</p>
+<p>Example 2:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;S1c1c&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">p</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;S20p50p&quot;</span><span class="o">&gt;</span><span class="n">Test</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Here the <code class="docutils literal"><span class="pre">&lt;div&gt;</span></code> overrides any value with absolute cell size.
+The child <code class="docutils literal"><span class="pre">&lt;p&gt;</span></code> anamorphically resizes relatively to the parent.</p>
+<p>Example 3:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">div</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;S1c&quot;</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">p</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;S20p50p&quot;</span><span class="o">&gt;</span><span class="n">Test</span> <span class="n">text</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">div</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Here the parent element defines an EM square of 1c.
+The child element defines a tall glyph that is going to be scaled in the ratio 20%:50% of a cell.</p>
+<p><strong>What if we could figure out width from height</strong></p>
+<p>The obvious solution would be to work out a way to normalize font sizing
+to be always 2 dimensional and have simple algorithms deal with them
+(without having to cater for edge cases of S100p being completely different from
+S1c).</p>
+<p>This solution would require knowing all these valies:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">extent</span><span class="p">(</span><span class="ow">in</span> <span class="n">pixels</span><span class="p">),</span> <span class="n">cellResolution</span><span class="p">,</span> <span class="n">pixelAspectRatio</span>
+</pre></div>
+</div>
+<p>But in a processing pipeline where we need to convert from
+one format to another, having to know the presentation context of a
+rendering engine is not ideal. So the solution must make no assumptions about the final presentation size.</p>
+</div>
+</div>
+<div class="section" id="the-solution">
+<h2>The solution<a class="headerlink" href="#the-solution" title="Permalink to this headline">¶</a></h2>
+<p>In the end we had to overload <code class="docutils literal"><span class="pre">ebuttdt.PercentageFontSizeType</span></code> to have either
+one value or two value variants, and then deal with those cases in the
+<a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._get_font_size_style" title="ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._get_font_size_style"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._get_font_size_style()</span></code></a>
+function.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ebu_tt_live.html" class="btn btn-neutral float-right" title="Source code reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="segmentation.html" class="btn btn-neutral" title="Segmentation of EBU-TT-Live document sequences" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'2.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

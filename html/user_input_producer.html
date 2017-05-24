@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>User input producer &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>User input producer &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
         <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
         <link rel="next" title="Timing resolution and consumer logic" href="timing_resolution.html"/>
         <link rel="prev" title="Validation framework" href="validation_framework.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -99,10 +99,12 @@
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">User input producer</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#demo">Demo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#handover-manager">Handover Manager</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.html">Source code reference</a></li>
@@ -173,46 +175,89 @@
             
   <div class="section" id="user-input-producer">
 <h1>User input producer<a class="headerlink" href="#user-input-producer" title="Permalink to this headline">¶</a></h1>
-<p>The user input producer is composed of a user interface written in javascript, the user interface is defined in the file <cite>ebu_tt_live/ui/user_input_producer/user_input_producer.html</cite>. It works with Javascript, <a class="reference external" href="https://jquery.com/">JQuery</a> and <a class="reference external" href="https://mozilla.github.io/nunjucks/">nunjucks</a>.</p>
+<p>The user input producer is composed of a user interface written in javascript,
+the user interface is defined in the file
+<cite>ebu_tt_live/ui/user_input_producer/user_input_producer.html</cite>. It works with
+Javascript, <a class="reference external" href="https://jquery.com/">JQuery</a> and <a class="reference external" href="https://mozilla.github.io/nunjucks/">nunjucks</a>.</p>
 <div class="section" id="demo">
 <h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h2>
-<p>To test the user input producer, setup the environment as indicated in the <code class="docutils literal"><span class="pre">README.md</span></code> file at the root of the project. Then launch a node that can listen for /publish requests - for example <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span> <span class="pre">ebu_tt_live/examples/config/user_input_producer_consumer.json</span></code> will run the simplest user-input-consumer script listening for a connection on the local host port 9001. Then open the <code class="docutils literal"><span class="pre">ebu_tt_live/ui/user_input_producer/user_input_producer.html</span></code> file in your browser.</p>
-<p>If you have no configured sequences or you need to create a new one, click &#8220;Create a new sequence&#8221;, enter the sequence number, what time base and clock mode you want the documents in the sequence to have and click Validate. Assuming all is well you can now use this sequence.</p>
-<p>Ensure that the correct URL is present and select the sequence you wish to connect to. The default of <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code> works with the above simple consumer script configuration. Click Connect to establish the connection - you should see &#8220;Connected to websocket server&#8221; appear if you have successfully connected.</p>
-<p>If for any reason the connection should be closed the text &#8220;Connection to websocket server closed.&#8221; appears next to the Connect button.</p>
+<p>To test the user input producer, setup the environment as indicated in the
+<code class="docutils literal"><span class="pre">README.md</span></code> file at the root of the project. Then launch a node that can
+listen for /publish requests - for example <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span>
+<span class="pre">ebu_tt_live/examples/config/user_input_producer_consumer.json</span></code> will run the
+simplest user-input-consumer script listening for a connection on the local host
+port 9001. Then open the
+<code class="docutils literal"><span class="pre">ebu_tt_live/ui/user_input_producer/user_input_producer.html</span></code> file in your
+browser.</p>
+<p>If you have no configured sequences or you need to create a new one, click
+“Create a new sequence”, enter the sequence number, what time base and clock
+mode you want the documents in the sequence to have and click Validate. Assuming
+all is well you can now use this sequence.</p>
+<p>Ensure that the correct URL is present and select the sequence you wish to
+connect to. The default of <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code> works with the above simple
+consumer script configuration. Click Connect to establish the connection - you
+should see “Connected to websocket server” appear if you have successfully
+connected.</p>
+<p>If for any reason the connection should be closed the text “Connection to
+websocket server closed.” appears next to the Connect button.</p>
 <dl class="docutils">
 <dt>There are three ways to trigger when each document will be sent:</dt>
 <dd><ul class="first last simple">
-<li><cite>on enter, space and escape</cite> will issue a new document each time you click the &#8220;Now!&#8221; button or every time you type a space or enter or escape in the subtitle text area.</li>
-<li><cite>on scheduled time</cite> displays an input box and a &#8220;Schedule&#8221; button. You have two options, using a &#8220;local&#8221; clock, which is the time of your computer or using a &#8220;media&#8221; clock, which is a clock starting at <cite>00:00:00.0</cite> when you click on &#8220;Synchronize&#8221; button. Times have to be entered using <cite>hh:mm:ss</cite> format in the &#8220;Scheduled time&#8221; input. When you click on &#8220;Schedule&#8221; the current document state is set to be sent at the given time. You can now change any field to schedule a new document without waiting.</li>
+<li><cite>on enter, space and escape</cite> will issue a new document each time you click the “Now!” button or every time you type a space or enter or escape in the subtitle text area.</li>
+<li><cite>on scheduled time</cite> displays an input box and a “Schedule” button. You have two options, using a “local” clock, which is the time of your computer or using a “media” clock, which is a clock starting at <cite>00:00:00.0</cite> when you click on “Synchronize” button. Times have to be entered using <cite>hh:mm:ss</cite> format in the “Scheduled time” input. When you click on “Schedule” the current document state is set to be sent at the given time. You can now change any field to schedule a new document without waiting.</li>
 <li><cite>asynchronously</cite> will send a new document every <cite>x</cite> seconds, taking your modifications on-the-go.</li>
 </ul>
 </dd>
 </dl>
-<p>You can configure the maximum number of lines to allow in the subtitle text area by varying the value in the Maximum lines input area. While typing in the subtitle text box pressing Enter will remove lines so that the next document sent does not exceed the Maximum lines setting. Pressing Escape will clear the text area.</p>
-<p>Now you are ready to type subtitle text in the <cite>Subtitle text</cite> box. Each time a new document is sent and received it should be logged by the running consumer script.</p>
+<p>You can configure the maximum number of lines to allow in the subtitle text area
+by varying the value in the Maximum lines input area. While typing in the
+subtitle text box pressing Enter will remove lines so that the next document
+sent does not exceed the Maximum lines setting. Pressing Escape will clear the
+text area.</p>
+<p>Now you are ready to type subtitle text in the <cite>Subtitle text</cite> box. Each time a
+new document is sent and received it should be logged by the running consumer
+script.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">Note that the simple configuration above creates a simple consumer that handles the first provided sequence identifier. If the connection is disconnected and a new one made with a different sequence identifier it will reject all documents and close the connection. The workaround to this is to restart the consumer and reconnect.</p>
+<p class="last">Note that the simple configuration above creates a simple consumer
+that handles the first provided sequence identifier. If the connection is
+disconnected and a new one made with a different sequence identifier it will
+reject all documents and close the connection. The workaround to this is to
+restart the consumer and reconnect.</p>
 </div>
+</div>
+<div class="section" id="handover-manager">
+<h2>Handover Manager<a class="headerlink" href="#handover-manager" title="Permalink to this headline">¶</a></h2>
+<p>To see the UIP in action with the Handover Manager node, using the Websocket
+transport mechanism, follow these steps:</p>
+<ul class="simple">
+<li>Start the Handover Manager: <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json</span></code></li>
+<li>Create two (or more) instances of the User Input Producer by opening <code class="docutils literal"><span class="pre">ebu_tt_live/ui/user_input_producer/user_input_producer.html</span></code> in multiple browser tabs/windows.</li>
+<li>In each instance of the UIP, create a sequence with a different sequence identifier but with identical authors group identifier. If you use the default configuration, this is “TestGroup1”.</li>
+<li>Select the sequence you created and connect. The default configuration publishes to <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code>.</li>
+<li>In the Result host panel, connect to the result host - the default configuration subscribes to <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code>. Enter the Handover Manager’s output sequence identifier - the default is “HandoverSequence1”.</li>
+<li>Enter a positive number in the ‘Authors group control token’ field.</li>
+<li>Enter subtitle text and send the document.</li>
+<li>The UIP publishing the sequence currently selected by the Handover Manager will display an “On air” flag. This is derived from the <code class="docutils literal"><span class="pre">ebuttm:authorsGroupSelectedSequenceIdentifier</span></code> metadata.</li>
+<li>The output from the handover node will appear in the “Received documents” panel. Click a row to reveal the document or message.</li>
+<li>Non-selected sequences can “take control” by sending a document with a higher control token value than the most recently output document from the Handover Manager, according to the EBU-TT Part 3 specification. To show this, enter a higher number in the Control Token field before sending a document.</li>
+</ul>
+<p>You can also send messages (not documents) to all subscribers by entering text
+in the Control Request field.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>More demo scenario examples :</p>
 <ul class="last simple">
-<li>Run <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span> <span class="pre">ebu_tt_live/examples/config/user_input_producer_dist_consumers.json</span></code>. This configuration runs a distributor node and two consumers, one for TestSequence1 and the other for TestSequence2. Open the <code class="docutils literal"><span class="pre">ui/user_input_producer/user_input_producer.html</span></code> page and create or select TestSequence1, and connect it to the distributor node via websocket (click &#8220;connect&#8221; button). When you send a document the consumer will log the new document. Open another user input web page and connect it with TestSequence2. The second consumer receives this document. Now documents can be sent by both web pages simultaneously and will be routed to the correct consumer by the Distributor node.</li>
+<li>Run <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span> <span class="pre">ebu_tt_live/examples/config/user_input_producer_dist_consumers.json</span></code>. This configuration runs a distributor node and two consumers, one for TestSequence1 and the other for TestSequence2. Open the <code class="docutils literal"><span class="pre">ui/user_input_producer/user_input_producer.html</span></code> page and create or select TestSequence1, and connect it to the distributor node via websocket (click “connect” button). When you send a document the consumer will log the new document. Open another user input web page and connect it with TestSequence2. The second consumer receives this document. Now documents can be sent by both web pages simultaneously and will be routed to the correct consumer by the Distributor node.</li>
 </ul>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>Demo scenario examples that need some more work :</p>
-<blockquote>
-<div><ul class="simple">
-<li>Open in a separate window the <cite>test.html</cite> page at the root of the project, connect on this page too.</li>
-<li>From the user input producer page create a new sequence, on the <cite>test.html</cite> window subscribe to the same sequence. Send documents from the user input producer page. View those pages being validated in the user input forwarder process output. Finally, view the documents arriving on the test.html page. You can even do this with 1x user input forwarder and <cite>n</cite> sequences, generated by <cite>n</cite> user input producer pages and viewed by <cite>m</cite> <cite>test.html</cite> pages.</li>
-</ul>
-</div></blockquote>
+<p>Demo scenario examples that need some better documentation :</p>
 <ul class="last simple">
-<li>Run <cite>ebu-user-input-forwarder &#8211;folder-export output</cite>, this will write all the files you send from the user input producer interface (<cite>ui/user_input_producer/user_input_producer.html</cite>) to the output folder. Create a sequence <cite>testSeq</cite> for example and send one document, in a new terminal run <cite>ebu-simple-consumer -m output/manifest_testSeq.txt -f</cite>. You should see the documents you send from the user input producer interface being validated by the <cite>ebu-user-input-forwarder</cite> process output and then displayed by the <cite>ebu-simple-consumer</cite> script.</li>
+<li>Open in a separate window the <cite>test.html</cite> page at the root of the project, connect on this page too.</li>
+<li>From the user input producer page create a new sequence, on the <cite>test.html</cite> window subscribe to the same sequence. Send documents from the user input producer page. View those pages being validated in the user input forwarder process output. Finally, view the documents arriving on the test.html page. You can even do this with 1x distributor node and <cite>n</cite> sequences, generated by <cite>n</cite> user input producer pages and viewed by <cite>m</cite> <cite>test.html</cite> pages.</li>
+<li>Run a distributor whose output carriage mechanism is the file system; this will write all the files you send from the input, e.g. the user input producer interface (<cite>ui/user_input_producer/user_input_producer.html</cite>) to the output folder. Create a sequence <cite>testSeq</cite> for example and send one document, in a new terminal run a simple consumer configured to read <cite>manifest_testSeq.txt</cite> with tail mode on. You should see the documents you send from the user input producer interface being validated by the distributor node’s process output and then displayed by the simple consumer script.</li>
 </ul>
 </div>
 <p>You can also try documents being generated on demand, at scheduled times or asynchronously by using the sending modes presented above.</p>
@@ -241,7 +286,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -263,7 +308,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

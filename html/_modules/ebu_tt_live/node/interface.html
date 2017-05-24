@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.node.interface &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ebu_tt_live.node.interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.node.interface</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">abstractproperty</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">AutoRegisteringABCMeta</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">,</span> <span class="n">validate_types_only</span>
+
+<span class="c1"># Interfaces</span>
+<span class="c1"># ==========</span>
+
+
+<div class="viewcode-block" id="INode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.INode">[docs]</a><span class="k">class</span> <span class="nc">INode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is the foundation of all nodes that take part in the processing of subtitle documents.</span>
+<span class="sd">    The Node should deal with subtitles in a high level interface,</span>
+<span class="sd">    which is an instance of :class:`&lt;ebu_tt_live.documents.SubtitleDocument&gt;`. That is the interface which should</span>
+<span class="sd">    be used to communicate with the carriage mechanism. See :class:`&lt;ebu_tt_live.carriage.ICarriageMechanism&gt;`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">AutoRegisteringABCMeta</span>
+
+<div class="viewcode-block" id="INode.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.INode.process_document">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The central hook that is meant to implement the main functionality of the node.</span>
+<span class="sd">        A node must implement this method.</span>
+
+<span class="sd">        :param kwargs: Extra parameters</span>
+<span class="sd">        :param document: Can be XML, Document object...etc. depending on the carriage implementation</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="IProducerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode">[docs]</a><span class="k">class</span> <span class="nc">IProducerNode</span><span class="p">(</span><span class="n">INode</span><span class="p">):</span>
+
+    <span class="n">_provides</span> <span class="o">=</span> <span class="n">AbstractStaticMember</span><span class="p">(</span><span class="n">validate_types_only</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IProducerNode.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode.resume_producing">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This allows the node to be triggered by events, such as a timer.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IProducerNode.provides"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode.provides">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">provides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Data type provided</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_provides</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_provides</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_provides</span></div>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carriage mechanism accessor</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IProducerNode.register_producer_carriage"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode.register_producer_carriage">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">register_producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Output carriage mechanism registration</span>
+<span class="sd">        :param producer_carriage:</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+
+
+<div class="viewcode-block" id="IConsumerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IConsumerNode">[docs]</a><span class="k">class</span> <span class="nc">IConsumerNode</span><span class="p">(</span><span class="n">INode</span><span class="p">):</span>
+
+    <span class="n">_expects</span> <span class="o">=</span> <span class="n">AbstractStaticMember</span><span class="p">(</span><span class="n">validate_types_only</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IConsumerNode.expects"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IConsumerNode.expects">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Data type expected</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_expects</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_expects</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_expects</span></div>
+
+    <span class="nd">@abstractproperty</span>
+    <span class="k">def</span> <span class="nf">consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Carriage mechanism accessor</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IConsumerNode.register_consumer_carriage"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IConsumerNode.register_consumer_carriage">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">register_consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Input carriage mechanism registration</span>
+<span class="sd">        :param consumer_carriage:</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

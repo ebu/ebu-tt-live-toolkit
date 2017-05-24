@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>validation package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>validation package &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
         <link rel="up" title="bindings Package" href="ebu_tt_live.bindings.html"/>
         <link rel="next" title="carriage Package" href="ebu_tt_live.carriage.html"/>
         <link rel="prev" title="raw Package" href="ebu_tt_live.bindings.raw.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -216,7 +216,7 @@
 
 <dl class="attribute">
 <dt id="ebu_tt_live.bindings.validation.base.IDMixin._tp_ebu_id_deconflict">
-<code class="descname">_tp_ebu_id_deconflict</code><em class="property"> = 'SEQ{sequence_number}.{original_id}'</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin._tp_ebu_id_deconflict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">_tp_ebu_id_deconflict</code><em class="property"> = ‘SEQ{sequence_number}.{original_id}’</em><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.IDMixin._tp_ebu_id_deconflict" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -246,7 +246,7 @@
 <code class="descname">validateBinding</code><span class="sig-paren">(</span><em>**extra_kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/base.html#SemanticDocumentMixin.validateBinding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check whether the binding content matches its content model.</p>
 <p>&#64;return: C{True} if validation was not performed due to settings or complex result dictionary with success and semantic_dataset keys.
-&#64;raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this...
+&#64;raise pyxb.BatchContentValidationError: complex content does not match model # Wondering about this…
 &#64;raise pyxb.SimpleTypeValueError: attribute or simple content fails to satisfy constraints</p>
 </dd></dl>
 
@@ -469,7 +469,7 @@ to timed containers in general in the EBU-TT-Live spec.</p>
 <em class="property">class </em><code class="descclassname">ebu_tt_live.bindings.validation.timing.</code><code class="descname">TimingValidationMixin</code><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This mixin is meant to be applied to timed elements (body, div, p, span) and provides parser hooks for timing
-attributes as well as a generic semantic validation for timing attributes in the document&#8217;s timeBase.</p>
+attributes as well as a generic semantic validation for timing attributes in the document’s timeBase.</p>
 <dl class="method">
 <dt id="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._assert_in_segment">
 <code class="descname">_assert_in_segment</code><span class="sig-paren">(</span><em>dataset</em>, <em>element_content=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/timing.html#TimingValidationMixin._assert_in_segment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._assert_in_segment" title="Permalink to this definition">¶</a></dt>
@@ -494,7 +494,7 @@ does not specify a begin time itself. NOTE: This does not modify the syncbase.</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>children</strong> &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>children</strong> – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -569,7 +569,7 @@ does not specify a begin time itself. NOTE: This does not modify the syncbase.</
 <dl class="docutils">
 <dt>Steps to take:</dt>
 <dd><ul class="first last simple">
-<li>Fill in end times if element doesn&#8217;t define end time</li>
+<li>Fill in end times if element doesn’t define end time</li>
 <li>Try using computed_end_time information from its children</li>
 <li>If no children are found look at parents end time constraints.</li>
 <li>Finalize computed_begin_time if begin is not specified using computed_begin_time of children.</li>
@@ -581,8 +581,8 @@ does not specify a begin time itself. NOTE: This does not modify the syncbase.</
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>dataset</strong> &#8211; Semantic dataset from semantic validation framework</li>
-<li><strong>element_content</strong> &#8211; PyXB&#8217;s binding placeholder for this binding instance</li>
+<li><strong>dataset</strong> – Semantic dataset from semantic validation framework</li>
+<li><strong>element_content</strong> – PyXB’s binding placeholder for this binding instance</li>
 </ul>
 </td>
 </tr>
@@ -608,8 +608,8 @@ does not specify a begin time itself. NOTE: This does not modify the syncbase.</
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>dataset</strong> &#8211; Semantic dataset from semantic validation framework</li>
-<li><strong>element_content</strong> &#8211; PyXB&#8217;s binding placeholder for this binding instance</li>
+<li><strong>dataset</strong> – Semantic dataset from semantic validation framework</li>
+<li><strong>element_content</strong> – PyXB’s binding placeholder for this binding instance</li>
 </ul>
 </td>
 </tr>
@@ -742,8 +742,8 @@ It is meant to be used by the containing element and its attributes as well so t
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>dataset</strong> &#8211; Semantic dataset</li>
-<li><strong>style_type</strong> &#8211; the style_type to be used in the process (there are different style types for EBU-TT D and</li>
+<li><strong>dataset</strong> – Semantic dataset</li>
+<li><strong>style_type</strong> – the style_type to be used in the process (there are different style types for EBU-TT D and</li>
 </ul>
 </td>
 </tr>
@@ -787,7 +787,7 @@ It is meant to be used by the containing element and its attributes as well so t
 <dd><p>In particular because of fontSize cascading semantics we need to be able to calculate the effective fontSize
 in any styled element container. Without it conversion from absolute values to relative would not be possible.
 This is a requirement for the EBU-TT-D conversion where only percentages are allowed in sizing attributes.
-To support converting the pixel/celll values that don&#8217;t cascade to percentages that do the simplest
+To support converting the pixel/celll values that don’t cascade to percentages that do the simplest
 approach is to compute the style in whatever crazy constellation of units it may be provided in and generate
 percentage based styles for p and span elements taking into account their relative cascading nature. Yes if
 this confused you please refer to the documentation of EBU-TT-D, EBU-TT-Live, TTML and whatever else TTML might
@@ -884,7 +884,7 @@ implemented by the subclasses of this class to make sure the container checks fo
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -906,7 +906,7 @@ implemented by the subclasses of this class to make sure the container checks fo
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.config.node &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.config.node &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -448,6 +448,28 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Handover"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.Handover">[docs]</a><span class="k">class</span> <span class="nc">Handover</span><span class="p">(</span><span class="n">ConsumerMixin</span><span class="p">,</span> <span class="n">ProducerMixin</span><span class="p">,</span> <span class="n">NodeBase</span><span class="p">):</span>
+
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;authors_group_identifier&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;AuthorsGroup1&#39;</span><span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;HandoverSequence1&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">processing_node</span><span class="o">.</span><span class="n">HandoverNode</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="n">authors_group_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">authors_group_identifier</span><span class="p">,</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sequence_identifier</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Handover</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_component</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
 <span class="n">nodes_by_type</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;simple-consumer&#39;</span><span class="p">:</span> <span class="n">SimpleConsumer</span><span class="p">,</span>
     <span class="s1">&#39;simple-producer&#39;</span><span class="p">:</span> <span class="n">SimpleProducer</span><span class="p">,</span>
@@ -455,7 +477,8 @@
     <span class="s1">&#39;ebuttd-encoder&#39;</span><span class="p">:</span> <span class="n">EBUTTDEncoder</span><span class="p">,</span>
     <span class="s1">&#39;buffer-delay&#39;</span><span class="p">:</span> <span class="n">BufferDelay</span><span class="p">,</span>
     <span class="s1">&#39;retiming-delay&#39;</span><span class="p">:</span> <span class="n">RetimingDelay</span><span class="p">,</span>
-    <span class="s1">&#39;distributor&#39;</span><span class="p">:</span> <span class="n">Distributor</span>
+    <span class="s1">&#39;distributor&#39;</span><span class="p">:</span> <span class="n">Distributor</span><span class="p">,</span>
+    <span class="s1">&#39;handover&#39;</span><span class="p">:</span> <span class="n">Handover</span>
 <span class="p">}</span>
 
 
@@ -487,8 +510,8 @@
 
     <span class="n">_nodes</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="UniversalNodeList.configure_component"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.UniversalNodeList.configure_component">[docs]</a>    <span class="k">def</span> <span class="nf">configure_component</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="UniversalNodeList.configure_component"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.node.UniversalNodeList.configure_component">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">configure_component</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span><span class="p">)</span>
 
         <span class="n">instance</span><span class="o">.</span><span class="n">_nodes</span> <span class="o">=</span> <span class="p">[]</span>
@@ -525,7 +548,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -547,7 +570,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

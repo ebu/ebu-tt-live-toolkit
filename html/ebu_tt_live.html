@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Source code reference &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>Source code reference &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,9 +35,9 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
         <link rel="next" title="bindings Package" href="ebu_tt_live.bindings.html"/>
-        <link rel="prev" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/> 
+        <link rel="prev" title="Conversion of EBU-TT-Live documents to EBU-TT-D documents" href="conversion.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -181,7 +181,7 @@ what the different components and classes are responsible for.</p>
 <div class="section" id="layout-of-the-source-files">
 <h2>Layout of the source files<a class="headerlink" href="#layout-of-the-source-files" title="Permalink to this headline">¶</a></h2>
 <p>The sources comprise subpackages and submodules to create a modular system that can be configured as required by the
-user. The very quick overview before the generated source code reference hopefully helps find one&#8217;s bearings faster.</p>
+user. The very quick overview before the generated source code reference hopefully helps find one’s bearings faster.</p>
 <blockquote>
 <div><p>Code Structure :</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>ebu_tt_live
@@ -276,6 +276,9 @@ user. The very quick overview before the generated source code reference hopeful
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3"><code class="docutils literal"><span class="pre">ebutt3</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_segmentation"><code class="docutils literal"><span class="pre">ebutt3_segmentation</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.bindings.converters.ebutt3_ebuttd"><code class="docutils literal"><span class="pre">bindings_converters</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.converters"><code class="docutils literal"><span class="pre">document_converters</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebuttd"><code class="docutils literal"><span class="pre">ebuttd</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a><ul>
@@ -284,9 +287,14 @@ user. The very quick overview before the generated source code reference hopeful
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#id1"><code class="docutils literal"><span class="pre">node</span></code> Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.interface"><code class="docutils literal"><span class="pre">interface</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.consumer"><code class="docutils literal"><span class="pre">consumer</span></code> Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.producer"><code class="docutils literal"><span class="pre">producer</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.encoder"><code class="docutils literal"><span class="pre">encoder</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.delay"><code class="docutils literal"><span class="pre">delay</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.distributing"><code class="docutils literal"><span class="pre">distributing</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.handover"><code class="docutils literal"><span class="pre">handover</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a><ul>
@@ -431,6 +439,12 @@ further.</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="ebu_tt_live.errors.UnexpectedAuthorsGroupError">
+<em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">UnexpectedAuthorsGroupError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#UnexpectedAuthorsGroupError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.UnexpectedAuthorsGroupError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="ebu_tt_live.errors.UnexpectedSequenceIdentifierError">
 <em class="property">exception </em><code class="descclassname">ebu_tt_live.errors.</code><code class="descname">UnexpectedSequenceIdentifierError</code><a class="reference internal" href="_modules/ebu_tt_live/errors.html#UnexpectedSequenceIdentifierError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.errors.UnexpectedSequenceIdentifierError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -512,7 +526,7 @@ NOTE: This is a slightly modified version of the one suggested by the following 
 <em class="property">class </em><code class="descclassname">ebu_tt_live.utils.</code><code class="descname">RingBufferWithCallback</code><span class="sig-paren">(</span><em>iterable=()</em>, <em>maxlen=None</em>, <em>callback=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#RingBufferWithCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.RingBufferWithCallback" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">collections.deque</span></code></p>
 <p>This class calls a callback when an item is falling out of the buffer due to removal.
-On manual removal it does not. That is the user&#8217;s responsibility.</p>
+On manual removal it does not. That is the user’s responsibility.</p>
 <dl class="method">
 <dt id="ebu_tt_live.utils.RingBufferWithCallback.append">
 <code class="descname">append</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#RingBufferWithCallback.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.RingBufferWithCallback.append" title="Permalink to this definition">¶</a></dt>
@@ -529,7 +543,7 @@ them asynchronously. Preferably just the names and not open file handles.</p>
 <dl class="method">
 <dt id="ebu_tt_live.utils.RotatingFileBuffer.append">
 <code class="descname">append</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#RotatingFileBuffer.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.RotatingFileBuffer.append" title="Permalink to this definition">¶</a></dt>
-<dd><p>This override makes sure that we don&#8217;t add to an asynchronously managed buffer that is about to be shut down.
+<dd><p>This override makes sure that we don’t add to an asynchronously managed buffer that is about to be shut down.
 :param item: The file name
 :return:</p>
 </dd></dl>
@@ -571,8 +585,8 @@ regularly for the stopped() condition.</p>
 <dl class="function">
 <dt id="ebu_tt_live.utils.compare_xml">
 <code class="descclassname">ebu_tt_live.utils.</code><code class="descname">compare_xml</code><span class="sig-paren">(</span><em>want</em>, <em>got</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/utils.html#compare_xml"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.utils.compare_xml" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tries to do a &#8216;xml-comparison&#8217; of want and got.  Plain string
-comparison doesn&#8217;t always work because, for example, attribute
+<dd><p>Tries to do a ‘xml-comparison’ of want and got.  Plain string
+comparison doesn’t always work because, for example, attribute
 ordering should not be important. Comment nodes are not considered in the
 comparison. Leading and trailing whitespace is ignored on both chunks.</p>
 <p>Based on <a class="reference external" href="https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py">https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py</a></p>
@@ -580,7 +594,7 @@ comparison. Leading and trailing whitespace is ignored on both chunks.</p>
 Possible scenario where this will yield a false positive result is where an element can have 2 arguments with
 the same name but different namespaces:</p>
 <blockquote>
-<div>i.e.: &lt;elem ns1:myattr=&#8221;1&#8221; /&gt; != &lt;elem ns2:myattr=&#8221;1&#8221; /&gt; if ns1 != ns2</div></blockquote>
+<div>i.e.: &lt;elem ns1:myattr=”1” /&gt; != &lt;elem ns2:myattr=”1” /&gt; if ns1 != ns2</div></blockquote>
 </dd></dl>
 
 <dl class="function">
@@ -624,7 +638,7 @@ the same name but different namespaces:</p>
         <a href="ebu_tt_live.bindings.html" class="btn btn-neutral float-right" title="bindings Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="segmentation.html" class="btn btn-neutral" title="Segmentation of EBU-TT-Live document sequences" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="conversion.html" class="btn btn-neutral" title="Conversion of EBU-TT-Live documents to EBU-TT-D documents" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -633,7 +647,7 @@ the same name but different namespaces:</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -655,7 +669,7 @@ the same name but different namespaces:</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

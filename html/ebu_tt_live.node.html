@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>node Package &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>node Package &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
         <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
         <link rel="next" title="scripts Package" href="ebu_tt_live.scripts.html"/>
         <link rel="prev" title="examples Package" href="ebu_tt_live.examples.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -104,9 +104,14 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">node Package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id1"><code class="docutils literal"><span class="pre">node</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.interface"><code class="docutils literal"><span class="pre">interface</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.consumer"><code class="docutils literal"><span class="pre">consumer</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.producer"><code class="docutils literal"><span class="pre">producer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.encoder"><code class="docutils literal"><span class="pre">encoder</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.delay"><code class="docutils literal"><span class="pre">delay</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.distributing"><code class="docutils literal"><span class="pre">distributing</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.handover"><code class="docutils literal"><span class="pre">handover</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
@@ -188,6 +193,113 @@
 <div class="section" id="id1">
 <h2><code class="xref py py-mod docutils literal"><span class="pre">node</span></code> Package<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-ebu_tt_live.node"></span></div>
+<div class="section" id="module-ebu_tt_live.node.interface">
+<span id="interface-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">interface</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.interface" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.node.interface.IConsumerNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.interface.</code><code class="descname">IConsumerNode</code><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IConsumerNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IConsumerNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.interface.INode" title="ebu_tt_live.node.interface.INode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.interface.INode</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.interface.IConsumerNode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.interface.IConsumerNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.node.interface.IConsumerNode.consumer_carriage">
+<code class="descname">consumer_carriage</code><a class="headerlink" href="#ebu_tt_live.node.interface.IConsumerNode.consumer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carriage mechanism accessor
+:return:</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.interface.IConsumerNode.expects">
+<em class="property">classmethod </em><code class="descname">expects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IConsumerNode.expects"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IConsumerNode.expects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data type expected
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.interface.IConsumerNode.register_consumer_carriage">
+<code class="descname">register_consumer_carriage</code><span class="sig-paren">(</span><em>consumer_carriage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IConsumerNode.register_consumer_carriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IConsumerNode.register_consumer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Input carriage mechanism registration
+:param consumer_carriage:</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.node.interface.INode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.interface.</code><code class="descname">INode</code><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#INode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.INode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This is the foundation of all nodes that take part in the processing of subtitle documents.
+The Node should deal with subtitles in a high level interface,
+which is an instance of <code class="xref py py-class docutils literal"><span class="pre">&lt;ebu_tt_live.documents.SubtitleDocument&gt;</span></code>. That is the interface which should
+be used to communicate with the carriage mechanism. See <code class="xref py py-class docutils literal"><span class="pre">&lt;ebu_tt_live.carriage.ICarriageMechanism&gt;</span></code></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.interface.INode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.interface.INode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.interface.INode.process_document">
+<code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#INode.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.INode.process_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>The central hook that is meant to implement the main functionality of the node.
+A node must implement this method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>kwargs</strong> – Extra parameters</li>
+<li><strong>document</strong> – Can be XML, Document object…etc. depending on the carriage implementation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.node.interface.IProducerNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.interface.</code><code class="descname">IProducerNode</code><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IProducerNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IProducerNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.interface.INode" title="ebu_tt_live.node.interface.INode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.interface.INode</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.interface.IProducerNode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.interface.IProducerNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ebu_tt_live.node.interface.IProducerNode.producer_carriage">
+<code class="descname">producer_carriage</code><a class="headerlink" href="#ebu_tt_live.node.interface.IProducerNode.producer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Carriage mechanism accessor
+:return:</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.interface.IProducerNode.provides">
+<em class="property">classmethod </em><code class="descname">provides</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IProducerNode.provides"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IProducerNode.provides" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data type provided
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.interface.IProducerNode.register_producer_carriage">
+<code class="descname">register_producer_carriage</code><span class="sig-paren">(</span><em>producer_carriage</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IProducerNode.register_producer_carriage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IProducerNode.register_producer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output carriage mechanism registration
+:param producer_carriage:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.interface.IProducerNode.resume_producing">
+<code class="descname">resume_producing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/interface.html#IProducerNode.resume_producing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.interface.IProducerNode.resume_producing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This allows the node to be triggered by events, such as a timer.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-ebu_tt_live.node.base">
 <span id="base-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">base</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.base" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -204,20 +316,30 @@
 <dl class="class">
 <dt id="ebu_tt_live.node.base.AbstractConsumerNode">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.node.base.</code><code class="descname">AbstractConsumerNode</code><span class="sig-paren">(</span><em>node_id</em>, <em>consumer_carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/base.html#AbstractConsumerNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.interface.IConsumerNode</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.__AbstractNode</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.interface.IConsumerNode" title="ebu_tt_live.node.interface.IConsumerNode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.interface.IConsumerNode</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.__AbstractNode</span></code></p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.node.base.AbstractConsumerNode.auto_register_impl">
 <em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ebu_tt_live.node.base.AbstractConsumerNode.check_document">
-<code class="descname">check_document</code><span class="sig-paren">(</span><em>document=None</em>, <em>sequence_identifier=None</em>, <em>sequence_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/base.html#AbstractConsumerNode.check_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode.check_document" title="Permalink to this definition">¶</a></dt>
+<dt id="ebu_tt_live.node.base.AbstractConsumerNode.check_if_document_seen">
+<code class="descname">check_if_document_seen</code><span class="sig-paren">(</span><em>document=None</em>, <em>sequence_identifier=None</em>, <em>sequence_number=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/base.html#AbstractConsumerNode.check_if_document_seen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode.check_if_document_seen" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ebu_tt_live.node.base.AbstractConsumerNode.consumer_carriage">
 <code class="descname">consumer_carriage</code><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode.consumer_carriage" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.base.AbstractConsumerNode.is_document">
+<code class="descname">is_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/base.html#AbstractConsumerNode.is_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode.is_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.base.AbstractConsumerNode.limit_sequence_to_one">
+<code class="descname">limit_sequence_to_one</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/base.html#AbstractConsumerNode.limit_sequence_to_one"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.base.AbstractConsumerNode.limit_sequence_to_one" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -230,7 +352,7 @@
 <dl class="class">
 <dt id="ebu_tt_live.node.base.AbstractProducerNode">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.node.base.</code><code class="descname">AbstractProducerNode</code><span class="sig-paren">(</span><em>node_id</em>, <em>producer_carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/base.html#AbstractProducerNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.base.AbstractProducerNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.interface.IProducerNode</span></code>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.__AbstractNode</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.interface.IProducerNode" title="ebu_tt_live.node.interface.IProducerNode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.interface.IProducerNode</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.__AbstractNode</span></code></p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.node.base.AbstractProducerNode.auto_register_impl">
 <em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.base.AbstractProducerNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
@@ -348,6 +470,172 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-ebu_tt_live.node.encoder">
+<span id="encoder-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">encoder</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.encoder" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.node.encoder.EBUTTDEncoder">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.encoder.</code><code class="descname">EBUTTDEncoder</code><span class="sig-paren">(</span><em>node_id</em>, <em>media_time_zero</em>, <em>default_ns=False</em>, <em>producer_carriage=None</em>, <em>consumer_carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/encoder.html#EBUTTDEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.encoder.EBUTTDEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.base.AbstractCombinedNode" title="ebu_tt_live.node.base.AbstractCombinedNode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.AbstractCombinedNode</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.encoder.EBUTTDEncoder.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.encoder.EBUTTDEncoder.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.encoder.EBUTTDEncoder.process_document">
+<code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/encoder.html#EBUTTDEncoder.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.encoder.EBUTTDEncoder.process_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.node.delay">
+<span id="delay-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">delay</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.delay" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.node.delay.BufferDelayNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">BufferDelayNode</code><span class="sig-paren">(</span><em>node_id</em>, <em>fixed_delay</em>, <em>consumer_carriage=None</em>, <em>producer_carriage=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#BufferDelayNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.BufferDelayNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.base.AbstractCombinedNode" title="ebu_tt_live.node.base.AbstractCombinedNode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.AbstractCombinedNode</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.delay.BufferDelayNode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.delay.BufferDelayNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.delay.BufferDelayNode.process_document">
+<code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#BufferDelayNode.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.BufferDelayNode.process_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.node.delay.RetimingDelayNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">RetimingDelayNode</code><span class="sig-paren">(</span><em>node_id</em>, <em>fixed_delay</em>, <em>document_sequence</em>, <em>consumer_carriage=None</em>, <em>producer_carriage=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#RetimingDelayNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.RetimingDelayNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.base.AbstractCombinedNode" title="ebu_tt_live.node.base.AbstractCombinedNode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.AbstractCombinedNode</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.delay.RetimingDelayNode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.delay.RetimingDelayNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.delay.RetimingDelayNode.process_document">
+<code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#RetimingDelayNode.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.RetimingDelayNode.process_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ebu_tt_live.node.delay.UntimedPathFinder">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">UntimedPathFinder</code><span class="sig-paren">(</span><em>root_element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#UntimedPathFinder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.UntimedPathFinder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation" title="ebu_tt_live.bindings.pyxb_utils.RecursiveOperation"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.RecursiveOperation</span></code></a></p>
+<dl class="attribute">
+<dt id="ebu_tt_live.node.delay.UntimedPathFinder.path_found">
+<code class="descname">path_found</code><a class="headerlink" href="#ebu_tt_live.node.delay.UntimedPathFinder.path_found" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.node.delay.has_a_leaf_with_no_timing_path">
+<code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">has_a_leaf_with_no_timing_path</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#has_a_leaf_with_no_timing_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.has_a_leaf_with_no_timing_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a document has at least one leaf that has no ancestor that has begin time or has begin time itself.
+&#64;param element:
+&#64;return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.node.delay.is_explicitly_timed">
+<code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">is_explicitly_timed</code><span class="sig-paren">(</span><em>element</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#is_explicitly_timed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.is_explicitly_timed" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.node.delay.update_body_timing">
+<code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">update_body_timing</code><span class="sig-paren">(</span><em>body</em>, <em>timebase</em>, <em>delay_int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#update_body_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.update_body_timing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ebu_tt_live.node.delay.update_children_timing">
+<code class="descclassname">ebu_tt_live.node.delay.</code><code class="descname">update_children_timing</code><span class="sig-paren">(</span><em>element</em>, <em>timebase</em>, <em>delay_int</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/delay.html#update_children_timing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.delay.update_children_timing" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.node.distributing">
+<span id="distributing-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">distributing</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.distributing" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.node.distributing.DistributingNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.distributing.</code><code class="descname">DistributingNode</code><span class="sig-paren">(</span><em>node_id</em>, <em>producer_carriage=None</em>, <em>consumer_carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/distributing.html#DistributingNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.distributing.DistributingNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.base.AbstractCombinedNode" title="ebu_tt_live.node.base.AbstractCombinedNode"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.base.AbstractCombinedNode</span></code></a></p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.distributing.DistributingNode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.distributing.DistributingNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.distributing.DistributingNode.process_document">
+<code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em>, <em>raw_xml=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/distributing.html#DistributingNode.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.distributing.DistributingNode.process_document" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ebu_tt_live.node.handover">
+<span id="handover-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">handover</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.handover" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ebu_tt_live.node.handover.HandoverNode">
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.handover.</code><code class="descname">HandoverNode</code><span class="sig-paren">(</span><em>node_id</em>, <em>authors_group_identifier</em>, <em>sequence_identifier</em>, <em>consumer_carriage=None</em>, <em>producer_carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/handover.html#HandoverNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.handover.HandoverNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.node.switcher.SwitcherNode</span></code></p>
+<p>The handover node implements the functionality described in EBU-3370. It is a specialised case
+of the switching node basing its decisions on the handover-related attributes on the document root element and
+on its previous decisions.</p>
+<dl class="classmethod">
+<dt id="ebu_tt_live.node.handover.HandoverNode.auto_register_impl">
+<em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.handover.HandoverNode.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.handover.HandoverNode.process_document">
+<code class="descname">process_document</code><span class="sig-paren">(</span><em>document</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/handover.html#HandoverNode.process_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.handover.HandoverNode.process_document" title="Permalink to this definition">¶</a></dt>
+<dd><p>The specified functionality is met by keeping the following priorities in mind when processing an
+incoming document:</p>
+<blockquote>
+<div><ul class="simple">
+<li>If this is a new sequence_identifier+sequence_number pair and
+authorsGroupIdentifier+authorsGroupControlToken are defined and authorsGroupIdentifier matches the
+configuration<ul>
+<li>If sequenceIdentifier matches the one selected the document should be emitted</li>
+<li>If sequenceIdentifier does not match the one selected or one is not selected<ul>
+<li>If the token is higher than our current one or one is not set the document should be emitted</li>
+<li>If token is lower than the our current one or missing the document should be ignored</li>
+</ul>
+</li>
+<li>If the document should be emitted<ul>
+<li>Set/update current sequenceIdentifier in the node from the one in the document</li>
+<li>Set/update current authorsGroupControlToken in the node</li>
+<li>Reassign document to output sequenceIdentifier</li>
+<li>Assign new sequenceNumber to document</li>
+<li>Emit document</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>document</strong> – </li>
+<li><strong>kwargs</strong> – </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -372,7 +660,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -394,7 +682,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

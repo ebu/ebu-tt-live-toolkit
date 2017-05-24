@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.twisted.websocket &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.twisted.websocket &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -201,8 +201,8 @@
         <span class="p">)</span></div></div>
 
 
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">IBroadcaster</span><span class="p">,</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
-<div class="viewcode-block" id="UserInputServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.UserInputServerFactory">[docs]</a><span class="k">class</span> <span class="nc">UserInputServerFactory</span><span class="p">(</span><span class="n">WebSocketServerFactory</span><span class="p">):</span>
+<div class="viewcode-block" id="UserInputServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.UserInputServerFactory">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">IBroadcaster</span><span class="p">,</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserInputServerFactory</span><span class="p">(</span><span class="n">WebSocketServerFactory</span><span class="p">):</span>
     <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_clients</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -297,8 +297,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_action</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPushProducer</span><span class="p">)</span>
-<div class="viewcode-block" id="TwistedWSPushProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer">[docs]</a><span class="k">class</span> <span class="nc">TwistedWSPushProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedWSPushProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSPushProducer">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPushProducer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TwistedWSPushProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This is a Twisted Push producer. The concept is related to twisted and it is not the same as our producer</span>
 <span class="sd">    and consumer nodes.</span>
@@ -346,8 +346,8 @@
         <span class="k">pass</span></div></div>
 
 
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
-<div class="viewcode-block" id="TwistedWSConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer">[docs]</a><span class="k">class</span> <span class="nc">TwistedWSConsumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedWSConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedWSConsumer">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TwistedWSConsumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class wraps the protocol objects.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -579,8 +579,8 @@
 
 <span class="c1"># Here comes the legacy ws protocol</span>
 <span class="c1"># =================================</span>
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPullProducer</span><span class="p">)</span>
-<div class="viewcode-block" id="TwistedPullProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedPullProducer">[docs]</a><span class="k">class</span> <span class="nc">TwistedPullProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedPullProducer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedPullProducer">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPullProducer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TwistedPullProducer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="n">_custom_producer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -604,8 +604,8 @@
         <span class="k">pass</span></div></div>
 
 
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
-<div class="viewcode-block" id="TwistedConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedConsumer">[docs]</a><span class="k">class</span> <span class="nc">TwistedConsumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="TwistedConsumer"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.TwistedConsumer">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TwistedConsumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
     <span class="n">_custom_consumer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -664,8 +664,8 @@
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;message sent to </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">peer</span><span class="p">))</span></div></div>
 
 
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">IBroadcaster</span><span class="p">,</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
-<div class="viewcode-block" id="LegacyBroadcastServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory">[docs]</a><span class="k">class</span> <span class="nc">LegacyBroadcastServerFactory</span><span class="p">(</span><span class="n">WebSocketServerFactory</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastServerFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastServerFactory">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">IBroadcaster</span><span class="p">,</span> <span class="n">interfaces</span><span class="o">.</span><span class="n">IConsumer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LegacyBroadcastServerFactory</span><span class="p">(</span><span class="n">WebSocketServerFactory</span><span class="p">):</span>
     <span class="n">_clients</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_producer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_push_producer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -734,8 +734,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">dataReceived</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span></div></div>
 
 
-<span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPushProducer</span><span class="p">)</span>
-<div class="viewcode-block" id="LegacyBroadcastClientFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory">[docs]</a><span class="k">class</span> <span class="nc">LegacyBroadcastClientFactory</span><span class="p">(</span><span class="n">WebSocketClientFactory</span><span class="p">):</span>
+<div class="viewcode-block" id="LegacyBroadcastClientFactory"><a class="viewcode-back" href="../../../ebu_tt_live.twisted.html#ebu_tt_live.twisted.websocket.LegacyBroadcastClientFactory">[docs]</a><span class="nd">@implementer</span><span class="p">(</span><span class="n">interfaces</span><span class="o">.</span><span class="n">IPushProducer</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LegacyBroadcastClientFactory</span><span class="p">(</span><span class="n">WebSocketClientFactory</span><span class="p">):</span>
 
     <span class="n">_channels</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_consumer</span> <span class="o">=</span> <span class="kc">None</span>
@@ -790,7 +790,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -812,7 +812,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

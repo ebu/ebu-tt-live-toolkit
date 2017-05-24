@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ebu_tt_live.node.delay &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> EBU-TT-Live Toolkit
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview of the EBU-TT live toolkit.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../ebu_tt_live.html">Source code reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">EBU-TT-Live Toolkit</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>ebu_tt_live.node.delay</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for ebu_tt_live.node.delay</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">AbstractCombinedNode</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="k">import</span> <span class="n">LimitedClockTimingType</span><span class="p">,</span> <span class="n">FullClockTimingType</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.pyxb_utils</span> <span class="k">import</span> <span class="n">RecursiveOperation</span><span class="p">,</span> <span class="n">StopBranchIteration</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.validation.timing</span> <span class="k">import</span> <span class="n">TimingValidationMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">UnexpectedSequenceIdentifierError</span>
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="RetimingDelayNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.RetimingDelayNode">[docs]</a><span class="k">class</span> <span class="nc">RetimingDelayNode</span><span class="p">(</span><span class="n">AbstractCombinedNode</span><span class="p">):</span>
+
+    <span class="n">_document_sequence</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_fixed_delay</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_expects</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
+    <span class="n">_provides</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">fixed_delay</span><span class="p">,</span> <span class="n">document_sequence</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RetimingDelayNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
+            <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
+            <span class="n">consumer_carriage</span><span class="o">=</span><span class="n">consumer_carriage</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span> <span class="o">=</span> <span class="n">fixed_delay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span> <span class="o">=</span> <span class="n">document_sequence</span>
+
+<div class="viewcode-block" id="RetimingDelayNode.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.RetimingDelayNode.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_document</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">UnexpectedSequenceIdentifierError</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_if_document_seen</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">document</span><span class="p">):</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">limit_sequence_to_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+
+                <span class="c1"># change the sequence identifier</span>
+                <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_document_sequence</span>
+
+                <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">headMetadata_type</span><span class="p">(</span>
+                        <span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span><span class="p">()</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span><span class="p">()</span>
+
+                <span class="n">ap_metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">appliedProcessing_type</span><span class="p">(</span>
+                    <span class="n">process</span><span class="o">=</span><span class="s1">&#39;retimed by &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span>
+                    <span class="n">generatedBy</span><span class="o">=</span><span class="s1">&#39;retiming_delay_node_v1.0&#39;</span><span class="p">,</span>
+                    <span class="n">sourceId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">node_id</span><span class="p">,</span>
+                    <span class="n">appliedDateTime</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+                <span class="p">)</span>
+
+                <span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">documentMetadata</span><span class="o">.</span><span class="n">appliedProcessing</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ap_metadata</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">has_a_leaf_with_no_timing_path</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">body</span><span class="p">):</span>
+                    <span class="n">update_body_timing</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">time_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span><span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">update_children_timing</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">time_base</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span><span class="p">)</span>
+
+                <span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s1">&#39;Ignoring duplicate document: </span><span class="si">{}</span><span class="s1">__</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                        <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BufferDelayNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.BufferDelayNode">[docs]</a><span class="k">class</span> <span class="nc">BufferDelayNode</span><span class="p">(</span><span class="n">AbstractCombinedNode</span><span class="p">):</span>
+
+    <span class="n">_fixed_delay</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_expects</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
+    <span class="n">_provides</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">fixed_delay</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BufferDelayNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
+            <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
+            <span class="n">consumer_carriage</span><span class="o">=</span><span class="n">consumer_carriage</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span> <span class="o">=</span> <span class="n">fixed_delay</span>
+
+<div class="viewcode-block" id="BufferDelayNode.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.BufferDelayNode.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="update_children_timing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.update_children_timing">[docs]</a><span class="k">def</span> <span class="nf">update_children_timing</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">):</span>
+
+    <span class="c1"># if the element has a child</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s1">&#39;orderedContent&#39;</span><span class="p">):</span>
+
+        <span class="n">children</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">end</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+                    <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+                    <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">update_children_timing</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="update_body_timing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.update_body_timing">[docs]</a><span class="k">def</span> <span class="nf">update_body_timing</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">body</span><span class="o">.</span><span class="n">begin</span> <span class="o">==</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;The body already has a begin time&quot;</span>
+
+    <span class="c1"># we always update the begin attribute, regardless of the presence of a begin or end attribute</span>
+    <span class="k">if</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+        <span class="n">delay</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+        <span class="n">body</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+        <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+        <span class="n">body</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+
+    <span class="c1"># if the body has an end attribute, we add to it the value of the delay</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_explicitly_timed"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.is_explicitly_timed">[docs]</a><span class="k">def</span> <span class="nf">is_explicitly_timed</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+
+    <span class="c1"># if element has begin or end attribute</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s1">&#39;begin&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">element</span><span class="o">.</span><span class="n">begin</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">element</span><span class="o">.</span><span class="n">end</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="c1"># if element has children</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="s1">&#39;orderedContent&#39;</span><span class="p">):</span>
+
+            <span class="n">children</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">is_explicitly_timed</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="UntimedPathFinder"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.UntimedPathFinder">[docs]</a><span class="k">class</span> <span class="nc">UntimedPathFinder</span><span class="p">(</span><span class="n">RecursiveOperation</span><span class="p">):</span>
+
+    <span class="n">_path_found</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">_timed_element_stack</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timed_element_stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UntimedPathFinder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">root_element</span><span class="p">,</span>
+            <span class="nb">filter</span><span class="o">=</span><span class="k">lambda</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">TimingValidationMixin</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_is_begin_timed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_before_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path_found</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StopBranchIteration</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_begin_timed</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timed_element_stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_after_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_begin_timed</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">bla</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timed_element_stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">is_timed_leaf</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timed_element_stack</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_path_found</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">raise</span> <span class="n">StopBranchIteration</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_process_non_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">non_element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path_found</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path_found</span></div>
+
+
+<div class="viewcode-block" id="has_a_leaf_with_no_timing_path"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.has_a_leaf_with_no_timing_path">[docs]</a><span class="k">def</span> <span class="nf">has_a_leaf_with_no_timing_path</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a document has at least one leaf that has no ancestor that has begin time or has begin time itself.</span>
+<span class="sd">    @param element:</span>
+<span class="sd">    @return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">finder</span> <span class="o">=</span> <span class="n">UntimedPathFinder</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+    <span class="n">finder</span><span class="o">.</span><span class="n">proceed</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">path_found</span></div>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, European Broadcasting Union.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'2.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

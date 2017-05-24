@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.node.consumer &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.node.consumer &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -185,31 +185,34 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span> <span class="o">=</span> <span class="n">verbose</span>
 
 <div class="viewcode-block" id="SimpleConsumer.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.consumer.SimpleConsumer.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Create sequence from document</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating document sequence from first document </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">document</span>
-            <span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="o">=</span> <span class="n">EBUTT3DocumentSequence</span><span class="o">.</span><span class="n">create_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">reference_clock</span>
-        <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_document</span><span class="p">(</span><span class="n">document</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">limit_sequence_to_one</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
 
-        <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_RECEIVED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
-            <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
-            <span class="n">computed_begin_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
-            <span class="n">computed_end_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_end_time</span>
-        <span class="p">))</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">SequenceNumberCollisionError</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="s1">&#39;Consumer ignoring duplicate seq number: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
-                <span class="p">)</span>
-            <span class="p">)</span></div>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Create sequence from document</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating document sequence from first document </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">document</span>
+                <span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span> <span class="o">=</span> <span class="n">EBUTT3DocumentSequence</span><span class="o">.</span><span class="n">create_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_verbose</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">reference_clock</span>
+            <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">document</span><span class="o">.</span><span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+            <span class="n">document_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">DOC_RECEIVED</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">sequence_number</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">computed_begin_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_begin_time</span><span class="p">,</span>
+                <span class="n">computed_end_time</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">computed_end_time</span>
+            <span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sequence</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">SequenceNumberCollisionError</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s1">&#39;Consumer ignoring duplicate seq number: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
+                    <span class="p">)</span>
+                <span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">reference_clock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -305,7 +308,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -327,7 +330,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

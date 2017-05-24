@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.bindings &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -163,6 +163,7 @@
 <span class="c1"># Let&#39;s import customizations</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttdt</span> <span class="k">as</span> <span class="n">ebuttdt</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">ebuttm</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttlm</span> <span class="k">as</span> <span class="n">ebuttlm</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebuttp</span> <span class="k">as</span> <span class="n">ebuttp</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ebutts</span> <span class="k">as</span> <span class="n">ebutts</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">_ttm</span> <span class="k">as</span> <span class="n">ttm</span>
@@ -201,7 +202,8 @@
     <span class="s1">&#39;ttm&#39;</span><span class="p">:</span> <span class="n">ttm</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
     <span class="s1">&#39;ebuttm&#39;</span><span class="p">:</span> <span class="n">ebuttm</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
     <span class="s1">&#39;ebutts&#39;</span><span class="p">:</span> <span class="n">ebutts</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
-    <span class="s1">&#39;ebuttp&#39;</span><span class="p">:</span> <span class="n">ebuttp</span><span class="o">.</span><span class="n">Namespace</span>
+    <span class="s1">&#39;ebuttp&#39;</span><span class="p">:</span> <span class="n">ebuttp</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span>
+    <span class="s1">&#39;ebuttlm&#39;</span><span class="p">:</span> <span class="n">ebuttlm</span><span class="o">.</span><span class="n">Namespace</span>
 <span class="p">}</span>
 
 
@@ -357,8 +359,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">multiRowAlign</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">multiRowAlign</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="style_type.resolve_styles"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.resolve_styles">[docs]</a>    <span class="k">def</span> <span class="nf">resolve_styles</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">referenced_styles</span><span class="p">):</span>
+<div class="viewcode-block" id="style_type.resolve_styles"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.resolve_styles">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">resolve_styles</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">referenced_styles</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resolve the style attributes in inheritance chain</span>
 <span class="sd">        :param referenced_styles:</span>
@@ -369,8 +371,8 @@
             <span class="n">instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">instance</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="style_type.compute_font_size"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_font_size">[docs]</a>    <span class="k">def</span> <span class="nf">compute_font_size</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">defer</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="style_type.compute_font_size"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_font_size">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">compute_font_size</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">defer</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="n">spec_font_size</span> <span class="o">=</span> <span class="n">specified_style</span><span class="o">.</span><span class="n">fontSize</span>
         <span class="n">default_font_size</span> <span class="o">=</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">CellFontSizeType</span><span class="p">(</span><span class="s1">&#39;1c&#39;</span><span class="p">)</span>
         <span class="n">result_font_size</span> <span class="o">=</span> <span class="kc">None</span>
@@ -461,8 +463,8 @@
             <span class="n">default_value</span>
         <span class="p">)</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="style_type.compute_inherited_attribute"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_inherited_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">compute_inherited_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">):</span>
+<div class="viewcode-block" id="style_type.compute_inherited_attribute"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_inherited_attribute">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">compute_inherited_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">):</span>
         <span class="n">fallback_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">fallback_order</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">default_attrs</span><span class="p">:</span>
@@ -471,16 +473,16 @@
                     <span class="k">return</span> <span class="n">attr_value</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="style_type.compute_simple_attribute"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_simple_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">compute_simple_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">):</span>
+<div class="viewcode-block" id="style_type.compute_simple_attribute"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_simple_attribute">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">compute_simple_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">specified_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">attr_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">specified_style</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">attr_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">attr_value</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="style_type.compute_line_height"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_line_height">[docs]</a>    <span class="k">def</span> <span class="nf">compute_line_height</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">font_size</span><span class="p">):</span>
+<div class="viewcode-block" id="style_type.compute_line_height"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_line_height">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">compute_line_height</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">font_size</span><span class="p">):</span>
         <span class="n">fallback_order</span> <span class="o">=</span> <span class="p">[</span><span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">fallback_order</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">item</span><span class="o">.</span><span class="n">lineHeight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;lineHeight&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">default_attrs</span><span class="p">:</span>
@@ -501,8 +503,8 @@
                 <span class="k">return</span> <span class="n">selected_value</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="style_type.compute_style"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_style">[docs]</a>    <span class="k">def</span> <span class="nf">compute_style</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="p">):</span>
+<div class="viewcode-block" id="style_type.compute_style"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_style">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">compute_style</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This function holds the styling semantics of containers considering direct reference, inheritance and</span>
 <span class="sd">        containment variables</span>
@@ -628,7 +630,7 @@
             <span class="n">authoringDelay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authoringDelay</span><span class="p">,</span>
             <span class="n">authorsGroupIdentifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authorsGroupIdentifier</span><span class="p">,</span>
             <span class="n">authorsGroupControlToken</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authorsGroupControlToken</span><span class="p">,</span>
-            <span class="n">authorsGroupControlRequest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authorsGroupControlRequest</span><span class="p">,</span>
+            <span class="n">authorsGroupSelectedSequenceIdentifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authorsGroupSelectedSequenceIdentifier</span><span class="p">,</span>
             <span class="n">referenceClockIdentifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">referenceClockIdentifier</span><span class="p">,</span>
             <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
@@ -769,8 +771,6 @@
         <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;timing_begin_stack&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;timing_end_stack&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;timing_syncbase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">()</span>
-        <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;timing_end_limit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;timing_begin_limit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
         <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;styles_stack&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_elements_by_id</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1311,8 +1311,8 @@
 
 <div class="viewcode-block" id="d_layout_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_layout_type">[docs]</a><span class="k">class</span> <span class="nc">d_layout_type</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">d_layout_type</span><span class="p">):</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="d_layout_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_layout_type.create_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="d_layout_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_layout_type.create_default_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">d_region_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">()</span>
         <span class="p">)</span>
@@ -1323,8 +1323,8 @@
 
 <div class="viewcode-block" id="d_region_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_region_type">[docs]</a><span class="k">class</span> <span class="nc">d_region_type</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">d_region_type</span><span class="p">):</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="d_region_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_region_type.create_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="d_region_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_region_type.create_default_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;region.default&#39;</span><span class="p">,</span>
             <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;0</span><span class="si">% 0%</span><span class="s1">&#39;</span><span class="p">,</span>
@@ -1337,8 +1337,8 @@
 
 <div class="viewcode-block" id="d_styling_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_styling_type">[docs]</a><span class="k">class</span> <span class="nc">d_styling_type</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">d_styling_type</span><span class="p">):</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="d_styling_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_styling_type.create_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="d_styling_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_styling_type.create_default_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">d_style_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">()</span>
         <span class="p">)</span>
@@ -1349,8 +1349,8 @@
 
 <div class="viewcode-block" id="d_style_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_style_type">[docs]</a><span class="k">class</span> <span class="nc">d_style_type</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">d_style_type</span><span class="p">):</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="d_style_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_style_type.create_default_value">[docs]</a>    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="d_style_type.create_default_value"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_style_type.create_default_value">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;style.default&#39;</span>
         <span class="p">)</span>
@@ -1371,7 +1371,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -1393,7 +1393,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

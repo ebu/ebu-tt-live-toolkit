@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.documents.ebutt3 &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.documents.ebutt3 &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -162,13 +162,14 @@
 <span class="kn">from</span> <span class="nn">.ebutt3_splicer</span> <span class="k">import</span> <span class="n">EBUTT3Splicer</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">bindings</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">TimingValidationMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttlm</span> <span class="k">as</span> <span class="n">ebuttlm</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_DOCUMENT_SEQUENCE_MISMATCH</span><span class="p">,</span> \
     <span class="n">ERR_DOCUMENT_NOT_COMPATIBLE</span><span class="p">,</span> <span class="n">ERR_DOCUMENT_NOT_PART_OF_SEQUENCE</span><span class="p">,</span> \
     <span class="n">ERR_DOCUMENT_SEQUENCE_INCONSISTENCY</span><span class="p">,</span> <span class="n">DOC_DISCARDED</span><span class="p">,</span> <span class="n">DOC_TRIMMED</span><span class="p">,</span> <span class="n">DOC_REQ_SEGMENT</span><span class="p">,</span> <span class="n">DOC_SEQ_REQ_SEGMENT</span><span class="p">,</span> \
     <span class="n">DOC_INSERTED</span><span class="p">,</span> <span class="n">DOC_SEMANTIC_VALIDATION_SUCCESSFUL</span><span class="p">,</span> <span class="n">ERR_SEQUENCE_FROM_DOCUMENT</span><span class="p">,</span> \
-    <span class="n">ERR_DOCUMENT_SEQUENCENUMBER_COLLISION</span>
+    <span class="n">ERR_DOCUMENT_SEQUENCENUMBER_COLLISION</span><span class="p">,</span> <span class="n">ERR_AUTHORS_GROUP_MISMATCH</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">IncompatibleSequenceError</span><span class="p">,</span> <span class="n">DocumentDiscardedError</span><span class="p">,</span> \
-    <span class="n">SequenceOverridden</span><span class="p">,</span> <span class="n">SequenceNumberCollisionError</span>
+    <span class="n">SequenceOverridden</span><span class="p">,</span> <span class="n">SequenceNumberCollisionError</span><span class="p">,</span> <span class="n">UnexpectedAuthorsGroupError</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.clocks</span> <span class="k">import</span> <span class="n">get_clock_from_document</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">pyxb</span> <span class="k">import</span> <span class="n">BIND</span>
@@ -179,7 +180,6 @@
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">document_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;document_logger&#39;</span><span class="p">)</span>
-
 
 <div class="viewcode-block" id="TimingEvent"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.TimingEvent">[docs]</a><span class="k">class</span> <span class="nc">TimingEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -240,6 +240,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">when</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">element</span>
         <span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="TimelineUtilMixin"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.TimelineUtilMixin">[docs]</a><span class="k">class</span> <span class="nc">TimelineUtilMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -307,7 +308,116 @@
         <span class="k">return</span> <span class="n">affected_elements</span></div></div>
 
 
-<div class="viewcode-block" id="EBUTT3Document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3Document</span><span class="p">(</span><span class="n">TimelineUtilMixin</span><span class="p">,</span> <span class="n">SubtitleDocument</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3ObjectBase"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3ObjectBase">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3ObjectBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">message_type_mapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="EBUTT3ObjectBase.get_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3ObjectBase.get_xml">[docs]</a>    <span class="k">def</span> <span class="nf">get_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EBUTT3ObjectBase.get_dom"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3ObjectBase.get_dom">[docs]</a>    <span class="k">def</span> <span class="nf">get_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EBUTT3ObjectBase.create_from_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3ObjectBase.create_from_xml">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_xml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xml</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span>
+            <span class="n">xml_text</span><span class="o">=</span><span class="n">xml</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">ebuttlm</span><span class="o">.</span><span class="n">message_type</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">message_type_mapping</span><span class="p">[</span><span class="n">instance</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">type</span><span class="p">]</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTT3ObjectBase.create_from_raw_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3ObjectBase.create_from_raw_binding">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_raw_binding</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="EBUTTLiveMessage"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTTLiveMessage">[docs]</a><span class="k">class</span> <span class="nc">EBUTTLiveMessage</span><span class="p">(</span><span class="n">EBUTT3ObjectBase</span><span class="p">):</span>
+
+    <span class="n">_sender</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_recipient</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_payload</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_availability_time</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span>
+
+    <span class="nd">@sequence_identifier</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">payload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_payload</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sender</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">recipient</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recipient</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">availability_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_availability_time</span>
+
+    <span class="nd">@availability_time</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">availability_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_availability_time</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="EBUTTAuthorsGroupControlRequest"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTTAuthorsGroupControlRequest">[docs]</a><span class="k">class</span> <span class="nc">EBUTTAuthorsGroupControlRequest</span><span class="p">(</span><span class="n">EBUTTLiveMessage</span><span class="p">):</span>
+
+    <span class="n">message_type_id</span> <span class="o">=</span> <span class="s1">&#39;authorsGroupControlRequest&#39;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recipient</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="n">sequence_identifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_payload</span> <span class="o">=</span> <span class="n">payload</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sender</span> <span class="o">=</span> <span class="n">sender</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipient</span> <span class="o">=</span> <span class="n">recipient</span>
+        <span class="k">if</span> <span class="n">availability_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_availability_time</span> <span class="o">=</span> <span class="n">availability_time</span>
+
+<div class="viewcode-block" id="EBUTTAuthorsGroupControlRequest._create_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTTAuthorsGroupControlRequest._create_binding">[docs]</a>    <span class="k">def</span> <span class="nf">_create_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">ebuttlm</span><span class="o">.</span><span class="n">message_header_type</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">message_type_id</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient</span><span class="p">:</span>
+            <span class="n">header</span><span class="o">.</span><span class="n">recipient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recipient</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">:</span>
+            <span class="n">header</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span>
+        <span class="k">return</span> <span class="n">ebuttlm</span><span class="o">.</span><span class="n">message</span><span class="p">(</span>
+            <span class="n">sequenceIdentifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">,</span>
+            <span class="n">payload</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_payload</span><span class="p">,</span>
+            <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="EBUTTAuthorsGroupControlRequest.get_dom"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTTAuthorsGroupControlRequest.get_dom">[docs]</a>    <span class="k">def</span> <span class="nf">get_dom</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_binding</span><span class="p">()</span><span class="o">.</span><span class="n">toDOM</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EBUTTAuthorsGroupControlRequest.get_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTTAuthorsGroupControlRequest.get_xml">[docs]</a>    <span class="k">def</span> <span class="nf">get_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_binding</span><span class="p">()</span><span class="o">.</span><span class="n">toxml</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EBUTTAuthorsGroupControlRequest.create_from_raw_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTTAuthorsGroupControlRequest.create_from_raw_binding">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_raw_binding</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
+            <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">sequenceIdentifier</span><span class="p">,</span>
+            <span class="n">sender</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
+            <span class="n">recipient</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">recipient</span><span class="p">,</span>
+            <span class="n">payload</span><span class="o">=</span><span class="n">binding</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>  <span class="c1"># anyType is considered complex type</span>
+            <span class="c1"># so orderedContent is needed and indexing the first component.</span>
+        <span class="p">)</span></div></div>
+
+<span class="c1"># Register the class in the base class</span>
+<span class="n">EBUTT3ObjectBase</span><span class="o">.</span><span class="n">message_type_mapping</span><span class="p">[</span><span class="n">EBUTTAuthorsGroupControlRequest</span><span class="o">.</span><span class="n">message_type_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">EBUTTAuthorsGroupControlRequest</span>
+
+
+<div class="viewcode-block" id="EBUTT3Document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3Document</span><span class="p">(</span><span class="n">TimelineUtilMixin</span><span class="p">,</span> <span class="n">SubtitleDocument</span><span class="p">,</span> <span class="n">EBUTT3ObjectBase</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This class wraps the binding object representation of the XML and provides the features the applications in the</span>
 <span class="sd">    specification require. e.g:availability time.</span>
@@ -329,13 +439,14 @@
     <span class="n">_sequence</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_base</span><span class="p">,</span> <span class="n">sequence_number</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">clock_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">authors_group_identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">clock_mode</span> <span class="ow">and</span> <span class="n">time_base</span> <span class="ow">is</span> <span class="n">TimeBase</span><span class="o">.</span><span class="n">CLOCK</span><span class="p">:</span>
             <span class="n">clock_mode</span> <span class="o">=</span> <span class="s1">&#39;local&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span> <span class="o">=</span> <span class="n">bindings</span><span class="o">.</span><span class="n">tt</span><span class="p">(</span>
             <span class="n">timeBase</span><span class="o">=</span><span class="n">time_base</span><span class="p">,</span>
             <span class="n">clockMode</span><span class="o">=</span><span class="n">clock_mode</span><span class="p">,</span>
             <span class="n">sequenceIdentifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
+            <span class="n">authorsGroupIdentifier</span><span class="o">=</span><span class="n">authors_group_identifier</span><span class="p">,</span>
             <span class="n">sequenceNumber</span><span class="o">=</span><span class="n">sequence_number</span><span class="p">,</span>
             <span class="n">lang</span><span class="o">=</span><span class="n">lang</span><span class="p">,</span>
             <span class="n">head</span><span class="o">=</span><span class="n">BIND</span><span class="p">(</span>
@@ -350,8 +461,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="EBUTT3Document.create_from_raw_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_raw_binding</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3Document.create_from_raw_binding"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_raw_binding">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_raw_binding</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">binding</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="n">instance</span><span class="o">.</span><span class="n">_ebutt3_content</span> <span class="o">=</span> <span class="n">binding</span>
         <span class="k">if</span> <span class="n">availability_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -359,8 +470,8 @@
         <span class="n">instance</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">instance</span></div>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="EBUTT3Document.create_from_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_xml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xml</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3Document.create_from_xml"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.create_from_xml">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_xml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">xml</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span>
             <span class="n">binding</span><span class="o">=</span><span class="n">bindings</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span>
                 <span class="n">xml_text</span><span class="o">=</span><span class="n">xml</span>
@@ -383,6 +494,22 @@
     <span class="nd">@sequence_identifier</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">sequenceIdentifier</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authors_group_control_token</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">authorsGroupControlToken</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authors_group_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">authorsGroupIdentifier</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authors_group_selected_sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">authorsGroupSelectedSequenceIdentifier</span>
+
+    <span class="nd">@authors_group_selected_sequence_identifier</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">authors_group_selected_sequence_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">authorsGroupSelectedSequenceIdentifier</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lang</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -535,10 +662,14 @@
 
         <span class="c1"># Default value for the computed begin time of the document is the active begin time of the body</span>
         <span class="c1"># This only changes if the body does not declare a begin time.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">computed_begin_time</span>
+        <span class="c1"># Same for end time.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">computed_begin_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">computed_end_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="n">availability_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="n">availability_time</span></div>
 
-        <span class="c1"># End times</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">computed_end_time</span></div>
 
 <div class="viewcode-block" id="EBUTT3Document.add_div"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3Document.add_div">[docs]</a>    <span class="k">def</span> <span class="nf">add_div</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">div</span><span class="p">):</span>
         <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebutt3_content</span><span class="o">.</span><span class="n">body</span>
@@ -610,6 +741,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_authors_group_identifier</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_reference_clock</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_time_base</span> <span class="o">=</span> <span class="kc">None</span>
@@ -618,8 +750,9 @@
     <span class="n">_documents</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_verbose</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">reference_clock</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">authors_group_identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span> <span class="o">=</span> <span class="n">sequence_identifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_authors_group_identifier</span> <span class="o">=</span> <span class="n">authors_group_identifier</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span> <span class="o">=</span> <span class="n">reference_clock</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lang</span> <span class="o">=</span> <span class="n">lang</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="mi">0</span>
@@ -636,6 +769,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span>
 
     <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">authors_group_identifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_authors_group_identifier</span>
+
+    <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">last_sequence_number</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span>
 
@@ -643,8 +780,8 @@
     <span class="k">def</span> <span class="nf">last_sequence_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="EBUTT3DocumentSequence.create_from_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">[docs]</a>    <span class="k">def</span> <span class="nf">create_from_document</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="EBUTT3DocumentSequence.create_from_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_from_document">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_from_document</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">EBUTT3Document</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="n">ERR_SEQUENCE_FROM_DOCUMENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -653,6 +790,7 @@
             <span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sequence_identifier&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">),</span>
+            <span class="n">authors_group_identifier</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;authors_group_identifier&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">authors_group_identifier</span><span class="p">),</span>
             <span class="n">reference_clock</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reference_clock&#39;</span><span class="p">,</span> <span class="n">get_clock_from_document</span><span class="p">(</span><span class="n">document</span><span class="p">)),</span>
             <span class="n">lang</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lang&#39;</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">lang</span><span class="p">),</span>
             <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
@@ -689,11 +827,29 @@
                 <span class="p">)</span>
             <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># If there is an authorsGroupIdentifier and sequence does not have one yet. Pick it up.</span>
+            <span class="c1"># If there is one already mismatch results in an error but missing value is allowed even then.</span>
+            <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">authors_group_identifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">document</span><span class="o">.</span><span class="n">authors_group_identifier</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">authors_group_identifier</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">authors_group_identifier</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">authors_group_identifier</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">UnexpectedAuthorsGroupError</span><span class="p">(</span>
+                            <span class="n">ERR_AUTHORS_GROUP_MISMATCH</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                <span class="n">agid_doc</span><span class="o">=</span><span class="n">document</span><span class="o">.</span><span class="n">authors_group_identifier</span><span class="p">,</span>
+                                <span class="n">agid_seq</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authors_group_identifier</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Set the one we currently have in the document except the empty string</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_authors_group_identifier</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">authors_group_identifier</span>
+
             <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Sequence number: </span><span class="si">{}</span><span class="s1"> can be safely inserted into sequence: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">sequence_identifier</span>
             <span class="p">))</span>
         <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="EBUTT3DocumentSequence.is_compatible"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.is_compatible">[docs]</a>    <span class="k">def</span> <span class="nf">is_compatible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_document_compatibility</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">document</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="EBUTT3DocumentSequence.create_compatible_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence.create_compatible_document">[docs]</a>    <span class="k">def</span> <span class="nf">create_compatible_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -707,6 +863,7 @@
             <span class="n">time_base</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">time_base</span><span class="p">,</span>
             <span class="n">clock_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_reference_clock</span><span class="o">.</span><span class="n">clock_mode</span><span class="p">,</span>
             <span class="n">sequence_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sequence_identifier</span><span class="p">,</span>
+            <span class="n">authors_group_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">authors_group_identifier</span><span class="p">,</span>
             <span class="n">sequence_number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_last_sequence_number</span><span class="p">,</span>
             <span class="n">lang</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lang</span>
         <span class="p">)</span></div>
@@ -1028,7 +1185,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -1050,7 +1207,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.carriage.interface &mdash; EBU-TT-Live Toolkit 1.0rc1 documentation</title>
+  <title>ebu_tt_live.carriage.interface &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 1.0rc1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                1.0
+                2.1
               </div>
             
           
@@ -177,8 +177,8 @@
 
     <span class="n">_expects</span> <span class="o">=</span> <span class="n">AbstractStaticMember</span><span class="p">(</span><span class="n">validate_types_only</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="IProducerCarriage.expects"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.expects">[docs]</a>    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="IProducerCarriage.expects"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.expects">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">expects</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Data type expected</span>
 
@@ -188,8 +188,8 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_expects</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_expects</span></div>
 
-    <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="IProducerCarriage.register_producer_node"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.register_producer_node">[docs]</a>    <span class="k">def</span> <span class="nf">register_producer_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="IProducerCarriage.register_producer_node"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.register_producer_node">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">register_producer_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register the producer node in the carriage mechanism</span>
 
@@ -205,8 +205,8 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-    <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="IProducerCarriage.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="IProducerCarriage.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.emit_data">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement protocol specific postprocessing here.</span>
 
@@ -215,8 +215,8 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span></div>
 
-    <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="IProducerCarriage.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="IProducerCarriage.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IProducerCarriage.resume_producing">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This makes sure that the producers can be pulled. This is good for timer or manual triggering</span>
 
@@ -231,8 +231,8 @@
 
     <span class="n">_provides</span> <span class="o">=</span> <span class="n">AbstractStaticMember</span><span class="p">(</span><span class="n">validate_types_only</span><span class="p">)</span>
 
-    <span class="nd">@classmethod</span>
-<div class="viewcode-block" id="IConsumerCarriage.provides"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage.provides">[docs]</a>    <span class="k">def</span> <span class="nf">provides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<div class="viewcode-block" id="IConsumerCarriage.provides"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage.provides">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">provides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Data type provided</span>
 
@@ -242,8 +242,8 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_provides</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_provides</span></div>
 
-    <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="IConsumerCarriage.register_consumer_node"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage.register_consumer_node">[docs]</a>    <span class="k">def</span> <span class="nf">register_consumer_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+<div class="viewcode-block" id="IConsumerCarriage.register_consumer_node"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage.register_consumer_node">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">register_consumer_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register the consumer node in the carriage mechanism</span>
 
@@ -259,8 +259,8 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-    <span class="nd">@abstractmethod</span>
-<div class="viewcode-block" id="IConsumerCarriage.on_new_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage.on_new_data">[docs]</a>    <span class="k">def</span> <span class="nf">on_new_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="IConsumerCarriage.on_new_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.interface.IConsumerCarriage.on_new_data">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">on_new_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Implement protocol specific preprocessing here.</span>
 
@@ -281,7 +281,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union.
 
     </p>
   </div>
@@ -303,7 +303,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0rc1',
+            VERSION:'2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
