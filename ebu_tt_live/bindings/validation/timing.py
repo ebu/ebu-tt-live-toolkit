@@ -196,6 +196,8 @@ class TimingValidationMixin(object):
                     # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
 
+        # Effectively discard this element from computed time calculation when
+        # end is before begin, as per spec requirement.
         if begin_timedelta is not None \
         and end_timedelta is not None \
         and begin_timedelta >= end_timedelta:
