@@ -50,7 +50,6 @@ class TimingValidationMixin(object):
 
     def _pre_assign_end(self, proposed_end):
         self._semantic_dataset['timing_end_stack'].append(proposed_end)
-        self._semantic_dataset['timing_end_limit'] = max(self._semantic_dataset.get('timing_end_limt', timedelta()), proposed_end)
         self._computed_end_time = proposed_end
 
     def _pre_calculate_end(self):
@@ -81,14 +80,6 @@ class TimingValidationMixin(object):
 
     def _pre_calculate_begin(self):
         self._pre_assign_begin(self._begin_timedelta)
-
-        if self._computed_begin_time is not None and self._begin_timedelta is not None:
-            # This will help us find the earliest descendant element of body
-            if self._semantic_dataset['timing_begin_limit'] is not None \
-                    and self._semantic_dataset['timing_begin_limit'] > self._computed_begin_time \
-                    or self._semantic_dataset['timing_begin_limit'] is None:
-                # This means that timing begin limit needs updating
-                self._semantic_dataset['timing_begin_limit'] = self._computed_begin_time
 
     def _post_calculate_begin(self, children):
         """
@@ -204,6 +195,14 @@ class TimingValidationMixin(object):
                 else:
                     # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
+
+        # Effectively discard this element from computed time calculation when
+        # end is before begin, as per spec requirement.
+        if begin_timedelta is not None \
+        and end_timedelta is not None \
+        and begin_timedelta >= end_timedelta:
+            self._computed_end_time = None
+            self._computed_begin_time = timedelta(0)
 
         if begin_timedelta is None:
 

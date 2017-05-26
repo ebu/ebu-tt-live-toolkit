@@ -44,3 +44,31 @@ documents Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`bindings_converters` Module
+---------------------------------
+
+.. automodule:: ebu_tt_live.bindings.converters.ebutt3_ebuttd
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`document_converters` Module
+---------------------------------
+
+.. automodule:: ebu_tt_live.documents.converters
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+
+
+:mod:`ebuttd` Module
+--------------------
+
+.. automodule:: ebu_tt_live.documents.ebuttd
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
+    

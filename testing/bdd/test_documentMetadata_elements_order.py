@@ -11,8 +11,8 @@ def handle_document_metadata_element(element):
         return '<ebuttm:intendedDestinationServiceIdentifier>Destination identifier</ebuttm:intendedDestinationServiceIdentifier>\n'
     elif element == 'documentFacet':
         return '<ebuttm:documentFacet summary="mixed">test</ebuttm:documentFacet>\n'
-    elif element == 'trace':
-        return '<ebuttm:trace action="creation" generatedBy="producer" />\n'
+    elif element == 'appliedProcessing':
+        return '<ebuttm:appliedProcessing process="creation" generatedBy="producer" />\n'
     elif element == 'documentIdentifier':
         return '<ebuttm:documentIdentifier>Doc ID</ebuttm:documentIdentifier>'
     else:

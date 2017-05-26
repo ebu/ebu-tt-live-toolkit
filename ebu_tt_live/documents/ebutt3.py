@@ -9,9 +9,9 @@ from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, DOC_REQ_SEGMENT, DOC_SEQ_REQ_SEGMENT, \
     DOC_INSERTED, DOC_SEMANTIC_VALIDATION_SUCCESSFUL, ERR_SEQUENCE_FROM_DOCUMENT, \
-    ERR_DOCUMENT_SEQUENCENUMBER_COLLISION
+    ERR_DOCUMENT_SEQUENCENUMBER_COLLISION, ERR_AUTHORS_GROUP_MISMATCH
 from ebu_tt_live.errors import IncompatibleSequenceError, DocumentDiscardedError, \
-    SequenceOverridden, SequenceNumberCollisionError
+    SequenceOverridden, SequenceNumberCollisionError, UnexpectedAuthorsGroupError
 from ebu_tt_live.clocks import get_clock_from_document
 from datetime import timedelta
 from pyxb import BIND
@@ -22,7 +22,6 @@ import gc
 
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
-
 
 class TimingEvent(object):
     """
@@ -282,13 +281,14 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
     _sequence = None
 
     def __init__(self, time_base, sequence_number, sequence_identifier, lang, clock_mode=None,
-                 availability_time=None):
+                 availability_time=None, authors_group_identifier=None):
         if not clock_mode and time_base is TimeBase.CLOCK:
             clock_mode = 'local'
         self._ebutt3_content = bindings.tt(
             timeBase=time_base,
             clockMode=clock_mode,
             sequenceIdentifier=sequence_identifier,
+            authorsGroupIdentifier=authors_group_identifier,
             sequenceNumber=sequence_number,
             lang=lang,
             head=BIND(
@@ -504,10 +504,14 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
 
         # Default value for the computed begin time of the document is the active begin time of the body
         # This only changes if the body does not declare a begin time.
-        self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
+        # Same for end time.
+        if self._ebutt3_content.body is not None:
+            self._computed_begin_time = self._ebutt3_content.body.computed_begin_time
+            self._computed_end_time = self._ebutt3_content.body.computed_end_time
+        else:
+            self._computed_begin_time = availability_time
+            self._computed_end_time = availability_time
 
-        # End times
-        self._computed_end_time = self._ebutt3_content.body.computed_end_time
 
     def add_div(self, div):
         body = self._ebutt3_content.body
@@ -579,6 +583,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     """
 
     _sequence_identifier = None
+    _authors_group_identifier = None
     _last_sequence_number = None
     _reference_clock = None
     _time_base = None
@@ -587,8 +592,9 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     _documents = None
     _verbose = None
 
-    def __init__(self, sequence_identifier, reference_clock, lang, verbose=False):
+    def __init__(self, sequence_identifier, reference_clock, lang, verbose=False, authors_group_identifier=None):
         self._sequence_identifier = sequence_identifier
+        self._authors_group_identifier = authors_group_identifier
         self._reference_clock = reference_clock
         self._lang = lang
         self._last_sequence_number = 0
@@ -603,6 +609,10 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
     @property
     def sequence_identifier(self):
         return self._sequence_identifier
+
+    @property
+    def authors_group_identifier(self):
+        return self._authors_group_identifier
 
     @property
     def last_sequence_number(self):
@@ -622,6 +632,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             )
         return cls(
             sequence_identifier=kwargs.get('sequence_identifier', document.sequence_identifier),
+            authors_group_identifier=kwargs.get('authors_group_identifier', document.authors_group_identifier),
             reference_clock=kwargs.get('reference_clock', get_clock_from_document(document)),
             lang=kwargs.get('lang', document.lang),
             verbose=verbose
@@ -658,11 +669,29 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 )
             )
         else:
+            # If there is an authorsGroupIdentifier and sequence does not have one yet. Pick it up.
+            # If there is one already mismatch results in an error but missing value is allowed even then.
+            if document.authors_group_identifier is not None and document.authors_group_identifier != "":
+                if self.authors_group_identifier is not None:
+                    if document.authors_group_identifier != self.authors_group_identifier:
+                        raise UnexpectedAuthorsGroupError(
+                            ERR_AUTHORS_GROUP_MISMATCH.format(
+                                agid_doc=document.authors_group_identifier,
+                                agid_seq=self.authors_group_identifier
+                            )
+                        )
+                else:
+                    # Set the one we currently have in the document except the empty string
+                    self._authors_group_identifier = document.authors_group_identifier
+
             log.debug('Sequence number: {} can be safely inserted into sequence: {}'.format(
                 document.sequence_number,
                 self.sequence_identifier
             ))
         return True
+
+    def is_compatible(self, document):
+        return self._check_document_compatibility(document=document)
 
     def create_compatible_document(self, *args, **kwargs):
         """
@@ -676,6 +705,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             time_base=self._reference_clock.time_base,
             clock_mode=self._reference_clock.clock_mode,
             sequence_identifier=self._sequence_identifier,
+            authors_group_identifier=self.authors_group_identifier,
             sequence_number=self._last_sequence_number,
             lang=self._lang
         )

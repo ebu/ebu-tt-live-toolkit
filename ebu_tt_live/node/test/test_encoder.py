@@ -1,7 +1,7 @@
 from ebu_tt_live.documents import EBUTT3Document, EBUTTDDocument, EBUTTAuthorsGroupControlRequest
 from ebu_tt_live.node.encoder import EBUTTDEncoder
 from ebu_tt_live.carriage.interface import IProducerCarriage
-from ebu_tt_live import bindings
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings import _ebuttdt as datatypes
@@ -99,6 +99,22 @@ class TestEBUTTDEncoderSuccess(TestCase):
             producer_carriage=carriage,
             media_time_zero=timedelta(hours=11, minutes=32)
         )
+
+    def test_process_two_documents_ignore_second_sequence_id(self):
+
+        first_sequence = self._create_test_document()
+        first_sequence.sequence_identifier = 'TestSequence1'
+
+        second_sequence = self._create_test_document()
+        second_sequence.sequence_identifier = 'TestSequence2'
+
+        self.encoder.process_document(document=first_sequence)
+        self.encoder.producer_carriage.emit_data.assert_called_once()
+
+        with self.assertRaises(UnexpectedSequenceIdentifierError) as context:
+            self.encoder.process_document(document=second_sequence)
+
+        self.assertTrue('Rejecting new sequence identifier' in context.exception.message)
 
     def test_basic_operation(self):
         doc = self._create_test_document()

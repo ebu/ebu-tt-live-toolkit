@@ -8,6 +8,7 @@ from mock import MagicMock
 
 
 scenarios('features/handover/handover_algorithm.feature')
+scenarios('features/handover/handover.feature')
 
 
 @given('a handover node with <authors_group_identifier> and <sequence_identifier>')
@@ -38,8 +39,18 @@ def when_sequence_id_and_num_2(sequence_identifier2, sequence_number2, template_
 @when('it has <authors_group_identifier>')
 def when_authors_group_id(template_dict, authors_group_identifier):
     template_dict['authors_group_identifier'] = authors_group_identifier
-    
-    
+
+
+@when('it has <authors_group_identifier1>')
+def when_authors_group_id1(template_dict, authors_group_identifier1):
+    template_dict['authors_group_identifier'] = authors_group_identifier1
+
+
+@when('it has <authors_group_identifier2>')
+def when_authors_group_id1(template_dict, authors_group_identifier2):
+    template_dict['authors_group_identifier'] = authors_group_identifier2
+
+
 @when('it has <authors_group_control_token1>')
 def when_authors_group_token1(template_dict, authors_group_control_token1):
     template_dict['authors_group_control_token'] = authors_group_control_token1
@@ -65,6 +76,12 @@ def then_handover_node_emits(given_handover_node, emitted_documents):
     assert given_handover_node.producer_carriage.emit_data.call_count == int(emitted_documents)
 
 
+@then('handover node errors when processing document')
+def then_handover_node_errors(given_handover_node, test_context):
+    with pytest.raises(Exception):
+        given_handover_node.process_document(test_context['document'])
+
+
 @then('the emitted documents belong to <sequence_identifier> and use consecutive sequence numbering from 1')
 def then_handover_node_produces_sequence(given_handover_node, sequence_identifier):
     counter = 1
@@ -79,3 +96,13 @@ def then_handover_parameter_passthrough(given_handover_node, authors_group_ident
     for pos_args, kw_args in given_handover_node.producer_carriage.emit_data.call_args_list:
         assert kw_args['data'].authors_group_identifier == authors_group_identifier
         assert kw_args['data'].authors_group_control_token is not None
+
+
+@then('the emitted documents have <authors_group_selected_sequence_identifiers>')
+def then_authors_group_selected_sequence_id(given_handover_node, authors_group_selected_sequence_identifiers):
+    # NOTE: The comma is a valid sequenceIdentifier character but we use it as a divisor in the test. Make sure
+    # the tests use sequence identifiers without commas.
+    seq_ids = map(lambda x: x.strip(), authors_group_selected_sequence_identifiers.split(','))
+    for index, call_args in enumerate(given_handover_node.producer_carriage.emit_data.call_args_list):
+        pos_args, kw_args = call_args
+        assert kw_args['data'].authors_group_selected_sequence_identifier == seq_ids[index]

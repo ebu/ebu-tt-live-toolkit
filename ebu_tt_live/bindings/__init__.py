@@ -614,8 +614,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         dataset['timing_begin_stack'] = []
         dataset['timing_end_stack'] = []
         dataset['timing_syncbase'] = timedelta()
-        dataset['timing_end_limit'] = None
-        dataset['timing_begin_limit'] = None
         dataset['tt_element'] = self
         dataset['styles_stack'] = []
         self._elements_by_id = {}

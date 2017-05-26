@@ -53,6 +53,7 @@ class StyledElementMixin(object):
         :param extra_referenced_styles: Used by region to inject its extra style attributes
         :return:
         """
+        
         self._specified_style = None
         self._computed_style = None
         self._parent_computed_style = None

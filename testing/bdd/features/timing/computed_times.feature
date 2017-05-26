@@ -5,15 +5,16 @@ Feature: Computed times computation
   # child elements.
 
   Examples:
-  | xml_file                             | sequence_identifier | sequence_number |
-  | computed_resolved_time_semantics.xml | testSequence1       | 1               |
+  | xml_file                             | sequence_identifier | sequence_number | no_body |
+  | computed_resolved_time_semantics.xml | testSequence1       | 1               |         |
 
-  # SPEC-CONFORMANCE: R16 R17
+  # SPEC-CONFORMANCE: R16 R17 R132
   Scenario: Computed times of a document
     Given an xml file <xml_file>
     And it has sequenceIdentifier <sequence_identifier>
     And it has timeBase <time_base>
     And it has sequenceNumber <sequence_number>
+    And it has body <no_body>
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
@@ -55,7 +56,21 @@ Feature: Computed times computation
     | clock     |             |              |          |             |             |            |            | 00:00:15.0  | 00:00:30.0  | 00:00:10.0  | 00:00:40.0 |             |           | 00:00:10.0     | 00:00:40.0   | 00:00:00.0  |
     | clock     |             |              |          |             |             |            |            | 00:00:15.0  | 00:00:30.0  | 00:00:10.0  | 00:00:40.0 | 00:00:05.0  | 00:00:14.0| 00:00:05.0     | 00:00:40.0   | 00:00:00.0  |
     | clock     |             |              |          |             |             |            |            | 00:00:15.0  | 00:00:30.0  | 00:00:05.0  | 00:00:40.0 | 00:00:10.0  | 00:00:14.0| 00:00:05.0     | 00:00:40.0   | 00:00:00.0  |
-    @skip
+    # The following scenarios are to deal with end times starting before the begin times. R132
+    | clock     | 00:00:10.0  | 00:00:05.0   |          |             |             |            |            |             |             |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          | 00:00:10.0  | 00:00:05.0  |            |            |             |             |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             | 00:00:10.0 | 00:00:05.0 |             |             |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             |            |            | 00:00:10.0  | 00:00:05.0  |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             |            |            | 00:00:10.0  | 00:00:05.0  | 00:00:15.0  | 00:00:10.0 |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             |            |            | 00:00:10.0  | 00:00:05.0  | 00:00:15.0  | 00:00:10.0 | 00:00:05.0  | 00:00:01.0| 00:00:00.0     |              | 00:00:00.0  |
+    # And as above but where the begin value is equal to end value (begin is inclusive, end exclusive, so this still counts as "end before begin")
+    | clock     | 00:00:10.0  | 00:00:10.0   |          |             |             |            |            |             |             |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          | 00:00:10.0  | 00:00:10.0  |            |            |             |             |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             | 00:00:10.0 | 00:00:10.0 |             |             |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             |            |            | 00:00:10.0  | 00:00:10.0  |             |            |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             |            |            | 00:00:10.0  | 00:00:10.0  | 00:00:15.0  | 00:00:15.0 |             |           | 00:00:00.0     |              | 00:00:00.0  |
+    | clock     |             |              |          |             |             |            |            | 00:00:10.0  | 00:00:10.0  | 00:00:15.0  | 00:00:15.0 | 00:00:05.0  | 00:00:05.0| 00:00:00.0     |              | 00:00:00.0  |
+    # The following scenarios check for correct processing of some unspecified begin or end times.
     | clock     | 00:00:10.0  |              | 5m       |             | 00:10:00.0  |            |            |             |             |             |            |             |           | 00:00:10.0     | 00:05:10.0   | 00:00:00.0  |
     | clock     | 00:00:10.0  |              |          | 00:00:15.0  |             |            |            |             |             |             |            |             |           | 00:00:10.0     |              | 00:00:00.0  |
     | clock     | 00:00:10.0  |              |          |             | 00:00:05.0  |            |            |             |             |             |            |             |           | 00:00:10.0     | 00:00:15.0   | 00:00:00.0  |

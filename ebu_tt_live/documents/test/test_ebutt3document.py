@@ -4,6 +4,7 @@ from ebu_tt_live.documents import EBUTT3Document,EBUTT3ObjectBase, EBUTTLiveMess
 import os
 import six
 from ebu_tt_live.utils import compare_xml
+from pyxb.exceptions_ import SimpleFacetValueError
 
 
 class TestEBUTT3Document(TestCase):
@@ -80,3 +81,25 @@ class TestEBUTT3Document(TestCase):
 
         self.assertIsInstance(re_xml, six.text_type)
         self.assertTrue(compare_xml(xml, re_xml))
+
+    def test_valid_authors_group_id(self):
+        doc = EBUTT3Document(
+            sequence_identifier='testSeq',
+            sequence_number=1,
+            time_base='media',
+            lang='en-GB',
+            authors_group_identifier='agIdTest'
+        )
+
+        self.assertEqual(doc.authors_group_identifier, 'agIdTest')
+
+    def test_invalid_authors_group_id(self):
+        self.assertRaises(
+            SimpleFacetValueError,
+            EBUTT3Document,
+            sequence_identifier='testSeq',
+            sequence_number=1,
+            time_base='media',
+            lang='en-GB',
+            authors_group_identifier=''
+        )
