@@ -842,7 +842,7 @@ class br_type(SemanticValidationMixin, raw.br_type):
 raw.br_type._SetSupersedingClass(br_type)
 
 class style_attr(IDMixin, RegionedElementMixin, LiveStyledElementMixin,
-               SemanticValidationMixin, raw.source_style, raw.element_style)
+               SemanticValidationMixin):
     def _source_style(self, dataset):
         source_style = style_type(
             id=self.id
@@ -880,7 +880,7 @@ class style_attr(IDMixin, RegionedElementMixin, LiveStyledElementMixin,
         self._assert_in_segment(dataset=dataset, element_content=element_content)
 
     def is_empty(self):
-        return !(len(self.style) || len(self.span) || len(self.region) || len(self.div))
+        return not (len(self.style) or len(self.span) or len(self.region) or len(self.div))
 
     def is_same(self):
         return source_style.id == element_style.style
@@ -893,8 +893,8 @@ class style_attr(IDMixin, RegionedElementMixin, LiveStyledElementMixin,
         self._semantic_copy_verify_referenced_region(dataset=dataset)
 
 
-raw.source_style._SetSupersedingClass(source_style)
-raw.element_style._SetSupersedingClass(element_style)
+#raw.source_style._SetSupersedingClass(source_style)
+#raw.element_style._SetSupersedingClass(element_style)
 
 class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):

@@ -1,42 +1,35 @@
 from pyxb.binding.basis import NonElementContent, ElementContent
 from pyxb import BIND
+from ebu_tt_live import bindings
 
-style_1 = '<tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="SEQ58.defaultStyle1"/>'
-style_2 = '<tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="SEQ59.defaultStyle1"/>'
-old_style_list = []
-new_style_list = []
-style_1_list = []
-style_2_list = []
+original_styles =   [
+                        [style_1 = bindings.style_type( id='SEQ58.defaultStyle1',
+                                                        color='rgb(255,255,255)',
+                                                        backgroundColor='rgb(0,0,0)')],
+                        [style_2 = bindings.style_type( id='SEQ59.defaultStyle1',
+                                                        color='rgb(255,255,255)',
+                                                        backgroundColor='rgb(0,0,0)')],
+#                        [style_3 = bindings.style_type( id= 'SEQ60.defaultStyle1',
+#                                                        color= 'rgb(0,255,255)',
+#                                                        backgroundColor= 'rgb(0,0,0)')]
+                    ]
 
-line_padding_begin = style_1.find('linePadding="')
-line_padding_end = style_1.find(' ',line_padding_begin)
-style_1_list.append(style_1[line_padding_begin:line_padding_end])
-style_2_list.append(style_2[line_padding_begin:line_padding_end])
+list_a = []
+list_b = []
+new_style_list = [[],[],[],[]]
 
-background_colour_begin = style_1.find('backgroundColor="')
-background_colour_end = style_1.find('" ',background_colour_begin)
-style_1_list.append(style_1[background_colour_begin:background_colour_end])
-style_2_list.append(style_2[background_colour_begin:background_colour_end])
+list_a.append(style_1.color)
+list_a.append(style_1.backgroundColor)
 
-colour_begin = style_1.find('color="')
-colour_end = style_1.find('" ',colour_begin)
-style_1_list.append(style_1[colour_begin:colour_end])
-style_2_list.append(style_2[colour_begin:colour_end])
+list_b.append(style_2.color)
+list_b.append(style_2.backgroundColor)
 
-if style_1_list == style_2_list:
-    old_style_list.append(style_1)
+if list_a == list_b:
+    new_style_list[0].append(style_1.id)
+    new_style_list[1].append(style_1.color)
+    new_style_list[2].append(style_1.backgroundColor)
 
-for x in old_style_list:
-    xml_id_attribute_holder = 'xml:id="'
-    xml_id_attribute_holder_length = len(xml_id_attribute_holder)
-    begin_xml_id = x.find(xml_id_attribute_holder)
-    find_xml_id_attribute_begin = begin_xml_id + xml_id_attribute_holder_length
-    end_id = x.find('"/>',begin_xml_id)
-    style_id = x[find_xml_id_attribute_begin:end_id]
-    new_id_start = style_id.find('.')
-    new_id = style_id[new_id_start + 1:end_id]
-
-    new_style = x[:find_xml_id_attribute_begin] + new_id + x[end_id:]
-    new_style_list.append(new_style)
+for i in range(len(old_style_list[0])):
+    new_style_list[3].append("style" + str(i))
 
 print (new_style_list)
