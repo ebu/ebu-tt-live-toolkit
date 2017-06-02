@@ -422,7 +422,7 @@ $(document).ready(function() {
 
     $("#sequence-selector").change(handleSequenceSelected);
 
-    $("input[name=sending-type-radio-input").click(function() {
+    $("input[name=sending-type-radio-input]").click(function() {
         if ($(this).is(':checked')) {
             handleSendingTypeDependingOptions();
         }
