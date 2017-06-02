@@ -43,6 +43,7 @@ class MediaClock(Clock):
             local_time = self.get_machine_time()
         self._reference_mapping = ReferenceTime(local_time, current_time)
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 class SMPTEClock(MediaClock):
 
