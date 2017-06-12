@@ -2,35 +2,39 @@ from pyxb.binding.basis import NonElementContent, ElementContent
 from pyxb import BIND
 from ebu_tt_live import bindings
 
-style_1 = bindings.style_type( id='SEQ58.defaultStyle1',
-                                color='rgb(255,255,255)',
-                                backgroundColor='rgb(0,0,0)')
+original_styles =   [
+                        bindings.style_type(   id='SEQ58.defaultStyle1',
+                                                color='rgb(255,255,255)',
+                                                backgroundColor='rgb(0,0,0)'),
 
-style_2 = bindings.style_type( id='SEQ59.defaultStyle1',
-                                color='rgb(255,255,255)',
-                                backgroundColor='rgb(0,0,0)')
+                        bindings.style_type(   id='SEQ59.defaultStyle1',
+                                                color='rgb(255,255,255)',
+                                                backgroundColor='rgb(0,0,0)')
 
-#style_3 = bindings.style_type(  id= 'SEQ60.defaultStyle1',
-#                                color= 'rgb(0,255,255)',
-#                                backgroundColor= 'rgb(0,0,0)')
+                        # [bindings.style_type(   id= 'SEQ60.defaultStyle1',
+                        #                         color= 'rgb(0,255,255)',
+                        #                         backgroundColor= 'rgb(0,0,0)')]
+                    ]
 
-list_a = []
-list_b = []
-old_style_list = [[],[],[],[]]
-new_style_list = []
+list_a = [[],[]]
+list_b = [[],[]]
+new_style_list = [[],[],[],[]]
 
-list_a.append(style_1.color)
-list_a.append(style_1.backgroundColor)
+i = 0
 
-list_b.append(style_2.color)
-list_b.append(style_2.backgroundColor)
+list_a[0].append(original_styles[i].color)
+list_a[1].append(original_styles[i].backgroundColor)
 
-if list_a == list_b:
-    old_style_list[0].append(style_1.id)
-    old_style_list[1].append(style_1.color)
-    old_style_list[2].append(style_1.backgroundColor)
+for x in range(len(original_styles)):
+    list_b[0].append(original_styles[x].color)
+    list_b[1].append(original_styles[x].backgroundColor)
 
-for i in range(len(old_style_list[0])):
-    old_style_list[3].append("style" + str(i))
+    if list_a == list_b:
+        new_style_list[0].append(original_styles[i].id)
+        new_style_list[1].append(original_styles[i].color)
+        new_style_list[2].append(original_styles[i].backgroundColor)
 
-print (old_style_list)
+for y in range(len(new_style_list[0])):
+    new_style_list[3].append("style" + str(y))
+
+print (new_style_list)
