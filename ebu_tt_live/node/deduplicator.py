@@ -3,8 +3,7 @@ from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTT3Document
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.strings import DOC_RECEIVED
-from ebu_tt_live.errors import SequenceNumberCollisionError
-from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
+from ebu_tt_live.errors import SequenceNumberCollisionError, UnexpectedSequenceIdentifierError
 from pyxb.binding.basis import NonElementContent, ElementContent
 from pyxb import BIND
 from ebu_tt_live import bindings
@@ -15,12 +14,12 @@ log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
 
-class DeDuplicatorNode(AbstractCombinedNode):
+class DeDuplicatorNode(AbstractCombinedNode, RecursiveOperation):
     _original_styles = []
     _original_regions = []
     _mirror_styles_no_id = []
-    _new_style_list = [[],[],[],[]]
-    _new_region_list = [[],[],[],[]]
+    _new_style_list = []
+    _new_region_list = []
     _styling_element = None
     _region_element = None
     _span_style_id = None
@@ -53,33 +52,48 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 document.sequence_identifier = self._sequence_identifier
                 #document.sequence_number = self._sequence_number
 
+                self.remove_duplication(document=document)
+
                 document.validate()
                 self.producer_carriage.emit_data(data=document, **kwargs)
 
-    def remove_duplication(self, document, original_styles, original_regions, new_style_list, new_region_list, styling_element, region_element, span_style_id, region_style_id):
+    def remove_duplication(self, document):
+        # print(vars(document.binding.head.styling))
+        # print(dir(document.binding.head.styling))
+        # print document.get_xml()
 
-        for style in enumerate(document.tt.head.styling):
-            original_styles.append(style)
+        styling_list = document.binding.head.styling.orderedContent()
+        # print styling_list
+        for style in styling_list:
+            self._original_styles.append(style)
 
         # for region in enumerate(document.tt.head.layout):
         #     original_regions.append(region)
 
-        mirror_styles = original_styles
+        mirror_styles = self._original_styles
 
-        mirror_styles_no_id = set()
+        self._mirror_styles_no_id = set()
 
         for mirror_entry in mirror_styles:
-            mirror_entry_no_id = mirror_entry.rstrip(style.id)
+            mirror_entry.id = None
+            mirror_entry_no_id = mirror_entry
 
-            mirror_styles_no_id.add(mirror_entry_no_id)
+            self._mirror_styles_no_id.add(mirror_entry_no_id)
 
-            mirror_styles_new_id = list(mirror_styles_no_id)
+            mirror_styles_new_id = list(self._mirror_styles_no_id)
 
-            for x in enumerate(mirror_styles_new_id):
-                new_style = mirror_styles_new_id.append("xml:id=\"style\"" + str(x))
+            for new_style in enumerate(mirror_styles_new_id):
+                new_id = "style" + str(new_style[0])
+                new_style[1].id = new_id
 
-                for span_style in enumerate(document.tt.body):
-                    div.p.span.style = new_style
+                def proceed(self, document, **kwargs):
+                    root_of_search = document.binding.body
 
-                for new_styling in enumerate(mirror_styles_new_id):
-                    document.tt.head.styling.add(new_styling)
+                    search_for_span = root_of_search.div.p.span.orderedContent()
+                    search_for_span.style = None
+                    search_for_span.style = new_id
+
+                document.binding.head.styling.style = None
+
+                for x in mirror_styles_new_id:
+                    document.binding.head.styling.append(x)
