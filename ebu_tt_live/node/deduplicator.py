@@ -63,37 +63,34 @@ class DeDuplicatorNode(AbstractCombinedNode, RecursiveOperation):
         # print document.get_xml()
 
         styling_list = document.binding.head.styling.orderedContent()
-        # print styling_list
-        for style in styling_list:
-            self._original_styles.append(style)
+            for style in styling_list:
+                self._original_styles.append(style)
 
-        # for region in enumerate(document.tt.head.layout):
-        #     original_regions.append(region)
+            root_of_search = document.binding.body.orderedContent()
+            for body_content in root_of_search:
+                self._body_content_list.append(body_content)
 
-        mirror_styles = self._original_styles
+            mirror_styles = self._original_styles
+            self._mirror_styles_no_id = set()
 
-        self._mirror_styles_no_id = set()
+            for span_search in self._body_content_list:
 
-        for mirror_entry in mirror_styles:
-            mirror_entry.id = None
-            mirror_entry_no_id = mirror_entry
+                for mirror_entry in mirror_styles:
+                    mirror_entry.id = None
+                    mirror_entry_no_id = mirror_entry
 
-            self._mirror_styles_no_id.add(mirror_entry_no_id)
+                    self._mirror_styles_no_id.add(mirror_entry_no_id)
 
-            mirror_styles_new_id = list(self._mirror_styles_no_id)
+                    mirror_styles_new_id = list(self._mirror_styles_no_id)
 
-            for new_style in enumerate(mirror_styles_new_id):
-                new_id = "style" + str(new_style[0])
-                new_style[1].id = new_id
+                    for new_style in mirror_styles_new_id:
+                        for x in range(len(mirror_styles_new_id)):
+                            new_id = "style" + str(x)
+                        new_style.id = new_id
 
-                def proceed(self, document, **kwargs):
-                    root_of_search = document.binding.body
+                span_search.span = None
+                span_search.span = new_id
 
-                    search_for_span = root_of_search.div.p.span.orderedContent()
-                    search_for_span.style = None
-                    search_for_span.style = new_id
-
-                document.binding.head.styling.style = None
-
-                for x in mirror_styles_new_id:
-                    document.binding.head.styling.append(x)
+            document.binding.head.styling.style = None
+            for y in mirror_styles_new_id:
+                document.binding.head.styling.append(mirror_styles_new_id)
