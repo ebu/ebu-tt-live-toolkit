@@ -1,10 +1,10 @@
 from .base import AbstractCombinedNode
 from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTT3Document
-from ebu_tt_live.bindings import _ebuttm as metadata
+# from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.strings import DOC_RECEIVED
 from ebu_tt_live.errors import SequenceNumberCollisionError, UnexpectedSequenceIdentifierError
-from pyxb.binding.basis import NonElementContent, ElementContent
+# from pyxb.binding.basis import NonElementContent, ElementContent
 from pyxb import BIND
 from ebu_tt_live import bindings
 import logging
@@ -14,9 +14,10 @@ log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
 
-class DeDuplicatorNode(AbstractCombinedNode, RecursiveOperation):
+class DeDuplicatorNode(AbstractCombinedNode):
     _original_styles = []
     _original_regions = []
+    _mirror_list = []
     _mirror_styles_no_id = []
     _new_style_list = []
     _new_region_list = []
@@ -53,6 +54,7 @@ class DeDuplicatorNode(AbstractCombinedNode, RecursiveOperation):
                 #document.sequence_number = self._sequence_number
 
                 self.remove_duplication(document=document)
+                self.comparison_method(self._original_styles)
 
                 document.validate()
                 self.producer_carriage.emit_data(data=document, **kwargs)
@@ -62,35 +64,88 @@ class DeDuplicatorNode(AbstractCombinedNode, RecursiveOperation):
         # print(dir(document.binding.head.styling))
         # print document.get_xml()
 
-        styling_list = document.binding.head.styling.orderedContent()
-            for style in styling_list:
-                self._original_styles.append(style)
+        styles = document.binding.head.styling.style
+        # print styling_list
+        for style in styles:
+            print style
+            print style.color
+            self._original_styles.append(style)
 
-            root_of_search = document.binding.body.orderedContent()
-            for body_content in root_of_search:
-                self._body_content_list.append(body_content)
+        print self._original_styles
 
-            mirror_styles = self._original_styles
-            self._mirror_styles_no_id = set()
 
-            for span_search in self._body_content_list:
+        # for region in enumerate(document.tt.head.layout):
+        #     original_regions.append(region)
 
-                for mirror_entry in mirror_styles:
-                    mirror_entry.id = None
-                    mirror_entry_no_id = mirror_entry
+    def comparison_method(self, something_to_compare):
 
-                    self._mirror_styles_no_id.add(mirror_entry_no_id)
+        for value in something_to_compare:
+            print value.color
+            value_to_compare = value
+            print value_to_compare
+            for attr in vars(value):
+                print attr
+                if getattr(value, attr) is not getattr(value_to_compare, attr):
+                    return False
+                else:
+                    pass
 
-                    mirror_styles_new_id = list(self._mirror_styles_no_id)
 
-                    for new_style in mirror_styles_new_id:
-                        for x in range(len(mirror_styles_new_id)):
-                            new_id = "style" + str(x)
-                        new_style.id = new_id
 
-                span_search.span = None
-                span_search.span = new_id
 
-            document.binding.head.styling.style = None
-            for y in mirror_styles_new_id:
-                document.binding.head.styling.append(mirror_styles_new_id)
+        # self._mirror_styles_no_id = set()
+        #
+        # for mirror_entry in mirror_styles:
+        #     #old_id_copy = mirror_entry.id
+        #     mirror_entry.id = None
+        #     mirror_entry_no_id = mirror_entry
+        #
+        #     self._mirror_styles_no_id.add(mirror_entry_no_id)#, old_id_copy)
+        #
+        #     mirror_styles_new_id = list(self._mirror_styles_no_id)
+        #
+        #     for new_style in mirror_styles_new_id:
+        #         for x in range(len(mirror_styles_new_id)):
+        #             new_id = "style" + str(x)
+        #         print new_style.id
+        #         new_style.id = new_id
+        #
+        # print mirror_styles_new_id
+
+        # document.binding.head.styling.style = None
+        # document.binding.head.styling = mirror_styles_new_id
+
+class ReplaceStylesAndRegions(RecursiveOperation):
+    # _path_found = False
+    # _timed_element_stack = None
+    #
+    # def __init__(self, root_element):
+    #     self._timed_element_stack = []
+    #     super(r, self).__init__(
+    #         root_element,
+    #     )
+
+    def _is_begin_timed(self, value):
+        pass
+
+    def _before_element(self, value, element=None, parent_binding=None, **kwargs):
+        pass
+
+    def _after_element(self, value, element=None, parent_binding=None, **kwargs):
+        pass
+
+    def _process_element(self, value, element=None, parent_binding=None, **kwargs):
+        if value.style and value.region is not None:
+            for x in self._original_styles:
+                if value.style == x.id:
+                    for y in mirror_styles_new_id:
+                        if x == mirror_styles_new_id[1]:
+                            value.style = mirror_styles_new_id[0].id
+
+
+    def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
+        pass
+
+    # @property
+    # def path_found(self):
+    #     return self._path_found
