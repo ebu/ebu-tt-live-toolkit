@@ -67,28 +67,23 @@ class DeDuplicatorNode(AbstractCombinedNode):
         styles = document.binding.head.styling.style
         # print styling_list
         for style in styles:
-            print style
-            print style.color
             self._original_styles.append(style)
-
-        print self._original_styles
-
 
         # for region in enumerate(document.tt.head.layout):
         #     original_regions.append(region)
 
     def comparison_method(self, something_to_compare):
+        self._mirror_list = something_to_compare
 
         for value in something_to_compare:
             print value.color
-            value_to_compare = value
-            print value_to_compare
-            for attr in vars(value):
-                print attr
-                if getattr(value, attr) is not getattr(value_to_compare, attr):
-                    return False
-                else:
-                    pass
+            for value_to_compare in self._mirror_list
+                for attr in vars(value):
+                    print attr
+                    if getattr(value, attr) is not getattr(value_to_compare, attr):
+                        return False
+                    else:
+                        pass
 
 
 
