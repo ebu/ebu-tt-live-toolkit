@@ -23,7 +23,7 @@ into a sequence of EBU-TT Live documents using natural language processing. Use
 The default carriage mechanism is WebSocket, so you will need to listen to
 ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just
 that. After you launch the Simple Producer, open ``docs/build/ui/test/index.html``
-`current release pre-built page <../ui/test>`_ in your
+or the `current release pre-built page <../ui/test>`_ in your
 browser. The 'Broadcast message' field should be populated with the correct
 address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can
 also change the identifier for the sequence. The documents should appear in the
