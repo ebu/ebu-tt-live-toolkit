@@ -16,7 +16,7 @@ ebu_tt_live/examples/config/user_input_producer_consumer.json`` will run the
 simplest user-input-consumer script listening for a connection on the local host
 port 9001. Then open the
 ``ebu_tt_live/docs/build/ui/user_input_producer/index.html`` file in your
-browser.
+browser, or open the `current release pre-built page <../ui/user_input_producer>`_.
 
 If you have no configured sequences or you need to create a new one, click
 "Create a new sequence", enter the sequence number, what time base and clock
@@ -61,7 +61,7 @@ transport mechanism, follow these steps:
 
 * Start the Handover Manager: ``ebu-run --admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json``
 
-* Create two (or more) instances of the User Input Producer by opening ``docs/build/ui/user_input_producer/index.html`` in multiple browser tabs/windows.
+* Create two (or more) instances of the User Input Producer by opening ``docs/build/ui/user_input_producer/index.html`` or the `current release pre-built page <../ui/user_input_producer>`_ in multiple browser tabs/windows.
 
 * In each instance of the UIP, create a sequence with a different sequence identifier but with identical authors group identifier. If you use the default configuration, this is "TestGroup1".
 
@@ -84,7 +84,7 @@ in the Control Request field.
 
 .. note:: More demo scenario examples :
 
-    * Run ``ebu-run --admin.conf ebu_tt_live/examples/config/user_input_producer_dist_consumers.json``. This configuration runs a distributor node and two consumers, one for TestSequence1 and the other for TestSequence2. Open the ``docs/build/ui/user_input_producer/index.html`` page and create or select TestSequence1, and connect it to the distributor node via websocket (click "connect" button). When you send a document the consumer will log the new document. Open another user input web page and connect it with TestSequence2. The second consumer receives this document. Now documents can be sent by both web pages simultaneously and will be routed to the correct consumer by the Distributor node.
+    * Run ``ebu-run --admin.conf ebu_tt_live/examples/config/user_input_producer_dist_consumers.json``. This configuration runs a distributor node and two consumers, one for TestSequence1 and the other for TestSequence2. Open the ``docs/build/ui/user_input_producer/index.html`` page or the `current release pre-built page <../ui/user_input_producer>`_ and create or select TestSequence1, and connect it to the distributor node via websocket (click "connect" button). When you send a document the consumer will log the new document. Open another user input web page and connect it with TestSequence2. The second consumer receives this document. Now documents can be sent by both web pages simultaneously and will be routed to the correct consumer by the Distributor node.
 
 .. note:: Demo scenario examples that need some better documentation :
 
