@@ -3,7 +3,7 @@ from autobahn.twisted.websocket import WebSocketClientProtocol, WebSocketServerF
     listenWS, WebSocketClientFactory, connectWS
 
 from twisted.internet import interfaces, reactor
-from twisted.python import url as twisted_url
+from hyperlink import URL
 from zope.interface import implementer
 from logging import getLogger
 import json
@@ -16,7 +16,6 @@ from .base import IBroadcaster
 
 
 log = getLogger(__name__)
-
 
 class UserInputServerProtocol(WebSocketServerProtocol):
     def onOpen(self):
@@ -102,7 +101,7 @@ class EBUWebsocketProtocolMixin(object):
     def _parse_path(self, full_url):
         if not isinstance(full_url, six.text_type):
             full_url = six.text_type(full_url)
-        result = twisted_url.URL.fromText(full_url).asIRI()
+        result = URL.fromText(full_url).to_iri()
         sequence_identifier, action = result.path
         return sequence_identifier, action
 
