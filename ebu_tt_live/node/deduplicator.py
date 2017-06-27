@@ -17,9 +17,7 @@ document_logger = logging.getLogger('document_logger')
 class DeDuplicatorNode(AbstractCombinedNode):
     _original_styles = []
     _original_regions = []
-    _mirror_list = []
-    _mirror_styles_no_id = []
-    _new_style_list = []
+    _new_style_set = set()
     _new_region_list = []
     _styling_element = None
     _region_element = None
@@ -54,7 +52,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 #document.sequence_number = self._sequence_number
 
                 self.remove_duplication(document=document)
-                self.comparison_method(self._original_styles)
+                # self.comparison_method(self._original_styles)
 
                 document.validate()
                 self.producer_carriage.emit_data(data=document, **kwargs)
@@ -63,30 +61,72 @@ class DeDuplicatorNode(AbstractCombinedNode):
         # print(vars(document.binding.head.styling))
         # print(dir(document.binding.head.styling))
         # print document.get_xml()
-
+        old_id_dict = dict({})
+        new_id_dict = dict({})
+        hash_style_dict = dict({})
+        new_style_list = list()
         styles = document.binding.head.styling.style
-        # print styling_list
+
         for style in styles:
             self._original_styles.append(style)
 
         # for region in enumerate(document.tt.head.layout):
         #     original_regions.append(region)
 
-    def comparison_method(self, something_to_compare):
-        self._mirror_list = something_to_compare
+        for value in self._original_styles:
+            unique_val = ComparableStyle(value)
+            old_id_dict[value.id] = unique_val.my_hash
+            hash_style_dict[unique_val.my_hash] = value
 
-        for value in something_to_compare:
-            print value.color
-            for value_to_compare in self._mirror_list
-                for attr in vars(value):
-                    print attr
-                    if getattr(value, attr) is not getattr(value_to_compare, attr):
-                        return False
-                    else:
-                        pass
+            self._new_style_set.add(unique_val.my_hash)
 
+        print self._new_style_set
+        print hash_style_dict
+        print old_id_dict
 
+        for z in self._new_style_set:
+            s = hash_style_dict.get(z)
+            new_style_list.append(s)
 
+        print new_style_list
+
+        for new_id in enumerate(self._new_style_set):
+            new_id_dict[new_id[1]] = 'style' + str(new_id[0])
+
+        print new_id_dict
+
+        for x in self._original_styles:
+            old_id_ref = old_id_dict.get(x.id)
+            new_id_ref = new_id_dict.get(old_id_ref)
+
+            print(old_id_ref, new_id_ref)
+
+class ComparableStyle:
+    def __init__(self, value):
+        self.value = value
+
+        self.my_hash = hash(value.linePadding + value.backgroundColor + value.color + value.fontFamily)
+        print value.linePadding + value.backgroundColor + value.color + value.fontFamily
+        print self.my_hash
+
+    def __eq__(self, other):
+        return other and self.my_hash == other.my_hash
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return self.my_hash
+
+        # for value in something_to_compare:
+        #     value_to_compare = self._mirror_list
+        #
+        #     for attr in vars(value):
+        #
+        #         if getattr(value, attr) is not getattr(value_to_compare, attr):
+        #             self._mirror_list.append(value)
+        #         else:
+        #             pass
 
         # self._mirror_styles_no_id = set()
         #
@@ -133,9 +173,10 @@ class ReplaceStylesAndRegions(RecursiveOperation):
         if value.style and value.region is not None:
             for x in self._original_styles:
                 if value.style == x.id:
-                    for y in mirror_styles_new_id:
-                        if x == mirror_styles_new_id[1]:
-                            value.style = mirror_styles_new_id[0].id
+                    old_id_ref = old_id_dict.get(x.id)
+                    new_id_ref = new_id_dict.get(old_id_ref)
+
+                    value.style = new_id_ref
 
 
     def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
