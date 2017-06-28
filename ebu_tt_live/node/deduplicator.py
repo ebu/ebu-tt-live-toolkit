@@ -60,8 +60,6 @@ class DeDuplicatorNode(AbstractCombinedNode):
         # print(vars(document.binding.head.styling))
         # print(dir(document.binding.head.styling))
         # print document.get_xml()
-        # old_style_id_dict = dict({})
-        # new_style_id_dict = dict({})
         hash_style_dict = dict({})
         new_style_list = list()
 
@@ -119,12 +117,19 @@ class DeDuplicatorNode(AbstractCombinedNode):
         replace_id_refs = ReplaceStylesAndRegions(document.binding.body, self._old_style_id_dict, self._new_style_id_dict, self._old_region_id_dict, self._new_region_id_dict)
         replace_id_refs.proceed()
 
+def ReplaceNone(none_value):
+    if none_value is None:
+        return "_" # '_' is a non-legal character and this is used to prevent collisions between similar attributes
+    else:
+        return none_value
+
 
 class ComparableStyle:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(value.linePadding + value.backgroundColor + value.color + value.fontFamily)
+        self.my_hash = hash(ReplaceNone(value.linePadding) + ReplaceNone(value.backgroundColor) + ReplaceNone(value.color) + ReplaceNone(value.fontFamily))
+        print value.id, self.my_hash
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
@@ -139,7 +144,7 @@ class ComparableRegion:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(value.displayAlign + value.extent + value.origin + value.overflow + value.writingMode)
+        self.my_hash = hash(ReplaceNone(value.displayAlign) + ReplaceNone(value.extent) + ReplaceNone(value.origin) + ReplaceNone(value.overflow) + ReplaceNone(value.writingMode))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
