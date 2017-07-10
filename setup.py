@@ -35,7 +35,8 @@ setup(
         "nltk",
         "sortedcontainers",
         "configman",
-        "six"
+        "six",
+        "hyperlink<17.2.0"  # This should be removed if https://github.com/python-hyper/hyperlink/issues/16 is fixed
     ],
     license="BSD3",
     packages=packages,

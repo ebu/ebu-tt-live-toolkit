@@ -1,4 +1,7 @@
 <?xml version="1.0" ?>
+
+<!--  Note: contains SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
 <tt:tt
   ebuttp:sequenceIdentifier="{{ sequence_identifier }}"
         ebuttp:sequenceNumber="{{sequence_number}}"
@@ -24,7 +27,7 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body 
+  <tt:body
 {% if body_begin %}
   {% if body_begin == "*?Empty?*" %}
       begin=""
@@ -63,7 +66,7 @@
   {% endif%}
 {% endif %}
       >
-      <tt:p 
+      <tt:p
 {% if p_begin %}
   {% if p_begin == "*?Empty?*" %}
         begin=""

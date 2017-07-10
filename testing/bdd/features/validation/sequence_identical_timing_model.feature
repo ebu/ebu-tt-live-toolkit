@@ -1,5 +1,8 @@
+# Note: contains examples of SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
+
 @validation @sequence
-Feature: Every document in a sequence shall have an identical timing model as defined by using the same values for the 
+Feature: Every document in a sequence shall have an identical timing model as defined by using the same values for the
   ttp:timeBase, ttp:clockMode, frameRate, frameRateMultiplier and dropMode attributes.
 
   Examples:
