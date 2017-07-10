@@ -43,6 +43,13 @@ class TimingValidationMixin(object):
         self._computed_end_time = None
         self._semantic_dataset = dataset
 
+    def _exclude_badly_timed_elements_filter(self, value, element):
+        if element.begin is not None and element.end is not None \
+            and element.begin >= element.end:
+            return False
+        else:
+            return True
+        
     def _post_cleanup_variables(self):
         del self._semantic_dataset
         del self._begin_timedelta
@@ -176,7 +183,10 @@ class TimingValidationMixin(object):
             # This requires calculation based on the timings in its children.
 
             # All timing containers are complexTypes so we can call orderedContent safely
-            children = filter(lambda item: isinstance(item, TimingValidationMixin), [x.value for x in self.orderedContent()])
+            # but we don't want to bother with explicitly badly timed elements so filter
+            # them out.
+            children = filter(lambda item: isinstance(item, TimingValidationMixin) \
+                              and item._exclude_badly_timed_elements_filter(value=None, element=item), [x.value for x in self.orderedContent()])
             # Order of statements is important
             if not children:
                 # This means we are in a timing container leaf.
@@ -196,18 +206,22 @@ class TimingValidationMixin(object):
                     # Propagate the longest end time among the children
                     self._computed_end_time = max(children_computed_end_times)
 
-        # Effectively discard this element from computed time calculation when
-        # end is before begin, as per spec requirement.
-        if begin_timedelta is not None \
-        and end_timedelta is not None \
-        and begin_timedelta >= end_timedelta:
+        # When we are the body element we need to check that our explicit timings
+        # are valid, i.e. deal with end before befin by discarding this element 
+        # from computed time calculation as per spec requirement. Since we exclude all
+        # elements where this is the case using the _exclude_badly_timed_elements_filter
+        # filter, this only applies to the body element (on which the filter
+        # doesn't get called).
+        if isinstance(self, BodyTimingValidationMixin) \
+            and not self._exclude_badly_timed_elements_filter(value=None, element=self):
             self._computed_end_time = None
             self._computed_begin_time = timedelta(0)
 
         if begin_timedelta is None:
 
             if children is None:
-                children = filter(lambda item: isinstance(item, TimingValidationMixin),
+                children = filter(lambda item: isinstance(item, TimingValidationMixin) \
+                                  and item._exclude_badly_timed_elements_filter(value=None, element=item),
                                   [x.value for x in self.orderedContent()])
 
             self._post_calculate_begin(children=children)
