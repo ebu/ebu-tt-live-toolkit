@@ -1,3 +1,5 @@
+# NOTE: This script is no longer maintained. Use `ebu-run` instead.
+
 import logging
 from argparse import ArgumentParser
 from .common import create_loggers
@@ -21,7 +23,7 @@ parser.add_argument('-m', '--manifest-path', dest='manifest_path',
                     help='Documents are read from the filesystem instead of the network, takes a manifest file as input',
                     type=str
                     )
-parser.add_argument('-u', '--websocket-url', dest='websocket_url', 
+parser.add_argument('-u', '--websocket-url', dest='websocket_url',
                     help='URL for the websocket address to connect to',
                     default='ws://localhost:9000/TestSequence1/subscribe')
 parser.add_argument('-f', '--tail-f', dest='do_tail',
