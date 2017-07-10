@@ -2,8 +2,11 @@
 <!-- Copyright 2016, EBU, www.ebu.ch -->
 <!-- Version of XML Schema: 0.9 -->
 <!-- Creation: 05/04/2016 -->
-<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9. 
+<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9.
 Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
+
+<!--# NOTE: This XSD includes legacy SMPTE-related definitions. SMPTE was removed from the specification in version 1.0. -->
+
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ebuttdt="urn:ebu:tt:datatypes"
 	targetNamespace="urn:ebu:tt:datatypes"
     xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
@@ -139,7 +142,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			memberTypes="ebuttdt:smpteTimingType ebuttdt:mediaTimingType ebuttdt:clockTimingType"/>
 	</xs:simpleType>
 	<xs:simpleType name="durationTimingType">
-		<xs:union 
+		<xs:union
 			memberTypes="ebuttdt:clockTimingType ebuttdt:mediaTimingType"/>
 	</xs:simpleType>
 	<xs:simpleType name="smpteTimingType">
@@ -236,7 +239,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			<xs:enumeration value="cyan"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:simpleType name="transitionStyleAttributeType">
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="block"/>

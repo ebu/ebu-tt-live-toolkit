@@ -1,4 +1,7 @@
-@validation 
+# Note: contains examples of SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
+
+@validation
 Feature: ttp:referenceClockIdentifier constraints testing
   Scenario: Valid use of referenceClockIdentifier
     Given an xml file <xml_file>

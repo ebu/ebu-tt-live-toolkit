@@ -6,7 +6,7 @@ a pretty good job validating the syntax but it does not provide any tooling to p
 be described in XSD 1.0 (PyXB does not understand XSD 1.1 and xpath assertions).
 
 Example:
-    if tt:tt has timeBase=clock smpteTimingType must not be present anywhere in the document.
+    If ttp:timebase="clock" then all begin and end attributes of timed elements shall be of type ebuttdt:clockTimingType.
 
 Elements/types are independent and according to the principles of OOP they do not know much about one another.
 In order to provide semantic validation there is need for a semantic validation context.

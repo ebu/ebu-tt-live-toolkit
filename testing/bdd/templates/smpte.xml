@@ -1,4 +1,7 @@
 <?xml version="1.0" ?>
+
+<!--  Note: contains SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
 <tt:tt
         ebuttp:sequenceIdentifier="testSequence001"
         ebuttp:sequenceNumber="1"

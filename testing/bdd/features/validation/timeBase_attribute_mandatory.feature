@@ -1,3 +1,6 @@
+# Note: contains examples of SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
+
 @validation @xsd
 Feature: ttp:timeBase attribute is mandatory
   Every document shall declare ttp:timeBase
