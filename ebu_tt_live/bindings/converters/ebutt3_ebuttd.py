@@ -9,6 +9,7 @@ from pyxb import BIND
 
 log = logging.getLogger(__name__)
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 class EBUTT3EBUTTDConverter(object):
 

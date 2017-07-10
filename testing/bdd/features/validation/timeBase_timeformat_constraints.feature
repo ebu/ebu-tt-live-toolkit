@@ -1,3 +1,6 @@
+# Note: contains examples of SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
+
 # SPEC-CONFORMANCE : R70
 @validation @xsd @syntax @times
 Feature: ttp:timeBase-related attribute constraints
