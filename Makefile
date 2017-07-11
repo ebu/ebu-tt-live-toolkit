@@ -1,4 +1,4 @@
-.PHONY: docs uiclean uibuild template initnpm
+.PHONY: docs uiclean uibuild template initnpm uicopy
 
 all: init ui
 	
@@ -25,8 +25,8 @@ bindings:
 ui: uiclean uibuild
 	
 uiclean:
-ifneq ($(wildcard docs/build/ui/.),)
-	rm -r docs/build/ui
+ifneq ("$(wildcard docs/build/ui/.)","")
+	rm -R docs/build/ui
 endif
 	
 uibuild: template uicopy
@@ -36,9 +36,7 @@ template: initnpm
 	node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/live_message_template.xml > ebu_tt_live/ui/user_input_producer/template/live_message_template.js
 
 uicopy:
-ifeq ($(wildcard docs/build/ui/.),)
-	mkdir docs/build/ui
-endif
+	mkdir -p docs/build/ui
 	cp -R ebu_tt_live/ui/user_input_producer docs/build/ui/
 	cp -R ebu_tt_live/ui/test docs/build/ui/
 	cp -R ebu_tt_live/ui/assets docs/build/ui/user_input_producer/
