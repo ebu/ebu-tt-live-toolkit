@@ -1,10 +1,9 @@
 from .base import AbstractCombinedNode
 from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTT3Document
-# from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation, StopBranchIteration
 from ebu_tt_live.strings import DOC_RECEIVED
 from ebu_tt_live.errors import SequenceNumberCollisionError, UnexpectedSequenceIdentifierError
-# from pyxb.binding.basis import NonElementContent, ElementContent
+from pyxb.binding.basis import ElementContent, complexTypeDefinition
 from pyxb import BIND
 from ebu_tt_live import bindings
 import logging
@@ -46,9 +45,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
                 self.limit_sequence_to_one(document)
 
-                # change the sequence identifier and sequence number
                 document.sequence_identifier = self._sequence_identifier
-                #document.sequence_number = self._sequence_number
 
                 self.remove_duplication(document=document)
                 print document.get_xml()
@@ -57,9 +54,6 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 self.producer_carriage.emit_data(data=document, **kwargs)
 
     def remove_duplication(self, document):
-        # print(vars(document.binding.head.styling))
-        # print(dir(document.binding.head.styling))
-        # print document.get_xml()
         hash_style_dict = dict({})
         new_style_list = list()
 
@@ -74,7 +68,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
         for value in self._original_styles:
             unique_val = ComparableStyle(value)
-            self._old_style_id_dict[value.id] = unique_val.my_hash  # stores references of original <xml:id> to <my_hash>
+            self._old_style_id_dict[value.id] = unique_val.my_hash # stores references of original <xml:id> to <my_hash>
             hash_style_dict[unique_val.my_hash] = value # stores references of <my_hash> to <tt:style>
 
             self._new_style_set.add(unique_val.my_hash)
@@ -82,15 +76,21 @@ class DeDuplicatorNode(AbstractCombinedNode):
         for style_hash in self._new_style_set:
             new_id = hash_style_dict.get(style_hash)
             new_style_list.append(new_id)
-            self._new_style_id_dict[style_hash] = new_id.id         # stores references of <my_hash> to new <xml:id>
+            self._new_style_id_dict[style_hash] = new_id.id # stores references of <my_hash> to new <xml:id>
 
 
         for region in regions:
             self._original_regions.append(region)
 
         for value in self._original_regions:
+            for old_id_index in range(len(value.style)):
+                old_id_ref = self._old_style_id_dict.get(value.style[old_id_index])
+                new_id_ref = self._new_style_id_dict.get(old_id_ref)
+
+                value.style[old_id_index] = new_id_ref
+
             unique_val = ComparableRegion(value)
-            self._old_region_id_dict[value.id] = unique_val.my_hash  # stores references of original <xml:id> to <my_hash>
+            self._old_region_id_dict[value.id] = unique_val.my_hash # stores references of original <xml:id> to <my_hash>
             hash_region_dict[unique_val.my_hash] = value # stores references of <my_hash> to <tt:region>
 
             self._new_region_set.add(unique_val.my_hash)
@@ -100,12 +100,6 @@ class DeDuplicatorNode(AbstractCombinedNode):
             new_region_list.append(new_id)
             self._new_region_id_dict[region_hash] = new_id.id
 
-        # for x in self._original_styles:
-        #     old_id_ref = old_id_dict.get(x.id)
-        #     new_id_ref = new_id_dict.get(old_id_ref)
-        #
-        #     print(old_id_ref, new_id_ref)
-
         document.binding.head.styling.style = None
         for new_style in new_style_list:
             document.binding.head.styling.append(new_style)
@@ -114,12 +108,12 @@ class DeDuplicatorNode(AbstractCombinedNode):
         for new_region in new_region_list:
             document.binding.head.layout.append(new_region)
 
-        replace_id_refs = ReplaceStylesAndRegions(document.binding.body, self._old_style_id_dict, self._new_style_id_dict, self._old_region_id_dict, self._new_region_id_dict)
+        replace_id_refs = ReplaceStylesAndRegions(document.binding, self._old_style_id_dict, self._new_style_id_dict, self._old_region_id_dict, self._new_region_id_dict)
         replace_id_refs.proceed()
 
 def ReplaceNone(none_value):
     if none_value is None:
-        return "_" # '_' is a non-legal character and this is used to prevent collisions between similar attributes
+        return "|" # '|' is a non-legal character and this is used to prevent collisions between similar attributes
     else:
         return none_value
 
@@ -128,8 +122,7 @@ class ComparableStyle:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(ReplaceNone(value.linePadding) + ReplaceNone(value.backgroundColor) + ReplaceNone(value.color) + ReplaceNone(value.fontFamily))
-        print value.id, self.my_hash
+        self.my_hash = hash(ReplaceNone(value.direction) + ReplaceNone(value.fontFamily) + ReplaceNone(value.fontSize) + ReplaceNone(value.lineHeight) + ReplaceNone(value.textAlign) + ReplaceNone(value.color) + ReplaceNone(value.backgroundColor) + ReplaceNone(value.fontStyle) + ReplaceNone(value.fontWeight) + ReplaceNone(value.textDecoration) + ReplaceNone(value.unicodeBidi) + ReplaceNone(value.wrapOption) + ReplaceNone(value.padding) + ReplaceNone(value.multiRowAlign) + ReplaceNone(value.linePadding))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
@@ -144,7 +137,7 @@ class ComparableRegion:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(ReplaceNone(value.displayAlign) + ReplaceNone(value.extent) + ReplaceNone(value.origin) + ReplaceNone(value.overflow) + ReplaceNone(value.writingMode))
+        self.my_hash = hash(ReplaceNone(str(value.style)) + ReplaceNone(value.origin) + ReplaceNone(value.extent) + ReplaceNone(value.displayAlign) + ReplaceNone(value.padding) + ReplaceNone(value.writingMode) + ReplaceNone(value.showBackground) + ReplaceNone(value.overflow))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
@@ -159,8 +152,7 @@ class ReplaceStylesAndRegions(RecursiveOperation):
 
     def __init__(self, root_element, _old_style_id_dict, _new_style_id_dict, _old_region_id_dict, _new_region_id_dict):
             super(ReplaceStylesAndRegions, self).__init__(
-                root_element,
-                filter=lambda value, element: not isinstance(value, bindings.br_type)
+                root_element
             )
             self._old_style_id_dict = _old_style_id_dict
             self._new_style_id_dict = _new_style_id_dict
@@ -177,7 +169,7 @@ class ReplaceStylesAndRegions(RecursiveOperation):
         pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        if value.style is not None:
+        if hasattr(value, 'style') and value.style is not None and not isinstance(value, bindings.styling): # The latter part of this and the next test is to check that the instance is not a styling or layout element as these can also have style attributes
             for old_id_index in range(len(value.style)):
                 old_id_ref = self._old_style_id_dict.get(value.style[old_id_index])
                 new_id_ref = self._new_style_id_dict.get(old_id_ref)
@@ -186,7 +178,7 @@ class ReplaceStylesAndRegions(RecursiveOperation):
         else:
             pass
 
-        if not isinstance(value, bindings.body_type) and not isinstance(value, bindings.span_type) and value.region is not None:
+        if hasattr(value, 'region') and value.region is not None and not isinstance(value, bindings.layout):
             old_id_ref = self._old_region_id_dict.get(value.region)
             new_id_ref = self._new_region_id_dict.get(old_id_ref)
 
