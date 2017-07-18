@@ -23,7 +23,6 @@ class DeDuplicatorNode(AbstractCombinedNode):
     _old_region_id_dict = dict({})
     _new_region_id_dict = dict({})
     _sequence_identifier = None
-    # _sequence_number = None
     _expects = EBUTT3Document
     _provides = EBUTT3Document
 
@@ -68,15 +67,18 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
         for value in self._original_styles:
             unique_val = ComparableStyle(value)
-            self._old_style_id_dict[value.id] = unique_val.my_hash # stores references of original <xml:id> to <my_hash>
-            hash_style_dict[unique_val.my_hash] = value # stores references of <my_hash> to <tt:style>
+            # stores references of original <xml:id> to <my_hash>
+            self._old_style_id_dict[value.id] = unique_val.my_hash
+            # stores references of <my_hash> to <tt:style>
+            hash_style_dict[unique_val.my_hash] = value
 
             self._new_style_set.add(unique_val.my_hash)
 
         for style_hash in self._new_style_set:
             new_id = hash_style_dict.get(style_hash)
             new_style_list.append(new_id)
-            self._new_style_id_dict[style_hash] = new_id.id # stores references of <my_hash> to new <xml:id>
+            # stores references of <my_hash> to new <xml:id>
+            self._new_style_id_dict[style_hash] = new_id.id
 
 
         for region in regions:
@@ -90,8 +92,10 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 value.style[old_id_index] = new_id_ref
 
             unique_val = ComparableRegion(value)
-            self._old_region_id_dict[value.id] = unique_val.my_hash # stores references of original <xml:id> to <my_hash>
-            hash_region_dict[unique_val.my_hash] = value # stores references of <my_hash> to <tt:region>
+            # stores references of original <xml:id> to <my_hash>
+            self._old_region_id_dict[value.id] = unique_val.my_hash
+            # stores references of <my_hash> to <tt:region>
+            hash_region_dict[unique_val.my_hash] = value
 
             self._new_region_set.add(unique_val.my_hash)
 
@@ -169,12 +173,23 @@ class ReplaceStylesAndRegions(RecursiveOperation):
         pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-        if hasattr(value, 'style') and value.style is not None and not isinstance(value, bindings.styling): # The latter part of this and the next test is to check that the instance is not a styling or layout element as these can also have style attributes
-            for old_id_index in range(len(value.style)):
+        # The latter part of this and the next test is to check that the instance
+        # is not a styling or layout element as these can also have style attributes
+        if hasattr(value, 'style') and value.style is not None and not isinstance(value, bindings.styling):
+            id_to_index_dict = dict()
+
+            for old_id_index in range(len(value.style)-1, 0, -1):
                 old_id_ref = self._old_style_id_dict.get(value.style[old_id_index])
                 new_id_ref = self._new_style_id_dict.get(old_id_ref)
 
+                # Next two lines remove in-line style duplication
+                if new_id_ref in id_to_index_dict:
+                    del value.style[id_to_index_dict[new_id_ref]]
+
+                id_to_index_dict[new_id_ref] = old_id_index
+
                 value.style[old_id_index] = new_id_ref
+
         else:
             pass
 
