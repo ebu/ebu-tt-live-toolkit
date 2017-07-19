@@ -44,11 +44,7 @@ class TimingValidationMixin(object):
         self._semantic_dataset = dataset
 
     def _exclude_badly_timed_elements_filter(self, value, element):
-        if element.begin is not None and element.end is not None \
-            and element.begin >= element.end:
-            return False
-        else:
-            return True
+        return (element.begin is None or element.end is None or element.end > element.begin)
         
     def _post_cleanup_variables(self):
         del self._semantic_dataset
@@ -186,7 +182,9 @@ class TimingValidationMixin(object):
             # but we don't want to bother with explicitly badly timed elements so filter
             # them out.
             children = filter(lambda item: isinstance(item, TimingValidationMixin) \
-                              and item._exclude_badly_timed_elements_filter(value=None, element=item), [x.value for x in self.orderedContent()])
+                              and item._exclude_badly_timed_elements_filter(value=None, element=item), \
+                              [x.value for x in self.orderedContent()])
+                              
             # Order of statements is important
             if not children:
                 # This means we are in a timing container leaf.

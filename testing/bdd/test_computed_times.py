@@ -3,8 +3,8 @@ from pytest_bdd import scenarios, given
 scenarios('features/timing/computed_times.feature')
 scenarios('features/timing/computed_times_empty_doc.feature')
 
-@given('l is <l>')
-def given_l(l, template_dict):
+@given('example_line is <l>')
+def given_example_line(l, template_dict):
     template_dict['l'] = l
 
 @given('it has timeBase <time_base>')

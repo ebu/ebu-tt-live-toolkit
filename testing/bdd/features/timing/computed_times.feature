@@ -11,7 +11,7 @@ Feature: Computed times computation
   # SPEC-CONFORMANCE: R16 R17 R132
   Scenario: Computed times of a document
     Given an xml file <xml_file>
-    And l is <l>
+    And example_line is <l>
     And it has sequenceIdentifier <sequence_identifier>
     And it has timeBase <time_base>
     And it has sequenceNumber <sequence_number>
