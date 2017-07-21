@@ -141,7 +141,7 @@ class ComparableRegion:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(ReplaceNone(str(value.style)) + ReplaceNone(value.origin) + ReplaceNone(value.extent) + ReplaceNone(value.displayAlign) + ReplaceNone(value.padding) + ReplaceNone(value.writingMode) + ReplaceNone(value.showBackground) + ReplaceNone(value.overflow))
+        self.my_hash = hash(ReplaceNone(value.origin) + ReplaceNone(value.extent) + ReplaceNone(str(value.style)) + ReplaceNone(value.displayAlign) + ReplaceNone(value.padding) + ReplaceNone(value.writingMode) + ReplaceNone(value.showBackground) + ReplaceNone(value.overflow))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash

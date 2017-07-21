@@ -1,5 +1,4 @@
 from unittest import TestCase
-from datetime import timedelta
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import ebuttdt as datatypes
 from ebu_tt_live.bindings import ebuttm as metadata
@@ -72,12 +71,12 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'Multiply your anger by about a'
+                        'Multiply your anger by about a',
                         style=['SEQ58.defaultStyle1']
                     ),
                     bindings.br_type(),
                     bindings.span_type(
-                        'hundred, Kate, that\'s how much he'
+                        'hundred, Kate, that\'s how much he',
                         style=['SEQ58.defaultStyle1']
                     ),
                     id='SEQ58.ID001.1'
@@ -87,7 +86,7 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'thinks he loves you.'
+                        'thinks he loves you.',
                         style=['SEQ59.defaultStyle1']
                     ),
                     id='SEQ59.ID001.1'
@@ -97,12 +96,12 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'Multiply your anger by about a'
+                        'Multiply your anger by about a',
                         style=['SEQ60.defaultStyle1']
                     ),
                     bindings.br_type(),
                     bindings.span_type(
-                        'hundred, Kate, that\'s how much he'
+                        'hundred, Kate, that\'s how much he',
                         style=['SEQ60.defaultStyle1']
                     ),
                     id='SEQ60.ID001.1'
@@ -114,7 +113,7 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
         tt.head = head_elem
         tt.body = body_elem
 
-        document = EBUTT3Document.create_from_raw_binding
+        document = EBUTT3Document.create_from_raw_binding(binding=tt)
         document.validate()
 
     def test_deduplicated_file(self):
@@ -150,12 +149,12 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'Multiply your anger by about a'
+                        'Multiply your anger by about a',
                         style=['defaultStyle1']
                     ),
                     bindings.br_type(),
                     bindings.span_type(
-                        'hundred, Kate, that\'s how much he'
+                        'hundred, Kate, that\'s how much he',
                         style=['defaultStyle1']
                     ),
                     id='SEQ58.ID001.1'
@@ -165,7 +164,7 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'thinks he loves you.'
+                        'thinks he loves you.',
                         style=['defaultStyle1']
                     ),
                     id='SEQ59.ID001.1'
@@ -175,12 +174,12 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
             bindings.div_type(
                 bindings.p_type(
                     bindings.span_type(
-                        'Multiply your anger by about a'
+                        'Multiply your anger by about a',
                         style=['defaultStyle1']
                     ),
                     bindings.br_type(),
                     bindings.span_type(
-                        'hundred, Kate, that\'s how much he'
+                        'hundred, Kate, that\'s how much he',
                         style=['defaultStyle1']
                     ),
                     id='SEQ60.ID001.1'
@@ -191,7 +190,7 @@ class TestEBUTT3DocumentDeDuplication(TestCase):
         tt.head = head_elem
         tt.body = body_elem
 
-        document = EBUTT3Document.create_from_raw_binding
+        document = EBUTT3Document.create_from_raw_binding(binding=tt)
         document.validate()
 
         self.assertIsInstance(document.get_element_by_id('bottomRegion'), bindings.region_type)
