@@ -7,15 +7,39 @@ from mock import MagicMock
 from pytest_bdd import scenarios, when, then, given
 import six
 
-scenarios('features/deduplicator/deduplicator-unittests.feature')
+scenarios('features/deduplicator/deduplicator-blackbox.feature')
 
 
-def assert_raises(exc_class, callable, *args, **kwargs):
-    try:
-        callable(*args, **kwargs)
-    except Exception as exc:
-        assert isinstance(exc, exc_class)
+@given('a deduplicator node')
+def given_deduplicator_node(template_dict):
+    template_dict.clear()
+    instance = DeDuplicatorNode(
+        node_id='testDeDuplicatorNode',
+        sequence_identifier='testDeDuplicated1'
+    )
+    return instance
 
+
+@when('the document is processed')
+def when_document_processed(given_deduplicator_node, xml_file):
+    given_deduplicator_node.process_document(document=xml_file)
+    given_deduplicator_node.producer_carriage.emit_data(data=document, **kwargs)
+#    given_deduplicator_node.producer_carriage.reset_mock()
+
+
+@then('the output document has <style_out_num> styles')
+def then_document_has_styles(template_dict, style_out_num, new_style_list):
+    template_dict['style_out_num'] = style_out_num
+    new_style_list = xml_file.new_style_list
+    assert style_out_num == len(new_style_list)
+
+
+
+@then('it has <region_out_num> regions')
+def then_document_has_regions(template_dict, region_out_num, new_region_list):
+    template_dict['region_out_num'] = region_out_num
+    new_region_list = xml_file.new_region_list
+    assert region_out_num == len(new_region_list)
 
 
 

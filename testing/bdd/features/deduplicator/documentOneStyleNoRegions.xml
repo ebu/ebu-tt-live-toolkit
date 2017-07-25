@@ -4,9 +4,6 @@
     <tt:styling>
       <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="SEQ58.defaultStyle1"/>
     </tt:styling>
-    <tt:layout>
-      <tt:region />
-    </tt:layout>
   </tt:head>
   <tt:body>
     <tt:div>
