@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="ReSequenced1" ebuttp:sequenceNumber="12" ttp:cellResolution="32 15" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:ebutts="urn:ebu:tt:style" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:styling>
+      <!-- Should be replaced with one attribute -->
+      <tt:style xml:id="SEQ1.defaultStyle1" tts:fontFamily="sansSerif " /> 
+    </tt:styling>
+    <tt:layout>
+      <tt:region xml:id="SEQ1.bottomRegion" tts:origin="14% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1 SEQ1.defaultStyle1 SEQ1.defaultStyle1 SEQ1.defaultStyle1"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body>
+    <tt:div region="SEQ58.bottomRegion">
+      <tt:p xml:id="SEQ58.ID001.1">
+
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="SEQ58.defaultStyle1">Multiply your anger by about a</tt:span>
+
+        <tt:br/>
+
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="SEQ58.defaultStyle1">hundred, Kate, that's how much he</tt:span>
+
+      </tt:p>
+    </tt:div>
+    <tt:div region="SEQ59.bottomRegion">
+      <tt:p xml:id="SEQ59.ID001.1">
+
+        <tt:span begin="12:24:27.732" end="12:24:28.732" style="SEQ59.defaultStyle1">thinks he loves you.</tt:span>
+
+      </tt:p>
+    </tt:div>
+    <tt:div region="SEQ60.bottomRegion">
+      <tt:p xml:id="SEQ60.ID001">
+
+        <tt:span begin="12:24:29.733" end="12:24:30.733" style="SEQ60.defaultStyle1">Multiply your anger by about a</tt:span>
+
+        <tt:br/>
+
+        <tt:span begin="12:24:29.733" end="12:24:30.733" style="SEQ60.defaultStyle1">hundred, Kate, that's how much he</tt:span>
+
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
