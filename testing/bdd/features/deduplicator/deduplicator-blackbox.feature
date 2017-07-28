@@ -5,14 +5,15 @@ Feature: Deduplicator removes duplicated style and region elements
 #  | xml_file      |
 #  | test_file.xml |
 
-  #Everything goes right
+  #Tests single document inputs
   Scenario: Removes duplicated styles and regions
      Given an xml file <xml_file>
+     And the document is generated
      And a deduplicator node
      When the document is processed
      Then the output document has <style_out_num> styles
      And it has <region_out_num> regions
-     And the document is valid
+     And document is valid
 
       Examples:
         | xml_file                                                                                      | style_out_num | region_out_num |
@@ -22,6 +23,27 @@ Feature: Deduplicator removes duplicated style and region elements
         | deduplicator_templates/documentOneStyleOneRegion.xml                                          | 1             | 1              |
         | deduplicator_templates/documentOneStyleOneRegionWithOneStyleAttr.xml                          | 1             | 1              |
         | deduplicator_templates/documentThreeDuplicateStylesThreeDuplicateRegionsAllAttrsSpecified.xml | 1             | 1              |
+
+  #Test more than one document input
+  Scenario: Successfully removes styles and regions of more than one document
+    Given a first xml file <xml_file_1>
+    And the first document is generated
+    And a deduplicator node
+    When the first document is processed
+    Then the first output document has <style_out_num_1> styles
+    And the first output document has <region_out_num_1> regions
+    And the first document is valid
+    Then a second xml file <xml_file_2>
+    And the second document is generated
+    And the second document is processed
+    Then the second output document has <style_out_num_2> styles
+    And the second output document has <region_out_num_2> regions
+    And the second document is valid
+
+      Examples:
+        | xml_file_1                                 | style_out_num_1 | region_out_num_1 | xml_file_2                                 | style_out_num_2 | region_out_num_2 |
+        | deduplicator_templates/ReSequenced1_12.xml | 5               | 2                | deduplicator_templates/ReSequenced1_13.xml | 1               | 1                |
+
 
 #  Scenario: Upon receiving more than one file, the deduplicator reads each one sequentially and successfully removes instances of element duplication
 #    Given the deduplicator receives more than one file

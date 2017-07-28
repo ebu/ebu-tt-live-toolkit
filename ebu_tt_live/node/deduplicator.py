@@ -14,14 +14,6 @@ document_logger = logging.getLogger('document_logger')
 
 
 class DeDuplicatorNode(AbstractCombinedNode):
-    _original_styles = []
-    _original_regions = []
-    _new_style_set = set()
-    _new_region_set = set()
-    _old_style_id_dict = dict({})
-    _new_style_id_dict = dict({})
-    _old_region_id_dict = dict({})
-    _new_region_id_dict = dict({})
     _sequence_identifier = None
     _expects = EBUTT3Document
     _provides = EBUTT3Document
@@ -53,67 +45,74 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 self.producer_carriage.emit_data(data=document, **kwargs)
 
     def remove_duplication(self, document):
+        _new_style_set = set()
+        _new_region_set = set()
+        _old_style_id_dict = dict({})
+        _new_style_id_dict = dict({})
+        _old_region_id_dict = dict({})
+        _new_region_id_dict = dict({})
         hash_style_dict = dict({})
         new_style_list = list()
 
         hash_region_dict = dict({})
         new_region_list = list()
 
-        styles = document.binding.head.styling.style
-        regions = document.binding.head.layout.region
+        if document.binding.head.styling is not None and document.binding.head.layout is not None:
+            styles = document.binding.head.styling.style
+            regions = document.binding.head.layout.region
 
-        for style in styles:
-            self._original_styles.append(style)
-
-        for value in self._original_styles:
-            unique_val = ComparableStyle(value)
-            # stores references of original <xml:id> to <my_hash>
-            self._old_style_id_dict[value.id] = unique_val.my_hash
-            # stores references of <my_hash> to <tt:style>
-            hash_style_dict[unique_val.my_hash] = value
-
-            self._new_style_set.add(unique_val.my_hash)
-
-        for style_hash in self._new_style_set:
-            new_id = hash_style_dict.get(style_hash)
-            new_style_list.append(new_id)
-            # stores references of <my_hash> to new <xml:id>
-            self._new_style_id_dict[style_hash] = new_id.id
+            for value in styles:
+                if value is not None:
+                    unique_val = ComparableStyle(value)
+                    # stores references of original <xml:id> to <my_hash>
+                    _old_style_id_dict[value.id] = unique_val.my_hash
+                    # stores references of <my_hash> to <tt:style>
+                    hash_style_dict[unique_val.my_hash] = value
 
 
-        for region in regions:
-            self._original_regions.append(region)
+            for style_hash in hash_style_dict:
+                new_id = hash_style_dict.get(style_hash)
+                new_style_list.append(new_id)
+                # stores references of <my_hash> to new <xml:id>
+                _new_style_id_dict[style_hash] = new_id.id
 
-        for value in self._original_regions:
-            for old_id_index in range(len(value.style)):
-                old_id_ref = self._old_style_id_dict.get(value.style[old_id_index])
-                new_id_ref = self._new_style_id_dict.get(old_id_ref)
+            for value in regions:
+                if value.style is not None:
+                    for old_id_index in range(len(value.style)):
+                        old_id_ref = _old_style_id_dict.get(value.style[old_id_index])
+                        new_id_ref = _new_style_id_dict.get(old_id_ref)
 
-                value.style[old_id_index] = new_id_ref
+                        value.style[old_id_index] = new_id_ref
 
-            unique_val = ComparableRegion(value)
-            # stores references of original <xml:id> to <my_hash>
-            self._old_region_id_dict[value.id] = unique_val.my_hash
-            # stores references of <my_hash> to <tt:region>
-            hash_region_dict[unique_val.my_hash] = value
+                if value is not None:
+                    unique_val = ComparableRegion(value)
+                    # stores references of original <xml:id> to <my_hash>
+                    _old_region_id_dict[value.id] = unique_val.my_hash
+                    # stores references of <my_hash> to <tt:region>
+                    hash_region_dict[unique_val.my_hash] = value
 
-            self._new_region_set.add(unique_val.my_hash)
+            for region_hash in hash_region_dict:
+                new_id = hash_region_dict.get(region_hash)
+                new_region_list.append(new_id)
+                _new_region_id_dict[region_hash] = new_id.id
 
-        for region_hash in self._new_region_set:
-            new_id = hash_region_dict.get(region_hash)
-            new_region_list.append(new_id)
-            self._new_region_id_dict[region_hash] = new_id.id
 
-        document.binding.head.styling.style = None
-        for new_style in new_style_list:
-            document.binding.head.styling.append(new_style)
+            document.binding.head.styling.style = None
+            for new_style in new_style_list:
+                document.binding.head.styling.append(new_style)
 
-        document.binding.head.layout.region = None
-        for new_region in new_region_list:
-            document.binding.head.layout.append(new_region)
+            document.binding.head.layout.region = None
+            for new_region in new_region_list:
+                document.binding.head.layout.append(new_region)
 
-        replace_id_refs = ReplaceStylesAndRegions(document.binding, self._old_style_id_dict, self._new_style_id_dict, self._old_region_id_dict, self._new_region_id_dict)
-        replace_id_refs.proceed()
+            replace_id_refs = ReplaceStylesAndRegions(document.binding, \
+                                                      _old_style_id_dict, \
+                                                      _new_style_id_dict, \
+                                                      _old_region_id_dict, \
+                                                      _new_region_id_dict)
+            replace_id_refs.proceed()
+        else:
+            return None
 
 def ReplaceNone(none_value):
     if none_value is None:
@@ -126,7 +125,21 @@ class ComparableStyle:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(ReplaceNone(value.direction) + ReplaceNone(value.fontFamily) + ReplaceNone(value.fontSize) + ReplaceNone(value.lineHeight) + ReplaceNone(value.textAlign) + ReplaceNone(value.color) + ReplaceNone(value.backgroundColor) + ReplaceNone(value.fontStyle) + ReplaceNone(value.fontWeight) + ReplaceNone(value.textDecoration) + ReplaceNone(value.unicodeBidi) + ReplaceNone(value.wrapOption) + ReplaceNone(value.padding) + ReplaceNone(value.multiRowAlign) + ReplaceNone(value.linePadding))
+        self.my_hash = hash(ReplaceNone(value.direction) + \
+                            ReplaceNone(value.fontFamily) + \
+                            ReplaceNone(value.fontSize) + \
+                            ReplaceNone(value.lineHeight) + \
+                            ReplaceNone(value.textAlign) + \
+                            ReplaceNone(value.color) + \
+                            ReplaceNone(value.backgroundColor) + \
+                            ReplaceNone(value.fontStyle) + \
+                            ReplaceNone(value.fontWeight) + \
+                            ReplaceNone(value.textDecoration) + \
+                            ReplaceNone(value.unicodeBidi) + \
+                            ReplaceNone(value.wrapOption) + \
+                            ReplaceNone(value.padding) + \
+                            ReplaceNone(value.multiRowAlign) + \
+                            ReplaceNone(value.linePadding))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
@@ -141,7 +154,14 @@ class ComparableRegion:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(ReplaceNone(value.origin) + ReplaceNone(value.extent) + ReplaceNone(str(value.style)) + ReplaceNone(value.displayAlign) + ReplaceNone(value.padding) + ReplaceNone(value.writingMode) + ReplaceNone(value.showBackground) + ReplaceNone(value.overflow))
+        self.my_hash = hash(ReplaceNone(value.origin) + \
+                            ReplaceNone(value.extent) + \
+                            ReplaceNone(str(value.style)) + \
+                            ReplaceNone(value.displayAlign) + \
+                            ReplaceNone(value.padding) + \
+                            ReplaceNone(value.writingMode) + \
+                            ReplaceNone(value.showBackground) + \
+                            ReplaceNone(value.overflow))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
@@ -153,11 +173,17 @@ class ComparableRegion:
         return self.my_hash
 
 class ReplaceStylesAndRegions(RecursiveOperation):
+    _old_style_id_dict = None
+    _new_style_id_dict = None
+    _old_region_id_dict = None
+    _new_region_id_dict = None
 
-    def __init__(self, root_element, _old_style_id_dict, _new_style_id_dict, _old_region_id_dict, _new_region_id_dict):
+    def __init__(self, root_element, _old_style_id_dict, _new_style_id_dict, \
+                 _old_region_id_dict, _new_region_id_dict):
             super(ReplaceStylesAndRegions, self).__init__(
                 root_element
             )
+
             self._old_style_id_dict = _old_style_id_dict
             self._new_style_id_dict = _new_style_id_dict
             self._old_region_id_dict = _old_region_id_dict
@@ -177,10 +203,13 @@ class ReplaceStylesAndRegions(RecursiveOperation):
         # is not a styling or layout element as these can also have style attributes
         if hasattr(value, 'style') and value.style is not None and not isinstance(value, bindings.styling):
             id_to_index_dict = dict()
+            #print len(value.style)
 
-            for old_id_index in range(len(value.style)-1, 0, -1):
+            for old_id_index in range(len(value.style)-1, -1, -1):
                 old_id_ref = self._old_style_id_dict.get(value.style[old_id_index])
                 new_id_ref = self._new_style_id_dict.get(old_id_ref)
+                #print old_id_ref
+                #print new_id_ref
 
                 # Next two lines remove in-line style duplication
                 if new_id_ref in id_to_index_dict:
@@ -189,7 +218,6 @@ class ReplaceStylesAndRegions(RecursiveOperation):
                 id_to_index_dict[new_id_ref] = old_id_index
 
                 value.style[old_id_index] = new_id_ref
-
         else:
             pass
 
