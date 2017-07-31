@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="ReSequenced1" ebuttp:sequenceNumber="12" ttp:cellResolution="32 15" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ns1="urn:namespace1" xmlns:ns2="urn:namespace2" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:ebutts="urn:ebu:tt:style" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:styling>
+      <!--  2, 3 and 4 should be merged -->
+      <tt:style xml:id="SEQ1.defaultStyle1" tts:fontFamily="sansSerif" ns1:foo="bar"/>
+      <tt:style xml:id="SEQ2.defaultStyle1" tts:fontFamily="sansSerif" />
+      <tt:style xml:id="SEQ3.defaultStyle1" tts:fontFamily="sansSerif" />
+      <tt:style tts:fontFamily="sansSerif" xml:id="SEQ4.defaultStyle1" />
+      <tt:style xml:id="SEQ5.defaultStyle1" tts:fontFamily="sansSerif" ns1:foo="foo"/>
+      <tt:style xml:id="SEQ6.defaultStyle1" tts:fontFamily="sansSerif" ns2:foo="bar"/>
+    </tt:styling>
+    <tt:layout>
+      <!-- 4, 5 and 6 are identical, only the order of the attribute changes.  -->
+      <tt:region xml:id="SEQ1.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1" ns1:foo="bar"/>
+      <tt:region xml:id="SEQ2.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1" ns2:foo="bar"/>
+      <tt:region xml:id="SEQ3.bottomRegion" tts:extent="71.25% 24%" tts:origin="14.375% 60%" style="SEQ1.defaultStyle1" ns1:foo="foo"/>
+      <tt:region tts:origin="14.375% 60%" xml:id="SEQ4.bottomRegion" tts:extent="71.25% 24%" style="SEQ2.defaultStyle1"/>
+      <tt:region xml:id="SEQ5.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1"/>
+      <tt:region xml:id="SEQ6.bottomRegion" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1" tts:origin="14.375% 60%" />
+
+    </tt:layout>
+  </tt:head>
+  <tt:body>
+    <tt:div region="SEQ1.bottomRegion">
+      <tt:p xml:id="SEQ58.ID001.1">
+
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="SEQ1.defaultStyle1">Multiply your anger by about a</tt:span>
+
+        <tt:br/>
+
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="SEQ1.defaultStyle1">hundred, Kate, that's how much he</tt:span>
+
+      </tt:p>
+    </tt:div>
+    <tt:div region="SEQ1.bottomRegion">
+      <tt:p xml:id="SEQ59.ID001.1">
+
+        <tt:span begin="12:24:27.732" end="12:24:28.732" style="SEQ1.defaultStyle1">thinks he loves you.</tt:span>
+
+      </tt:p>
+    </tt:div>
+    <tt:div region="SEQ1.bottomRegion">
+      <tt:p xml:id="SEQ60.ID001">
+
+        <tt:span begin="12:24:29.733" end="12:24:30.733" style="SEQ1.defaultStyle1">Multiply your anger by about a</tt:span>
+
+        <tt:br/>
+
+        <tt:span begin="12:24:29.733" end="12:24:30.733" style="SEQ1.defaultStyle1">hundred, Kate, that's how much he</tt:span>
+
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
