@@ -22,6 +22,9 @@ Feature: Deduplicator removes duplicated style and region elements
         | deduplicator_templates/OneStyleOneRegion.xml                                          | 1             | 1              |  
         | deduplicator_templates/OneStyleOneRegionWithOneStyleAttr.xml                          | 1             | 1              |  
         | deduplicator_templates/ThreeDuplicateStylesThreeDuplicateRegionsAllAttrsSpecified.xml | 1             | 1              |  
+        | deduplicator_templates/6Sty3Dup6Reg3DupForeignNamespace.xml                           | 4             | 4              |  
+
+
 
 #  Scenario: Upon receiving more than one file, the deduplicator reads each one sequentially and successfully removes instances of element duplication
 #    Given the deduplicator receives more than one file
@@ -40,9 +43,10 @@ Feature: Deduplicator removes duplicated style and region elements
      And all style attributes contain the same style reference
      And all region attributes contain the same region reference
      And all region attributes contain the same style reference
-
+     And the document is valid
 
       Examples:
         | xml_file                                      |  
         | deduplicator_templates/3DupSty3DupRegRefs.xml |  
+        | deduplicator_templates/1Sty1Reg4DupAtts.xml   |  
 
