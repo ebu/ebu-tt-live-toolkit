@@ -16,13 +16,16 @@ Feature: Deduplicator removes duplicated style and region elements
      And document is valid
 
       Examples:
-        | xml_file                                                       | style_out_num | region_out_num |  
-        | NoStylesNoRegions.xml                                          | 0             | 0              |  
-        | NoStylesOneRegion.xml                                          | 0             | 1              |  
-        | OneStyleNoRegions.xml                                          | 1             | 0              |  
-        | OneStyleOneRegion.xml                                          | 1             | 1              |  
-        | OneStyleOneRegionWithOneStyleAttr.xml                          | 1             | 1              |  
-        | ThreeDuplicateStylesThreeDuplicateRegionsAllAttrsSpecified.xml | 1             | 1              |  
+        | xml_file                                                                              | style_out_num | region_out_num |  
+        | deduplicator_templates/NoStylesNoRegions.xml                                          | 0             | 0              |  
+        | deduplicator_templates/NoStylesOneRegion.xml                                          | 0             | 1              |  
+        | deduplicator_templates/OneStyleNoRegions.xml                                          | 1             | 0              |  
+        | deduplicator_templates/OneStyleOneRegion.xml                                          | 1             | 1              |  
+        | deduplicator_templates/OneStyleOneRegionWithOneStyleAttr.xml                          | 1             | 1              |  
+        | deduplicator_templates/ThreeDuplicateStylesThreeDuplicateRegionsAllAttrsSpecified.xml | 1             | 1              |  
+        | deduplicator_templates/6Sty3Dup6Reg3DupForeignNamespace.xml                           | 4             | 4              |  
+
+
 
   #Test more than one document input
   Scenario: Successfully removes styles and regions of more than one document
@@ -62,9 +65,10 @@ Feature: Deduplicator removes duplicated style and region elements
      And all style attributes contain the same style reference
      And all region attributes contain the same region reference
      And all region attributes contain the same style reference
-
+     And the document is valid
 
       Examples:
-        | xml_file               |  
-        | 3DupSty3DupRegRefs.xml |  
+        | xml_file                                      |  
+        | deduplicator_templates/3DupSty3DupRegRefs.xml |  
+        | deduplicator_templates/1Sty1Reg4DupAtts.xml   |  
 
