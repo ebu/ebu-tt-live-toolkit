@@ -58,16 +58,17 @@ Feature: Deduplicator removes duplicated style and region elements
 #    Then the process terminates
 
 #Everything goes right
-  Scenario: Replace references for merged styles and regions
-     Given an xml file <xml_file>
-     And a deduplicator node
-     When the document is processed
-     Then all style attributes contain a single style reference
-     And all style attributes contain the same style reference
-     And all region attributes contain the same region reference
-     And all region attributes contain the same style reference
+#  Scenario: Replace references for merged styles and regions
+#     Given an xml file <xml_file>
+#     And a deduplicator node
+#     When the document is processed
+#     Then all style attributes contain a single style reference
+#     And all style attributes contain the same style reference
+#     And all region attributes contain the same region reference
+#     And all region attributes contain the same style reference
+#     And the document is valid
 
-
-      Examples:
-        | xml_file               |
-        | 3DupSty3DupRegRefs.xml |
+#      Examples:
+#        | xml_file                                      |
+#        | deduplicator_templates/3DupSty3DupRegRefs.xml |
+#        | deduplicator_templates/1Sty1Reg4DupAtts.xml   |
