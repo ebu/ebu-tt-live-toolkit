@@ -3,12 +3,12 @@
   <tt:head>
     <tt:styling>
       <!-- we're only doing simple string comparisons, not computing, so all these are different. -->
-      <tt:style xml:id="SEQ1.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14px 14px" tts:lineHeight="normal" tts:color="rgb(255, 255, 255)" />
-      <tt:style xml:id="SEQ1.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14px 14px" tts:color="rgb(255, 255, 255)" />
-      <tt:style xml:id="SEQ2.defaultStyle1" tts:fontFamily="SansSerif" tts:fontSize="14px 14px" tts:lineHeight="normal" tts:color="rgb(255, 255, 255)" />
-      <tt:style xml:id="SEQ3.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14.00px 14.00px" tts:lineHeight="normal" tts:color="rgb(255, 255, 255)" />
-      <tt:style xml:id="SEQ4.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14.00px 14.00px" tts:lineHeight="normal" tts:color="#ffffff" />
-      <tt:style xml:id="SEQ5.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14.00px 14.00px" tts:lineHeight="normal" tts:color="#ffffff" style="SEQ4.defaultStyle1" />
+      <tt:style xml:id="SEQ1.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14c 14c" tts:lineHeight="normal" tts:color="rgb(255, 255, 255)" />
+      <tt:style xml:id="SEQ6.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14c 14c" tts:color="rgb(255, 255, 255)" />
+      <tt:style xml:id="SEQ2.defaultStyle1" tts:fontFamily="SansSerif" tts:fontSize="14c 14c" tts:lineHeight="normal" tts:color="rgb(255, 255, 255)" />
+      <tt:style xml:id="SEQ3.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14.00c 14.00c" tts:lineHeight="normal" tts:color="rgb(255, 255, 255)" />
+      <tt:style xml:id="SEQ4.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14.00c 14.00c" tts:lineHeight="normal" tts:color="#ffffff" />
+      <tt:style xml:id="SEQ5.defaultStyle1" tts:fontFamily="sansSerif" tts:fontSize="14.00c 14.00c" tts:lineHeight="normal" tts:color="#ffffff" style="SEQ4.defaultStyle1" />
     </tt:styling>
     <tt:layout>
       <tt:region xml:id="SEQ1.bottomRegion" tts:origin="14.00% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1"/>
