@@ -13,9 +13,9 @@
     <tt:layout>
       <!-- 4, 5 and 6 are identical, only the order of the attribute changes.  -->
       <tt:region xml:id="SEQ1.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1" ns1:foo="bar"/>
-      <tt:region xml:id="SEQ2.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1" ns2:foo="bar"/>
+      <tt:region xml:id="SEQ2.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ2.defaultStyle1" ns2:foo="bar"/>
       <tt:region xml:id="SEQ3.bottomRegion" tts:extent="71.25% 24%" tts:origin="14.375% 60%" style="SEQ1.defaultStyle1" ns1:foo="foo"/>
-      <tt:region tts:origin="14.375% 60%" xml:id="SEQ4.bottomRegion" tts:extent="71.25% 24%" style="SEQ2.defaultStyle1"/>
+      <tt:region tts:origin="14.375% 60%" xml:id="SEQ4.bottomRegion" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1"/>
       <tt:region xml:id="SEQ5.bottomRegion" tts:origin="14.375% 60%" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1"/>
       <tt:region xml:id="SEQ6.bottomRegion" tts:extent="71.25% 24%" style="SEQ1.defaultStyle1" tts:origin="14.375% 60%" />
 

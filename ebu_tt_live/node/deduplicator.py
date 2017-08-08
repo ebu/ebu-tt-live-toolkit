@@ -5,6 +5,7 @@ from ebu_tt_live.strings import DOC_RECEIVED
 from ebu_tt_live.errors import SequenceNumberCollisionError, UnexpectedSequenceIdentifierError
 from pyxb.binding.basis import ElementContent, complexTypeDefinition
 from pyxb import BIND
+from pyxb.namespace import ExpandedName
 from ebu_tt_live import bindings
 import logging
 
@@ -58,6 +59,14 @@ class DeDuplicatorNode(AbstractCombinedNode):
             document.binding.head.layout.region = None
 
             for value in styles:
+                #deduplicating in-line styles
+                if value.style is not None:
+                    for old_id_index in range(len(value.style)):
+                        old_id_ref = _old_id_dict.get(value.style[old_id_index])
+                        new_id_ref = _new_id_dict.get(old_id_ref)
+
+                        value.style[old_id_index] = new_id_ref
+
                 #deduplicating style elements
                 if value is not None:
                     unique_val = ComparableStyle(value)
@@ -76,7 +85,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 _new_id_dict[hash_val] = new_id.id
 
             for value in regions:
-                #in-line style removal
+                #deduplicating in-line styles
                 if value.style is not None:
                     for old_id_index in range(len(value.style)):
                         old_id_ref = _old_id_dict.get(value.style[old_id_index])
@@ -91,6 +100,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
                     _old_id_dict[value.id] = unique_val.my_hash
                     # stores references of <my_hash> to <tt:region>
                     hash_dict[unique_val.my_hash] = value
+
 
             for hash_val in hash_dict:
                 new_id = hash_dict.get(hash_val)
@@ -109,7 +119,8 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
 def ReplaceNone(none_value):
     if none_value is None:
-        return "|" # '|' is a non-legal character and this is used to prevent collisions between similar attributes
+        return "|" # '|' is a non-legal character and this is used to prevent
+                   # collisions between similar attributes
     else:
         return none_value
 
@@ -118,21 +129,24 @@ class ComparableStyle:
     def __init__(self, value):
         self.value = value
 
-        self.my_hash = hash(ReplaceNone(value.direction) + \
-                            ReplaceNone(value.fontFamily) + \
-                            ReplaceNone(value.fontSize) + \
-                            ReplaceNone(value.lineHeight) + \
-                            ReplaceNone(value.textAlign) + \
-                            ReplaceNone(value.color) + \
-                            ReplaceNone(value.backgroundColor) + \
-                            ReplaceNone(value.fontStyle) + \
-                            ReplaceNone(value.fontWeight) + \
-                            ReplaceNone(value.textDecoration) + \
-                            ReplaceNone(value.unicodeBidi) + \
-                            ReplaceNone(value.wrapOption) + \
-                            ReplaceNone(value.padding) + \
-                            ReplaceNone(value.multiRowAlign) + \
-                            ReplaceNone(value.linePadding))
+        attributeDict = value._AttributeMap.copy()
+        xml_id_attr = ExpandedName('http://www.w3.org/XML/1998/namespace', 'id')
+        attributeDict.pop(xml_id_attr, None)
+
+        sortedDict = sorted(attributeDict.items(), key=lambda t: t[0])
+
+        concatenatedStyleString = u''
+        for key,val in sortedDict:
+            styleValue = ReplaceNone(val.value(value))
+            concatenatedStyleString += str(styleValue)
+
+        for key,val in value.wildcardAttributeMap().items():
+            namespace = ReplaceNone(key.namespaceURI())
+            localName = key.localName()
+            wildcardValue = ReplaceNone(val)
+            concatenatedStyleString += namespace + localName + wildcardValue
+
+        self.my_hash = hash(concatenatedStyleString)
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
@@ -154,7 +168,8 @@ class ComparableRegion:
                             ReplaceNone(value.padding) + \
                             ReplaceNone(value.writingMode) + \
                             ReplaceNone(value.showBackground) + \
-                            ReplaceNone(value.overflow))
+                            ReplaceNone(value.overflow) + \
+                            str(value.wildcardAttributeMap().items()))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
