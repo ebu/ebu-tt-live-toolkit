@@ -69,7 +69,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
                 #deduplicating style elements
                 if value is not None:
-                    unique_val = ComparableStyle(value)
+                    unique_val = ComparableMethod(value)
                     # stores references of original <xml:id> to <my_hash>
                     _old_id_dict[value.id] = unique_val.my_hash
                     # stores references of <my_hash> to <tt:style>
@@ -95,7 +95,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
                 #deduplicating region elements
                 if value is not None:
-                    unique_val = ComparableRegion(value)
+                    unique_val = ComparableMethod(value)
                     # stores references of original <xml:id> to <my_hash>
                     _old_id_dict[value.id] = unique_val.my_hash
                     # stores references of <my_hash> to <tt:region>
@@ -125,7 +125,7 @@ def ReplaceNone(none_value):
         return none_value
 
 
-class ComparableStyle:
+class ComparableMethod:
     def __init__(self, value):
         self.value = value
 
@@ -147,29 +147,6 @@ class ComparableStyle:
             concatenatedStyleString += namespace + localName + wildcardValue
 
         self.my_hash = hash(concatenatedStyleString)
-
-    def __eq__(self, other):
-        return other and self.my_hash == other.my_hash
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __hash__(self):
-        return self.my_hash
-
-class ComparableRegion:
-    def __init__(self, value):
-        self.value = value
-
-        self.my_hash = hash(ReplaceNone(value.origin) + \
-                            ReplaceNone(value.extent) + \
-                            ReplaceNone(str(value.style)) + \
-                            ReplaceNone(value.displayAlign) + \
-                            ReplaceNone(value.padding) + \
-                            ReplaceNone(value.writingMode) + \
-                            ReplaceNone(value.showBackground) + \
-                            ReplaceNone(value.overflow) + \
-                            str(value.wildcardAttributeMap().items()))
 
     def __eq__(self, other):
         return other and self.my_hash == other.my_hash
