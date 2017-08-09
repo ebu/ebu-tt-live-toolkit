@@ -58,57 +58,13 @@ class DeDuplicatorNode(AbstractCombinedNode):
             regions = document.binding.head.layout.region
             document.binding.head.layout.region = None
 
-            for value in styles:
-                #deduplicating in-line styles
-                if value.style is not None:
-                    for old_id_index in range(len(value.style)):
-                        old_id_ref = _old_id_dict.get(value.style[old_id_index])
-                        new_id_ref = _new_id_dict.get(old_id_ref)
+            self.CollateUniqueVals(styles, _old_id_dict, _new_id_dict, hash_dict)
+            self.AppendNewElements(styles, document.binding.head.styling.style, \
+                                   _old_id_dict, _new_id_dict, hash_dict)
 
-                        value.style[old_id_index] = new_id_ref
-
-                #deduplicating style elements
-                if value is not None:
-                    unique_val = ComparableMethod(value)
-                    # stores references of original <xml:id> to <my_hash>
-                    _old_id_dict[value.id] = unique_val.my_hash
-                    # stores references of <my_hash> to <tt:style>
-                    hash_dict[unique_val.my_hash] = value
-
-            for hash_val in hash_dict:
-                new_id = hash_dict.get(hash_val)
-                for old_s in styles:
-                    if old_s.id is new_id.id:
-                        document.binding.head.styling.style.append(new_id)
-
-                # stores references of <my_hash> to new <xml:id>
-                _new_id_dict[hash_val] = new_id.id
-
-            for value in regions:
-                #deduplicating in-line styles
-                if value.style is not None:
-                    for old_id_index in range(len(value.style)):
-                        old_id_ref = _old_id_dict.get(value.style[old_id_index])
-                        new_id_ref = _new_id_dict.get(old_id_ref)
-
-                        value.style[old_id_index] = new_id_ref
-
-                #deduplicating region elements
-                if value is not None:
-                    unique_val = ComparableMethod(value)
-                    # stores references of original <xml:id> to <my_hash>
-                    _old_id_dict[value.id] = unique_val.my_hash
-                    # stores references of <my_hash> to <tt:region>
-                    hash_dict[unique_val.my_hash] = value
-
-
-            for hash_val in hash_dict:
-                new_id = hash_dict.get(hash_val)
-                for old_r in regions:
-                    if old_r.id is new_id.id:
-                        document.binding.head.layout.region.append(new_id)
-
-                _new_id_dict[hash_val] = new_id.id
+            self.CollateUniqueVals(regions, _old_id_dict, _new_id_dict, hash_dict)
+            self.AppendNewElements(regions, document.binding.head.layout.region, \
+                                   _old_id_dict, _new_id_dict, hash_dict)
 
             replace_id_refs = ReplaceStylesAndRegions(document.binding, \
                                                       _old_id_dict, \
@@ -116,6 +72,36 @@ class DeDuplicatorNode(AbstractCombinedNode):
             replace_id_refs.proceed()
         else:
             return None
+
+    def CollateUniqueVals(self, element_list, _old_id_dict, _new_id_dict, \
+                          hash_dict):
+        for value in element_list:
+            #deduplicating in-line styles
+            if value.style is not None:
+                for old_id_index in range(len(value.style)):
+                    old_id_ref = _old_id_dict.get(value.style[old_id_index])
+                    new_id_ref = _new_id_dict.get(old_id_ref)
+
+                    value.style[old_id_index] = new_id_ref
+
+            #deduplicating region elements
+            if value is not None:
+                unique_val = ComparableElement(value)
+                # stores references of original <xml:id> to <my_hash>
+                _old_id_dict[value.id] = unique_val.my_hash
+                # stores references of <my_hash> to <tt:region>
+                hash_dict[unique_val.my_hash] = value
+
+    def AppendNewElements(self, element_list, element_to_append_to, _old_id_dict, \
+                          _new_id_dict, hash_dict):
+        for hash_val in hash_dict:
+            new_id = hash_dict.get(hash_val)
+
+            for old_element in element_list:
+                if old_element.id is new_id.id:
+                    element_to_append_to.append(new_id)
+
+            _new_id_dict[hash_val] = new_id.id
 
 def ReplaceNone(none_value):
     if none_value is None:
@@ -125,7 +111,7 @@ def ReplaceNone(none_value):
         return none_value
 
 
-class ComparableMethod:
+class ComparableElement:
     def __init__(self, value):
         self.value = value
 
