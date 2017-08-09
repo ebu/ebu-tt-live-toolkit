@@ -1,3 +1,6 @@
+# Note: contains legacy scenarios for SMPTE time base. SMPTE was removed from the specification in version 1.0. -->
+
+
 # SPEC-CONFORMANCE.md : R71 R72 R73a R96
 @validation @smpte
 Feature: SMPTE-related attribute constraints

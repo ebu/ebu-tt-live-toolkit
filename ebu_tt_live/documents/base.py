@@ -1,6 +1,8 @@
 
 from ebu_tt_live.utils import ComparableMixin
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
+
 class TimeBase(object):
     SMPTE = 'smpte'
     MEDIA = 'media'

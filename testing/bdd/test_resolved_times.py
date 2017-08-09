@@ -5,6 +5,8 @@ from pytest_bdd import scenarios, then, when, parsers
 scenarios('features/timing/resolved_times.feature')
 scenarios('features/timing/resolved_times_no_body.feature')
 
+#NOTE: contains SMPTE time base. SMPTE was removed from the specification in version 1.0.
+
 def timestr_to_timedelta(time_str, time_base):
     if time_base == 'clock':
         return LimitedClockTimingType(time_str).timedelta
@@ -12,7 +14,6 @@ def timestr_to_timedelta(time_str, time_base):
         return FullClockTimingType(time_str).timedelta
     elif time_base == 'smpte':
         raise NotImplementedError('SMPTE needs implementation')
-
 
 @when('we create a new document')
 def when_new_doc(template_dict):

@@ -132,6 +132,8 @@ class EBUTT3Segmenter(RecursiveOperation):
 
         super(EBUTT3Segmenter, self).proceed(**kwargs)
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
+
     def _convert_time(self, timedelta_value):
         if self.document.time_base == 'clock':
             return ebuttdt.LimitedClockTimingType(timedelta_value)

@@ -440,6 +440,7 @@ class LiveStyledElementMixin(StyledElementMixin):
 
 # EBU TT Live element types
 # =========================
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):

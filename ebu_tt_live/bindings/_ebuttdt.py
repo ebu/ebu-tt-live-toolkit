@@ -404,6 +404,7 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
 
 ebuttdt_raw.limitedClockTimingType._SetSupersedingClass(LimitedClockTimingType)
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 # Here comes the tricky one. The SMPTE requires knowledge about frames. The top level tt element knows the frameRate.
 # Unfortunately the conversion methods run before the object gets created let alone inserted into a document structure.
