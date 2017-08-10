@@ -55,4 +55,4 @@ DOC_REQ_SEGMENT = gettext('{sequence_identifier}__{sequence_number}: requesting 
 DOC_SEQ_REQ_SEGMENT = gettext('{sequence_identifier}: requesting segment ({begin} - {end})')
 
 FS_DEFAULT_CLOCK_USED = gettext('Availability time not provided, creating default clock for sequence: {sequence_identifier}')
-FS_MISSING_AVAILABILITY = gettext('Could not resolve availability time for item in sequence: {sequence_identifier}. Item discarded.')
+FS_MISSING_AVAILABILITY = gettext('Could not resolve availability time for item in sequence: {sequence_identifier} after writing {file_path} - no manifest line written.')

@@ -23,7 +23,7 @@
         },
         "output": {
           "carriage": {
-            "type": "filesystem-simple"
+            "type": "filesystem"
           }
         },
         "delay": 3,

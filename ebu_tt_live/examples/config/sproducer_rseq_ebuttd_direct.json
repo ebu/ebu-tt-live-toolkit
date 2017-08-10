@@ -16,7 +16,7 @@
       "id": "resequencer1",
       "type": "resequencer",
       "sequence_identifier": "ReSequenced1",
-      "segment_length": "5.0",
+      "segment_length": "1.0",
       "input": {
         "carriage": {
           "type": "direct",
@@ -33,6 +33,7 @@
     "node3": {
       "id": "encoder1",
       "type": "ebuttd-encoder",
+      "default_namespace": "true",
       "input": {
         "carriage": {
           "type": "direct",
@@ -41,7 +42,10 @@
       },
       "output": {
         "carriage": {
-          "type": "filesystem"
+          "type": "filesystem",
+          "folder": "demo/ebuttd_export",
+          "rotating_buf": 0,
+          "message_filename_pattern": "ebuttd-encode-{counter}.xml"
         }
       }
     }
