@@ -455,7 +455,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         (pyxb.namespace.ExpandedName(ttp.Namespace, 'timeBase')).uriTuple(): __post_time_base_set_attribute
     }
     _elements_by_id = None
-    _attributes_by_name = None
     _validator_class = SemanticValidator
 
     def __copy__(self):
@@ -619,8 +618,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         dataset['styles_stack'] = []
         self._elements_by_id = {}
         dataset['elements_by_id'] = self._elements_by_id
-        self._attributes_by_name = {}
-        dataset['attributes_by_name'] = self._attributes_by_name
         if self.timeBase == 'smpte':
             self.__semantic_test_smpte_attrs_present()
         else:
@@ -633,7 +630,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         # Save this for id lookup.
         self._elements_by_id = dataset['elements_by_id']
-        self._attributes_by_name = dataset['attributes_by_name']
 
     def get_element_by_id(self, elem_id, elem_type=None):
         """
@@ -656,21 +652,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             return ebuttdt.FullClockTimingType(timedelta_in)
         if self.timeBase == 'smpte':
             return ebuttdt.SMPTETimingType(timedelta_in)
-
-    def get_element_by_attr(self, attr, attr_type=None):
-        """
-        Lookup an attribute and return it. Optionally type is checked as well.
-        :param attr:
-        :param attr_type:
-        :return:
-        """
-        if self._attributes_by_name is None:
-            raise SemanticValidationError(ERR_SEMANTIC_VALIDATION_EXPECTED)
-        attribute = self._attributes_by_name.get(attr, None)
-        if attribute is None or attr_type is not None and not isinstance(attribute, attr_type):
-            raise LookupError(ERR_SEMANTIC_ELEMENT_BY_ID_MISSING.format(id=elem_id))
-        return attribute
-
 
 raw.tt_type._SetSupersedingClass(tt_type)
 
@@ -841,57 +822,6 @@ class br_type(SemanticValidationMixin, raw.br_type):
 
 
 raw.br_type._SetSupersedingClass(br_type)
-
-class style_attr(IDMixin, RegionedElementMixin, LiveStyledElementMixin,
-               SemanticValidationMixin):
-    def _source_style(self, dataset):
-        source_style = style_type(
-            id=self.id
-        )
-        return source_style
-
-    def __source_style_copy__(self):
-         source_style = style_type(
-            id=self.id
-         )
-         return source_style
-
-    def _element_styling(self, dataset):
-        element_style = styling_type(
-            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset)
-        )
-        return element_style
-
-    def __element_styling_copy__(self):
-        element_style = styling_type(
-            style=self.style
-        )
-        return element_style
-
-    def _semantic_before_traversal(self, dataset, parent_binding=None):
-        self._semantic_collect_applicable_styles(
-            dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
-        )
-        self._semantic_push_styles(dataset=dataset)
-
-    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
-        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
-
-    def _semantic_before_copy(self, dataset, element_content=None):
-        self._assert_in_segment(dataset=dataset, element_content=element_content)
-
-    def is_empty(self):
-        return not (len(self.style) or len(self.span) or len(self.region) or len(self.div))
-
-    def is_same(self):
-        return source_style.id == element_style.style
-
-    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
-        copied_instance._assert_empty_container()
-        self._semantic_copy_apply_leaf_timing(
-            copied_instance=copied_instance, dataset=dataset, element_content=element_content)
-        self._semantic_copy_verify_referenced_styles(dataset=dataset)
-        self._semantic_copy_verify_referenced_region(dataset=dataset)
 
 
 #raw.source_style._SetSupersedingClass(source_style)

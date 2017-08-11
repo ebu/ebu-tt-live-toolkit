@@ -27,6 +27,9 @@ Feature: Deduplicator removes duplicated style and region elements
         | deduplicator_templates/3DupSty3DupRegRefs.xml                                         | 1             | 1              |
         | deduplicator_templates/6Sty3Dup6Reg3DupForeignNamespace.xml                           | 4             | 4              |
         | deduplicator_templates/NoDupStyNoDupReg.xml                                           | 6             | 3              |
+        | deduplicator_templates/TwoDuplicateStylesNoRegions.xml                                | 1             | 0              |
+        | deduplicator_templates/NoStylesTwoDuplicateRegions.xml                                | 0             | 1              |
+        | deduplicator_templates/4Sty2Dup5Reg2Dup2SimilarForeignNamespacesEach.xml              | 3             | 4              |
 
   #Test more than one document input
   Scenario: Successfully removes styles and regions of more than one document

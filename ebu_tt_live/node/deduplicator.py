@@ -42,66 +42,64 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
                 self.remove_duplication(document=document)
                 print document.get_xml()
-
                 document.validate()
                 self.producer_carriage.emit_data(data=document, **kwargs)
 
     def remove_duplication(self, document):
-        _old_id_dict = dict({})
-        _new_id_dict = dict({})
+        old_id_dict = dict({})
+        new_id_dict = dict({})
         hash_dict = dict({})
 
-        if document.binding.head.styling is not None and document.binding.head.layout is not None:
+        if document.binding.head.styling is not None:
             styles = document.binding.head.styling.style
             document.binding.head.styling.style = None
 
+            self.CollateUniqueVals(styles, old_id_dict, new_id_dict, hash_dict)
+            self.AppendNewElements(styles, document.binding.head.styling.style, \
+                                   old_id_dict, new_id_dict, hash_dict)
+
+        if document.binding.head.layout is not None:
             regions = document.binding.head.layout.region
             document.binding.head.layout.region = None
 
-            self.CollateUniqueVals(styles, _old_id_dict, _new_id_dict, hash_dict)
-            self.AppendNewElements(styles, document.binding.head.styling.style, \
-                                   _old_id_dict, _new_id_dict, hash_dict)
-
-            self.CollateUniqueVals(regions, _old_id_dict, _new_id_dict, hash_dict)
+            self.CollateUniqueVals(regions, old_id_dict, new_id_dict, hash_dict)
             self.AppendNewElements(regions, document.binding.head.layout.region, \
-                                   _old_id_dict, _new_id_dict, hash_dict)
+                                   old_id_dict, new_id_dict, hash_dict)
 
-            replace_id_refs = ReplaceStylesAndRegions(document.binding, \
-                                                      _old_id_dict, \
-                                                      _new_id_dict)
-            replace_id_refs.proceed()
-        else:
-            return None
 
-    def CollateUniqueVals(self, element_list, _old_id_dict, _new_id_dict, \
+        replace_id_refs = ReplaceStylesAndRegions(document.binding, \
+                                                      old_id_dict, \
+                                                      new_id_dict)
+        replace_id_refs.proceed()
+
+    def CollateUniqueVals(self, element_list, old_id_dict, new_id_dict, \
                           hash_dict):
         for value in element_list:
-            #deduplicating in-line styles
+            #deduplicating in-line style attributes
             if value.style is not None:
                 for old_id_index in range(len(value.style)):
-                    old_id_ref = _old_id_dict.get(value.style[old_id_index])
-                    new_id_ref = _new_id_dict.get(old_id_ref)
+                    old_id_ref = old_id_dict.get(value.style[old_id_index])
+                    new_id_ref = new_id_dict.get(old_id_ref)
 
                     value.style[old_id_index] = new_id_ref
 
-            #deduplicating region elements
+            #deduplicating elements
             if value is not None:
                 unique_val = ComparableElement(value)
                 # stores references of original <xml:id> to <my_hash>
-                _old_id_dict[value.id] = unique_val.my_hash
+                old_id_dict[value.id] = unique_val.my_hash
                 # stores references of <my_hash> to <tt:region>
                 hash_dict[unique_val.my_hash] = value
 
-    def AppendNewElements(self, element_list, element_to_append_to, _old_id_dict, \
-                          _new_id_dict, hash_dict):
-        for hash_val in hash_dict:
-            new_id = hash_dict.get(hash_val)
+    def AppendNewElements(self, element_list, element_to_append_to, old_id_dict, \
+                          new_id_dict, hash_dict):
+        for hash_val, new_id in hash_dict.iteritems():
 
             for old_element in element_list:
                 if old_element.id is new_id.id:
                     element_to_append_to.append(new_id)
 
-            _new_id_dict[hash_val] = new_id.id
+            new_id_dict[hash_val] = new_id.id
 
 def ReplaceNone(none_value):
     if none_value is None:
@@ -117,20 +115,23 @@ class ComparableElement:
 
         attributeDict = value._AttributeMap.copy()
         xml_id_attr = ExpandedName('http://www.w3.org/XML/1998/namespace', 'id')
-        attributeDict.pop(xml_id_attr, None)
-
+        attributeDict.pop(xml_id_attr)
+        # sorted to make sure that for two elements with the same set of
+        # attributes the values are put into the hash string in the same order
         sortedDict = sorted(attributeDict.items(), key=lambda t: t[0])
 
         concatenatedStyleString = u''
         for key,val in sortedDict:
             styleValue = ReplaceNone(val.value(value))
-            concatenatedStyleString += str(styleValue)
+            concatenatedStyleString += str(styleValue) + '%'
 
         for key,val in value.wildcardAttributeMap().items():
             namespace = ReplaceNone(key.namespaceURI())
             localName = key.localName()
             wildcardValue = ReplaceNone(val)
-            concatenatedStyleString += namespace + localName + wildcardValue
+            concatenatedStyleString += namespace + '%' + localName + '%' + wildcardValue
+            print localName
+            print concatenatedStyleString
 
         self.my_hash = hash(concatenatedStyleString)
 
@@ -145,16 +146,16 @@ class ComparableElement:
 
 
 class ReplaceStylesAndRegions(RecursiveOperation):
-    _old_id_dict = None
-    _new_id_dict = None
+    old_id_dict = None
+    new_id_dict = None
 
-    def __init__(self, root_element, _old_id_dict, _new_id_dict):
+    def __init__(self, root_element, old_id_dict, new_id_dict):
             super(ReplaceStylesAndRegions, self).__init__(
                 root_element
             )
 
-            self._old_id_dict = _old_id_dict
-            self._new_id_dict = _new_id_dict
+            self.old_id_dict = old_id_dict
+            self.new_id_dict = new_id_dict
 
     def _is_begin_timed(self, value):
         pass
@@ -167,14 +168,16 @@ class ReplaceStylesAndRegions(RecursiveOperation):
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
         # The latter part of this and the next test is to check that the instance
-        # is not a styling or layout element as these can also have style attributes
+        # is not a styling or layout element as these can't have style attributes
+        # but their style elements present themselves in exactly the same way as
+        # style attributes on other elements, so we have to avoid getting confused by them
         if hasattr(value, 'style') and value.style is not None and not \
         isinstance(value, bindings.styling):
             id_to_index_dict = dict()
-
+            # Stepping backwards to preserve hierarchy of style attributes
             for old_id_index in range(len(value.style)-1, -1, -1):
-                old_id_ref = self._old_id_dict.get(value.style[old_id_index])
-                new_id_ref = self._new_id_dict.get(old_id_ref)
+                old_id_ref = self.old_id_dict.get(value.style[old_id_index])
+                new_id_ref = self.new_id_dict.get(old_id_ref)
 
                 # Next two lines remove in-line style duplication
                 if new_id_ref in id_to_index_dict:
@@ -188,8 +191,8 @@ class ReplaceStylesAndRegions(RecursiveOperation):
 
         if hasattr(value, 'region') and value.region is not None and not \
         isinstance(value, bindings.layout):
-            old_id_ref = self._old_id_dict.get(value.region)
-            new_id_ref = self._new_id_dict.get(old_id_ref)
+            old_id_ref = self.old_id_dict.get(value.region)
+            new_id_ref = self.new_id_dict.get(old_id_ref)
 
             value.region = new_id_ref
         else:
