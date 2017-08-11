@@ -13,7 +13,6 @@ import logging
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
-
 class DeDuplicatorNode(AbstractCombinedNode):
     _sequence_identifier = None
     _expects = EBUTT3Document
@@ -41,7 +40,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 document.sequence_identifier = self._sequence_identifier
 
                 self.remove_duplication(document=document)
-                print document.get_xml()
+                
                 document.validate()
                 self.producer_carriage.emit_data(data=document, **kwargs)
 
@@ -115,7 +114,7 @@ class ComparableElement:
 
         attributeDict = value._AttributeMap.copy()
         xml_id_attr = ExpandedName('http://www.w3.org/XML/1998/namespace', 'id')
-        attributeDict.pop(xml_id_attr)
+        attributeDict.pop(xml_id_attr) # Need to add error notification
         # sorted to make sure that for two elements with the same set of
         # attributes the values are put into the hash string in the same order
         sortedDict = sorted(attributeDict.items(), key=lambda t: t[0])
@@ -130,8 +129,6 @@ class ComparableElement:
             localName = key.localName()
             wildcardValue = ReplaceNone(val)
             concatenatedStyleString += namespace + '%' + localName + '%' + wildcardValue
-            print localName
-            print concatenatedStyleString
 
         self.my_hash = hash(concatenatedStyleString)
 
