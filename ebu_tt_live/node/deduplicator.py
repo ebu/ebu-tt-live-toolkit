@@ -14,6 +14,10 @@ log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
 class DeDuplicatorNode(AbstractCombinedNode):
+    """
+    The DeDuplicator Node addresses the issue raised, whereby after ReSequencing duplication
+    of style and region elements and attributes occurs.
+    """
     _sequence_identifier = None
     _expects = EBUTT3Document
     _provides = EBUTT3Document
@@ -40,7 +44,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 document.sequence_identifier = self._sequence_identifier
 
                 self.remove_duplication(document=document)
-                
+
                 document.validate()
                 self.producer_carriage.emit_data(data=document, **kwargs)
 
@@ -87,7 +91,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
                 unique_val = ComparableElement(value)
                 # stores references of original <xml:id> to <my_hash>
                 old_id_dict[value.id] = unique_val.my_hash
-                # stores references of <my_hash> to <tt:region>
+                # stores references of <my_hash> to element
                 hash_dict[unique_val.my_hash] = value
 
     def AppendNewElements(self, element_list, element_to_append_to, old_id_dict, \

@@ -79,7 +79,7 @@ The more detailed options are: ::
     │ ├─id : identifier for the node, defaults to a value based on the node's type.
     │ └─[node type-dependent options - see below]
     backend
-    └─type: ["twisted" (default) | "dummy"]    
+    └─type: ["twisted" (default) | "dummy"]
 
 Node type dependent options for [nodeN] : ::
 
@@ -119,6 +119,9 @@ Node type dependent options for [nodeN] : ::
    type="handover"
    ├─authors_group_identifier : the authors' group to follow, default "AuthorsGroup1"
    └─sequence_identifier : sequence identifier, default "HandoverSequence1"
+
+   type="deduplicator"
+   └─sequence_identifier : sequence identifier, default "DeDuplicated1"
 
    type="distributor" : No options
 
