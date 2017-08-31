@@ -55,6 +55,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
         if document.binding.head.styling is not None:
             styles = document.binding.head.styling.style
+            print styles
             document.binding.head.styling.style = None
 
             self.CollateUniqueVals(styles, old_id_dict, new_id_dict, hash_dict)
@@ -77,6 +78,9 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
     def CollateUniqueVals(self, element_list, old_id_dict, new_id_dict, \
                           hash_dict):
+        """
+        Creates a `dict()` of all unique style/region names
+        """
         for value in element_list:
             #deduplicating in-line style attributes
             if value.style is not None:
@@ -96,6 +100,10 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
     def AppendNewElements(self, element_list, element_to_append_to, old_id_dict, \
                           new_id_dict, hash_dict):
+        """
+        Replaces starting style and region elements with the unique ones identified in
+        CollateUniqueVals
+        """
         for hash_val, new_id in hash_dict.iteritems():
 
             for old_element in element_list:
@@ -104,21 +112,29 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
             new_id_dict[hash_val] = new_id.id
 
-def ReplaceNone(none_value):
-    if none_value is None:
+def ReplaceNone(attr_value):
+    """
+    If an attribute has no value, it is given non-legal character as a value, to
+    prevent 'collisions'
+    """
+    if attr_value is None:
         return "|" # '|' is a non-legal character and this is used to prevent
                    # collisions between similar attributes
     else:
-        return none_value
+        return attr_value
 
 
 class ComparableElement:
+    """
+    Takes all the attributes of an element and returns a hash value
+    """
     def __init__(self, value):
         self.value = value
 
         attributeDict = value._AttributeMap.copy()
         xml_id_attr = ExpandedName('http://www.w3.org/XML/1998/namespace', 'id')
-        attributeDict.pop(xml_id_attr) # Need to add error notification
+        attributeDict.pop(xml_id_attr) # This shouldn't throw an error, but if it does, something's wrong
+
         # sorted to make sure that for two elements with the same set of
         # attributes the values are put into the hash string in the same order
         sortedDict = sorted(attributeDict.items(), key=lambda t: t[0])
@@ -168,6 +184,9 @@ class ReplaceStylesAndRegions(RecursiveOperation):
         pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
+        """
+        Replaces the style and region attributes in the rest of
+        """
         # The latter part of this and the next test is to check that the instance
         # is not a styling or layout element as these can't have style attributes
         # but their style elements present themselves in exactly the same way as

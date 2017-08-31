@@ -1,6 +1,7 @@
 from unittest import TestCase
 import os
 from ebu_tt_live import bindings
+from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation
 from ebu_tt_live.bindings import ebuttdt as datatypes
 from ebu_tt_live.bindings import ebuttm as metadata
 from ebu_tt_live.node import deduplicator
@@ -162,31 +163,37 @@ class TestReplaceStylesAndRegions(TestCase):
             document = EBUTT3Document.create_from_raw_binding(binding=self.tt)
             document.validate()
 
-            self.assertIsInstance(document.get_element_by_id('SEQ58.defaultStyle1'), bindings.style_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ59.defaultStyle1'), bindings.style_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ60.defaultStyle1'), bindings.style_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ61.defaultStyle1'), bindings.style_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ58.bottomRegion1'), bindings.region_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ59.bottomRegion1'), bindings.region_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ60.bottomRegion1'), bindings.region_type)
-            self.assertIsInstance(document.get_element_by_id('SEQ61.bottomRegion1'), bindings.region_type)
-
-            self.assertIsInstance(document.get_element_by_id('ID005'), bindings.p_type)
-            self.assertIsInstance(document.get_element_by_id('span1'), bindings.span_type)
-            self.assertIsInstance(document.get_element_by_id('span2'), bindings.span_type)
-
-            self.assertIsInstance(document.get_element_by_id('ID006'), bindings.p_type)
-            self.assertIsInstance(document.get_element_by_id('span3'), bindings.span_type)
-            self.assertIsInstance(document.get_element_by_id('span4'), bindings.span_type)
-
-            self.assertIsInstance(document.get_element_by_id('ID007'), bindings.p_type)
-            self.assertIsInstance(document.get_element_by_id('span5'), bindings.span_type)
-            self.assertIsInstance(document.get_element_by_id('span6'), bindings.span_type)
-
-            self.assertIsInstance(document.get_element_by_id('ID008'), bindings.p_type)
-            self.assertIsInstance(document.get_element_by_id('span7'), bindings.span_type)
-            self.assertIsInstance(document.get_element_by_id('span8'), bindings.span_type)
-
             cdoc = self.replaceStylesAndRegions(document, self.test_old_ids, self.test_new_ids)
+            cdoc.proceed()
 
-            print cdoc
+            document.validate()
+
+            print document.get_xml()
+
+            self.fail()
+
+            # self.test_new_ids.clear()
+            #
+            # check_attrs = CheckAttr(cdoc, self.test_new_ids)
+            # check_attrs.proceed()
+
+# class CheckAttr(RecursiveOperation):
+#     def __init__(self, root_element, test_new_ids):
+#             super(CheckAttr, self).__init__(
+#                 root_element
+#             )
+#
+#             self.test_new_ids = test_new_ids
+#
+#     def _is_begin_timed(self, value):
+#         pass
+#
+#     def _before_element(self, value, element=None, parent_binding=None, **kwargs):
+#         pass
+#
+#     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
+#         pass
+#
+#     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
+#         assert value.style in test_new_ids.values()
+#         assert value.region in test_new_ids.values()
