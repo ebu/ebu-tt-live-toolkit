@@ -170,7 +170,7 @@ class TestReplaceStylesAndRegions(TestCase):
 
             print document.get_xml()
 
-            self.fail()
+            # self.fail()
 
             # self.test_new_ids.clear()
             #
