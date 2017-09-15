@@ -77,7 +77,8 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         fs_carriage.emit_data(data, sequence_identifier='testSeq')
-        assert os.listdir(self.test_dir_path) == []
+        # Expected behaviour is to write the message file but fail to write the manifest.
+        assert os.listdir(self.test_dir_path) == ['testSeq_msg_1.xml']
         assert fs_carriage._default_clocks == {}
 
     def test_msg_mid_sequence_missing_availability(self):
@@ -120,7 +121,7 @@ class TestFilesystemProducerImpl(TestCase):
         data = 'live message without availability time'
         # This message does not have enough information to produce a reference clock by itself
         fs_carriage.emit_data(data, sequence_identifier='testSeq')
-        assert len(os.listdir(self.test_dir_path)) == 2  # document, message and manifest
+        assert len(os.listdir(self.test_dir_path)) == 3  # document, message and manifest
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
         exported_message_path = os.path.join(self.test_dir_path, 'testSeq_msg_1.xml')
