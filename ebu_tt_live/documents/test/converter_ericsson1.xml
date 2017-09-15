@@ -12,7 +12,7 @@
                 <ebuttm:documentOriginalProgrammeTitle>tgv</ebuttm:documentOriginalProgrammeTitle>
                 <ebuttm:documentOriginalEpisodeTitle>tgv</ebuttm:documentOriginalEpisodeTitle>
                 <ebuttm:documentCreationDate>2016-09-06</ebuttm:documentCreationDate>
-                <ebuttm:documentRevisionNumber/>
+                <!-- <ebuttm:documentRevisionNumber/> -->
                 <ebuttm:documentMaximumNumberOfDisplayableCharacterInAnyRow>37</ebuttm:documentMaximumNumberOfDisplayableCharacterInAnyRow>
                 <ebuttm:documentCountryOfOrigin>UK</ebuttm:documentCountryOfOrigin>
                 <ebuttm:documentPublisher>Ericsson and Redbee</ebuttm:documentPublisher>
