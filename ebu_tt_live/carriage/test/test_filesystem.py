@@ -125,7 +125,7 @@ class TestFilesystemProducerImpl(TestCase):
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
         exported_message_path = os.path.join(self.test_dir_path, 'testSeq_msg_1.xml')
-        assert not os.path.exists(exported_message_path)
+        assert os.path.exists(exported_message_path)
         manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
         assert os.path.exists(manifest_path)
 
