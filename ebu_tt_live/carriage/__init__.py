@@ -1,7 +1,7 @@
 
 from .interface import IConsumerCarriage, IProducerCarriage, ICarriageMechanism
 from .base import AbstractProducerCarriage, AbstractConsumerCarriage, AbstractCombinedCarriage
-from .filesystem import FilesystemConsumerImpl, FilesystemProducerImpl, FilesystemReader, RotatingFolderExport
+from .filesystem import FilesystemConsumerImpl, FilesystemProducerImpl, FilesystemReader
 from .websocket import WebsocketConsumerCarriage, WebsocketProducerCarriage
 
 
