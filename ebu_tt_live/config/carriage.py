@@ -54,6 +54,7 @@ class FilesystemOutput(ConfigurableComponent):
         'folder',
         default='./export',
         doc='The output folder/directory. Folder is created if it does not exist. Existing files are overwritten.'
+    )
     required_config.add_option(
         'filename_pattern',
         default='{sequence_identifier}_{counter}.xml',
