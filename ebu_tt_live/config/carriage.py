@@ -5,6 +5,7 @@ from ebu_tt_live.carriage import filesystem
 from ebu_tt_live.utils import HTTPProxyConfig
 from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE, ERR_NO_SUCH_COMPONENT
 from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
 import urlparse
 import re
 
@@ -57,12 +58,12 @@ class FilesystemOutput(ConfigurableComponent):
     )
     required_config.add_option(
         'filename_pattern',
-        default='{sequence_identifier}_{counter}.xml',
+        default=CFG_FILENAME_PATTERN,
         doc='File name pattern. It needs to contain {counter} format parameter.'
     )
     required_config.add_option(
         'message_filename_pattern',
-        default='{sequence_identifier}_msg_{counter}.xml',
+        default=CFG_MESSAGE_PATTERN,
         doc='File name pattern. It needs to contain {counter} format parameter.'
     )
     required_config.add_option(

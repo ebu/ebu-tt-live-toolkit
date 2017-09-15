@@ -3,7 +3,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.clocks import get_clock
 from ebu_tt_live.utils import RotatingFileBuffer
-from ebu_tt_live.strings import FS_DEFAULT_CLOCK_USED, FS_MISSING_AVAILABILITY
+from ebu_tt_live.strings import FS_DEFAULT_CLOCK_USED, FS_MISSING_AVAILABILITY, CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
 from datetime import timedelta
 import logging
 import six
@@ -69,8 +69,8 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
     _msg_counter = None
 
     def __init__(self, dirpath, 
-                 file_name_pattern, 
-                 message_file_name_pattern, 
+                 file_name_pattern = CFG_FILENAME_PATTERN, 
+                 message_file_name_pattern = CFG_MESSAGE_PATTERN, 
                  circular_buf_size = 0, 
                  suppress_manifest = False):
         self._dirpath = dirpath
