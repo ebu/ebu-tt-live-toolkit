@@ -68,7 +68,8 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
     _default_clocks = None
     _msg_counter = None
 
-    def __init__(self, dirpath, 
+    def __init__(self, 
+                 dirpath, 
                  file_name_pattern = CFG_FILENAME_PATTERN, 
                  message_file_name_pattern = CFG_MESSAGE_PATTERN, 
                  circular_buf_size = 0, 
@@ -136,21 +137,20 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         # Handle there the switch and checks to handle the string format to use
         # for times in the manifest file depending on your time base.
         if sequence_number is None:
-            # This means that it isn't a document. It can be a message.
+            # This means that it isn't a Part 3 document. It can be a message, or an EBU-TT-D document.
+            # We don't try to spot the difference between a message and an EBU-TT-D document:
+            # instead we just use the message format for EBU-TT-D documents!
             self._msg_counter += 1
             filename = self._message_file_name_pattern.format(
                 counter=self._msg_counter, 
                 sequence_identifier=sequence_identifier)
-            #filename = '{}_msg_{}.xml'.format(sequence_identifier, self._msg_counter)
         else:
-            #how do i tell the difference between a message and an EBU-TT-D document?
-            #maybe the answer is to use the message format for EBU-TT-D documents!
+            # It's a Part 3 document, so use the sequence number.
             filename = self._file_name_pattern.format(
                 counter=sequence_number, 
                 sequence_identifier=sequence_identifier)
-            #filename = '{}_{}.xml'.format(sequence_identifier, sequence_number)
             
-        # consider using different classes or functions to do the document writing,
+        # TODO: consider using different classes or functions to do the document writing,
         # depending on the settings of suppress_manifest and rotating_buf etc that
         # can be selected once at the beginning and dereferenced rather than repeating
         # if statements.
@@ -175,10 +175,12 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
             )
 
             if availability_time is None:
-                # This is a possibility with a live messages as first document. They don't contain enough timing info.
+                # This is a possibility with a live messages as first document.
+                # They don't contain enough timing info.
                 log.warning(
-                    FS_MISSING_AVAILABILITY.format(sequence_identifier=sequence_identifier,
-                                                   file_path=filepath)
+                    FS_MISSING_AVAILABILITY.format(
+                        sequence_identifier=sequence_identifier,
+                        file_path=filepath)
                 )
                 # Without availability time we can not create manifest file.
                 # In this case we have written an output file but no matching
