@@ -30,11 +30,6 @@ class TestDeDuplicator(TestCase):
         self.deduplicatorNode.process_document(document)
         self.deduplicatorNode.producer_carriage.emit_data.assert_called_with(data=document)
 
-    # def test_remove_duplication(self):
-    #     document = MagicMock(spec=EBUTT3Document)
-    #     self.deduplicatorNode.remove_duplication(document)
-    #     self.deduplicatorNode.remove_duplication.assertIs(document=document)
-
     def test_collate_unique_vals(self):
         document = MagicMock(spec=EBUTT3Document)
 
@@ -72,10 +67,6 @@ class TestDeDuplicator(TestCase):
         self.deduplicatorNode.CollateUniqueVals(test_styles, old_id_dict, new_id_dict, hash_dict)
         self.deduplicatorNode.AppendNewElements(test_styles, test_styles_blank, old_id_dict, new_id_dict, hash_dict)
 
-        # assert len(test_styles_blank) is 1
-
-        # for ts in test_styles_blank:
-        #     assert ts.id is not None
 
 # ReplaceNone
 # Passed attributes - where an attribute has no value, it is replaced with the

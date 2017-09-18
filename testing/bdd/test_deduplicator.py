@@ -28,21 +28,18 @@ def given_deduplicator_node():
 def when_document_processed(given_deduplicator_node, gen_document, test_context):
     given_deduplicator_node.process_document(gen_document)
     test_context['doc'] = gen_document
-#    given_deduplicator_node.producer_carriage.emit_data.assert_called_once()
     given_deduplicator_node.producer_carriage.reset_mock()
 
 @when('the first document is processed')
 def when_first_document_processed(given_deduplicator_node, gen_first_document, test_context):
     given_deduplicator_node.process_document(gen_first_document)
     test_context['doc1'] = gen_first_document
-#    given_deduplicator_node.producer_carriage.emit_data.assert_called_once()
     given_deduplicator_node.producer_carriage.reset_mock()
 
 @then('the second document is processed')
 def when_second_document_processed(given_deduplicator_node, gen_second_document, test_context):
     given_deduplicator_node.process_document(gen_second_document)
     test_context['doc2'] = gen_second_document
-#    given_deduplicator_node.producer_carriage.emit_data.assert_called_once()
     given_deduplicator_node.producer_carriage.reset_mock()
 
 @then('the output document has <style_out_num> styles')

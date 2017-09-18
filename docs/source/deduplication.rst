@@ -2,8 +2,8 @@ DeDuplication of EBU-TT-Live documents
 ======================================
 
 When documents are ReSequenced, duplication of ``style`` and ``region`` elements
-and attributes can occur. To address this, the DeDuplicator node takes in a
-``manifest_file``, and processes the document(s) with the
+and attributes can occur. To address this, the DeDuplicator node processes the
+document(s) with the
 :py:func:`ebu_tt_live.node.deduplicator.DeDuplicatorNode.remove_duplication` function.
 
 After copying ``styling`` and ``layout`` into a ``list()`` and setting them up for new
@@ -11,7 +11,9 @@ After copying ``styling`` and ``layout`` into a ``list()`` and setting them up f
 :py:func:`ebu_tt_live.node.deduplicator.DeDuplicatorNode.CollateUniqueVals` function.
 
 Because ``style`` and ``region`` elements can have ``style`` attributes, these
-are deduplicated first. Each element is then passed through the
+are deduplicated first. At this stage, it's possible that where two identical elements
+that differed only in their style references, these may end up looking the same.
+ Each element is then passed through the
 :py:class:`ebu_tt_live.node.deduplicator.ComparableElement` class, which processes
 each attribute, omitting the ``xml:id`` and using the
 :py:func:`ebu_tt_live.node.deduplicator.ReplaceNone` function to replace empty
@@ -31,10 +33,12 @@ where the hash is the ``key`` and the ``xml:id`` is the ``value``.
 
 In the final step, before emitting the document, the document as it is at this stage is passed
 through the :py:class:`ebu_tt_live.node.deduplicator.ReplaceStylesAndRegions` class.
-This addresses where a ``style`` or ``region`` attribute has been declared, and
-replaces the reference to the old ``xml:id`` with the new one stored in ``new_id_dict``,
-which is done by taking the reference to the old ``xml:id``, matching it to the key
-in ``old_id_dict`` to find the hash ``value``, then matching the hash to the ``key``
-in ``new_id_dict`` to get the new ``xml:id`` reference. While doing this, it also
-deduplicates instances where multiple ``style`` attributes have been referenced,
-removing duplicates while maintaining the hierarchy in which they were declared.
+This utilises RecursiveOperation i.e. this class is used to recursively fix
+the style and region attribute values, by addressing where a ``style`` or ``region``
+attribute has been declared, and replaces the reference to the old ``xml:id`` with
+the new one stored in ``new_id_dict``, which is done by taking the reference to
+the old ``xml:id``, matching it to the key in ``old_id_dict`` to find the hash
+``value``, then matching the hash to the ``key`` in ``new_id_dict`` to get the
+new ``xml:id`` reference. While doing this, it also deduplicates instances where
+multiple ``style`` attributes have been referenced, removing duplicates while
+maintaining the hierarchy in which they were declared.

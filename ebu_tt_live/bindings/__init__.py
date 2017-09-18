@@ -823,10 +823,6 @@ class br_type(SemanticValidationMixin, raw.br_type):
 
 raw.br_type._SetSupersedingClass(br_type)
 
-
-#raw.source_style._SetSupersedingClass(source_style)
-#raw.element_style._SetSupersedingClass(element_style)
-
 class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):
 

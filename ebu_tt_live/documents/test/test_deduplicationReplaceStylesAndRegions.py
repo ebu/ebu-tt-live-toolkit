@@ -1,5 +1,4 @@
 from unittest import TestCase
-import os
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation
 from ebu_tt_live.bindings import ebuttdt as datatypes
@@ -169,31 +168,3 @@ class TestReplaceStylesAndRegions(TestCase):
             document.validate()
 
             print document.get_xml()
-
-            # self.fail()
-
-            # self.test_new_ids.clear()
-            #
-            # check_attrs = CheckAttr(cdoc, self.test_new_ids)
-            # check_attrs.proceed()
-
-# class CheckAttr(RecursiveOperation):
-#     def __init__(self, root_element, test_new_ids):
-#             super(CheckAttr, self).__init__(
-#                 root_element
-#             )
-#
-#             self.test_new_ids = test_new_ids
-#
-#     def _is_begin_timed(self, value):
-#         pass
-#
-#     def _before_element(self, value, element=None, parent_binding=None, **kwargs):
-#         pass
-#
-#     def _after_element(self, value, element=None, parent_binding=None, **kwargs):
-#         pass
-#
-#     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
-#         assert value.style in test_new_ids.values()
-#         assert value.region in test_new_ids.values()
