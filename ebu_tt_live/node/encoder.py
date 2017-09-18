@@ -41,4 +41,8 @@ class EBUTTDEncoder(AbstractCombinedNode):
             converted_doc = EBUTTDDocument.create_from_raw_binding(
                 self._ebuttd_converter.convert_document(document.binding)
             )
-            self.producer_carriage.emit_data(data=converted_doc, sequence_identifier='default', **kwargs)
+            # Specify the time_base since the FilesystemProducerImpl can't derive it otherwise.
+            # Hard coded to 'media' because that's all that's permitted in EBU-TT-D. Alternative
+            # would be to extract it from the EBUTTDDocument but since it's the only permitted
+            # value that would be an unnecessary overhead...
+            self.producer_carriage.emit_data(data=converted_doc, sequence_identifier='default', time_base='media', **kwargs)
