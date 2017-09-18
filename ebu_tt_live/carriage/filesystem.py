@@ -27,7 +27,7 @@ def timestr_manifest_to_timedelta(timestr):
         seconds, milliseconds = rest.split(".")
         return timedelta(hours=int(hours), minutes=int(minutes), seconds=int(seconds), milliseconds=int(milliseconds))
 
-
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 class FilesystemProducerImpl(AbstractProducerCarriage):
     """
@@ -101,16 +101,16 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
     def check_availability_time(
             self, sequence_identifier, time_base=None, clock_mode=None, availability_time=None):
         """
-        Make sure we have a suitable timedelta value sent down from upstream as availability_time. 
-        If the value is None or unusable use the default clock to derive an availability time 
+        Make sure we have a suitable timedelta value sent down from upstream as availability_time.
+        If the value is None or unusable use the default clock to derive an availability time
         for the current document. (This does not check if the value is within valid range)
-        
+
         :param sequence_identifier: remember default clock used per sequence
         :param time_base: document time base
         :param clock_mode: in clock timebase this parameter is needed
         :param availability_time: provided availability_time from upstream
         :return: a valid availability_time (timedelta)
-        
+
         """
 
         if not isinstance(availability_time, timedelta):

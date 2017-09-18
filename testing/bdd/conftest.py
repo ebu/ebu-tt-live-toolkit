@@ -17,6 +17,7 @@ def template_file(xml_file):
                          trim_blocks=True)
     return j2_env.get_template(xml_file)
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 @given('a sequence <sequence_identifier> with timeBase <time_base>')
 def sequence(sequence_identifier, time_base):

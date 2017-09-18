@@ -4,6 +4,8 @@ from . import local
 from . import utc
 from . import media
 
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
+
 
 def get_clock(time_base, **kwargs):
     if time_base == 'clock':
