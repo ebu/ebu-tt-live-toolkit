@@ -12,7 +12,7 @@
                 <ebuttm:documentOriginalProgrammeTitle>tgv</ebuttm:documentOriginalProgrammeTitle>
                 <ebuttm:documentOriginalEpisodeTitle>tgv</ebuttm:documentOriginalEpisodeTitle>
                 <ebuttm:documentCreationDate>2016-09-06</ebuttm:documentCreationDate>
-                <!--<ebuttm:documentRevisionNumber/> <== this element was part of the document originally generated but fails the tests because it's not conformant, so commented out in order to proceed, but leaving in for future archaeologists -->
+                <!--<ebuttm:documentRevisionNumber/> --> <!-- <== this element was part of the document originally generated but fails the tests because it's not conformant, so commented out in order to proceed, but leaving in for future archaeologists -->
                 <ebuttm:documentMaximumNumberOfDisplayableCharacterInAnyRow>37</ebuttm:documentMaximumNumberOfDisplayableCharacterInAnyRow>
                 <ebuttm:documentCountryOfOrigin>UK</ebuttm:documentCountryOfOrigin>
                 <ebuttm:documentPublisher>Ericsson and Redbee</ebuttm:documentPublisher>
