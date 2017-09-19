@@ -86,14 +86,17 @@ class TestComparableElement(TestCase):
     def test_dup_elements_diff_ids(self):
         test_instance1 = self.comparableElement(self.test_style1)
         test_instance2 = self.comparableElement(self.test_style2)
-        assert test_instance1.my_hash == test_instance2.my_hash
+        self.assertEqual(test_instance1.my_hash, test_instance2.my_hash)
+        self.assertEqual(test_instance1, test_instance2)
 
     def test_two_diff_elements(self):
         test_instance1 = self.comparableElement(self.test_style1)
         test_instance2 = self.comparableElement(self.test_style3)
-        assert test_instance1.my_hash != test_instance2.my_hash
+        self.assertNotEqual(test_instance1.my_hash, test_instance2.my_hash)
+        self.assertNotEqual(test_instance1, test_instance2)
 
     def test_dup_elements_diff_order_attrs(self):
         test_instance1 = self.comparableElement(self.test_style3)
         test_instance2 = self.comparableElement(self.test_style4)
-        assert test_instance1.my_hash == test_instance2.my_hash
+        self.assertEqual(test_instance1.my_hash, test_instance2.my_hash)
+        self.assertEqual(test_instance1, test_instance2)
