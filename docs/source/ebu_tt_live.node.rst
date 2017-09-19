@@ -72,3 +72,11 @@ node Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`deduplicator` Module
+----------------------
+
+.. automodule:: ebu_tt_live.node.deduplicator
+    :members:
+    :undoc-members:
+    :show-inheritance:

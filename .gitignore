@@ -126,6 +126,9 @@ docs/build/*
 !docs/build/index.html
 !docs/build/img
 
+# Test Sequences export folder
+export/
+
 # Mac OS X files
 .DS_Store
 

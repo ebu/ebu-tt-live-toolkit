@@ -1,0 +1,21 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "deduplicator1",
+      "type": "deduplicator",
+      "sequence_identifier": "DeDuplicated1",
+      "input": {
+        "carriage": {
+          "type": "filesystem",
+            "manifest_file": "export/manifest_ReSequenced2.txt",
+            "tail": "true"
+        }
+      },
+      "output": {
+        "carriage": {
+          "type": "filesystem"
+        }
+      }
+    }
+  }
+}

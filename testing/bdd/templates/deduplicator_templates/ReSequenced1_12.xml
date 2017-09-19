@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="ReSequenced1" ebuttp:sequenceNumber="12" ttp:cellResolution="32 15" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:ebutts="urn:ebu:tt:style" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:styling>
+      <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="SEQ58.defaultStyle1"/>
+      <tt:style ebutts:linePadding="0.5c" tts:color="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="SEQ59.defaultStyle1"/>
+      <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(255, 255, 255)" tts:fontFamily="sansSerif" xml:id="SEQ60.defaultStyle1"/>
+      <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="Serif" xml:id="SEQ61.defaultStyle1"/>
+      <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(255, 255, 255)" tts:fontFamily="Serif" xml:id="SEQ62.defaultStyle1"/>
+      <tt:style ebutts:linePadding="0.5c" tts:backgroundColor="rgb(0, 0, 0)" tts:color="rgb(0, 255, 255)" tts:fontFamily="Serif" xml:id="SEQ63.defaultStyle1"/>
+    </tt:styling>
+    <tt:layout>
+      <tt:region tts:displayAlign="after" tts:extent="71.25% 24%" tts:origin="14.375% 60%" tts:overflow="visible" tts:writingMode="lrtb" xml:id="SEQ58.bottomRegion" style="SEQ61.defaultStyle1"/>
+      <tt:region tts:displayAlign="after" tts:extent="71.25% 24%" tts:origin="14.375% 60%" tts:overflow="visible" tts:writingMode="lrtb" xml:id="SEQ59.bottomRegion" style="SEQ58.defaultStyle1"/>
+      <tt:region tts:displayAlign="after" tts:extent="71.25% 24%" tts:origin="14.375% 60%" tts:overflow="visible" tts:writingMode="lrtb" xml:id="SEQ60.bottomRegion" style="SEQ62.defaultStyle1"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body>
+    <tt:div region="SEQ58.bottomRegion">
+      <tt:p xml:id="SEQ58.ID001.1">
+
+
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="SEQ62.defaultStyle1">Multiply your anger by about a</tt:span>
+
+
+        <tt:br/>
+
+
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="SEQ58.defaultStyle1 SEQ61.defaultStyle1 SEQ62.defaultStyle1">hundred, Kate, that's how much he</tt:span>
+
+
+      </tt:p>
+    </tt:div>
+    <tt:div region="SEQ59.bottomRegion">
+      <tt:p xml:id="SEQ59.ID001.1">
+
+
+        <tt:span begin="12:24:27.732" end="12:24:28.732" style="SEQ59.defaultStyle1">thinks he loves you.</tt:span>
+
+
+      </tt:p>
+    </tt:div>
+    <tt:div region="SEQ60.bottomRegion">
+      <tt:p xml:id="SEQ60.ID001">
+
+
+        <tt:span begin="12:24:29.733" end="12:24:30.733" style="SEQ60.defaultStyle1">Multiply your anger by about a</tt:span>
+
+
+        <tt:br/>
+
+
+        <tt:span begin="12:24:29.733" end="12:24:30.733" style="SEQ60.defaultStyle1">hundred, Kate, that's how much he</tt:span>
+
+
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

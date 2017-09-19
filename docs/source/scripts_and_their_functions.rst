@@ -22,7 +22,7 @@ into a sequence of EBU-TT Live documents using natural language processing. Use
 
 The default carriage mechanism is WebSocket, so you will need to listen to
 ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just
-that. After you launch the Simple Producer, open `docs/build/ui/test/index.html <../ui/test/index.html>`_ 
+that. After you launch the Simple Producer, open `docs/build/ui/test/index.html <../ui/test/index.html>`_
 or the `current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/test/>`_ in your
 browser. The 'Broadcast message' field should be populated with the correct
 address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can
@@ -99,6 +99,13 @@ equivalent to a longer carriage latency, no modification to the documents is
 required. The Buffer Delay Node is primarily intended for delaying implicitly
 timed documents for resynchronisation. Use ``ebu-run`` to start this script, for
 example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer_delay.json``
+
+DeDuplicator Node
+-----------------
+This node addresses instances where ``style`` and ``region`` elements and
+attributes are duplicated.
+For the default configuration of the node, see:
+``ebu-run --admin.conf=ebu_tt_live/examples/config/deduplicator_fs.json``
 
 Retiming Delay Node
 -------------------

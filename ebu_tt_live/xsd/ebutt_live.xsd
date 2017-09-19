@@ -2,7 +2,7 @@
 <!-- Copyright 2016, EBU, www.ebu.ch -->
 <!-- Version of XML Schema: 0.9 -->
 <!-- Creation: Current draft for EBU-TT Part 3 Update -->
-<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9. 
+<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9.
 Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tt="http://www.w3.org/ns/ttml"
 	xmlns:ebuttdt="urn:ebu:tt:datatypes" xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
@@ -20,7 +20,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	<xs:import namespace="urn:ebu:tt:datatypes" schemaLocation="ebutt_datatypes.xsd"/>
 	<xs:import namespace="urn:ebu:tt:parameters" schemaLocation="ebutt_parameters.xsd"/>
 	<xs:import namespace="http://www.w3.org/ns/ttml#metadata" schemaLocation="metadata.xsd"/>
-	
+
 	<xs:complexType name="head_type">
 		<xs:annotation>
 			<xs:documentation>Contains metadata as well as layout and styling information that are
@@ -88,6 +88,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		</xs:attribute>
 		<xs:attribute ref="ebutts:multiRowAlign" use="optional"/>
 		<xs:attribute ref="ebutts:linePadding" use="optional"/>
+		<xs:anyAttribute namespace="##other" processContents="lax"/>
 
 	</xs:complexType>
 	<xs:complexType name="layout">
@@ -135,6 +136,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		<xs:attribute ref="tts:writingMode" use="optional"/>
 		<xs:attribute ref="tts:showBackground" use="optional"/>
 		<xs:attribute ref="tts:overflow" use="optional"/>
+		<xs:anyAttribute namespace="##other" processContents="lax"/>
 
 	</xs:complexType>
 	<xs:complexType name="body_type">
@@ -377,5 +379,5 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
-	<xs:element name="tt" type="tt:tt_type"/> 
+	<xs:element name="tt" type="tt:tt_type"/>
 </xs:schema>
