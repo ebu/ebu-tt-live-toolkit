@@ -1,7 +1,6 @@
 import six
 from unittest import TestCase
 from mock import MagicMock
-import os
 from ebu_tt_live import bindings
 from ebu_tt_live.node.deduplicator import DeDuplicatorNode, ReplaceStylesAndRegions, ReplaceNone
 from ebu_tt_live.carriage.interface import IProducerCarriage

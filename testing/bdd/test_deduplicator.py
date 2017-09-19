@@ -8,7 +8,7 @@ from pytest_bdd import scenarios, when, then, given
 import six
 import pytest
 
-scenarios('features/deduplicator/deduplicator-blackbox.feature')
+scenarios('features/deduplicator/deduplicator.feature')
 
 
 @given('a deduplicator node')
