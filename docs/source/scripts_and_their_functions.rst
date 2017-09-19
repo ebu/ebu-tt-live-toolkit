@@ -103,8 +103,7 @@ example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer_delay.json``
 DeDuplicator Node
 -----------------
 This node addresses instances where ``style`` and ``region`` elements and
-attributes are duplicated. To carry out the deduplication, the DeDuplicator
-needs to take in a ``manifest_file`` e.g. ``manifest_ReSequenced2.txt``
+attributes are duplicated.
 For the default configuration of the node, see:
 ``ebu-run --admin.conf=ebu_tt_live/examples/config/deduplicator_fs.json``
 
