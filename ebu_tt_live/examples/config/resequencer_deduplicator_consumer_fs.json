@@ -1,0 +1,47 @@
+{
+  "nodes": {
+    "node1": {
+      "id": "resequencer1",
+      "type": "resequencer",
+      "sequence_identifier": "ReSequenced1",
+      "segment_length": "5.0",
+      "clock":  {
+        "type": "local"
+      },
+      "input": {
+        "carriage": {
+          "type": "filesystem",
+            "manifest_file": "export/manifest_TestSequence1.txt",
+            "tail": "true"
+        }
+      },
+      "output": {
+        "carriage": {
+          "type": "filesystem"
+        }
+      }
+    },
+    "node2": {
+      "id": "deduplicator1",
+      "type": "deduplicator",
+      "sequence_identifier": "DeDuplicated1",
+      "input": {
+        "carriage": {
+          "type": "filesystem",
+            "manifest_file": "export/manifest_ReSequenced2.txt",
+            "tail": "true"
+        }
+    },
+    "node3": {
+      "id": "consumer1",
+      "type": "simple-consumer",
+      "input": {
+        "carriage": {
+          "type": "filesystem",
+            "manifest_file": "export/manifest_DeDuplicated1.txt",
+            "tail": "true"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="ReSequenced1" ebuttp:sequenceNumber="12" ttp:cellResolution="32 15" ttp:clockMode="local" ttp:timeBase="clock" xml:lang="en-GB" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:ebutts="urn:ebu:tt:style" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:styling>
+      <tt:style xml:id="seq555_s1" tts:fontFamily="sansSerif" />
+      <tt:style xml:id="seq333_s2" tts:fontFamily="sansSerif" />
+      <tt:style xml:id="seq777_s3" tts:fontFamily="sansSerif" />
+    </tt:styling>
+    <tt:layout>
+      <tt:region xml:id="seq444_r1" tts:origin="14% 60%" tts:extent="71.25% 24%" style="seq555_s1"/>
+      <tt:region xml:id="seq222_r2" tts:origin="14% 60%" tts:extent="71.25% 24%" style="seq555_s1"/>
+      <tt:region xml:id="seq666_r3" tts:origin="14% 60%" tts:extent="71.25% 24%" style="seq555_s1"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body>
+    <tt:div style="seq333_s2">
+      <tt:p xml:id="p1" region="seq222_r2">
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="seq333_s2">Multiply your anger by about a</tt:span>
+        <tt:br/>
+        <tt:span begin="12:24:25.860" end="12:24:26.733" style="seq777_s3">hundred, Kate, that's how much he</tt:span>
+      </tt:p>
+    </tt:div>
+    <tt:div region="seq666_r3" style="seq777_s3 seq555_s1">
+      <tt:p xml:id="p2" style="seq777_s3 seq333_s2">
+        <tt:span begin="14:24:25.860" end="12:24:26.733" style="seq333_s2 seq777_s3 seq555_s1">Multiply your anger by about a</tt:span>
+        <tt:br/>
+        <tt:span begin="14:24:25.860" end="12:24:26.733" style="seq333_s2">hundred, Kate, that's how much he</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
