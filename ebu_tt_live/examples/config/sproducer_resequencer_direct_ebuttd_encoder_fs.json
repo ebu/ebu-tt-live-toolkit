@@ -41,7 +41,8 @@
       },
       "output": {
         "carriage": {
-          "type": "filesystem"
+          "type": "filesystem",
+          "suppress_manifest": true
         }
       }
     }
