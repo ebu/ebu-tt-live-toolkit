@@ -3,7 +3,7 @@ from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.errors import EndOfData
 from ebu_tt_live.clocks import get_clock
 from ebu_tt_live.utils import RotatingFileBuffer
-from ebu_tt_live.strings import FS_DEFAULT_CLOCK_USED, FS_MISSING_AVAILABILITY, CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
+from ebu_tt_live.strings import FS_DEFAULT_CLOCK_USED, FS_MISSING_AVAILABILITY, CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN, CFG_MANIFEST_FILENAME_PATTERN, CFG_MANIFEST_LINE_PATTERN
 from datetime import timedelta
 import logging
 import six
@@ -58,7 +58,6 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
     _dirpath = None
     _file_name_pattern = None
     _message_file_name_pattern = None
-    _manifest_content = None
     _manifest_time_format = None
     _circular_buf_size = 0
     _circular_buf = None
@@ -84,7 +83,6 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         if circular_buf_size > 0 :
             self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
         self._suppress_manifest = suppress_manifest
-        self._manifest_content = ''
         # Get a set of default clocks
         self._default_clocks = {}
         self._msg_counter = 0
@@ -187,19 +185,19 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                 # entry in the manifest file.
                 return
 
-            time_base = time_base
-            availability_time = availability_time
             if delay is not None:
                 availability_time += timedelta(seconds=delay)
 
             # Open the manifest filepath
             if self._manifest_path is None :
-                manifest_filename = "manifest_" + sequence_identifier + ".txt"
+                manifest_filename = CFG_MANIFEST_FILENAME_PATTERN.format(
+                    sequence_identifier=sequence_identifier)
                 self._manifest_path = os.path.join(self._dirpath, manifest_filename)
                 
             # Write a new line to the manifest file
-            new_manifest_line = '{},{}\n'.format(timedelta_to_str_manifest(availability_time), filename)
-            self._manifest_content += new_manifest_line
+            new_manifest_line = CFG_MANIFEST_LINE_PATTERN.format(
+                availability_time=timedelta_to_str_manifest(availability_time), 
+                filename=filename)
             with open(self._manifest_path, 'a') as f:
                 f.write(new_manifest_line)
 
@@ -254,6 +252,7 @@ class FilesystemReader(object):
                     else:
                         break
                 else:
+                    # If CFG_MANIFEST_LINE_PATTERN changes, then the parsing below needs to change too.
                     availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
                     xml_file_path = os.path.join(self._dirpath, xml_file_name)
                     xml_content = None
