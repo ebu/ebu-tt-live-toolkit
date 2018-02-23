@@ -30,6 +30,7 @@ setup(
         "ipdb>=0.10.1,<0.10.3",  # This will eventually be removed from here
         "configobj",
         "pyyaml",
+        "service_identity",
         "twisted",
         "autobahn",
         "nltk",
