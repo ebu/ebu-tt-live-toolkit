@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings._ebuttdt &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.bindings._ebuttdt &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="ebu_tt_live.bindings" href="../bindings.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -263,8 +263,8 @@
         <span class="c1"># 2dimensional</span>
         <span class="k">return</span> <span class="n">cells_in</span><span class="o">.</span><span class="n">horizontal</span> <span class="o">*</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">horizontal</span> <span class="o">/</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">horizontal</span><span class="p">,</span> \
                <span class="n">cells_in</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">cells_in</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span><span class="p">,</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">cells_in</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span><span class="p">,</span>
 
 
 <div class="viewcode-block" id="pixels_to_cells"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.pixels_to_cells">[docs]</a><span class="k">def</span> <span class="nf">pixels_to_cells</span><span class="p">(</span><span class="n">pixels_in</span><span class="p">,</span> <span class="n">root_extent</span><span class="p">,</span> <span class="n">cell_resolution</span><span class="p">):</span>
@@ -273,8 +273,8 @@
     <span class="k">if</span> <span class="n">pixels_in</span><span class="o">.</span><span class="n">horizontal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pixels_in</span><span class="o">.</span><span class="n">horizontal</span> <span class="o">*</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">horizontal</span> <span class="o">/</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">horizontal</span><span class="p">,</span> \
                <span class="n">pixels_in</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">vertical</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">pixels_in</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">vertical</span><span class="p">,</span></div>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">pixels_in</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="n">root_extent</span><span class="o">.</span><span class="n">vertical</span><span class="p">,</span>
 
 
 <div class="viewcode-block" id="named_color_to_rgba"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.named_color_to_rgba">[docs]</a><span class="k">def</span> <span class="nf">named_color_to_rgba</span><span class="p">(</span><span class="n">named_color</span><span class="p">):</span>
@@ -298,15 +298,15 @@
         <span class="s2">&quot;teal&quot;</span><span class="p">:</span> <span class="s2">&quot;008080ff&quot;</span><span class="p">,</span>
         <span class="s2">&quot;aqua&quot;</span><span class="p">:</span> <span class="s2">&quot;00ffffff&quot;</span><span class="p">,</span>
         <span class="s2">&quot;cyan&quot;</span><span class="p">:</span> <span class="s2">&quot;00ffffff&quot;</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="s1">&#39;#</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">color_map</span><span class="p">[</span><span class="n">named_color</span><span class="p">])</span></div>
+    <span class="p">}</span></div>
+    <span class="k">return</span> <span class="s1">&#39;#</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">color_map</span><span class="p">[</span><span class="n">named_color</span><span class="p">])</span>
 
 
 <div class="viewcode-block" id="convert_cell_region_to_percentage"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.convert_cell_region_to_percentage">[docs]</a><span class="k">def</span> <span class="nf">convert_cell_region_to_percentage</span><span class="p">(</span><span class="n">cells_in</span><span class="p">,</span> <span class="n">cell_resolution</span><span class="p">):</span>
     <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">% </span><span class="si">{}</span><span class="s1">%&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
         <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cells_in</span><span class="o">.</span><span class="n">horizontal</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cell_resolution</span><span class="o">.</span><span class="n">horizontal</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
-        <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cells_in</span><span class="o">.</span><span class="n">vertical</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
-    <span class="p">)</span></div>
+        <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cells_in</span><span class="o">.</span><span class="n">vertical</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">cell_resolution</span><span class="o">.</span><span class="n">vertical</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span></div>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="TwoDimSizingMixin"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin">[docs]</a><span class="k">class</span> <span class="nc">TwoDimSizingMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -322,8 +322,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">second</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">second</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">first</span><span class="p">),</span> <span class="n">second</span></div>
+            <span class="n">second</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">second</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">first</span><span class="p">),</span> <span class="n">second</span>
 
 <div class="viewcode-block" id="TwoDimSizingMixin.from_tuple"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TwoDimSizingMixin.from_tuple">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_tuple</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
@@ -337,8 +337,8 @@
             <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_1dim_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">SimpleTypeValueError</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">ERR_2DIM_ONLY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="nb">type</span><span class="o">=</span><span class="bp">cls</span>
-                <span class="p">))</span>
-            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_1dim_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">instance</span><span class="p">)</span></div>
+                <span class="p">))</span></div>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_1dim_format</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">instance</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">horizontal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -378,8 +378,8 @@
             <span class="k">return</span> <span class="kc">True</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">NotImplemented</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
 
 
 <div class="viewcode-block" id="TimecountTimingType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TimecountTimingType">[docs]</a><span class="k">class</span> <span class="nc">TimecountTimingType</span><span class="p">(</span><span class="n">_TimedeltaBindingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">timecountTimingType</span><span class="p">):</span>
@@ -413,8 +413,8 @@
             <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">numerator</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">unit</span> <span class="o">==</span> <span class="s1">&#39;ms&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="n">numerator</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SimpleTypeValueError</span><span class="p">()</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="n">SimpleTypeValueError</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TimecountTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.TimecountTimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
@@ -449,8 +449,8 @@
         <span class="k">if</span> <span class="n">unit</span> <span class="ow">or</span> <span class="n">hours</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">unit</span><span class="p">:</span>
                 <span class="n">unit</span> <span class="o">=</span> <span class="s1">&#39;h&#39;</span>
-            <span class="n">numerator</span> <span class="o">+=</span> <span class="n">hours</span> <span class="o">*</span> <span class="n">multiplier</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span></div></div>
+            <span class="n">numerator</span> <span class="o">+=</span> <span class="n">hours</span> <span class="o">*</span> <span class="n">multiplier</span></div></div>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numerator</span><span class="p">,</span> <span class="n">unit</span><span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">timecountTimingType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">TimecountTimingType</span><span class="p">)</span>
@@ -469,8 +469,8 @@
     <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FullClockTimingType.compatible_timebases"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.compatible_timebases">[docs]</a>    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">compatible_timebases</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_compatible_timebases</span></div>
+    <span class="k">def</span> <span class="nf">compatible_timebases</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_compatible_timebases</span>
 
 <div class="viewcode-block" id="FullClockTimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.as_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
@@ -482,8 +482,8 @@
         <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_int_or_none</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span>
 
 <div class="viewcode-block" id="FullClockTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.FullClockTimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
@@ -504,8 +504,8 @@
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{hours:02d}</span><span class="s1">:</span><span class="si">{minutes:02d}</span><span class="s1">:</span><span class="si">{seconds:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span>
                 <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span>
-                <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span>
-            <span class="p">)</span></div></div>
+                <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span></div></div>
+            <span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">fullClockTimingType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">FullClockTimingType</span><span class="p">)</span>
@@ -533,8 +533,8 @@
         <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_int_or_none</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_groups_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="o">=</span><span class="n">milliseconds</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LimitedClockTimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.LimitedClockTimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
@@ -558,12 +558,13 @@
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{hours:02d}</span><span class="s1">:</span><span class="si">{minutes:02d}</span><span class="s1">:</span><span class="si">{seconds:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">hours</span><span class="o">=</span><span class="n">hours</span><span class="p">,</span>
                 <span class="n">minutes</span><span class="o">=</span><span class="n">minutes</span><span class="p">,</span>
-                <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span>
-            <span class="p">)</span></div></div>
+                <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span></div></div>
+            <span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">limitedClockTimingType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">LimitedClockTimingType</span><span class="p">)</span>
 
+<span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
 
 <span class="c1"># Here comes the tricky one. The SMPTE requires knowledge about frames. The top level tt element knows the frameRate.</span>
 <span class="c1"># Unfortunately the conversion methods run before the object gets created let alone inserted into a document structure.</span>
@@ -581,13 +582,13 @@
 
 <div class="viewcode-block" id="SMPTETimingType.as_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.as_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">as_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-        <span class="c1"># TODO: implement SMPTE</span>
-        <span class="k">return</span> <span class="n">timedelta</span><span class="p">()</span></div>
+        <span class="c1"># TODO: implement SMPTE</span></div>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SMPTETimingType.from_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.SMPTETimingType.from_timedelta">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_timedelta</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
-        <span class="c1"># TODO: implement SMPTE</span>
-        <span class="k">return</span> <span class="n">SMPTETimingType</span><span class="p">(</span><span class="s1">&#39;00:00:00:00&#39;</span><span class="p">)</span></div></div>
+        <span class="c1"># TODO: implement SMPTE</span></div></div>
+        <span class="k">return</span> <span class="n">SMPTETimingType</span><span class="p">(</span><span class="s1">&#39;00:00:00:00&#39;</span><span class="p">)</span>
 
 
 <span class="c1"># TODO: SMPTE frameRate and frameRateMultiplier value from tt element.</span>
@@ -601,24 +602,24 @@
 
     <span class="k">def</span> <span class="nf">_semantic_validate_sizing_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">extent</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extent</span>
-        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelOriginType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PixelOriginType</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="CellOriginType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellOriginType">[docs]</a><span class="k">class</span> <span class="nc">CellOriginType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellOriginType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?:[+-]?(?P&lt;first&gt;\d*\.?\d+)(?:c))\s(?:[+-]?(?P&lt;second&gt;\d*\.?\d+)(?:c))&#39;</span><span class="p">)</span>
-    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">c </span><span class="si">{}</span><span class="s1">c&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?:[+-]?(?P&lt;first&gt;\d*\.?\d+)(?:c))\s(?:[+-]?(?P&lt;second&gt;\d*\.?\d+)(?:c))&#39;</span><span class="p">)</span></div>
+    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">c </span><span class="si">{}</span><span class="s1">c&#39;</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellOriginType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellOriginType</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PercentageOriginType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PercentageOriginType">[docs]</a><span class="k">class</span> <span class="nc">PercentageOriginType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageOriginType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?:[+-]?(?P&lt;first&gt;\d*\.?\d+)(?:%))\s(?:[+-]?(?P&lt;second&gt;\d*\.?\d+)(?:%))&#39;</span><span class="p">)</span>
-    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">% </span><span class="si">{}</span><span class="s1">%&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?:[+-]?(?P&lt;first&gt;\d*\.?\d+)(?:%))\s(?:[+-]?(?P&lt;second&gt;\d*\.?\d+)(?:%))&#39;</span><span class="p">)</span></div>
+    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">% </span><span class="si">{}</span><span class="s1">%&#39;</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageOriginType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageOriginType</span><span class="p">)</span>
 
@@ -630,8 +631,8 @@
 
     <span class="k">def</span> <span class="nf">_semantic_validate_sizing_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">extent</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extent</span>
-        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelExtentType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PixelExtentType</span><span class="p">)</span>
@@ -639,16 +640,16 @@
 
 <div class="viewcode-block" id="CellExtentType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellExtentType">[docs]</a><span class="k">class</span> <span class="nc">CellExtentType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellExtentType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?:[+]?(?P&lt;first&gt;\d*\.?\d+)(?:c))\s(?:[+]?(?P&lt;second&gt;\d*\.?\d+)(?:c))&#39;</span><span class="p">)</span>
-    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">c </span><span class="si">{}</span><span class="s1">c&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?:[+]?(?P&lt;first&gt;\d*\.?\d+)(?:c))\s(?:[+]?(?P&lt;second&gt;\d*\.?\d+)(?:c))&#39;</span><span class="p">)</span></div>
+    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">c </span><span class="si">{}</span><span class="s1">c&#39;</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellExtentType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellExtentType</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PercentageExtentType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PercentageExtentType">[docs]</a><span class="k">class</span> <span class="nc">PercentageExtentType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageExtentType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?:[+]?(?P&lt;first&gt;\d*\.?\d+)(?:%))\s(?:[+]?(?P&lt;second&gt;\d*\.?\d+)(?:%))&#39;</span><span class="p">)</span>
-    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">% </span><span class="si">{}</span><span class="s1">%&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?:[+]?(?P&lt;first&gt;\d*\.?\d+)(?:%))\s(?:[+]?(?P&lt;second&gt;\d*\.?\d+)(?:%))&#39;</span><span class="p">)</span></div>
+    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">% </span><span class="si">{}</span><span class="s1">%&#39;</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageExtentType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageExtentType</span><span class="p">)</span>
 
@@ -657,22 +658,22 @@
 
     <span class="k">def</span> <span class="nf">_semantic_validate_sizing_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">extent</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extent</span>
-        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelLengthType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PixelLengthType</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="PercentageLengthType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PercentageLengthType">[docs]</a><span class="k">class</span> <span class="nc">PercentageLengthType</span><span class="p">(</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageLengthType</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="PercentageLengthType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PercentageLengthType">[docs]</a><span class="k">class</span> <span class="nc">PercentageLengthType</span><span class="p">(</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageLengthType</span><span class="p">):</span></div>
+    <span class="k">pass</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageLengthType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageLengthType</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="CellLengthType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellLengthType">[docs]</a><span class="k">class</span> <span class="nc">CellLengthType</span><span class="p">(</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLengthType</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="CellLengthType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellLengthType">[docs]</a><span class="k">class</span> <span class="nc">CellLengthType</span><span class="p">(</span><span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLengthType</span><span class="p">):</span></div>
+    <span class="k">pass</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLengthType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellLengthType</span><span class="p">)</span>
@@ -687,8 +688,8 @@
 
     <span class="k">def</span> <span class="nf">_semantic_validate_sizing_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">extent</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extent</span>
-        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">extent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="n">ExtentMissingError</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelFontSizeType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PixelFontSizeType</span><span class="p">)</span>
 
@@ -739,8 +740,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">NotImplemented</span>
 
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_eq</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_eq</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellFontSizeType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellFontSizeType</span><span class="p">)</span>
@@ -783,22 +784,22 @@
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">result_type</span><span class="p">(</span>
-                    <span class="n">other</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="mi">100</span>
-                <span class="p">)</span></div>
+                    <span class="n">other</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="mi">100</span></div>
+                <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_mul</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_mul</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_mul</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageFontSizeType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageFontSizeType</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="CellResolutionType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellResolutionType">[docs]</a><span class="k">class</span> <span class="nc">CellResolutionType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellResolutionType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;[0]*[1-9][0-9]*)\s(?P&lt;second&gt;[0]*[1-9][0-9]*)&#39;</span><span class="p">)</span>
-    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;[0]*[1-9][0-9]*)\s(?P&lt;second&gt;[0]*[1-9][0-9]*)&#39;</span><span class="p">)</span></div>
+    <span class="n">_2dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellResolutionType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellResolutionType</span><span class="p">)</span>
@@ -806,8 +807,8 @@
 
 <div class="viewcode-block" id="CellLineHeightType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.CellLineHeightType">[docs]</a><span class="k">class</span> <span class="nc">CellLineHeightType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLineHeightType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;\d*\.?\d+)c&#39;</span><span class="p">)</span>
-    <span class="n">_1dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">c&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;\d*\.?\d+)c&#39;</span><span class="p">)</span></div>
+    <span class="n">_1dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">c&#39;</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">cellLineHeightType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">CellLineHeightType</span><span class="p">)</span>
@@ -821,14 +822,14 @@
 <div class="viewcode-block" id="PercentageLineHeightType.do_mul"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PercentageLineHeightType.do_mul">[docs]</a>    <span class="k">def</span> <span class="nf">do_mul</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CellFontSizeType</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">CellLineHeightType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertical</span> <span class="o">*</span> <span class="n">other</span><span class="o">.</span><span class="n">vertical</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">NotImplemented</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
 
     <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_mul</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_mul</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">do_mul</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">percentageLineHeightType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PercentageLineHeightType</span><span class="p">)</span>
@@ -836,8 +837,8 @@
 
 <div class="viewcode-block" id="PixelLineHeightType"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings._ebuttdt.PixelLineHeightType">[docs]</a><span class="k">class</span> <span class="nc">PixelLineHeightType</span><span class="p">(</span><span class="n">TwoDimSizingMixin</span><span class="p">,</span> <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelLineHeightType</span><span class="p">):</span>
 
-    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;\d*\.?\d+)px&#39;</span><span class="p">)</span>
-    <span class="n">_1dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">px&#39;</span></div>
+    <span class="n">_groups_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(?P&lt;first&gt;\d*\.?\d+)px&#39;</span><span class="p">)</span></div>
+    <span class="n">_1dim_format</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">px&#39;</span>
 
 
 <span class="n">ebuttdt_raw</span><span class="o">.</span><span class="n">pixelLineHeightType</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">PixelLineHeightType</span><span class="p">)</span>
@@ -877,7 +878,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Timing resolution and consumer logic &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>Timing resolution and consumer logic &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
         <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
         <link rel="next" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/>
         <link rel="prev" title="User input producer" href="user_input_producer.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -95,7 +95,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Timing resolution and consumer logic</a><ul>
@@ -104,6 +104,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a></li>
 </ul>
 </li>
@@ -182,7 +183,7 @@ timeline where possible collisions are detected and resolved with the possible d
 <div class="section" id="document-timings">
 <h2>Document Timings<a class="headerlink" href="#document-timings" title="Permalink to this headline">¶</a></h2>
 <p>The document timing resolution logic is built using the validation framework and mostly is in
-<code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.TimingValidationMixin</span></code></p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.TimingValidationMixin</span></code></p>
 <p>The approach is that the element timing semantics require parent and children derived information to calculate
 begin and end events on an absolute timeline. For this we hook into the Depth First Search that the validation framework
 uses to process element validation. It is very important to note that the begin and end times can be
@@ -285,23 +286,23 @@ TimingValidationMixin &lt;|-- span_type
 </p>
 <p class="caption"><span class="caption-text">Classes involved in timing resolution (Simplified)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
-<p>The functions <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation" title="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation()</span></code></a> and
-<code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_after_validation()</span></code> are hooks that run
+<p>The functions <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation" title="ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation()</span></code></a> and
+<code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_after_validation()</span></code> are hooks that run
 before and after the Depth First Search traversal of the content tree.
-The <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal()</span></code></a> and
-<a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal()</span></code></a> are element hooks,
+The <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal()</span></code></a> and
+<a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal" title="ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal()</span></code></a> are element hooks,
 which are called before the traversal logic gets to the element and after the traversal logic has finished processing
 the children of the element in question. Types that subclass these mixins should override these functions to provide
 their own customized hook behaviour. In the case of timing resolution another mixin,
-<code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.base.TimingValidationMixin</span></code> is involved, which encapsulates the functions
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.base.TimingValidationMixin</span></code> is involved, which encapsulates the functions
 used to process <cite>begin</cite> and <cite>end</cite> attributes. In order for a particular element type to gain timing resolution
 capability it needs to subclass <cite>TimingValidationMixin</cite> and <cite>SemanticValidationMixin</cite> and it must have <cite>begin</cite> and <cite>end</cite>
 attributes capability. Then it should implement <cite>_semantic_before_traversal</cite> and <cite>_semantic_after_traversal</cite> functions
-and call the <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing</span></code></a>
+and call the <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing</span></code></a>
 in the before traversal and
-<a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing</span></code></a> in the after
+<a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing</span></code></a> in the after
 traversal hook. The following code sample is from the implementation of the div_type class.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_register_id</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_preprocess_timing</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
@@ -471,10 +472,10 @@ deactivate root
 </div>
 <div class="section" id="sequence-timings">
 <h2>Sequence Timings<a class="headerlink" href="#sequence-timings" title="Permalink to this headline">¶</a></h2>
-<p>The sequence timings are handled by the <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence</span></code></a> class.
+<p>The sequence timings are handled by the <a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence</span></code></a> class.
 The document is inserted into the sequence after it is validated. The sequence looks at the computed begin and
 end times and detects collisions. If there are any, the collisions are resolved by the logic starting in
-<a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard()</span></code></a></p>
+<a class="reference internal" href="ebu_tt_live.documents.html#ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard" title="ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.documents.ebutt3.EBUTT3DocumentSequence._insert_or_discard()</span></code></a></p>
 </div>
 </div>
 
@@ -522,7 +523,7 @@ end times and detects collisions. If there are any, the collisions are resolved 
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

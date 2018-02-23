@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.config.carriage &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.config.carriage &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -163,10 +163,12 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">HTTPProxyConfig</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_CONF_PROXY_CONF_VALUE</span><span class="p">,</span> <span class="n">ERR_NO_SUCH_COMPONENT</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MESSAGE_PATTERN</span>
 <span class="kn">import</span> <span class="nn">urlparse</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-
+<span class="c1"># Memory carriage mechanism configurators</span>
+<span class="c1"># ===========================================</span>
 <div class="viewcode-block" id="DirectCommon"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectCommon">[docs]</a><span class="k">class</span> <span class="nc">DirectCommon</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
     <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
     <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
@@ -191,65 +193,57 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_components</span><span class="p">[</span><span class="n">local_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">component</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">instance</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">component</span>
-
-        <span class="k">return</span> <span class="n">instance</span></div></div>
-
-
-<div class="viewcode-block" id="DirectInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectInput">[docs]</a><span class="k">class</span> <span class="nc">DirectInput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+</div></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 
-<div class="viewcode-block" id="DirectOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectOutput">[docs]</a><span class="k">class</span> <span class="nc">DirectOutput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="DirectInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectInput">[docs]</a><span class="k">class</span> <span class="nc">DirectInput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span></div>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="DirectOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectOutput">[docs]</a><span class="k">class</span> <span class="nc">DirectOutput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span></div>
+    <span class="k">pass</span>
 
 
 <span class="c1"># File-based carriage mechanism configurators</span>
 <span class="c1"># ===========================================</span>
-<div class="viewcode-block" id="FileOutputCommon"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FileOutputCommon">[docs]</a><span class="k">class</span> <span class="nc">FileOutputCommon</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
+<div class="viewcode-block" id="FilesystemOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemOutput">[docs]</a><span class="k">class</span> <span class="nc">FilesystemOutput</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
     <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
     <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
         <span class="s1">&#39;folder&#39;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="s1">&#39;./export&#39;</span><span class="p">,</span>
         <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;The output folder/directory. Folder is created if it does not exist. Existing files are overwritten.&#39;</span>
-    <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="FilesystemOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemOutput">[docs]</a><span class="k">class</span> <span class="nc">FilesystemOutput</span><span class="p">(</span><span class="n">FileOutputCommon</span><span class="p">):</span>
-
-    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">FilesystemOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">FilesystemProducerImpl</span><span class="p">(</span><span class="n">dirpath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="SimpleFilesystemOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.SimpleFilesystemOutput">[docs]</a><span class="k">class</span> <span class="nc">SimpleFilesystemOutput</span><span class="p">(</span><span class="n">FileOutputCommon</span><span class="p">):</span>
-    <span class="c1"># This does not create a manifest file</span>
-    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="p">)</span>
     <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
         <span class="s1">&#39;filename_pattern&#39;</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="s1">&#39;export-</span><span class="si">{counter}</span><span class="s1">.xml&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;File name pattern. It needs to contain </span><span class="si">{counter}</span><span class="s1"> format parameter.&#39;</span>
+    <span class="p">)</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+        <span class="s1">&#39;message_filename_pattern&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">CFG_MESSAGE_PATTERN</span><span class="p">,</span>
         <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;File name pattern. It needs to contain </span><span class="si">{counter}</span><span class="s1"> format parameter.&#39;</span>
     <span class="p">)</span>
     <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
         <span class="s1">&#39;rotating_buf&#39;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;Rotating buffer size. This will keep the last N number of files created in the folder.&#39;</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;Rotating buffer size. This will keep the last N number of files created in the folder or all if N is zero.&#39;</span>
     <span class="p">)</span>
-
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span>
+        <span class="s1">&#39;suppress_manifest&#39;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;Suppress output of a manifest file (default false)&#39;</span>
+    <span class="p">)</span>
+    
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SimpleFilesystemOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">rotating_buf</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">RotatingFolderExport</span><span class="p">(</span>
-                <span class="n">dir_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
-                <span class="n">file_name_pattern</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">filename_pattern</span><span class="p">,</span>
-                <span class="n">circular_buf_size</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">rotating_buf</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">SimpleFolderExport</span><span class="p">(</span>
-                <span class="n">dir_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
-                <span class="n">file_name_pattern</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">filename_pattern</span>
-            <span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FilesystemOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">FilesystemProducerImpl</span><span class="p">(</span>
+            <span class="n">dirpath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
+            <span class="n">file_name_pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">filename_pattern</span><span class="p">,</span>
+            <span class="n">message_file_name_pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">message_filename_pattern</span><span class="p">,</span>
+            <span class="n">circular_buf_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rotating_buf</span><span class="p">,</span></div>
+            <span class="n">suppress_manifest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">suppress_manifest</span><span class="p">)</span>
+
 
 
 <div class="viewcode-block" id="FilesystemInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemInput">[docs]</a><span class="k">class</span> <span class="nc">FilesystemInput</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
@@ -272,23 +266,23 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FilesystemInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fs_reader</span><span class="o">.</span><span class="n">resume_reading</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="FilesystemInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs_reader</span><span class="o">.</span><span class="n">resume_reading</span><span class="p">()</span>
 
 
 <span class="c1"># Websocket carriage mechanism configurators</span>
 <span class="c1"># ==========================================</span>
 <div class="viewcode-block" id="str_to_url_converter"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.str_to_url_converter">[docs]</a><span class="k">def</span> <span class="nf">str_to_url_converter</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">parsed</span></div>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">parsed</span>
 
 
 <div class="viewcode-block" id="parse_url_list"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.parse_url_list">[docs]</a><span class="k">def</span> <span class="nf">parse_url_list</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="n">parsed_value</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="n">parsed_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_to_url_converter</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">parsed_value</span></div>
+            <span class="n">parsed_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_to_url_converter</span><span class="p">(</span><span class="n">item</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">parsed_value</span>
 
 <span class="n">proxy_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^((?P&lt;protocol&gt;.+?)://)?(?P&lt;host&gt;[^:]+?):(?P&lt;port&gt;[0-9]+)$&#39;</span><span class="p">)</span>
 
@@ -308,13 +302,13 @@
             <span class="n">ERR_CONF_PROXY_CONF_VALUE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">value</span><span class="o">=</span><span class="n">value</span>
             <span class="p">)</span>
-        <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+        <span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <div class="viewcode-block" id="WebsocketLegacyBase"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyBase">[docs]</a><span class="k">class</span> <span class="nc">WebsocketLegacyBase</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
-    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
-    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ws://localhost:9001&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">str_to_url_converter</span><span class="p">)</span></div>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span></div>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ws://localhost:9001&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">str_to_url_converter</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WebsocketLegacyOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyOutput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketLegacyOutput</span><span class="p">(</span><span class="n">WebsocketLegacyBase</span><span class="p">):</span>
@@ -327,8 +321,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">WebsocketProducerCarriage</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="WebsocketLegacyOutput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyOutput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_producer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_producer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="WebsocketLegacyOutput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyOutput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_producer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_producer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WebsocketLegacyInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyInput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketLegacyInput</span><span class="p">(</span><span class="n">WebsocketLegacyBase</span><span class="p">):</span>
@@ -347,8 +341,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">WebsocketConsumerCarriage</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="WebsocketLegacyInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_consumer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_consumer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="WebsocketLegacyInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_consumer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_consumer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="WebsocketBase"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketBase">[docs]</a><span class="k">class</span> <span class="nc">WebsocketBase</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
@@ -365,8 +359,8 @@
         <span class="s1">&#39;proxy&#39;</span><span class="p">,</span>
         <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;HTTP proxy in format ADDR:PORT&#39;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">from_string_converter</span><span class="o">=</span><span class="n">parse_proxy_address</span>
-    <span class="p">)</span></div>
+        <span class="n">from_string_converter</span><span class="o">=</span><span class="n">parse_proxy_address</span></div>
+    <span class="p">)</span>
 
 
 <div class="viewcode-block" id="WebsocketOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketOutput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketOutput</span><span class="p">(</span><span class="n">WebsocketBase</span><span class="p">):</span>
@@ -386,8 +380,8 @@
             <span class="n">custom_producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
             <span class="n">listen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">listen</span><span class="p">,</span>
             <span class="n">connect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span>
-            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span>
-        <span class="p">)</span></div></div>
+            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span></div></div>
+        <span class="p">)</span>
 
 
 <div class="viewcode-block" id="WebsocketInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketInput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketInput</span><span class="p">(</span><span class="n">WebsocketBase</span><span class="p">):</span>
@@ -407,15 +401,14 @@
             <span class="n">custom_consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
             <span class="n">listen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">listen</span><span class="p">,</span>
             <span class="n">connect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span>
-            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span>
-        <span class="p">)</span></div></div>
+            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span></div></div>
+        <span class="p">)</span>
 
 
 <span class="n">producer_carriage_by_type</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;websocket&#39;</span><span class="p">:</span> <span class="n">WebsocketOutput</span><span class="p">,</span>
     <span class="s1">&#39;websocket-legacy&#39;</span><span class="p">:</span> <span class="n">WebsocketLegacyOutput</span><span class="p">,</span>
     <span class="s1">&#39;filesystem&#39;</span><span class="p">:</span> <span class="n">FilesystemOutput</span><span class="p">,</span>
-    <span class="s1">&#39;filesystem-simple&#39;</span><span class="p">:</span> <span class="n">SimpleFilesystemOutput</span><span class="p">,</span>
     <span class="s1">&#39;direct&#39;</span><span class="p">:</span> <span class="n">DirectOutput</span>
 <span class="p">}</span>
 
@@ -427,8 +420,8 @@
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_NO_SUCH_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">type_name</span><span class="o">=</span><span class="n">carriage_type</span>
-            <span class="p">)</span>
-        <span class="p">)</span></div>
+            <span class="p">)</span></div>
+        <span class="p">)</span>
 
 
 <span class="n">consumer_carriage_by_type</span> <span class="o">=</span> <span class="p">{</span>
@@ -446,8 +439,8 @@
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_NO_SUCH_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">type_name</span><span class="o">=</span><span class="n">carriage_type</span>
-            <span class="p">)</span>
-        <span class="p">)</span></div>
+            <span class="p">)</span></div>
+        <span class="p">)</span>
 </pre></div>
 
            </div>
@@ -484,7 +477,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

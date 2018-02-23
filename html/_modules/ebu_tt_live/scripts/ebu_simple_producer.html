@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.scripts.ebu_simple_producer &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.scripts.ebu_simple_producer &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -156,7 +156,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.scripts.ebu_simple_producer</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="c1"># NOTE: This script is no longer maintained. Use `ebu-run` instead.</span>
+
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">cycle</span>
 <span class="kn">from</span> <span class="nn">twisted.internet</span> <span class="k">import</span> <span class="n">task</span><span class="p">,</span> <span class="n">reactor</span>
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
@@ -259,8 +260,8 @@
         <span class="n">looping_task</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">simple_producer</span><span class="o">.</span><span class="n">process_document</span><span class="p">)</span>
 
         <span class="n">looping_task</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
-
-        <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+</div>
+        <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 
            </div>
@@ -297,7 +298,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

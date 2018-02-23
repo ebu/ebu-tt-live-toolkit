@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings.converters.ebutt3_ebuttd &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.bindings.converters.ebutt3_ebuttd &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../../index.html"/>
         <link rel="up" title="ebu_tt_live.bindings" href="../../bindings.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -169,6 +169,7 @@
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
+<span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter">[docs]</a><span class="k">class</span> <span class="nc">EBUTT3EBUTTDConverter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
@@ -181,8 +182,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_media_clock</span> <span class="o">=</span> <span class="n">media_clock</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter._children_contain"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._children_contain">[docs]</a>    <span class="k">def</span> <span class="nf">_children_contain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">container_elem</span><span class="p">,</span> <span class="n">binding_type</span><span class="p">):</span>
-        <span class="n">element_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">container_elem</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">)]</span>
-        <span class="k">return</span> <span class="n">binding_type</span> <span class="ow">in</span> <span class="n">element_types</span></div>
+        <span class="n">element_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">container_elem</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">)]</span></div>
+        <span class="k">return</span> <span class="n">binding_type</span> <span class="ow">in</span> <span class="n">element_types</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter._process_timing_type"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._process_timing_type">[docs]</a>    <span class="k">def</span> <span class="nf">_process_timing_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timing_type</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">timing_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -193,11 +194,11 @@
             <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">FullClockTimingType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_media_clock</span><span class="o">.</span><span class="n">get_media_time</span><span class="p">(</span><span class="n">timing_type</span><span class="o">.</span><span class="n">timedelta</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">timing_type</span>
-        <span class="k">if</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="n">time_base</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span></div>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="EBUTT3EBUTTDConverter._adjusted_font_style_map"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._adjusted_font_style_map">[docs]</a>    <span class="k">def</span> <span class="nf">_adjusted_font_style_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset_key_for_font_styles</span><span class="p">,</span> <span class="p">{})</span></div>
+<div class="viewcode-block" id="EBUTT3EBUTTDConverter._adjusted_font_style_map"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._adjusted_font_style_map">[docs]</a>    <span class="k">def</span> <span class="nf">_adjusted_font_style_map</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dataset_key_for_font_styles</span><span class="p">,</span> <span class="p">{})</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter._get_font_size_style"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._get_font_size_style">[docs]</a>    <span class="k">def</span> <span class="nf">_get_font_size_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vertical</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">horizontal</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -223,8 +224,8 @@
             <span class="p">)</span>
 
         <span class="n">adjusted_font_style_map</span><span class="p">[</span><span class="n">font_style_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
-
-        <span class="k">return</span> <span class="n">instance</span></div>
+</div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter._fix_fontsize"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._fix_fontsize">[docs]</a>    <span class="k">def</span> <span class="nf">_fix_fontsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem</span><span class="p">,</span> <span class="n">celem</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -274,8 +275,8 @@
                 <span class="n">celem</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="p">[</span>
                     <span class="n">adjusted_style</span><span class="o">.</span><span class="n">id</span>
                 <span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">celem</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adjusted_style</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
+            <span class="k">else</span><span class="p">:</span></div>
+                <span class="n">celem</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adjusted_style</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter._link_adjusted_fonts_styling"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter._link_adjusted_fonts_styling">[docs]</a>    <span class="k">def</span> <span class="nf">_link_adjusted_fonts_styling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adjusted_fonts</span><span class="p">,</span> <span class="n">root_element</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">adjusted_fonts</span><span class="p">:</span>
@@ -283,8 +284,8 @@
         <span class="k">if</span> <span class="n">root_element</span><span class="o">.</span><span class="n">head</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">root_element</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">d_head_type</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">root_element</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">root_element</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span> <span class="o">=</span> <span class="n">d_styling_type</span><span class="p">()</span>
-        <span class="n">root_element</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">adjusted_fonts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+            <span class="n">root_element</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span> <span class="o">=</span> <span class="n">d_styling_type</span><span class="p">()</span></div>
+        <span class="n">root_element</span><span class="o">.</span><span class="n">head</span><span class="o">.</span><span class="n">styling</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">adjusted_fonts</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_tt"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_tt">[docs]</a>    <span class="k">def</span> <span class="nf">convert_tt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tt_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;timeBase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tt_in</span><span class="o">.</span><span class="n">timeBase</span>
@@ -299,8 +300,8 @@
             <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_link_adjusted_fonts_styling</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_adjusted_font_style_map</span><span class="p">(),</span> <span class="n">new_elem</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+</div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_head"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_head">[docs]</a>    <span class="k">def</span> <span class="nf">convert_head</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">head_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">new_elem</span> <span class="o">=</span> <span class="n">d_head_type</span><span class="p">(</span>
@@ -321,8 +322,8 @@
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;converter added a default layout&#39;</span><span class="p">)</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">([</span><span class="n">item</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">new_elem</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()])</span>
             <span class="n">new_elem</span><span class="o">.</span><span class="n">layout</span> <span class="o">=</span> <span class="n">d_layout_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+</div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_layout"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_layout">[docs]</a>    <span class="k">def</span> <span class="nf">convert_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layout_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">new_elem</span> <span class="o">=</span> <span class="n">d_layout_type</span><span class="p">(</span>
@@ -331,8 +332,8 @@
         <span class="c1"># Fill in the gaps with default values</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children_contain</span><span class="p">(</span><span class="n">new_elem</span><span class="p">,</span> <span class="n">d_region_type</span><span class="p">):</span>
             <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;converter added a default region&#39;</span><span class="p">)</span>
-            <span class="n">new_elem</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_region_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+            <span class="n">new_elem</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_region_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_region"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_region">[docs]</a>    <span class="k">def</span> <span class="nf">convert_region</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">origin</span> <span class="o">=</span> <span class="n">region_in</span><span class="o">.</span><span class="n">origin</span>
@@ -354,8 +355,8 @@
             <span class="n">writingMode</span><span class="o">=</span><span class="n">region_in</span><span class="o">.</span><span class="n">writingMode</span><span class="p">,</span>
             <span class="n">showBackground</span><span class="o">=</span><span class="n">region_in</span><span class="o">.</span><span class="n">showBackground</span><span class="p">,</span>
             <span class="n">overflow</span><span class="o">=</span><span class="n">region_in</span><span class="o">.</span><span class="n">overflow</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_styling"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_styling">[docs]</a>    <span class="k">def</span> <span class="nf">convert_styling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">styling_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">new_elem</span> <span class="o">=</span> <span class="n">d_styling_type</span><span class="p">(</span>
@@ -363,8 +364,8 @@
         <span class="p">)</span>
         <span class="c1"># Fill in the gaps here</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children_contain</span><span class="p">(</span><span class="n">new_elem</span><span class="p">,</span> <span class="n">d_style_type</span><span class="p">):</span>
-            <span class="n">new_elem</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_style_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+            <span class="n">new_elem</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d_style_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_style"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_style">[docs]</a>    <span class="k">def</span> <span class="nf">convert_style</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">style_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">color</span> <span class="o">=</span> <span class="n">style_in</span><span class="o">.</span><span class="n">color</span>
@@ -394,8 +395,8 @@
             <span class="n">padding</span><span class="o">=</span><span class="n">style_in</span><span class="o">.</span><span class="n">padding</span><span class="p">,</span>
             <span class="n">linePadding</span><span class="o">=</span><span class="n">style_in</span><span class="o">.</span><span class="n">linePadding</span><span class="p">,</span>
             <span class="n">_strict_keywords</span><span class="o">=</span><span class="kc">False</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_body"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_body">[docs]</a>    <span class="k">def</span> <span class="nf">convert_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">body_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">body_in</span><span class="o">.</span><span class="n">div</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -404,8 +405,8 @@
             <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_children</span><span class="p">(</span><span class="n">body_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">),</span>
             <span class="n">agent</span><span class="o">=</span><span class="n">body_in</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span>
             <span class="n">role</span><span class="o">=</span><span class="n">body_in</span><span class="o">.</span><span class="n">role</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_div"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_div">[docs]</a>    <span class="k">def</span> <span class="nf">convert_div</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">div_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">new_elem</span> <span class="o">=</span> <span class="n">d_div_type</span><span class="p">(</span>
@@ -414,8 +415,8 @@
             <span class="n">region</span><span class="o">=</span><span class="n">div_in</span><span class="o">.</span><span class="n">region</span><span class="p">,</span>
             <span class="n">style</span><span class="o">=</span><span class="n">div_in</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
             <span class="n">agent</span><span class="o">=</span><span class="n">div_in</span><span class="o">.</span><span class="n">agent</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_p"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_p">[docs]</a>    <span class="k">def</span> <span class="nf">convert_p</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">new_elem</span> <span class="o">=</span> <span class="n">d_p_type</span><span class="p">(</span>
@@ -429,8 +430,8 @@
             <span class="n">style</span><span class="o">=</span><span class="n">p_in</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
             <span class="n">agent</span><span class="o">=</span><span class="n">p_in</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span>
             <span class="n">role</span><span class="o">=</span><span class="n">p_in</span><span class="o">.</span><span class="n">role</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_span"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_span">[docs]</a>    <span class="k">def</span> <span class="nf">convert_span</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">span_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">new_elem</span> <span class="o">=</span> <span class="n">d_span_type</span><span class="p">(</span>
@@ -443,11 +444,11 @@
             <span class="n">style</span><span class="o">=</span><span class="n">span_in</span><span class="o">.</span><span class="n">style</span><span class="p">,</span>
             <span class="n">agent</span><span class="o">=</span><span class="n">span_in</span><span class="o">.</span><span class="n">agent</span><span class="p">,</span>
             <span class="n">role</span><span class="o">=</span><span class="n">span_in</span><span class="o">.</span><span class="n">role</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">new_elem</span></div>
+        <span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">new_elem</span>
 
-<div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_br"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_br">[docs]</a>    <span class="k">def</span> <span class="nf">convert_br</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">br_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">d_br_type</span><span class="p">()</span></div>
+<div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_br"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_br">[docs]</a>    <span class="k">def</span> <span class="nf">convert_br</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">br_in</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="n">d_br_type</span><span class="p">()</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.map_type"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.map_type">[docs]</a>    <span class="k">def</span> <span class="nf">map_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_element</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_element</span><span class="p">,</span> <span class="n">tt_type</span><span class="p">):</span>
@@ -472,11 +473,11 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_styling</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">in_element</span><span class="p">,</span> <span class="n">style_type</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_style</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_unknown</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_unknown</span>
 
-<div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_unknown"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_unknown">[docs]</a>    <span class="k">def</span> <span class="nf">convert_unknown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+<div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_unknown"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_unknown">[docs]</a>    <span class="k">def</span> <span class="nf">convert_unknown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_children"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_children">[docs]</a>    <span class="k">def</span> <span class="nf">convert_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -505,12 +506,12 @@
                         <span class="p">)</span>
                     <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conv_elem</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Can this even happen!??!?!?!&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">output</span></div>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Can this even happen!??!?!?!&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">output</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_element"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_element">[docs]</a>    <span class="k">def</span> <span class="nf">convert_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-        <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">converter</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">)</span></div>
+        <span class="n">converter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_type</span><span class="p">(</span><span class="n">element</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">converter</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">dataset</span><span class="p">)</span>
 
 <div class="viewcode-block" id="EBUTT3EBUTTDConverter.convert_document"><a class="viewcode-back" href="../../../../ebu_tt_live.documents.html#ebu_tt_live.bindings.converters.ebutt3_ebuttd.EBUTT3EBUTTDConverter.convert_document">[docs]</a>    <span class="k">def</span> <span class="nf">convert_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">dataset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -518,8 +519,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
         <span class="n">converted_bindings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_element</span><span class="p">(</span><span class="n">root_element</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">converted_bindings</span></div></div>
+</div></div>
+        <span class="k">return</span> <span class="n">converted_bindings</span>
 </pre></div>
 
            </div>
@@ -556,7 +557,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

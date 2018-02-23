@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.node.interface &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.node.interface &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -181,8 +181,8 @@
 <span class="sd">        :param kwargs: Extra parameters</span>
 <span class="sd">        :param document: Can be XML, Document object...etc. depending on the carriage implementation</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="IProducerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode">[docs]</a><span class="k">class</span> <span class="nc">IProducerNode</span><span class="p">(</span><span class="n">INode</span><span class="p">):</span>
@@ -192,8 +192,8 @@
 <div class="viewcode-block" id="IProducerNode.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode.resume_producing">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This allows the node to be triggered by events, such as a timer.</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
+<span class="sd">        This allows the node to be triggered by events, such as a timer.</span></div>
+<span class="sd">        &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="IProducerNode.provides"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IProducerNode.provides">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">provides</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
@@ -202,8 +202,8 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_provides</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_provides</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_provides</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_provides</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_provides</span>
 
     <span class="nd">@abstractproperty</span>
     <span class="k">def</span> <span class="nf">producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -216,8 +216,8 @@
     <span class="k">def</span> <span class="nf">register_producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Output carriage mechanism registration</span>
-<span class="sd">        :param producer_carriage:</span>
-<span class="sd">        &quot;&quot;&quot;</span></div></div>
+<span class="sd">        :param producer_carriage:</span></div></div>
+<span class="sd">        &quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="IConsumerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.interface.IConsumerNode">[docs]</a><span class="k">class</span> <span class="nc">IConsumerNode</span><span class="p">(</span><span class="n">INode</span><span class="p">):</span>
@@ -231,8 +231,8 @@
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_expects</span><span class="p">,</span> <span class="n">AbstractStaticMember</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_expects</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_expects</span></div>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Classmethod relies on abstract property: </span><span class="se">\&#39;</span><span class="s1">_expects</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_expects</span>
 
     <span class="nd">@abstractproperty</span>
     <span class="k">def</span> <span class="nf">consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -245,8 +245,8 @@
     <span class="k">def</span> <span class="nf">register_consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Input carriage mechanism registration</span>
-<span class="sd">        :param consumer_carriage:</span>
-<span class="sd">        &quot;&quot;&quot;</span></div></div>
+<span class="sd">        :param consumer_carriage:</span></div></div>
+<span class="sd">        &quot;&quot;&quot;</span>
 </pre></div>
 
            </div>
@@ -283,7 +283,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

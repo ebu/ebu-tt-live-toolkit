@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.clocks.media &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.clocks.media &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -179,14 +179,14 @@
 
 <div class="viewcode-block" id="MediaClock.get_machine_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.MediaClock.get_machine_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_machine_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">current_time</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">microseconds</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">microsecond</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">current_time</span></div>
+        <span class="n">current_time</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">microseconds</span><span class="o">=</span><span class="n">now</span><span class="o">.</span><span class="n">microsecond</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">current_time</span>
 
-<div class="viewcode-block" id="MediaClock.get_media_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.MediaClock.get_media_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_media_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real_clock_timedelta</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">remote</span> <span class="o">+</span> <span class="p">(</span><span class="n">real_clock_timedelta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">local</span><span class="p">)</span></div>
+<div class="viewcode-block" id="MediaClock.get_media_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.MediaClock.get_media_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_media_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real_clock_timedelta</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">remote</span> <span class="o">+</span> <span class="p">(</span><span class="n">real_clock_timedelta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">local</span><span class="p">)</span>
 
-<div class="viewcode-block" id="MediaClock.get_real_clock_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.MediaClock.get_real_clock_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_real_clock_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">remote</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_machine_time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">local</span><span class="p">)</span></div>
+<div class="viewcode-block" id="MediaClock.get_real_clock_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.MediaClock.get_real_clock_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_real_clock_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">remote</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_machine_time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span><span class="o">.</span><span class="n">local</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MediaClock.adjust_time"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.MediaClock.adjust_time">[docs]</a>    <span class="k">def</span> <span class="nf">adjust_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_time</span><span class="p">,</span> <span class="n">local_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -198,16 +198,17 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current_time</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">)</span> <span class="ow">or</span> <span class="n">local_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">local_time</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">TimeFormatError</span><span class="p">(</span><span class="n">ERR_TIME_WRONG_FORMAT</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">local_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">local_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_machine_time</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span> <span class="o">=</span> <span class="n">ReferenceTime</span><span class="p">(</span><span class="n">local_time</span><span class="p">,</span> <span class="n">current_time</span><span class="p">)</span></div></div>
+            <span class="n">local_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_machine_time</span><span class="p">()</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reference_mapping</span> <span class="o">=</span> <span class="n">ReferenceTime</span><span class="p">(</span><span class="n">local_time</span><span class="p">,</span> <span class="n">current_time</span><span class="p">)</span>
 
+<span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
 
 <div class="viewcode-block" id="SMPTEClock"><a class="viewcode-back" href="../../../ebu_tt_live.clocks.html#ebu_tt_live.clocks.media.SMPTEClock">[docs]</a><span class="k">class</span> <span class="nc">SMPTEClock</span><span class="p">(</span><span class="n">MediaClock</span><span class="p">):</span>
 
     <span class="n">_time_base</span> <span class="o">=</span> <span class="s1">&#39;smpte&#39;</span>
     <span class="n">_framerate</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_framerate_multiplier</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_drop_mode</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="n">_framerate_multiplier</span> <span class="o">=</span> <span class="kc">None</span></div>
+    <span class="n">_drop_mode</span> <span class="o">=</span> <span class="kc">None</span>
 </pre></div>
 
            </div>
@@ -244,7 +245,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

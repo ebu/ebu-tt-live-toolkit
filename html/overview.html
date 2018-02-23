@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview of the EBU-TT live toolkit. &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>Overview of the EBU-TT live toolkit. &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
         <link rel="next" title="Nodes and Carriage Mechanisms" href="nodes_and_carriage_mechanisms.html"/>
         <link rel="prev" title="Welcome to EBU-TT-Live Toolkit’s documentation!" href="index.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -94,11 +94,12 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Overview of the EBU-TT live toolkit.</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a></li>
 </ul>
 </li>
@@ -195,11 +196,12 @@
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#distributor">Distributor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#handover-manager">Handover Manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#buffer-delay-node">Buffer Delay Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#deduplicator-node">DeDuplicator Node</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#retiming-delay-node">Retiming Delay Node</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html#ebu-tt-d-encoder">EBU-TT-D Encoder</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a><ul>
+<li class="toctree-l1"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="configurator.html#the-configuration-file-structure">The configuration file structure</a></li>
 </ul>
 </li>
@@ -219,6 +221,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html#the-problem">The problem</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="conversion.html#percentages-and-the-em-square">Percentages and the EM square</a></li>
@@ -275,7 +278,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

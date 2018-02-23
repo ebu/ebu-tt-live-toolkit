@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+      <script type="text/javascript">
+         var sock = null;
+         var ellog = null;
+         var websocket_url_input = null;
+         var sequence_input = null;
+
+         /************************************************** Helper functions ******************************************/
+         function notifyError(element, notification, fade_out) {
+            element.css("color", "red");
+            element.text(notification);
+            if (fade_out)
+               setTimeout(function () { element.text(""); }, 3000);
+         }
+
+         function notifyWarning(element, notification, fade_out) {
+            element.css("color", "orange");
+            element.text(notification);
+            if (fade_out)
+               setTimeout(function () { element.text(""); }, 3000);
+         }
+
+         function notifySuccess(element, notification, fade_out) {
+            element.css("color", "green");
+            element.text(notification);
+            if (fade_out)
+               setTimeout(function () { element.text(""); }, 3000);
+         }
+
+         function connect() {
+
+            if (sock) {
+               sock.close();
+               return;
+            }
+
+            wsuri = websocket_url_input.value + '/' + sequence_input.value + '/subscribe';
+
+            if ("WebSocket" in window) {
+               sock = new WebSocket(wsuri);
+            } else if ("MozWebSocket" in window) {
+               sock = new MozWebSocket(wsuri);
+            } else {
+               log("Browser does not support WebSocket!");
+            }
+
+            if (sock) {
+               sock.onopen = function() {
+                  log("Connected to " + wsuri);
+                  $("#websocket-connect-button").hide();
+                  $("#websocket-disconnect-button").show();
+                  notifySuccess($("#websocket-notifications-span"), "Connected to websocket server", false);
+               }
+
+               sock.onclose = function(e) {
+                  notifyWarning($("#websocket-notifications-span"), "Connection to websocket server closed.", false);
+                  log("Connection closed (wasClean = " + e.wasClean + ", code = " + e.code + ", reason = '" + e.reason + "')");
+                  sock = null;
+                  $("#websocket-connect-button").show();
+                  $("#websocket-disconnect-button").hide();
+               }
+
+               sock.onmessage = function(e) {
+                  log(e.data);
+                  socket.connected = false;
+                  socket.websocket = null;
+                  $("#websocket-connect-button").show();
+                  $("#websocket-disconnect-button").hide();
+               }
+
+               sock.onerror = function(evt) {
+                  console.log(evt);
+               }
+            }
+
+         }
+         
+         function disconnect() {
+           if (sock) {
+              sock.close();
+            }
+            
+            
+         }
+
+         window.onload = function() {
+
+            var wsuri;
+            ellog = document.getElementById('log');
+            websocket_url_input = document.getElementById('websocket-url-input');
+            sequence_input = document.getElementById('sequence-input');
+         };
+
+         function log(m) {
+            ellog.textContent = m + '\n';
+            ellog.scrollTop = 0;
+         };
+      </script>
+      <link rel="stylesheet" href="assets/css/bootstrap.css" media="screen">
+      <link rel="stylesheet" href="assets/css/custom.min.css" media="screen">
+      <link rel="stylesheet" href="assets/css/main.css" media="screen">
+      <link rel="stylesheet" href="assets/css/test-style.css" media="screen">
+   </head>
+   <body>
+     <div id="header">
+       <a href="https://tech.ebu.ch/home"><img src="assets/img/ebu-logo-relaunch.png"/></a>
+       <h1><a href="http://ebu.github.io/ebu-tt-live-toolkit/">EBU-TT Live Interoperability Toolkit</a></h1>
+       <h3>This is the WebSocket Test document viewer.</h3>
+       It subscribes to a sequence of Part 3 documents on a WebSocket connection and displays each document as it arrives.
+     </div>
+     <div>
+      <noscript>You must enable JavaScript</noscript>
+      
+      <div id="websocket-url-div" class="control-section-div">
+         <span class="control-section-header-span">Connection</span>
+         <label for="websocket-url-input">Websocket URL: </label>
+         <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9000" required>
+         <span> / </span><label for="sequence-selector">Sequence: </label>
+         <input type="text" id="sequence-input" name="sequence-input" value="TestSequence1"></select>
+         <span> / subscribe </span>
+         <button type="button" id="websocket-connect-button" name="websocket-connect-button" onclick='connect();'>Connect</button>
+         <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none;" onclick='disconnect();'>Disconnect</button>
+         <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
+         </div>
+      <form action="" id="subtitle-form">
+
+      <div>
+        <pre id="log" style="height: 30em; overflow-y: scroll; background-color: #faa;"></pre>
+      </div>
+    </div>
+   </body>
+</html>

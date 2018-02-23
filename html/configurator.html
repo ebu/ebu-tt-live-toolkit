@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Configuration files and ebu-run &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>Configuration files and ebu-run &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
         <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
         <link rel="next" title="Document and sequence validation" href="validation.html"/>
         <link rel="prev" title="Scripts and their functions" href="scripts_and_their_functions.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -95,7 +95,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#the-configuration-file-structure">The configuration file structure</a></li>
 </ul>
 </li>
@@ -103,6 +103,7 @@
 <li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a></li>
 </ul>
 </li>
@@ -153,7 +154,7 @@
         
           <li><a href="overview.html">Overview of the EBU-TT live toolkit.</a> &raquo;</li>
         
-      <li>Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></li>
+      <li>Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -173,7 +174,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="configuration-files-and-ebu-run">
-<h1>Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code><a class="headerlink" href="#configuration-files-and-ebu-run" title="Permalink to this headline">¶</a></h1>
+<h1>Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code><a class="headerlink" href="#configuration-files-and-ebu-run" title="Permalink to this headline">¶</a></h1>
 <p>There are 2 ways the nodes and carriage mechanisms can be set up:</p>
 <blockquote>
 <div><p>1. Write a script where you instantiate these components and connect them. This technique uses
@@ -183,7 +184,7 @@ implements the expected interface. This eliminates the possibility of creating s
 how to create every carriage mechanism and deal with all the possible parameters and every carriage mechanism would know
 in turn how to instantiate every node. This is to be avoided! And this brings us to the second way to do this.</p>
 <p>2. Use the component configurators and use a simple configuration file to create your system and give the
-configuration file to the <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> script, which takes care of creating all the
+configuration file to the <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> script, which takes care of creating all the
 required components for you. This eliminates the need for a programmer to keep repeating the configuration logic
 in their scripts where they create the components.</p>
 </div></blockquote>
@@ -193,13 +194,13 @@ wiring and their factories are actually the configurator classes. The configurat
 name of the configuration options relevant to the component and wires it with its immediate dependencies. This
 way the factories that create the system are separate from the system’s business logic and this separation is
 meant to be kept. There is a simple naming correspondence. For instance the business logic of the processing
-nodes are in the <a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node" title="ebu_tt_live.node"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.node</span></code></a> package while their configurators are to be found in the
-<a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.node" title="ebu_tt_live.config.node"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.config.node</span></code></a> module.</p>
+nodes are in the <a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node" title="ebu_tt_live.node"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_tt_live.node</span></code></a> package while their configurators are to be found in the
+<a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.node" title="ebu_tt_live.config.node"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_tt_live.config.node</span></code></a> module.</p>
 <div class="section" id="the-configuration-file-structure">
 <h2>The configuration file structure<a class="headerlink" href="#the-configuration-file-structure" title="Permalink to this headline">¶</a></h2>
 <p>The configuration file is JSON at the moment. The general structure looks like this:</p>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s2">&quot;node1&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;simple-producer&quot;</span><span class="p">,</span>
@@ -228,14 +229,14 @@ define the carriage mechanism that that side is supposed to be talking to. So pr
 an output carriage mechanism that is “websocket” and 2) a consumer of an input carriage mechanism of the same websocket
 address that the producer is using essentially creates a loopback through the network stack between the 2 nodes
 and they will talk to one another. An even more convenient way of doing the same thing is to use
-the carriage mechanism type: <code class="docutils literal"><span class="pre">direct</span></code> which simply transfers the payload data in memory without going via e.g. a network stack.</p>
+the carriage mechanism type: <code class="docutils literal notranslate"><span class="pre">direct</span></code> which simply transfers the payload data in memory without going via e.g. a network stack.</p>
 <p>The more detailed options are:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>nodes
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>nodes
 ├─[nodeN] : a node to configure - any from node1 to node9
-│ ├─type : [&quot;simple-consumer&quot; | &quot;simple-producer&quot; | &quot;resequencer&quot; | &quot;ebuttd-encoder&quot; | &quot;buffer-delay&quot; | &quot;retiming-delay&quot; | &quot;distributor&quot; | &quot;handover&quot;]
+│ ├─type : [&quot;simple-consumer&quot; | &quot;simple-producer&quot; | &quot;resequencer&quot; | &quot;ebuttd-encoder&quot; | &quot;buffer-delay&quot; | &quot;retiming-delay&quot; | &quot;distributor&quot; | &quot;handover&quot; | &quot;deduplicator&quot;]
 │ ├─output : the output settings for the node, if applicable
 │ │ ├─carriage : the carriage mechanism to use to get incoming documents
-│ │ │ ├─type : [&quot;direct&quot; | &quot;filesystem&quot; | &quot;filesystem-simple&quot; | &quot;websocket&quot; | &quot;websocket-legacy&quot;]
+│ │ │ ├─type : [&quot;direct&quot; | &quot;filesystem&quot; | &quot;websocket&quot; | &quot;websocket-legacy&quot;]
 │ │ │ └─[output carriage type-dependent options - see below]
 │ │ └─adapters : see below
 │ ├─input : the input settings for the node, if applicable
@@ -250,7 +251,7 @@ backend
 </pre></div>
 </div>
 <p>Node type dependent options for [nodeN] :</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>type=&quot;simple-consumer&quot;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>type=&quot;simple-consumer&quot;
 ├─verbose : whether to log subtitle content on activation changes, default False
 └─clock
   └─type : [&quot;auto&quot; (default) | &quot;utc&quot; | &quot;local&quot;]
@@ -287,20 +288,22 @@ type=&quot;handover&quot;
 ├─authors_group_identifier : the authors&#39; group to follow, default &quot;AuthorsGroup1&quot;
 └─sequence_identifier : sequence identifier, default &quot;HandoverSequence1&quot;
 
+type=&quot;deduplicator&quot;
+└─sequence_identifier : sequence identifier, default &quot;DeDuplicated1&quot;
+
 type=&quot;distributor&quot; : No options
 </pre></div>
 </div>
 <p>Output carriage type dependent options for “carriage”:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>type=&quot;direct&quot;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>type=&quot;direct&quot;
 └─id : id of the &#39;pipe&#39; to write to, default &quot;default&quot;
 
 type=&quot;filesystem&quot;
-└─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default &quot;./export&quot;
-
-type=&quot;filesystem-simple&quot;
 ├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default &quot;./export&quot;
-├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
-└─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default &quot;export-{counter}.xml&quot;
+├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder or all if 0, default 0
+├─suppress_manifest : Whether to suppress writing of a manifest file (e.g. for EBU-TT-D output). Default False
+├─message_filename_pattern : File name pattern for message documents or EBU-TT-D documents. It can contain {sequence_identifier} and {counter} format parameters, default &quot;{sequence_identifier}_msg_{counter}.xml&quot;
+└─filename_pattern : File name pattern for EBU-TT-Live documents. It needs to contain {counter} format parameter, which will be populated with the sequence number. Default &quot;{sequence_identifier}_{counter}.xml&quot;
 
 type=&quot;websocket&quot;
 ├─proxy : HTTP proxy in format ADDR:PORT
@@ -313,17 +316,12 @@ type=&quot;websocket-legacy&quot;
 </pre></div>
 </div>
 <p>Input carriage type dependent options for “carriage”:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>type=&quot;direct&quot;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>type=&quot;direct&quot;
 └─id : id of the pipe to read from, default &quot;default&quot;
 
 type=&quot;filesystem&quot;
 ├─manifest_file : The timing manifest file for importing files. Files are required to be in the same folder as the manifest file.
 └─tail : Keep the manifest open and wait for new input much like UNIX&#39;s tail -f command
-
-type=&quot;filesystem-simple&quot;
-├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default &quot;./export&quot;
-├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
-└─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default &quot;export-{counter}.xml&quot;
 
 type=&quot;websocket&quot;
 ├─proxy : HTTP proxy in format ADDR:PORT
@@ -337,16 +335,16 @@ type=&quot;websocket-legacy&quot;
 </pre></div>
 </div>
 <p>Adapters will be automatically selected if not specified, or can be manually specified:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>adapters
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>adapters
 ├─xml-&gt;ebutt3 : XML serialisation to EBU-TT Part 3
 ├─xml-&gt;ebuttd : XML serialisation to EBU-TT-D
 ├─ebutt3-&gt;xml : EBU-TT Part 3 to XML serialisation
 └─ebuttd-&gt;xml : EBU-TT-D to XML serialisation
 </pre></div>
 </div>
-<p>Please refer to the <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> for more information.
-Example <code class="docutils literal"><span class="pre">.conf</span></code> files for some common configurations can be found in
-<code class="docutils literal"><span class="pre">examples/config</span></code>, some of which are described in
+<p>Please refer to the <a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run" title="ebu_tt_live.scripts.ebu_run"><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_tt_live.scripts.ebu_run</span></code></a> for more information.
+Example <code class="docutils literal notranslate"><span class="pre">.conf</span></code> files for some common configurations can be found in
+<code class="docutils literal notranslate"><span class="pre">examples/config</span></code>, some of which are described in
 <a class="reference internal" href="scripts_and_their_functions.html"><span class="doc">Scripts and their functions</span></a>.</p>
 </div>
 </div>
@@ -395,7 +393,7 @@ Example <code class="docutils literal"><span class="pre">.conf</span></code> fil
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.node.encoder &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.node.encoder &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -199,7 +199,11 @@
             <span class="n">converted_doc</span> <span class="o">=</span> <span class="n">EBUTTDDocument</span><span class="o">.</span><span class="n">create_from_raw_binding</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_ebuttd_converter</span><span class="o">.</span><span class="n">convert_document</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">converted_doc</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+            <span class="c1"># Specify the time_base since the FilesystemProducerImpl can&#39;t derive it otherwise.</span>
+            <span class="c1"># Hard coded to &#39;media&#39; because that&#39;s all that&#39;s permitted in EBU-TT-D. Alternative</span>
+            <span class="c1"># would be to extract it from the EBUTTDDocument but since it&#39;s the only permitted</span>
+            <span class="c1"># value that would be an unnecessary overhead...</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">converted_doc</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">time_base</span><span class="o">=</span><span class="s1">&#39;media&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -236,7 +240,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

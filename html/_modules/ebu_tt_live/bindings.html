@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.bindings &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -213,8 +213,8 @@
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">xml_parsing_context</span><span class="p">():</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">CreateFromDocument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <div class="viewcode-block" id="CreateFromDOM"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.CreateFromDOM">[docs]</a><span class="k">def</span> <span class="nf">CreateFromDOM</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -223,8 +223,8 @@
 <span class="sd">    :return:</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">xml_parsing_context</span><span class="p">():</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">CreateFromDOM</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">raw</span><span class="o">.</span><span class="n">CreateFromDOM</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <span class="c1"># Customizing validation mixins before application</span>
@@ -323,8 +323,8 @@
                             <span class="n">style</span><span class="o">=</span><span class="n">style_id</span>
                         <span class="p">))</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_ordered_styles</span> <span class="o">=</span> <span class="n">ordered_styles</span>
-            <span class="k">return</span> <span class="n">ordered_styles</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ordered_styles</span> <span class="o">=</span> <span class="n">ordered_styles</span></div>
+            <span class="k">return</span> <span class="n">ordered_styles</span>
 
 <div class="viewcode-block" id="style_type.add"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">direction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -356,8 +356,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">linePadding</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">linePadding</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">linePadding</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">linePadding</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">multiRowAlign</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">multiRowAlign</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">multiRowAlign</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">multiRowAlign</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">multiRowAlign</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">multiRowAlign</span></div>
+        <span class="k">return</span> <span class="bp">self</span>
 
 <div class="viewcode-block" id="style_type.resolve_styles"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.resolve_styles">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">resolve_styles</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">referenced_styles</span><span class="p">):</span>
@@ -368,8 +368,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">referenced_styles</span><span class="p">:</span>
-            <span class="n">instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div>
+            <span class="n">instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <div class="viewcode-block" id="style_type.compute_font_size"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_font_size">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">compute_font_size</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">defer</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -426,8 +426,8 @@
                 <span class="p">)</span>
         <span class="k">elif</span> <span class="n">defer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">result_font_size</span> <span class="o">=</span> <span class="n">default_font_size</span>
-
-        <span class="k">return</span> <span class="n">result_font_size</span></div>
+</div>
+        <span class="k">return</span> <span class="n">result_font_size</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">default_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -460,8 +460,8 @@
         <span class="nb">setattr</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">attr_name</span><span class="p">,</span>
-            <span class="n">default_value</span>
-        <span class="p">)</span></div>
+            <span class="n">default_value</span></div>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="style_type.compute_inherited_attribute"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_inherited_attribute">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">compute_inherited_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">):</span>
@@ -470,16 +470,16 @@
             <span class="k">if</span> <span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attr_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">default_attrs</span><span class="p">:</span>
                 <span class="n">attr_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">attr_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">attr_value</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+                    <span class="k">return</span> <span class="n">attr_value</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="style_type.compute_simple_attribute"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_simple_attribute">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">compute_simple_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">specified_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">attr_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">specified_style</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">attr_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">attr_value</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+                <span class="k">return</span> <span class="n">attr_value</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="style_type.compute_line_height"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_line_height">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">compute_line_height</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">font_size</span><span class="p">):</span>
@@ -500,8 +500,8 @@
                     <span class="c1"># We only need to deal with this case if fontSize was not deferred</span>
                     <span class="n">selected_value</span> <span class="o">*=</span> <span class="n">font_size</span>
 
-                <span class="k">return</span> <span class="n">selected_value</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+                <span class="k">return</span> <span class="n">selected_value</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="style_type.compute_style"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.style_type.compute_style">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">compute_style</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">specified_style</span><span class="p">,</span> <span class="n">parent_computed_style</span><span class="p">,</span> <span class="n">region_computed_style</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="p">):</span>
@@ -571,8 +571,8 @@
                     <span class="n">attr_name</span><span class="p">,</span>
                     <span class="n">comp_attr_value</span>
                 <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">computed</span></div>
+</div>
+        <span class="k">return</span> <span class="n">computed</span>
 
     <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_register_id</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
@@ -583,8 +583,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_ordered_styles</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">_semantic_before_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;affected_elements&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;affected_elements&#39;</span><span class="p">]:</span></div>
+            <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span>
 
 <span class="c1"># For the requirements of the StyledElementMixin</span>
 <span class="n">style_type</span><span class="o">.</span><span class="n">_compatible_style_type</span> <span class="o">=</span> <span class="n">style_type</span>
@@ -592,12 +592,13 @@
 
 
 <div class="viewcode-block" id="LiveStyledElementMixin"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.LiveStyledElementMixin">[docs]</a><span class="k">class</span> <span class="nc">LiveStyledElementMixin</span><span class="p">(</span><span class="n">StyledElementMixin</span><span class="p">):</span>
-
-    <span class="n">_compatible_style_type</span> <span class="o">=</span> <span class="n">style_type</span></div>
+</div>
+    <span class="n">_compatible_style_type</span> <span class="o">=</span> <span class="n">style_type</span>
 
 
 <span class="c1"># EBU TT Live element types</span>
 <span class="c1"># =========================</span>
+<span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
 
 
 <div class="viewcode-block" id="tt_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.tt_type">[docs]</a><span class="k">class</span> <span class="nc">tt_type</span><span class="p">(</span><span class="n">SemanticDocumentMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">tt_type</span><span class="p">):</span>
@@ -656,8 +657,8 @@
         <span class="c1">#     authorsGroupControlRequest=self.authorsGroupControlRequest,</span>
         <span class="c1">#     referenceClockIdentifier=self.referenceClockIdentifier,</span>
         <span class="c1">#     _strict_keywords=False</span>
-        <span class="c1"># )</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+        <span class="c1"># )</span></div>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">__check_bds</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">bds</span><span class="p">):</span>
@@ -672,8 +673,8 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">tt_type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">toDOM</span><span class="p">(</span>
             <span class="n">bds</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__check_bds</span><span class="p">(</span><span class="n">bds</span><span class="p">),</span>
             <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
-            <span class="n">element_name</span><span class="o">=</span><span class="n">element_name</span>
-        <span class="p">)</span></div>
+            <span class="n">element_name</span><span class="o">=</span><span class="n">element_name</span></div>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="tt_type.toxml"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.tt_type.toxml">[docs]</a>    <span class="k">def</span> <span class="nf">toxml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">element_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">dom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toDOM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__check_bds</span><span class="p">(</span><span class="n">bds</span><span class="p">),</span> <span class="n">element_name</span><span class="o">=</span><span class="n">element_name</span><span class="p">)</span>
@@ -681,8 +682,8 @@
             <span class="n">dom</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">documentElement</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span>
             <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span>
-            <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;  &#39;</span>
-        <span class="p">)</span></div>
+            <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;  &#39;</span></div>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># This one does not have another parent to link with but it can make itself an element</span>
@@ -799,17 +800,16 @@
             <span class="k">raise</span> <span class="n">SemanticValidationError</span><span class="p">(</span><span class="n">ERR_SEMANTIC_VALIDATION_EXPECTED</span><span class="p">)</span>
         <span class="n">element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_elements_by_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">elem_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">elem_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">elem_type</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">ERR_SEMANTIC_ELEMENT_BY_ID_MISSING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">elem_id</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">element</span></div>
+            <span class="k">raise</span> <span class="ne">LookupError</span><span class="p">(</span><span class="n">ERR_SEMANTIC_ELEMENT_BY_ID_MISSING</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">elem_id</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">element</span>
 
 <div class="viewcode-block" id="tt_type.get_timing_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.tt_type.get_timing_type">[docs]</a>    <span class="k">def</span> <span class="nf">get_timing_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timedelta_in</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;clock&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">timedelta_in</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta_in</span><span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">SMPTETimingType</span><span class="p">(</span><span class="n">timedelta_in</span><span class="p">)</span></div></div>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">==</span> <span class="s1">&#39;smpte&#39;</span><span class="p">:</span></div></div>
+            <span class="k">return</span> <span class="n">ebuttdt</span><span class="o">.</span><span class="n">SMPTETimingType</span><span class="p">(</span><span class="n">timedelta_in</span><span class="p">)</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">tt_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">tt_type</span><span class="p">)</span>
 
@@ -824,8 +824,8 @@
         <span class="n">copied_head</span> <span class="o">=</span> <span class="n">head_type</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">copied_head</span>
 
-<div class="viewcode-block" id="head_type.merge"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.head_type.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_elem</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+<div class="viewcode-block" id="head_type.merge"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.head_type.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_elem</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">head_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">head_type</span><span class="p">)</span>
 
@@ -891,15 +891,15 @@
 <div class="viewcode-block" id="p_type.is_timed_leaf"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.p_type.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">copied_instance</span><span class="o">.</span><span class="n">_assert_empty_container</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_apply_leaf_timing</span><span class="p">(</span>
             <span class="n">copied_instance</span><span class="o">=</span><span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">p_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">p_type</span><span class="p">)</span>
@@ -958,14 +958,14 @@
 <div class="viewcode-block" id="span_type.is_timed_leaf"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.span_type.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">span</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">copied_instance</span><span class="o">.</span><span class="n">_assert_empty_container</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_apply_leaf_timing</span><span class="p">(</span>
-            <span class="n">copied_instance</span><span class="o">=</span><span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+            <span class="n">copied_instance</span><span class="o">=</span><span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">span_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">span_type</span><span class="p">)</span>
 
@@ -975,12 +975,11 @@
     <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">br_type</span><span class="p">()</span>
 
-<div class="viewcode-block" id="br_type.content_to_string"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.br_type.content_to_string">[docs]</a>    <span class="k">def</span> <span class="nf">content_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;br /&gt;&#39;</span></div></div>
+<div class="viewcode-block" id="br_type.content_to_string"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.br_type.content_to_string">[docs]</a>    <span class="k">def</span> <span class="nf">content_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></div></div>
+        <span class="k">return</span> <span class="s1">&#39;&lt;br /&gt;&#39;</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">br_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">br_type</span><span class="p">)</span>
-
 
 <div class="viewcode-block" id="div_type"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.div_type">[docs]</a><span class="k">class</span> <span class="nc">div_type</span><span class="p">(</span><span class="n">ContentContainerMixin</span><span class="p">,</span> <span class="n">IDMixin</span><span class="p">,</span> <span class="n">RegionedElementMixin</span><span class="p">,</span> <span class="n">LiveStyledElementMixin</span><span class="p">,</span> <span class="n">TimingValidationMixin</span><span class="p">,</span>
                <span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">div_type</span><span class="p">):</span>
@@ -1039,15 +1038,15 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">copied_instance</span><span class="o">.</span><span class="n">_assert_empty_container</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_apply_leaf_timing</span><span class="p">(</span>
             <span class="n">copied_instance</span><span class="o">=</span><span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">div_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">div_type</span><span class="p">)</span>
@@ -1131,8 +1130,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_merge_deconflict_ids</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">merged_body</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_merge_deconflict_ids</span><span class="p">(</span><span class="n">element</span><span class="o">=</span><span class="n">other_elem</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="n">merged_body</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="n">ids</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">merged_body</span></div>
+</div>
+        <span class="k">return</span> <span class="n">merged_body</span>
 
     <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
@@ -1151,8 +1150,8 @@
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_apply_leaf_timing</span><span class="p">(</span>
-            <span class="n">copied_instance</span><span class="o">=</span><span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span></div>
+            <span class="n">copied_instance</span><span class="o">=</span><span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_copy_verify_referenced_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">body_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">body_type</span><span class="p">)</span>
@@ -1174,8 +1173,8 @@
                 <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">style_ids</span><span class="p">:</span>
                     <span class="n">copied_style</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">copied_style</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copied_style</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># The styles are not ordered by inheritance so they need an extra step here</span>
@@ -1190,8 +1189,8 @@
             <span class="c1"># The style may not have been copied at all because it isn&#39;t used in the requested segment</span>
             <span class="k">if</span> <span class="n">copied_style_elem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">style_elem_styles</span> <span class="o">=</span> <span class="n">style_elem</span><span class="o">.</span><span class="n">_semantic_deconflicted_ids</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;style&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">style_elem_styles</span><span class="p">:</span>
-                    <span class="n">copied_style_elem</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style_elem_styles</span></div>
+                <span class="k">if</span> <span class="n">style_elem_styles</span><span class="p">:</span></div>
+                    <span class="n">copied_style_elem</span><span class="o">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style_elem_styles</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">styling</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">styling</span><span class="p">)</span>
@@ -1232,8 +1231,8 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_semantic_before_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;affected_elements&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span></div>
+        <span class="k">if</span> <span class="bp">self</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;affected_elements&#39;</span><span class="p">]:</span></div>
+            <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">region</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">region_type</span><span class="p">)</span>
@@ -1255,8 +1254,8 @@
                 <span class="k">if</span> <span class="n">copied_region</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
                     <span class="n">copied_region</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.1&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">copied_region</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
                     <span class="n">region_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">copied_region</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copied_region</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copied_region</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
@@ -1287,8 +1286,8 @@
         <span class="k">if</span> <span class="n">bds</span><span class="o">.</span><span class="n">defaultNamespace</span><span class="p">()</span> <span class="o">!=</span> <span class="n">Namespace</span><span class="p">:</span>
             <span class="n">xml_dom</span><span class="o">.</span><span class="n">documentElement</span><span class="o">.</span><span class="n">tagName</span> <span class="o">=</span> <span class="s1">&#39;tt:tt&#39;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">xml_dom</span><span class="o">.</span><span class="n">documentElement</span><span class="o">.</span><span class="n">tagName</span> <span class="o">=</span> <span class="s1">&#39;tt&#39;</span>
-        <span class="k">return</span> <span class="n">xml_dom</span></div>
+            <span class="n">xml_dom</span><span class="o">.</span><span class="n">documentElement</span><span class="o">.</span><span class="n">tagName</span> <span class="o">=</span> <span class="s1">&#39;tt&#39;</span></div>
+        <span class="k">return</span> <span class="n">xml_dom</span>
 
 <div class="viewcode-block" id="d_tt_type.toxml"><a class="viewcode-back" href="../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.d_tt_type.toxml">[docs]</a>    <span class="k">def</span> <span class="nf">toxml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">element_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">dom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">toDOM</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__check_bds</span><span class="p">(</span><span class="n">bds</span><span class="p">),</span> <span class="n">element_name</span><span class="o">=</span><span class="n">element_name</span><span class="p">)</span>
@@ -1296,14 +1295,14 @@
             <span class="n">dom</span> <span class="o">=</span> <span class="n">dom</span><span class="o">.</span><span class="n">documentElement</span>
         <span class="k">return</span> <span class="n">dom</span><span class="o">.</span><span class="n">toprettyxml</span><span class="p">(</span>
             <span class="n">encoding</span><span class="o">=</span><span class="n">encoding</span><span class="p">,</span>
-            <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;  &#39;</span>
-        <span class="p">)</span></div>
+            <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;  &#39;</span></div>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validateBinding_vx</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span> <span class="o">!=</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SimpleTypeValueError</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeBase</span><span class="p">)</span>
-
-        <span class="nb">super</span><span class="p">(</span><span class="n">d_tt_type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_validateBinding_vx</span><span class="p">()</span></div>
+</div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">d_tt_type</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_validateBinding_vx</span><span class="p">()</span>
 
 
 <span class="n">raw</span><span class="o">.</span><span class="n">d_tt_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">d_tt_type</span><span class="p">)</span>
@@ -1315,8 +1314,8 @@
     <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">d_region_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div></div>
+        <span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">d_layout_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">d_layout_type</span><span class="p">)</span>
 
@@ -1329,8 +1328,8 @@
             <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;region.default&#39;</span><span class="p">,</span>
             <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;0</span><span class="si">% 0%</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="n">extent</span><span class="o">=</span><span class="s1">&#39;100</span><span class="si">% 100%</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div></div>
+        <span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">d_region_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">d_region_type</span><span class="p">)</span>
 
@@ -1341,8 +1340,8 @@
     <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="n">d_style_type</span><span class="o">.</span><span class="n">create_default_value</span><span class="p">()</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div></div>
+        <span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">d_styling_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">d_styling_type</span><span class="p">)</span>
 
@@ -1353,8 +1352,8 @@
     <span class="k">def</span> <span class="nf">create_default_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span>
             <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;style.default&#39;</span>
-        <span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div></div>
+        <span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <span class="n">raw</span><span class="o">.</span><span class="n">d_style_type</span><span class="o">.</span><span class="n">_SetSupersedingClass</span><span class="p">(</span><span class="n">d_style_type</span><span class="p">)</span>
 </pre></div>
@@ -1393,7 +1392,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

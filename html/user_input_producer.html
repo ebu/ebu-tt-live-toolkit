@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>User input producer &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>User input producer &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
         <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
         <link rel="next" title="Timing resolution and consumer logic" href="timing_resolution.html"/>
         <link rel="prev" title="Validation framework" href="validation_framework.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -95,7 +95,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">Document and sequence validation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">User input producer</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#demo">Demo</a></li>
@@ -104,6 +104,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a></li>
 </ul>
 </li>
@@ -182,19 +183,19 @@ Javascript, <a class="reference external" href="https://jquery.com/">JQuery</a> 
 <div class="section" id="demo">
 <h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h2>
 <p>To test the user input producer, setup the environment as indicated in the
-<code class="docutils literal"><span class="pre">README.md</span></code> file at the root of the project. Then launch a node that can
-listen for /publish requests - for example <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span>
+<code class="docutils literal notranslate"><span class="pre">README.md</span></code> file at the root of the project. Then launch a node that can
+listen for /publish requests - for example <code class="docutils literal notranslate"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span>
 <span class="pre">ebu_tt_live/examples/config/user_input_producer_consumer.json</span></code> will run the
 simplest user-input-consumer script listening for a connection on the local host
 port 9001. Then open the
-<code class="docutils literal"><span class="pre">ebu_tt_live/ui/user_input_producer/user_input_producer.html</span></code> file in your
-browser.</p>
+<a class="reference external" href="../ui/user_input_producer/index.html">docs/build/ui/user_input_producer/index.html</a> file in your
+browser, or open the <a class="reference external" href="http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/">current release pre-built page</a>.</p>
 <p>If you have no configured sequences or you need to create a new one, click
 “Create a new sequence”, enter the sequence number, what time base and clock
 mode you want the documents in the sequence to have and click Validate. Assuming
 all is well you can now use this sequence.</p>
 <p>Ensure that the correct URL is present and select the sequence you wish to
-connect to. The default of <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code> works with the above simple
+connect to. The default of <code class="docutils literal notranslate"><span class="pre">ws://127.0.0.1:9001</span></code> works with the above simple
 consumer script configuration. Click Connect to establish the connection - you
 should see “Connected to websocket server” appear if you have successfully
 connected.</p>
@@ -231,14 +232,14 @@ restart the consumer and reconnect.</p>
 <p>To see the UIP in action with the Handover Manager node, using the Websocket
 transport mechanism, follow these steps:</p>
 <ul class="simple">
-<li>Start the Handover Manager: <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json</span></code></li>
-<li>Create two (or more) instances of the User Input Producer by opening <code class="docutils literal"><span class="pre">ebu_tt_live/ui/user_input_producer/user_input_producer.html</span></code> in multiple browser tabs/windows.</li>
+<li>Start the Handover Manager: <code class="docutils literal notranslate"><span class="pre">ebu-run</span> <span class="pre">--admin.conf=ebu_tt_live/examples/config/user_input_producer_handover.json</span></code></li>
+<li>Create two (or more) instances of the User Input Producer by opening <a class="reference external" href="../ui/user_input_producer/index.html">docs/build/ui/user_input_producer/index.html</a> or the <a class="reference external" href="http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/">current release pre-built page</a> in multiple browser tabs/windows.</li>
 <li>In each instance of the UIP, create a sequence with a different sequence identifier but with identical authors group identifier. If you use the default configuration, this is “TestGroup1”.</li>
-<li>Select the sequence you created and connect. The default configuration publishes to <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code>.</li>
-<li>In the Result host panel, connect to the result host - the default configuration subscribes to <code class="docutils literal"><span class="pre">ws://127.0.0.1:9001</span></code>. Enter the Handover Manager’s output sequence identifier - the default is “HandoverSequence1”.</li>
+<li>Select the sequence you created and connect. The default configuration publishes to <code class="docutils literal notranslate"><span class="pre">ws://127.0.0.1:9001</span></code>.</li>
+<li>In the Result host panel, connect to the result host - the default configuration subscribes to <code class="docutils literal notranslate"><span class="pre">ws://127.0.0.1:9001</span></code>. Enter the Handover Manager’s output sequence identifier - the default is “HandoverSequence1”.</li>
 <li>Enter a positive number in the ‘Authors group control token’ field.</li>
 <li>Enter subtitle text and send the document.</li>
-<li>The UIP publishing the sequence currently selected by the Handover Manager will display an “On air” flag. This is derived from the <code class="docutils literal"><span class="pre">ebuttm:authorsGroupSelectedSequenceIdentifier</span></code> metadata.</li>
+<li>The UIP publishing the sequence currently selected by the Handover Manager will display an “On air” flag. This is derived from the <code class="docutils literal notranslate"><span class="pre">ebuttm:authorsGroupSelectedSequenceIdentifier</span></code> metadata.</li>
 <li>The output from the handover node will appear in the “Received documents” panel. Click a row to reveal the document or message.</li>
 <li>Non-selected sequences can “take control” by sending a document with a higher control token value than the most recently output document from the Handover Manager, according to the EBU-TT Part 3 specification. To show this, enter a higher number in the Control Token field before sending a document.</li>
 </ul>
@@ -248,7 +249,7 @@ in the Control Request field.</p>
 <p class="first admonition-title">Note</p>
 <p>More demo scenario examples :</p>
 <ul class="last simple">
-<li>Run <code class="docutils literal"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span> <span class="pre">ebu_tt_live/examples/config/user_input_producer_dist_consumers.json</span></code>. This configuration runs a distributor node and two consumers, one for TestSequence1 and the other for TestSequence2. Open the <code class="docutils literal"><span class="pre">ui/user_input_producer/user_input_producer.html</span></code> page and create or select TestSequence1, and connect it to the distributor node via websocket (click “connect” button). When you send a document the consumer will log the new document. Open another user input web page and connect it with TestSequence2. The second consumer receives this document. Now documents can be sent by both web pages simultaneously and will be routed to the correct consumer by the Distributor node.</li>
+<li>Run <code class="docutils literal notranslate"><span class="pre">ebu-run</span> <span class="pre">--admin.conf</span> <span class="pre">ebu_tt_live/examples/config/user_input_producer_dist_consumers.json</span></code>. This configuration runs a distributor node and two consumers, one for TestSequence1 and the other for TestSequence2. Open the <a class="reference external" href="../ui/user_input_producer/index.html">docs/build/ui/user_input_producer/index.html</a> page or the <a class="reference external" href="http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/">current release pre-built page</a> and create or select TestSequence1, and connect it to the distributor node via websocket (click “connect” button). When you send a document the consumer will log the new document. Open another user input web page and connect it with TestSequence2. The second consumer receives this document. Now documents can be sent by both web pages simultaneously and will be routed to the correct consumer by the Distributor node.</li>
 </ul>
 </div>
 <div class="admonition note">
@@ -308,7 +309,7 @@ in the Control Request field.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

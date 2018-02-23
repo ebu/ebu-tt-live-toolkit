@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to EBU-TT-Live Toolkit’s documentation! &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>Welcome to EBU-TT-Live Toolkit’s documentation! &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="#"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="#"/>
         <link rel="next" title="Overview of the EBU-TT live toolkit." href="overview.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -182,11 +182,12 @@
 <li class="toctree-l3"><a class="reference internal" href="scripts_and_their_functions.html#distributor">Distributor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scripts_and_their_functions.html#handover-manager">Handover Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scripts_and_their_functions.html#buffer-delay-node">Buffer Delay Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scripts_and_their_functions.html#deduplicator-node">DeDuplicator Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scripts_and_their_functions.html#retiming-delay-node">Retiming Delay Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scripts_and_their_functions.html#ebu-tt-d-encoder">EBU-TT-D Encoder</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="configurator.html#the-configuration-file-structure">The configuration file structure</a></li>
 </ul>
 </li>
@@ -206,6 +207,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="conversion.html#the-problem">The problem</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="conversion.html#percentages-and-the-em-square">Percentages and the EM square</a></li>
@@ -220,34 +222,34 @@
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#layout-of-the-source-files">Layout of the source files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.bindings.html">bindings Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#id1"><code class="docutils literal"><span class="pre">bindings</span></code> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttdt"><code class="docutils literal"><span class="pre">_ebuttdt</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttm"><code class="docutils literal"><span class="pre">_ebuttm</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttp"><code class="docutils literal"><span class="pre">_ebuttp</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebutts"><code class="docutils literal"><span class="pre">_ebutts</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttm"><code class="docutils literal"><span class="pre">_ttm</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttp"><code class="docutils literal"><span class="pre">_ttp</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._tts"><code class="docutils literal"><span class="pre">_tts</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings.pyxb_utils"><code class="docutils literal"><span class="pre">pyxb_utils</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#id1"><code class="docutils literal notranslate"><span class="pre">bindings</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttdt"><code class="docutils literal notranslate"><span class="pre">_ebuttdt</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttm"><code class="docutils literal notranslate"><span class="pre">_ebuttm</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebuttp"><code class="docutils literal notranslate"><span class="pre">_ebuttp</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ebutts"><code class="docutils literal notranslate"><span class="pre">_ebutts</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttm"><code class="docutils literal notranslate"><span class="pre">_ttm</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._ttp"><code class="docutils literal notranslate"><span class="pre">_ttp</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings._tts"><code class="docutils literal notranslate"><span class="pre">_tts</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#module-ebu_tt_live.bindings.pyxb_utils"><code class="docutils literal notranslate"><span class="pre">pyxb_utils</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.bindings.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="ebu_tt_live.bindings.raw.html">raw Package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#id1"><code class="docutils literal"><span class="pre">raw</span></code> Package</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebuttdt"><code class="docutils literal"><span class="pre">_ebuttdt</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebuttm"><code class="docutils literal"><span class="pre">_ebuttm</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebuttp"><code class="docutils literal"><span class="pre">_ebuttp</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebutts"><code class="docutils literal"><span class="pre">_ebutts</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ttm"><code class="docutils literal"><span class="pre">_ttm</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ttp"><code class="docutils literal"><span class="pre">_ttp</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._tts"><code class="docutils literal"><span class="pre">_tts</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#id1"><code class="docutils literal notranslate"><span class="pre">raw</span></code> Package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebuttdt"><code class="docutils literal notranslate"><span class="pre">_ebuttdt</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebuttm"><code class="docutils literal notranslate"><span class="pre">_ebuttm</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebuttp"><code class="docutils literal notranslate"><span class="pre">_ebuttp</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ebutts"><code class="docutils literal notranslate"><span class="pre">_ebutts</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ttm"><code class="docutils literal notranslate"><span class="pre">_ttm</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._ttp"><code class="docutils literal notranslate"><span class="pre">_ttp</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.raw.html#module-ebu_tt_live.bindings.raw._tts"><code class="docutils literal notranslate"><span class="pre">_tts</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l5"><a class="reference internal" href="ebu_tt_live.bindings.validation.html">validation package</a><ul>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#id1"><code class="docutils literal"><span class="pre">validation</span></code> Package</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.validator"><code class="docutils literal"><span class="pre">validator</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.timing"><code class="docutils literal"><span class="pre">timing</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.presentation"><code class="docutils literal"><span class="pre">presentation</span></code> Module</a></li>
-<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.content"><code class="docutils literal"><span class="pre">content</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#id1"><code class="docutils literal notranslate"><span class="pre">validation</span></code> Package</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.base"><code class="docutils literal notranslate"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.validator"><code class="docutils literal notranslate"><span class="pre">validator</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.timing"><code class="docutils literal notranslate"><span class="pre">timing</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.presentation"><code class="docutils literal notranslate"><span class="pre">presentation</span></code> Module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ebu_tt_live.bindings.validation.html#module-ebu_tt_live.bindings.validation.content"><code class="docutils literal notranslate"><span class="pre">content</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -255,83 +257,84 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.carriage.html">carriage Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.interface"><code class="docutils literal"><span class="pre">interface</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.direct"><code class="docutils literal"><span class="pre">direct</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.filesystem"><code class="docutils literal"><span class="pre">filesystem</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.websocket"><code class="docutils literal"><span class="pre">websocket</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.interface"><code class="docutils literal notranslate"><span class="pre">interface</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.base"><code class="docutils literal notranslate"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.direct"><code class="docutils literal notranslate"><span class="pre">direct</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.filesystem"><code class="docutils literal notranslate"><span class="pre">filesystem</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.carriage.html#module-ebu_tt_live.carriage.websocket"><code class="docutils literal notranslate"><span class="pre">websocket</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.clocks.html">clocks Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.local"><code class="docutils literal"><span class="pre">local</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.media"><code class="docutils literal"><span class="pre">media</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.base"><code class="docutils literal notranslate"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.local"><code class="docutils literal notranslate"><span class="pre">local</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.clocks.html#module-ebu_tt_live.clocks.media"><code class="docutils literal notranslate"><span class="pre">media</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.config.html">config Package - Component configurators</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config"><code class="docutils literal"><span class="pre">config</span></code> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.backend"><code class="docutils literal"><span class="pre">backend</span></code> module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.node"><code class="docutils literal"><span class="pre">node</span></code> module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.carriage"><code class="docutils literal"><span class="pre">carriage</span></code> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.adapters"><code class="docutils literal"><span class="pre">adapters</span></code> module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.clocks"><code class="docutils literal"><span class="pre">clocks</span></code> module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.common"><code class="docutils literal"><span class="pre">common</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config"><code class="docutils literal notranslate"><span class="pre">config</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.backend"><code class="docutils literal notranslate"><span class="pre">backend</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.node"><code class="docutils literal notranslate"><span class="pre">node</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.carriage"><code class="docutils literal notranslate"><span class="pre">carriage</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.adapters"><code class="docutils literal notranslate"><span class="pre">adapters</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.clocks"><code class="docutils literal notranslate"><span class="pre">clocks</span></code> module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.config.html#module-ebu_tt_live.config.common"><code class="docutils literal notranslate"><span class="pre">common</span></code> module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.documents.html">documents Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#id1"><code class="docutils literal"><span class="pre">documents</span></code> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3"><code class="docutils literal"><span class="pre">ebutt3</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_segmentation"><code class="docutils literal"><span class="pre">ebutt3_segmentation</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.bindings.converters.ebutt3_ebuttd"><code class="docutils literal"><span class="pre">bindings_converters</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.converters"><code class="docutils literal"><span class="pre">document_converters</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebuttd"><code class="docutils literal"><span class="pre">ebuttd</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#id1"><code class="docutils literal notranslate"><span class="pre">documents</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.base"><code class="docutils literal notranslate"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3"><code class="docutils literal notranslate"><span class="pre">ebutt3</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_segmentation"><code class="docutils literal notranslate"><span class="pre">ebutt3_segmentation</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebutt3_splicer"><code class="docutils literal notranslate"><span class="pre">ebutt3_splicer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.bindings.converters.ebutt3_ebuttd"><code class="docutils literal notranslate"><span class="pre">bindings_converters</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.converters"><code class="docutils literal notranslate"><span class="pre">document_converters</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.documents.html#module-ebu_tt_live.documents.ebuttd"><code class="docutils literal notranslate"><span class="pre">ebuttd</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.examples.html#id1"><code class="docutils literal"><span class="pre">examples</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.examples.html#id1"><code class="docutils literal notranslate"><span class="pre">examples</span></code> Package</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#id1"><code class="docutils literal"><span class="pre">node</span></code> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.interface"><code class="docutils literal"><span class="pre">interface</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.consumer"><code class="docutils literal"><span class="pre">consumer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.producer"><code class="docutils literal"><span class="pre">producer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.encoder"><code class="docutils literal"><span class="pre">encoder</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.delay"><code class="docutils literal"><span class="pre">delay</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.distributing"><code class="docutils literal"><span class="pre">distributing</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.handover"><code class="docutils literal"><span class="pre">handover</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#id1"><code class="docutils literal notranslate"><span class="pre">node</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.interface"><code class="docutils literal notranslate"><span class="pre">interface</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.base"><code class="docutils literal notranslate"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.consumer"><code class="docutils literal notranslate"><span class="pre">consumer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.producer"><code class="docutils literal notranslate"><span class="pre">producer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.encoder"><code class="docutils literal notranslate"><span class="pre">encoder</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.delay"><code class="docutils literal notranslate"><span class="pre">delay</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.distributing"><code class="docutils literal notranslate"><span class="pre">distributing</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#module-ebu_tt_live.node.handover"><code class="docutils literal notranslate"><span class="pre">handover</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.node.html#deduplicator-module"><code class="docutils literal notranslate"><span class="pre">deduplicator</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.common"><code class="docutils literal"><span class="pre">common</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run"><code class="docutils literal"><span class="pre">ebu_run</span></code> Module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.common"><code class="docutils literal notranslate"><span class="pre">common</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_run"><code class="docutils literal notranslate"><span class="pre">ebu_run</span></code> Module</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="ebu_tt_live.scripts.html#basic-usage">Basic usage:</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ebu_tt_live.scripts.html#adjust-existing-config-file">Adjust existing config file:</a></li>
 <li class="toctree-l5"><a class="reference internal" href="ebu_tt_live.scripts.html#help">Help:</a></li>
 </ul>
 </li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_simple_producer"><code class="docutils literal"><span class="pre">ebu_simple_producer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_user_input_consumer"><code class="docutils literal"><span class="pre">ebu_user_input_consumer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal notranslate"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal notranslate"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal notranslate"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_simple_producer"><code class="docutils literal notranslate"><span class="pre">ebu_simple_producer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.scripts.html#module-ebu_tt_live.scripts.ebu_user_input_consumer"><code class="docutils literal notranslate"><span class="pre">ebu_user_input_consumer</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#id1"><code class="docutils literal"><span class="pre">twisted</span></code> Package</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#module-ebu_tt_live.twisted.base"><code class="docutils literal"><span class="pre">base</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#module-ebu_tt_live.twisted.node"><code class="docutils literal"><span class="pre">node</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#module-ebu_tt_live.twisted.websocket"><code class="docutils literal"><span class="pre">websocket</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#id1"><code class="docutils literal notranslate"><span class="pre">twisted</span></code> Package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#module-ebu_tt_live.twisted.base"><code class="docutils literal notranslate"><span class="pre">base</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#module-ebu_tt_live.twisted.node"><code class="docutils literal notranslate"><span class="pre">node</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ebu_tt_live.twisted.html#module-ebu_tt_live.twisted.websocket"><code class="docutils literal notranslate"><span class="pre">websocket</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal notranslate"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal notranslate"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal notranslate"><span class="pre">utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -388,7 +391,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.scripts.ebu_simple_consumer &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.scripts.ebu_simple_consumer &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -156,7 +156,9 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.scripts.ebu_simple_consumer</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span></span><span class="c1"># NOTE: This script is no longer maintained. Use `ebu-run` instead.</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">ArgumentParser</span>
 <span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">create_loggers</span>
 
@@ -179,7 +181,7 @@
                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Documents are read from the filesystem instead of the network, takes a manifest file as input&#39;</span><span class="p">,</span>
                     <span class="nb">type</span><span class="o">=</span><span class="nb">str</span>
                     <span class="p">)</span>
-<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;--websocket-url&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;websocket_url&#39;</span><span class="p">,</span> 
+<span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-u&#39;</span><span class="p">,</span> <span class="s1">&#39;--websocket-url&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;websocket_url&#39;</span><span class="p">,</span>
                     <span class="n">help</span><span class="o">=</span><span class="s1">&#39;URL for the websocket address to connect to&#39;</span><span class="p">,</span>
                     <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ws://localhost:9000/TestSequence1/subscribe&#39;</span><span class="p">)</span>
 <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--tail-f&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;do_tail&#39;</span><span class="p">,</span>
@@ -241,8 +243,8 @@
         <span class="n">factory</span><span class="o">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="n">BroadcastClientProtocol</span>
 
         <span class="n">factory</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
-
-        <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+</div>
+        <span class="n">reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </pre></div>
 
            </div>
@@ -279,7 +281,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

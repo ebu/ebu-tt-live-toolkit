@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.config.clocks &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.config.clocks &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -165,23 +165,23 @@
 <div class="viewcode-block" id="LocalMachineClock"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.clocks.LocalMachineClock">[docs]</a><span class="k">class</span> <span class="nc">LocalMachineClock</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">LocalMachineClock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">clocks</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">LocalMachineClock</span><span class="p">()</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LocalMachineClock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">clocks</span><span class="o">.</span><span class="n">local</span><span class="o">.</span><span class="n">LocalMachineClock</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="UTCClock"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.clocks.UTCClock">[docs]</a><span class="k">class</span> <span class="nc">UTCClock</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">UTCClock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">clocks</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">UTCClock</span><span class="p">()</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UTCClock</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">clocks</span><span class="o">.</span><span class="n">utc</span><span class="o">.</span><span class="n">UTCClock</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="DummyClock"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.clocks.DummyClock">[docs]</a><span class="k">class</span> <span class="nc">DummyClock</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This wrapper returns None for reference clock allowing the consumer to create a reference clock from the first</span>
 <span class="sd">    document received</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">component</span> <span class="o">=</span> <span class="kc">None</span></div>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    <span class="n">component</span> <span class="o">=</span> <span class="kc">None</span>
 
 
 <span class="n">clock_by_type</span> <span class="o">=</span> <span class="p">{</span>
@@ -198,8 +198,8 @@
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_NO_SUCH_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">type_name</span><span class="o">=</span><span class="n">clock_type</span>
-            <span class="p">)</span>
-        <span class="p">)</span></div>
+            <span class="p">)</span></div>
+        <span class="p">)</span>
 </pre></div>
 
            </div>
@@ -236,7 +236,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

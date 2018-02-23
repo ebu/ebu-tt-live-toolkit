@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="UTF-8"></meta>
+      <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+      <script src="template/user_input_producer_template.js"></script>
+      <script src="template/live_message_template.js"></script>
+      <script src="moment.js"></script>
+      <script src="nunjucks.js"></script>
+      <script src="uip.js"></script>
+      <link rel="stylesheet" href="assets/css/bootstrap.css" media="screen">
+      <link rel="stylesheet" href="assets/css/custom.min.css" media="screen">
+      <link rel="stylesheet" href="assets/css/main.css" media="screen">
+
+   </head>
+   <body>
+
+      <div class="wrapper">
+         <div id="header">
+            <div class="left"><a href="https://tech.ebu.ch/home"><img src="assets/img/ebu-logo-relaunch.png"/></a></div>
+            <div class="right">
+               <h1><a href="http://ebu.github.io/ebu-tt-live-toolkit/">EBU-TT Live Interoperability Toolkit</a></h1>
+               <h3>This is the User Input Producer (UIP).</h3>
+               It streams a sequence of Part 3 documents on a WebSocket connection.
+            </div>
+         </div>
+      <div id="content-producer-div" class="left-side">
+      <div id="sequence-selector-div" class="control-section-div">
+         <span class="control-section-header-span">Manage Sequences</span>
+         <button type="button" id="create-new-sequence-button" name="create-new-sequence-button">Create a new sequence</button>
+         <div id="new-sequence-div" style="display: none">
+               <label for="new-sequence-identifier-input">Sequence Identifier: </label>
+               <input type="text" name="new-sequence-identifier-input" id="new-sequence-identifier-input">
+               <label for="ag-identifier-input">Authors group identifier: </label>
+               <input type="text" name="ag-identifier-input" id="ag-identifier-input" />
+               <label for ="time-base-selector">Time base : </label>
+               <select id="time-base-selector" name="time-base-selector">
+                  <option value="clock" selected="selected">Clock</option>
+                  <option value="media">Media</option>
+                  <!-- Disabling for demo
+                  <option value="smpte">SMPTE</option>
+                  -->
+               </select>
+               <span id="clock-mode-span">
+                  <label for="clock-mode-selector">Clock mode : </label>
+                  <select id="clock-mode-selector" name="clock-mode-selector">
+                     <option value="local" selected="selected">Local</option>
+                     <option value="utc">UTC</option>
+                     <option value="gps">GPS</option>
+                  </select>
+               </span>
+               <span id="smpte-attributes-span">
+                  <label for="frame-rate-input">Frame rate : </label>
+                  <input type="text" id="frame-rate-input" name="frame-rate-input">
+                  <br>
+                  <label for="frm-numerator-input"> Frame rate multiplier numerator : </label>
+                  <input type="text" id="frm-numerator-input" name="frm-numerator-input">
+                  <label for="frm-denominator-input">Frame rate multiplier denominator : </label>
+                  <input type="text" id="frm-denominator-input" name="frm-denominator-input">
+                  <br>
+                  <label for="marker-mode-selector">Marker mode : </label>
+                  <select id="marker-mode-selector" name="marker-mode-selector">
+                     <option value="continuous">continuous</option>
+                  </select>
+                  <br>
+                  <label for="drop-mode-selector">Drop mode : </label>
+                  <select id="drop-mode-selector" name="drop-mode-selector">
+                     <option value="nonDrop">nonDrop</option>
+                     <option value="dropNTSC">dropNTSC</option>
+                     <option value="dropPAL">dropPAL</option>
+                  </select>
+               </span>
+               <button type="button" name="validate-new-sequence-button" id="validate-new-sequence-button">Validate</button>
+               <button type="button" name="cancel-new-sequence-button" id="cancel-new-sequence-button">Cancel</button>
+            </div>
+               <span id="new-sequence-notification-span"></span>
+         </div>
+
+      <div id="websocket-url-div" class="control-section-div">
+         <span class="control-section-header-span">Connection</span>
+         <label for="websocket-url-input">Websocket URL: </label>
+         <input type="url" id="websocket-url-input" name="websocket-url-input" value="ws://127.0.0.1:9001" required>
+         <span> / </span><label for="sequence-selector">Sequence: </label>
+         <select id="sequence-selector" name="sequence-selector"></select>
+         <span> / publish </span>
+         <button type="button" id="websocket-connect-button" name="websocket-connect-button">Connect</button>
+         <button type="button" id="websocket-disconnect-button" name="websocket-disconnect-button" style="display: none">Disconnect</button>
+         <span id="websocket-notifications-span" style="color: orange">Disconnected</span>
+         </div>
+      <form action="" id="subtitle-form">
+      <div id="send-mode-div" class="control-section-div">
+         <span class="control-section-header-span">Send Document </span>
+         <button type="button" name="submit-subtitle-button" id="submit-subtitle-button">Now!</button>
+         <span>&nbsp;&nbsp;</span>
+         <input type="radio" name="sending-type-radio-input" id="radio_send" value="live" checked> on enter, space and escape
+         &nbsp;
+         <input type="radio" name="sending-type-radio-input" id="radio_schedule" value="scheduled_send"> on scheduled time
+         &nbsp;
+         <input type="radio" name="sending-type-radio-input" id ="radio_async" value="asynchronous_send"> asynchronously
+         <div id="scheduled-send-setup-div" style="margin:10px;">
+            <label for="scheduled-send-clock-selector">Clock type: </label>
+            <select id="scheduled-send-clock-selector" name="scheduled-send-clock-selector">
+               <option value="local">Local (computer) clock</option>
+               <option value="media">Media clock (offseted local clock)</option>
+            </select>
+            <button type="button" id="synchronize-media-clock-button" name="synchronize-media-clock-button"> Synchronize </button>
+            <span id="scheduled-send-status-span"></span>
+            <span id="running-clock"></span>
+            <span id="running-clock-media"></span>
+            <br>
+            <span id="scheduled-time-span">
+               <label for="scheduled-time-input">Scheduled time (hh:mm:ss format) : </label>
+               <input type="text" id="scheduled-time-input" name="scheduled-time-input" class="time-input"/>
+            </span>
+            <button type="button" name="schedule-subtitle-button" id="schedule-subtitle-button">Schedule</button>
+            <span id="scheduled-confirmation-span"></span>
+         </div>
+         <div id="asynchronous-send-setup-div" style="margin:10px;">
+            <label for="asynchronous-send-interval-input">Asynchronous send interval (in seconds): </label>
+            <input type="text" id="asynchronous-send-interval-input" name="asynchronous-send-interval-input" value="1">
+            <button type="button" id="asynchronous-send-start-button" name="asynchronous-send-start-button"> Start </button>
+            <button type="button" id="asynchronous-send-stop-button" name="asynchronous-send-stop-button"> Stop </button>
+            <span id="asynchronous-send-status-span"></span>
+         </div>
+         </div>
+
+         <div id="ag-control-request-div" class="control-section-div">
+            <span class="control-section-header-span">Handover request </span>
+            <span id="ag-control-request-content-span">
+               <input type="text" id="ag-control-request-input" name="ag-control-request-input" />
+               <button type="button" name="submit-ag-control-request-button" id="submit-ag-control-request-button">Send</button>
+            </span>
+            <span id="on-air-span">ON AIR</span>
+         </div>
+
+         <div id="subtitle-content-div" class="control-section-div">
+         <span class="control-section-header-span">Document </span>
+         <span id="max-lines-span">
+            <label for="max-lines">Maximum lines: </label>
+            <input type="number" name="max-lines" id="max-lines" min="1" max="15" step="1" value="2" />
+            <label for="ag-token-input">Authors group control token: </label>
+            <input type="number" id="ag-token-input" name="ag-token-input" min="1" step="1" value="" />
+         </span>
+         <div id="document-content-div" style="padding-left: 10px;">
+            <div id="document-timings-div">
+               <label for="body-begin-input">Body begin time: </label>
+               <input type="text" id="body-begin-input" name="body-begin-input" class="time-input">
+               <label for="body-end-input" style="padding-left: 1em;">Body end time: </label>
+               <input type="text" id="body-end-input" name="body-end-input" class="time-input">
+               <label for="dur-input" style="padding-left: 1em;">Duration: </label>
+               <input type="text" id="dur-input" name="dur-input" class="time-input">
+            </div>
+         <label for="subtitle-content-textarea">Subtitle text: </label><br>
+         <textarea id="subtitle-content-textarea" name="subtitle-content-textarea" style="resize: both; font-size:3em;" cols="30" rows="4"></textarea>
+         <br/>
+         <div id="subtitle-form-notification-div"></div>
+      </div>
+      </div>
+      <br/>
+
+      </form>
+     
+      </div>
+      <div id="result-monitoring-div" class="right-side">
+            <div id="result-connection-div" class="control-section-div">
+               <span><label for="subscribe-host-input">Result host: </label><input type="text" id="subscribe-host-input" value="ws://127.0.0.1:9001" required></span>
+               <span><label for="subscribe-sequence-input">Sequence: </label><input type="text" id="subscribe-sequence-input" value="HandoverSequence1" required></span>
+               <span>/subscribe</span>
+               <button id="subscribe-websocket-connect-button">Connect</button>
+            </div>
+         <div id="result-container" class="control-section-div">
+            <span class="control-section-header-span">Received documents</span>
+            <div id="result-list" class="result-list">
+               <div class="doc-item-template doc-item">
+                  <span>Seq.Num.: </span><span class="seqNum-value"></span><span>  --  </span>
+                  <span>Au.G.Id.: </span><span class="autGID-value"></span><span>  --  </span>
+                  <span>Au.G.C.Token: </span><snap class="autGCT-value"></snap>
+               </div>
+               <div class="message-item-template message-item">
+                  <span>Message from sender: </span><span class="sender-value"></span>
+               </div>
+            </div>
+            <div id="result-view-div">
+               <pre id="result-view-pre" class="result-view"></pre>
+            </div>
+         </div>
+      </div>
+         <div class="footer">
+            <button id="reset-all" name="reset-all" type="reset">Reset everything, clear local storage</button>
+            <span>&nbsp;</span>
+         </div>
+      </div>
+      
+   </body>
+</html>

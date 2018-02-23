@@ -65,10 +65,10 @@ The more detailed options are: ::
 
     nodes
     ├─[nodeN] : a node to configure - any from node1 to node9
-    │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay" | "distributor" | "handover"]
+    │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay" | "distributor" | "handover" | "deduplicator"]
     │ ├─output : the output settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to get incoming documents
-    │ │ │ ├─type : ["direct" | "filesystem" | "filesystem-simple" | "websocket" | "websocket-legacy"]
+    │ │ │ ├─type : ["direct" | "filesystem" | "websocket" | "websocket-legacy"]
     │ │ │ └─[output carriage type-dependent options - see below]
     │ │ └─adapters : see below
     │ ├─input : the input settings for the node, if applicable
@@ -79,7 +79,7 @@ The more detailed options are: ::
     │ ├─id : identifier for the node, defaults to a value based on the node's type.
     │ └─[node type-dependent options - see below]
     backend
-    └─type: ["twisted" (default) | "dummy"]    
+    └─type: ["twisted" (default) | "dummy"]
 
 Node type dependent options for [nodeN] : ::
 
@@ -120,6 +120,9 @@ Node type dependent options for [nodeN] : ::
    ├─authors_group_identifier : the authors' group to follow, default "AuthorsGroup1"
    └─sequence_identifier : sequence identifier, default "HandoverSequence1"
 
+   type="deduplicator"
+   └─sequence_identifier : sequence identifier, default "DeDuplicated1"
+
    type="distributor" : No options
 
 Output carriage type dependent options for "carriage": ::
@@ -128,12 +131,11 @@ Output carriage type dependent options for "carriage": ::
    └─id : id of the 'pipe' to write to, default "default"
 
    type="filesystem"
-   └─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
-
-   type="filesystem-simple"
    ├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
-   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
-   └─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
+   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder or all if 0, default 0
+   ├─suppress_manifest : Whether to suppress writing of a manifest file (e.g. for EBU-TT-D output). Default False
+   ├─message_filename_pattern : File name pattern for message documents or EBU-TT-D documents. It can contain {sequence_identifier} and {counter} format parameters, default "{sequence_identifier}_msg_{counter}.xml" 
+   └─filename_pattern : File name pattern for EBU-TT-Live documents. It needs to contain {counter} format parameter, which will be populated with the sequence number. Default "{sequence_identifier}_{counter}.xml"
 
    type="websocket"
    ├─proxy : HTTP proxy in format ADDR:PORT
@@ -152,11 +154,6 @@ Input carriage type dependent options for "carriage": ::
    type="filesystem"
    ├─manifest_file : The timing manifest file for importing files. Files are required to be in the same folder as the manifest file.
    └─tail : Keep the manifest open and wait for new input much like UNIX's tail -f command
-
-   type="filesystem-simple"
-   ├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
-   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder., default 0
-   └─filename_pattern : File name pattern. It needs to contain {counter} format parameter, default "export-{counter}.xml"
 
    type="websocket"
    ├─proxy : HTTP proxy in format ADDR:PORT

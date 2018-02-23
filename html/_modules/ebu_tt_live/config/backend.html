@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.config.backend &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.config.backend &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -176,25 +176,25 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_components_to_start</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_all_configurators</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
-<div class="viewcode-block" id="BackendBase.register_configurator"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.register_configurator">[docs]</a>    <span class="k">def</span> <span class="nf">register_configurator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configurator</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_all_configurators</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">configurator</span><span class="p">)</span></div>
+<div class="viewcode-block" id="BackendBase.register_configurator"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.register_configurator">[docs]</a>    <span class="k">def</span> <span class="nf">register_configurator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">configurator</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_all_configurators</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">configurator</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BackendBase.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_configurators</span><span class="p">:</span>
             <span class="c1"># Start all the components</span>
             <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="bp">self</span> <span class="ow">and</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_components_to_start</span><span class="p">:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting component: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
-                <span class="n">item</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting component: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item</span><span class="p">))</span></div>
+                <span class="n">item</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
 <div class="viewcode-block" id="BackendBase.register_component_start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.register_component_start">[docs]</a>    <span class="k">def</span> <span class="nf">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_components_to_start</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components_to_start</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_components_to_start</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span></div>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components_to_start</span><span class="p">)</span>
 
-<div class="viewcode-block" id="BackendBase.call_once"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.call_once">[docs]</a>    <span class="k">def</span> <span class="nf">call_once</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<div class="viewcode-block" id="BackendBase.call_once"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.call_once">[docs]</a>    <span class="k">def</span> <span class="nf">call_once</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-<div class="viewcode-block" id="BackendBase.call_periodically"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.call_periodically">[docs]</a>    <span class="k">def</span> <span class="nf">call_periodically</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="BackendBase.call_periodically"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.BackendBase.call_periodically">[docs]</a>    <span class="k">def</span> <span class="nf">call_periodically</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="DummyBackend"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.DummyBackend">[docs]</a><span class="k">class</span> <span class="nc">DummyBackend</span><span class="p">(</span><span class="n">BackendBase</span><span class="p">):</span>
@@ -212,16 +212,16 @@
             <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">func</span><span class="p">,</span>
             <span class="s1">&#39;delay&#39;</span><span class="p">:</span> <span class="n">delay</span><span class="p">,</span>
             <span class="s1">&#39;result_callback&#39;</span><span class="p">:</span> <span class="n">result_callback</span><span class="p">,</span>
-            <span class="s1">&#39;error_callback&#39;</span><span class="p">:</span> <span class="n">error_callback</span>
-        <span class="p">})</span></div>
+            <span class="s1">&#39;error_callback&#39;</span><span class="p">:</span> <span class="n">error_callback</span></div>
+        <span class="p">})</span>
 
 <div class="viewcode-block" id="DummyBackend.call_periodically"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.DummyBackend.call_periodically">[docs]</a>    <span class="k">def</span> <span class="nf">call_periodically</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_periodic_calls</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
             <span class="s1">&#39;func&#39;</span><span class="p">:</span> <span class="n">func</span><span class="p">,</span>
             <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="n">interval</span><span class="p">,</span>
             <span class="s1">&#39;result_callback&#39;</span><span class="p">:</span> <span class="n">result_callback</span><span class="p">,</span>
-            <span class="s1">&#39;error_callback&#39;</span><span class="p">:</span> <span class="n">error_callback</span>
-        <span class="p">})</span></div></div>
+            <span class="s1">&#39;error_callback&#39;</span><span class="p">:</span> <span class="n">error_callback</span></div></div>
+        <span class="p">})</span>
 
 
 <div class="viewcode-block" id="TwistedBackend"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend">[docs]</a><span class="k">class</span> <span class="nc">TwistedBackend</span><span class="p">(</span><span class="n">BackendBase</span><span class="p">):</span>
@@ -256,8 +256,8 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">TwistedBackend</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TwistedBackend.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">TwistedBackend</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TwistedBackend</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reactor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_crosscheck_ws_server_uri</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listen</span><span class="p">,</span> <span class="n">legacy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -347,8 +347,8 @@
                 <span class="n">producer</span><span class="o">=</span><span class="n">twisted_producer</span><span class="p">,</span>
                 <span class="n">proxy</span><span class="o">=</span><span class="n">proxy</span>
             <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">twisted_producer</span></div>
+</div>
+        <span class="k">return</span> <span class="n">twisted_producer</span>
 
 <div class="viewcode-block" id="TwistedBackend.ws_backend_consumer"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend.ws_backend_consumer">[docs]</a>    <span class="k">def</span> <span class="nf">ws_backend_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">,</span> <span class="n">listen</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">connect</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">server_factory</span> <span class="o">=</span> <span class="n">listen</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crosscheck_ws_server_uri</span><span class="p">(</span><span class="n">listen</span><span class="o">.</span><span class="n">geturl</span><span class="p">())</span> <span class="ow">or</span> <span class="kc">None</span>
@@ -374,8 +374,8 @@
                 <span class="n">consumer</span><span class="o">=</span><span class="n">twisted_consumer</span><span class="p">,</span>
                 <span class="n">proxy</span><span class="o">=</span><span class="n">proxy</span>
             <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">twisted_consumer</span></div>
+</div>
+        <span class="k">return</span> <span class="n">twisted_consumer</span>
 
 <div class="viewcode-block" id="TwistedBackend.wsl_backend_producer"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend.wsl_backend_producer">[docs]</a>    <span class="k">def</span> <span class="nf">wsl_backend_producer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">custom_producer</span><span class="p">):</span>
         <span class="n">server_factory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crosscheck_ws_server_uri</span><span class="p">(</span><span class="n">listen</span><span class="o">=</span><span class="n">uri</span><span class="o">.</span><span class="n">geturl</span><span class="p">(),</span> <span class="n">legacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -390,8 +390,8 @@
             <span class="n">server_factory</span><span class="o">.</span><span class="n">registerProducer</span><span class="p">(</span><span class="n">twisted_producer</span><span class="p">,</span> <span class="n">streaming</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_wsl_twisted_servers</span><span class="p">[</span><span class="n">uri</span><span class="o">.</span><span class="n">geturl</span><span class="p">()]</span> <span class="o">=</span> <span class="n">server_factory</span>
             <span class="n">server_factory</span><span class="o">.</span><span class="n">listen</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">server_factory</span><span class="o">.</span><span class="n">producer</span></div>
+</div>
+        <span class="k">return</span> <span class="n">server_factory</span><span class="o">.</span><span class="n">producer</span>
 
 <div class="viewcode-block" id="TwistedBackend.wsl_backend_consumer"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend.wsl_backend_consumer">[docs]</a>    <span class="k">def</span> <span class="nf">wsl_backend_consumer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">,</span> <span class="n">proxy</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">factory_args</span> <span class="o">=</span> <span class="p">{}</span>
@@ -407,23 +407,23 @@
         <span class="p">)</span>
 
         <span class="n">factory</span><span class="o">.</span><span class="n">protocol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_websocket</span><span class="o">.</span><span class="n">LegacyBroadcastClientProtocol</span>
-
-        <span class="n">factory</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span></div>
+</div>
+        <span class="n">factory</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TwistedBackend.call_once"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend.call_once">[docs]</a>    <span class="k">def</span> <span class="nf">call_once</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task</span><span class="o">.</span><span class="n">deferLater</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reactor</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="p">,</span> <span class="n">callable</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">d</span><span class="o">.</span><span class="n">addCallback</span><span class="p">(</span><span class="n">result_callback</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">error_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">d</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">error_callback</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="n">error_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span></div>
+            <span class="n">d</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">error_callback</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TwistedBackend.call_periodically"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.TwistedBackend.call_periodically">[docs]</a>    <span class="k">def</span> <span class="nf">call_periodically</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">result_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">looping_call</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task</span><span class="o">.</span><span class="n">LoopingCall</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">looping_call</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">interval</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">result_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">d</span><span class="o">.</span><span class="n">addCallback</span><span class="p">(</span><span class="n">result_callback</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">error_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">d</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">error_callback</span><span class="p">)</span></div></div>
+        <span class="k">if</span> <span class="n">error_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span></div></div>
+            <span class="n">d</span><span class="o">.</span><span class="n">addErrback</span><span class="p">(</span><span class="n">error_callback</span><span class="p">)</span>
 
 
 <span class="n">backend_by_type</span> <span class="o">=</span> <span class="p">{</span>
@@ -439,14 +439,14 @@
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_NO_SUCH_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">type_name</span><span class="o">=</span><span class="n">backend_name</span>
-            <span class="p">)</span>
-        <span class="p">)</span></div>
+            <span class="p">)</span></div>
+        <span class="p">)</span>
 
 
 <div class="viewcode-block" id="UniversalBackend"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.backend.UniversalBackend">[docs]</a><span class="k">class</span> <span class="nc">UniversalBackend</span><span class="p">(</span><span class="n">RequiredConfig</span><span class="p">):</span>
     <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
-    <span class="n">required_config</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
-    <span class="n">backend</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;twisted&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_backend</span><span class="p">)</span></div>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span></div>
+    <span class="n">backend</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;twisted&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">get_backend</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -483,7 +483,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

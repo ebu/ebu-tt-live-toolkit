@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.documents.base &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.documents.base &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -159,10 +159,12 @@
 <span></span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">ComparableMixin</span>
 
+<span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
+
 <div class="viewcode-block" id="TimeBase"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.TimeBase">[docs]</a><span class="k">class</span> <span class="nc">TimeBase</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="n">SMPTE</span> <span class="o">=</span> <span class="s1">&#39;smpte&#39;</span>
-    <span class="n">MEDIA</span> <span class="o">=</span> <span class="s1">&#39;media&#39;</span>
-    <span class="n">CLOCK</span> <span class="o">=</span> <span class="s1">&#39;clock&#39;</span></div>
+    <span class="n">MEDIA</span> <span class="o">=</span> <span class="s1">&#39;media&#39;</span></div>
+    <span class="n">CLOCK</span> <span class="o">=</span> <span class="s1">&#39;clock&#39;</span>
 
 
 <div class="viewcode-block" id="SubtitleDocument"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.SubtitleDocument">[docs]</a><span class="k">class</span> <span class="nc">SubtitleDocument</span><span class="p">(</span><span class="n">ComparableMixin</span><span class="p">):</span>
@@ -170,8 +172,8 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;This is an abstract class&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SubtitleDocument.validate"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.SubtitleDocument.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="SubtitleDocument.validate"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.SubtitleDocument.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="DocumentSequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.DocumentSequence">[docs]</a><span class="k">class</span> <span class="nc">DocumentSequence</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -188,8 +190,8 @@
 <span class="sd">        :param args:</span>
 <span class="sd">        :param kwargs: parameter override to constructor</span>
 <span class="sd">        :return: a new document</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DocumentSequence.add_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.DocumentSequence.add_document">[docs]</a>    <span class="k">def</span> <span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -198,8 +200,8 @@
 <span class="sd">        :param document:</span>
 <span class="sd">        :raises IncompatibleSequenceError meaning that the document cannot be part of this sequence for</span>
 <span class="sd">        it does not match the semantics of the sequence.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DocumentSequence.get_document"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.DocumentSequence.get_document">[docs]</a>    <span class="k">def</span> <span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -207,8 +209,8 @@
 <span class="sd">        :param seq_id:</span>
 <span class="sd">        :return: a document</span>
 <span class="sd">        :raises: KeyError meaning the document is not in the sequence</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">seq_id</span><span class="o">=</span><span class="n">item</span><span class="p">)</span>
@@ -219,8 +221,8 @@
 <span class="sd">        :param args:</span>
 <span class="sd">        :param kwargs: parameter override to constructor</span>
 <span class="sd">        :return: a new documentstream instance</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="CloningDocumentSequence"><a class="viewcode-back" href="../../../ebu_tt_live.documents.html#ebu_tt_live.documents.base.CloningDocumentSequence">[docs]</a><span class="k">class</span> <span class="nc">CloningDocumentSequence</span><span class="p">(</span><span class="n">DocumentSequence</span><span class="p">):</span>
@@ -237,8 +239,8 @@
 <span class="sd">        :param args:</span>
 <span class="sd">        :param kwargs: parameter override to constructor</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 </pre></div>
 
            </div>
@@ -275,7 +277,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

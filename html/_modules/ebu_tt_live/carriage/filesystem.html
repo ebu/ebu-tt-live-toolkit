@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.carriage.filesystem &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.carriage.filesystem &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -161,7 +161,7 @@
 <span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.clocks</span> <span class="k">import</span> <span class="n">get_clock</span>
 <span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">RotatingFileBuffer</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">FS_DEFAULT_CLOCK_USED</span><span class="p">,</span> <span class="n">FS_MISSING_AVAILABILITY</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">FS_DEFAULT_CLOCK_USED</span><span class="p">,</span> <span class="n">FS_MISSING_AVAILABILITY</span><span class="p">,</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MESSAGE_PATTERN</span><span class="p">,</span> <span class="n">CFG_MANIFEST_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MANIFEST_LINE_PATTERN</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">six</span>
@@ -176,16 +176,16 @@
         <span class="n">hours</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
         <span class="n">hours</span> <span class="o">+=</span> <span class="n">timed</span><span class="o">.</span><span class="n">days</span> <span class="o">*</span> <span class="mi">24</span>
         <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="n">milliseconds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">microseconds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">)</span></div>
+        <span class="n">milliseconds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">microseconds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="timestr_manifest_to_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.timestr_manifest_to_timedelta">[docs]</a><span class="k">def</span> <span class="nf">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">timestr</span><span class="p">):</span>
         <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">timestr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-        <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hours</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">),</span> <span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span> <span class="n">milliseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">milliseconds</span><span class="p">))</span></div>
+        <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hours</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">),</span> <span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span> <span class="n">milliseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">milliseconds</span><span class="p">))</span>
 
-
+<span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
 
 <div class="viewcode-block" id="FilesystemProducerImpl"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl">[docs]</a><span class="k">class</span> <span class="nc">FilesystemProducerImpl</span><span class="p">(</span><span class="n">AbstractProducerCarriage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -214,17 +214,33 @@
 
     <span class="n">_manifest_path</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_dirpath</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_manifest_content</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_message_file_name_pattern</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_manifest_time_format</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_circular_buf_size</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">_circular_buf</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_counter</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_suppress_manifest</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">_expects</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
     <span class="n">_default_clocks</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_msg_counter</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirpath</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                 <span class="n">dirpath</span><span class="p">,</span> 
+                 <span class="n">file_name_pattern</span> <span class="o">=</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> 
+                 <span class="n">message_file_name_pattern</span> <span class="o">=</span> <span class="n">CFG_MESSAGE_PATTERN</span><span class="p">,</span> 
+                 <span class="n">circular_buf_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
+                 <span class="n">suppress_manifest</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span> <span class="o">=</span> <span class="n">dirpath</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_content</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="n">file_name_pattern</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_message_file_name_pattern</span> <span class="o">=</span> <span class="n">message_file_name_pattern</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf_size</span> <span class="o">=</span> <span class="n">circular_buf_size</span>
+        <span class="k">if</span> <span class="n">circular_buf_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf</span> <span class="o">=</span> <span class="n">RotatingFileBuffer</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">circular_buf_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_suppress_manifest</span> <span class="o">=</span> <span class="n">suppress_manifest</span>
         <span class="c1"># Get a set of default clocks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_default_clocks</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_msg_counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -241,16 +257,16 @@
 <div class="viewcode-block" id="FilesystemProducerImpl.check_availability_time"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.check_availability_time">[docs]</a>    <span class="k">def</span> <span class="nf">check_availability_time</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">time_base</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clock_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Make sure we have a suitable timedelta value sent down from upstream as availability_time. </span>
-<span class="sd">        If the value is None or unusable use the default clock to derive an availability time </span>
+<span class="sd">        Make sure we have a suitable timedelta value sent down from upstream as availability_time.</span>
+<span class="sd">        If the value is None or unusable use the default clock to derive an availability time</span>
 <span class="sd">        for the current document. (This does not check if the value is within valid range)</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param sequence_identifier: remember default clock used per sequence</span>
 <span class="sd">        :param time_base: document time base</span>
 <span class="sd">        :param clock_mode: in clock timebase this parameter is needed</span>
 <span class="sd">        :param availability_time: provided availability_time from upstream</span>
 <span class="sd">        :return: a valid availability_time (timedelta)</span>
-<span class="sd">        </span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">availability_time</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">):</span>
@@ -261,56 +277,87 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">clock_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">availability_time</span> <span class="o">=</span> <span class="n">clock_obj</span><span class="o">.</span><span class="n">get_real_clock_time</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">availability_time</span></div>
+</div>
+        <span class="k">return</span> <span class="n">availability_time</span>
 
 <div class="viewcode-block" id="FilesystemProducerImpl.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">producer_node</span><span class="o">.</span><span class="n">resume_producing</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">EndOfData</span><span class="p">:</span>
-                <span class="k">break</span></div>
+            <span class="k">except</span> <span class="n">EndOfData</span><span class="p">:</span></div>
+                <span class="k">break</span>
 
 <div class="viewcode-block" id="FilesystemProducerImpl.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">time_base</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clock_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="c1"># NOTE: This is nasty</span>
-        <span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_availability_time</span><span class="p">(</span>
-            <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
-            <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span><span class="p">,</span>
-            <span class="n">clock_mode</span><span class="o">=</span><span class="n">clock_mode</span><span class="p">,</span>
-            <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span>
-        <span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># This is a possibility with a live messages as first document. They don&#39;t contain enough timing info.</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="n">FS_MISSING_AVAILABILITY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="c1"># Without availability time we can not create manifest file.</span>
-            <span class="k">return</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">manifest_filename</span> <span class="o">=</span> <span class="s2">&quot;manifest_&quot;</span> <span class="o">+</span> <span class="n">sequence_identifier</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">manifest_filename</span><span class="p">)</span>
         <span class="c1"># Handle there the switch and checks to handle the string format to use</span>
         <span class="c1"># for times in the manifest file depending on your time base.</span>
         <span class="k">if</span> <span class="n">sequence_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># This means that it isn&#39;t a document. It can be a message.</span>
+            <span class="c1"># This means that it isn&#39;t a Part 3 document. It can be a message, or an EBU-TT-D document.</span>
+            <span class="c1"># We don&#39;t try to spot the difference between a message and an EBU-TT-D document:</span>
+            <span class="c1"># instead we just use the message format for EBU-TT-D documents!</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_msg_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_msg_</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_counter</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_message_file_name_pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">counter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_counter</span><span class="p">,</span> 
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">sequence_number</span><span class="p">)</span>
+            <span class="c1"># It&#39;s a Part 3 document, so use the sequence number.</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">counter</span><span class="o">=</span><span class="n">sequence_number</span><span class="p">,</span> 
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">)</span>
+            
+        <span class="c1"># TODO: consider using different classes or functions to do the document writing,</span>
+        <span class="c1"># depending on the settings of suppress_manifest and rotating_buf etc that</span>
+        <span class="c1"># can be selected once at the beginning and dereferenced rather than repeating</span>
+        <span class="c1"># if statements.</span>
         <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="n">time_base</span> <span class="o">=</span> <span class="n">time_base</span>
-        <span class="n">availability_time</span> <span class="o">=</span> <span class="n">availability_time</span>
-        <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">availability_time</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay</span><span class="p">)</span>
-        <span class="n">new_manifest_line</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timedelta_to_str_manifest</span><span class="p">(</span><span class="n">availability_time</span><span class="p">),</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_content</span> <span class="o">+=</span> <span class="n">new_manifest_line</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_manifest_line</span><span class="p">)</span></div></div>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">destfile</span><span class="p">:</span>
+            <span class="n">destfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">destfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                        
+        <span class="c1"># If we&#39;re running a rotating buffer remember this file for possible deletion later</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf_size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suppress_manifest</span> <span class="p">:</span>
+            <span class="c1"># Work out what time to put in the manifest file</span>
+            
+            <span class="c1"># NOTE: This is nasty</span>
+            <span class="n">availability_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_availability_time</span><span class="p">(</span>
+                <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span><span class="p">,</span>
+                <span class="n">clock_mode</span><span class="o">=</span><span class="n">clock_mode</span><span class="p">,</span>
+                <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">availability_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># This is a possibility with a live messages as first document.</span>
+                <span class="c1"># They don&#39;t contain enough timing info.</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="n">FS_MISSING_AVAILABILITY</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">,</span>
+                        <span class="n">file_path</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># Without availability time we can not create manifest file.</span>
+                <span class="c1"># In this case we have written an output file but no matching</span>
+                <span class="c1"># entry in the manifest file.</span>
+                <span class="k">return</span>
+
+            <span class="k">if</span> <span class="n">delay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">availability_time</span> <span class="o">+=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay</span><span class="p">)</span>
+
+            <span class="c1"># Open the manifest filepath</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">:</span>
+                <span class="n">manifest_filename</span> <span class="o">=</span> <span class="n">CFG_MANIFEST_FILENAME_PATTERN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">sequence_identifier</span><span class="o">=</span><span class="n">sequence_identifier</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">manifest_filename</span><span class="p">)</span>
+                
+            <span class="c1"># Write a new line to the manifest file</span>
+            <span class="n">new_manifest_line</span> <span class="o">=</span> <span class="n">CFG_MANIFEST_LINE_PATTERN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">availability_time</span><span class="o">=</span><span class="n">timedelta_to_str_manifest</span><span class="p">(</span><span class="n">availability_time</span><span class="p">),</span> 
+                <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></div></div>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_manifest_line</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="FilesystemConsumerImpl"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">[docs]</a><span class="k">class</span> <span class="nc">FilesystemConsumerImpl</span><span class="p">(</span><span class="n">AbstractConsumerCarriage</span><span class="p">):</span>
@@ -325,8 +372,8 @@
         <span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="k">if</span> <span class="n">xml_content</span><span class="p">:</span>
-            <span class="n">availability_time</span> <span class="o">=</span> <span class="n">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">availability_time_str</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">xml_content</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span><span class="p">)</span></div></div>
+            <span class="n">availability_time</span> <span class="o">=</span> <span class="n">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">availability_time_str</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">xml_content</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="FilesystemReader"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemReader">[docs]</a><span class="k">class</span> <span class="nc">FilesystemReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -363,58 +410,14 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="k">break</span>
                 <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># If CFG_MANIFEST_LINE_PATTERN changes, then the parsing below needs to change too.</span>
                     <span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_file_name</span> <span class="o">=</span> <span class="n">manifest_line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
                     <span class="n">xml_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span><span class="p">,</span> <span class="n">xml_file_name</span><span class="p">)</span>
                     <span class="n">xml_content</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">xml_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
                         <span class="n">xml_content</span> <span class="o">=</span> <span class="n">xml_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="SimpleFolderExport"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.SimpleFolderExport">[docs]</a><span class="k">class</span> <span class="nc">SimpleFolderExport</span><span class="p">(</span><span class="n">AbstractProducerCarriage</span><span class="p">):</span>
-
-    <span class="n">_dir_path</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">_counter</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name_pattern</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span> <span class="o">=</span> <span class="n">dir_path</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dir_path</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span> <span class="o">=</span> <span class="n">file_name_pattern</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">def</span> <span class="nf">_do_write_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_name_pattern</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">counter</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">)</span>
-        <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dir_path</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">destfile</span><span class="p">:</span>
-            <span class="n">destfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get_xml</span><span class="p">())</span>
-            <span class="n">destfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">filepath</span>
-
-<div class="viewcode-block" id="SimpleFolderExport.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.SimpleFolderExport.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_do_write_document</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
-
-
-<div class="viewcode-block" id="RotatingFolderExport"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.RotatingFolderExport">[docs]</a><span class="k">class</span> <span class="nc">RotatingFolderExport</span><span class="p">(</span><span class="n">SimpleFolderExport</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This carriage mechanism only keeps the last files that fit in its circular buffer. If a new file is written the</span>
-<span class="sd">    oldest one is discarded. The size of the buffer can be specified. This is useful for use-cases when the entire</span>
-<span class="sd">    sequence of files is not meant to be kept, only just the right amount to cover the needs of broadcast requirement</span>
-<span class="sd">    such as timeshift, which allows the viewer to rewind the TV show within a specific limited time range.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">_circular_buf</span> <span class="o">=</span> <span class="kc">None</span>
-
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name_pattern</span><span class="p">,</span> <span class="n">circular_buf_size</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFolderExport</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name_pattern</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf</span> <span class="o">=</span> <span class="n">RotatingFileBuffer</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="n">circular_buf_size</span><span class="p">)</span>
-
-<div class="viewcode-block" id="RotatingFolderExport.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.RotatingFolderExport.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_write_document</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_circular_buf</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></div></div>
+                    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span><span class="p">]</span></div></div>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -451,7 +454,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

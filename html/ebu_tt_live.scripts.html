@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scripts Package &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>scripts Package &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
         <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
         <link rel="next" title="twisted Package" href="ebu_tt_live.twisted.html"/>
         <link rel="prev" title="node Package" href="ebu_tt_live.node.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -104,21 +104,21 @@
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.examples.html">examples Package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.node.html">node Package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">scripts Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.common"><code class="docutils literal"><span class="pre">common</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_run"><code class="docutils literal"><span class="pre">ebu_run</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_producer"><code class="docutils literal"><span class="pre">ebu_simple_producer</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_user_input_consumer"><code class="docutils literal"><span class="pre">ebu_user_input_consumer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.common"><code class="docutils literal notranslate"><span class="pre">common</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_run"><code class="docutils literal notranslate"><span class="pre">ebu_run</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder"><code class="docutils literal notranslate"><span class="pre">ebu_dummy_encoder</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_interactive_shell"><code class="docutils literal notranslate"><span class="pre">ebu_interactive_shell</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_consumer"><code class="docutils literal notranslate"><span class="pre">ebu_simple_consumer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_simple_producer"><code class="docutils literal notranslate"><span class="pre">ebu_simple_producer</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.scripts.ebu_user_input_consumer"><code class="docutils literal notranslate"><span class="pre">ebu_user_input_consumer</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.twisted.html">twisted Package</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal"><span class="pre">strings</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal"><span class="pre">utils</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.errors"><code class="docutils literal notranslate"><span class="pre">errors</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.strings"><code class="docutils literal notranslate"><span class="pre">strings</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ebu_tt_live.html#module-ebu_tt_live.utils"><code class="docutils literal notranslate"><span class="pre">utils</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -189,7 +189,7 @@
   <div class="section" id="scripts-package">
 <h1>scripts Package<a class="headerlink" href="#scripts-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-ebu_tt_live.scripts.common">
-<span id="common-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">common</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.common" title="Permalink to this headline">¶</a></h2>
+<span id="common-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">common</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.common" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="ebu_tt_live.scripts.common.create_loggers">
 <code class="descclassname">ebu_tt_live.scripts.common.</code><code class="descname">create_loggers</code><span class="sig-paren">(</span><em>level=20</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/common.html#create_loggers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.common.create_loggers" title="Permalink to this definition">¶</a></dt>
@@ -197,14 +197,14 @@
 
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_run">
-<span id="ebu-run-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_run</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_run" title="Permalink to this headline">¶</a></h2>
-<p>The <code class="docutils literal"><span class="pre">ebu-run</span></code> script is a universal runner for any component or complex interconnected sets of components
+<span id="ebu-run-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_run</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_run" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code> script is a universal runner for any component or complex interconnected sets of components
 based on a compliant configuration file or set of valid options. The configuration framework uses
 the mozilla/configman package that picks up configuration from command line/config file.</p>
 <div class="section" id="basic-usage">
 <h3>Basic usage:<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -212,7 +212,7 @@ the mozilla/configman package that picks up configuration from command line/conf
 <div class="section" id="adjust-existing-config-file">
 <h3>Adjust existing config file:<a class="headerlink" href="#adjust-existing-config-file" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">nodes</span><span class="o">.</span><span class="n">node1</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="o">=</span><span class="n">Sequence2</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">nodes</span><span class="o">.</span><span class="n">node1</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="o">=</span><span class="n">Sequence2</span>
 </pre></div>
 </div>
 </div></blockquote>
@@ -220,14 +220,14 @@ the mozilla/configman package that picks up configuration from command line/conf
 <div class="section" id="help">
 <h3>Help:<a class="headerlink" href="#help" title="Permalink to this headline">¶</a></h3>
 <blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">help</span>
+<div><div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ebu</span><span class="o">-</span><span class="n">run</span> <span class="o">--</span><span class="n">admin</span><span class="o">.</span><span class="n">conf</span><span class="o">=</span><span class="n">ebu_tt_live</span><span class="o">/</span><span class="n">examples</span><span class="o">/</span><span class="n">config</span><span class="o">/</span><span class="n">simple</span><span class="o">-</span><span class="n">producer</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
 </div></blockquote>
 <p>The –help flag aims to be context matching so anywhere as long as configman is used is expected and it elaborates
 the directly accessible config file keys using the current configuration structure as well as possible alternative
 values for the keys already having a value from the config file or from the command line.</p>
-<p>Since the components and their connections are not hard-coded the <code class="docutils literal"><span class="pre">ebu-run</span></code> does not have a single purpose
+<p>Since the components and their connections are not hard-coded the <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code> does not have a single purpose
 limitation. The usage of a configurator facilitates the configuration mapping of a single node or an entire complex
 interconnected set of nodes via various carriage mechanisms, events and timings.</p>
 <dl class="function">
@@ -238,7 +238,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
 </div>
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_dummy_encoder">
-<span id="ebu-dummy-encoder-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_dummy_encoder</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder" title="Permalink to this headline">¶</a></h2>
+<span id="ebu-dummy-encoder-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_dummy_encoder</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_dummy_encoder" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="ebu_tt_live.scripts.ebu_dummy_encoder.main">
 <code class="descclassname">ebu_tt_live.scripts.ebu_dummy_encoder.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_dummy_encoder.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_dummy_encoder.main" title="Permalink to this definition">¶</a></dt>
@@ -246,7 +246,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
 
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_interactive_shell">
-<span id="ebu-interactive-shell-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_interactive_shell</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_interactive_shell" title="Permalink to this headline">¶</a></h2>
+<span id="ebu-interactive-shell-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_interactive_shell</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_interactive_shell" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="ebu_tt_live.scripts.ebu_interactive_shell.main">
 <code class="descclassname">ebu_tt_live.scripts.ebu_interactive_shell.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_interactive_shell.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_interactive_shell.main" title="Permalink to this definition">¶</a></dt>
@@ -254,7 +254,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
 
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_simple_consumer">
-<span id="ebu-simple-consumer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_simple_consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_simple_consumer" title="Permalink to this headline">¶</a></h2>
+<span id="ebu-simple-consumer-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_simple_consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_simple_consumer" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="ebu_tt_live.scripts.ebu_simple_consumer.main">
 <code class="descclassname">ebu_tt_live.scripts.ebu_simple_consumer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_simple_consumer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_simple_consumer.main" title="Permalink to this definition">¶</a></dt>
@@ -262,7 +262,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
 
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_simple_producer">
-<span id="ebu-simple-producer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_simple_producer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_simple_producer" title="Permalink to this headline">¶</a></h2>
+<span id="ebu-simple-producer-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_simple_producer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_simple_producer" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="ebu_tt_live.scripts.ebu_simple_producer.main">
 <code class="descclassname">ebu_tt_live.scripts.ebu_simple_producer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_simple_producer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_simple_producer.main" title="Permalink to this definition">¶</a></dt>
@@ -270,7 +270,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
 
 </div>
 <div class="section" id="module-ebu_tt_live.scripts.ebu_user_input_consumer">
-<span id="ebu-user-input-consumer-module"></span><h2><code class="xref py py-mod docutils literal"><span class="pre">ebu_user_input_consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_user_input_consumer" title="Permalink to this headline">¶</a></h2>
+<span id="ebu-user-input-consumer-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">ebu_user_input_consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.scripts.ebu_user_input_consumer" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="ebu_tt_live.scripts.ebu_user_input_consumer.main">
 <code class="descclassname">ebu_tt_live.scripts.ebu_user_input_consumer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/scripts/ebu_user_input_consumer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.scripts.ebu_user_input_consumer.main" title="Permalink to this definition">¶</a></dt>
@@ -323,7 +323,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

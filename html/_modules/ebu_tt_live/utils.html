@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.utils &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.utils &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -217,8 +217,8 @@
 <span class="sd">        Any custom exceptions thrown here are preserved and propagated in original form.</span>
 <span class="sd">        :param other:</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span></div>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+        <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="RingBufferWithCallback"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RingBufferWithCallback">[docs]</a><span class="k">class</span> <span class="nc">RingBufferWithCallback</span><span class="p">(</span><span class="n">collections</span><span class="o">.</span><span class="n">deque</span><span class="p">):</span>
@@ -238,8 +238,8 @@
 <div class="viewcode-block" id="RingBufferWithCallback.append"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RingBufferWithCallback.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxlen</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">popleft</span><span class="p">())</span></div></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="StoppableThread"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread">[docs]</a><span class="k">class</span> <span class="nc">StoppableThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
@@ -252,15 +252,15 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">StoppableThread</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
 
-<div class="viewcode-block" id="StoppableThread.stop"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
+<div class="viewcode-block" id="StoppableThread.stop"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
-<div class="viewcode-block" id="StoppableThread.stopped"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread.stopped">[docs]</a>    <span class="k">def</span> <span class="nf">stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="o">.</span><span class="n">isSet</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="StoppableThread.stopped"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.StoppableThread.stopped">[docs]</a>    <span class="k">def</span> <span class="nf">stopped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="o">.</span><span class="n">isSet</span><span class="p">()</span>
 
 
-<div class="viewcode-block" id="RotatingFileBufferStopped"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBufferStopped">[docs]</a><span class="k">class</span> <span class="nc">RotatingFileBufferStopped</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="k">pass</span></div>
+<div class="viewcode-block" id="RotatingFileBufferStopped"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBufferStopped">[docs]</a><span class="k">class</span> <span class="nc">RotatingFileBufferStopped</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span></div>
+    <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="RotatingFileBuffer"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBuffer">[docs]</a><span class="k">class</span> <span class="nc">RotatingFileBuffer</span><span class="p">(</span><span class="n">RingBufferWithCallback</span><span class="p">):</span>
@@ -339,8 +339,8 @@
                 <span class="n">files_waiting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_consume</span><span class="p">(</span>
                     <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_deletion_queue</span><span class="p">,</span>
                     <span class="n">files_waiting</span><span class="o">=</span><span class="n">files_waiting</span><span class="p">,</span>
-                    <span class="n">default_wait</span><span class="o">=</span><span class="n">default_wait</span>
-                <span class="p">)</span></div>
+                    <span class="n">default_wait</span><span class="o">=</span><span class="n">default_wait</span></div>
+                <span class="p">)</span>
 
 <div class="viewcode-block" id="RotatingFileBuffer.append"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.RotatingFileBuffer.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -350,8 +350,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletion_thread</span><span class="o">.</span><span class="n">stopped</span><span class="p">():</span>
-                <span class="k">raise</span> <span class="n">RotatingFileBufferStopped</span><span class="p">(</span><span class="s1">&#39;File deletion thread is stopped!&#39;</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFileBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div></div>
+                <span class="k">raise</span> <span class="n">RotatingFileBufferStopped</span><span class="p">(</span><span class="s1">&#39;File deletion thread is stopped!&#39;</span><span class="p">)</span></div></div>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RotatingFileBuffer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="tokenize_english_document"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.tokenize_english_document">[docs]</a><span class="k">def</span> <span class="nf">tokenize_english_document</span><span class="p">(</span><span class="n">input_text</span><span class="p">):</span>
@@ -406,8 +406,8 @@
                 <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
                 <span class="n">end_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">end_list</span></div>
+</div>
+    <span class="k">return</span> <span class="n">end_list</span>
 
 
 <span class="k">def</span> <span class="nf">_assert_asm_is_defined</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
@@ -429,8 +429,8 @@
                 <span class="s1">&#39;Abstract static member: </span><span class="se">\&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="se">\&#39;</span><span class="s1"> is not a type or class&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">class_name</span><span class="p">,</span>
                     <span class="n">member_name</span>
-                <span class="p">)</span>
-            <span class="p">)</span></div>
+                <span class="p">)</span></div>
+            <span class="p">)</span>
 
 
 <div class="viewcode-block" id="AnyType"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AnyType">[docs]</a><span class="k">class</span> <span class="nc">AnyType</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -442,8 +442,8 @@
     <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;ANY&gt;&#39;</span></div>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="s1">&#39;&lt;ANY&gt;&#39;</span>
 
 <span class="n">ANY</span> <span class="o">=</span> <span class="n">AnyType</span><span class="p">()</span>
 
@@ -463,8 +463,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_validation_func</span> <span class="o">=</span> <span class="n">validation_func</span>
 
-<div class="viewcode-block" id="AbstractStaticMember.validate"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AbstractStaticMember.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_validation_func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="AbstractStaticMember.validate"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AbstractStaticMember.validate">[docs]</a>    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validation_func</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">member_name</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AutoRegisteringABCMeta"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.AutoRegisteringABCMeta">[docs]</a><span class="k">class</span> <span class="nc">AutoRegisteringABCMeta</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
@@ -513,8 +513,8 @@
     <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_abc_interface</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Can</span><span class="se">\&#39;</span><span class="s1">t instantiate </span><span class="si">{}</span><span class="s1"> is an abstract base class.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span>
-        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AutoRegisteringABCMeta</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">instance</span></div>
+        <span class="n">instance</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">AutoRegisteringABCMeta</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">instance</span>
 
 <span class="n">HTTPProxyConfig</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;HTTPProxyConfig&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">])</span>
 
@@ -551,8 +551,8 @@
         <span class="n">got</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">elif</span> <span class="n">is_quoted_unicode</span><span class="p">(</span><span class="n">want</span><span class="p">)</span> <span class="ow">and</span> <span class="n">is_quoted_unicode</span><span class="p">(</span><span class="n">got</span><span class="p">):</span>
         <span class="n">want</span> <span class="o">=</span> <span class="n">want</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">got</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">want</span><span class="p">,</span> <span class="n">got</span></div>
+        <span class="n">got</span> <span class="o">=</span> <span class="n">got</span><span class="o">.</span><span class="n">strip</span><span class="p">()[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">want</span><span class="p">,</span> <span class="n">got</span>
 
 
 <div class="viewcode-block" id="compare_xml"><a class="viewcode-back" href="../../ebu_tt_live.html#ebu_tt_live.utils.compare_xml">[docs]</a><span class="k">def</span> <span class="nf">compare_xml</span><span class="p">(</span><span class="n">want</span><span class="p">,</span> <span class="n">got</span><span class="p">):</span>
@@ -624,8 +624,8 @@
     <span class="c1"># Parse the want and got strings, and compare the parsings.</span>
     <span class="n">want_root</span> <span class="o">=</span> <span class="n">first_node</span><span class="p">(</span><span class="n">parseString</span><span class="p">(</span><span class="n">want</span><span class="p">))</span>
     <span class="n">got_root</span> <span class="o">=</span> <span class="n">first_node</span><span class="p">(</span><span class="n">parseString</span><span class="p">(</span><span class="n">got</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">check_element</span><span class="p">(</span><span class="n">want_root</span><span class="p">,</span> <span class="n">got_root</span><span class="p">)</span></div>
+</div>
+    <span class="k">return</span> <span class="n">check_element</span><span class="p">(</span><span class="n">want_root</span><span class="p">,</span> <span class="n">got_root</span><span class="p">)</span>
 </pre></div>
 
            </div>
@@ -662,7 +662,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

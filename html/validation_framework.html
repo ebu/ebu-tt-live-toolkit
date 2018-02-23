@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Validation framework &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>Validation framework &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
         <link rel="up" title="Document and sequence validation" href="validation.html"/>
         <link rel="next" title="User input producer" href="user_input_producer.html"/>
         <link rel="prev" title="Document and sequence validation" href="validation.html"/> 
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -95,7 +95,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="overview.html">Overview of the EBU-TT live toolkit.</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="nodes_and_carriage_mechanisms.html">Nodes and Carriage Mechanisms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scripts_and_their_functions.html">Scripts and their functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal"><span class="pre">ebu-run</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="configurator.html">Configuration files and <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="validation.html">Document and sequence validation</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Validation framework</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#semantic-parser-patch">Semantic parser patch</a></li>
@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="user_input_producer.html">User input producer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timing_resolution.html">Timing resolution and consumer logic</a></li>
 <li class="toctree-l2"><a class="reference internal" href="segmentation.html">Segmentation of EBU-TT-Live document sequences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deduplication.html">DeDuplication of EBU-TT-Live documents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conversion.html">Conversion of EBU-TT-Live documents to EBU-TT-D documents</a></li>
 </ul>
 </li>
@@ -182,14 +183,14 @@ a pretty good job validating the syntax but it does not provide any tooling to p
 be described in XSD 1.0 (PyXB does not understand XSD 1.1 and xpath assertions).</p>
 <dl class="docutils">
 <dt>Example:</dt>
-<dd>if tt:tt has timeBase=clock smpteTimingType must not be present anywhere in the document.</dd>
+<dd>If ttp:timebase=”clock” then all begin and end attributes of timed elements shall be of type ebuttdt:clockTimingType.</dd>
 </dl>
 <p>Elements/types are independent and according to the principles of OOP they do not know much about one another.
 In order to provide semantic validation there is need for a semantic validation context.
 A common object that shared information can be collected to and each type/element receives it as a parameter in its
 semantic validation hooks if the element needs to take part in the semantic validation process.</p>
 <p>For an element to be part of the semantic validation flow it needs to inherit the
-<code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.validation.SemanticValidationMixin</span></code> mixin, which contains the boilerplate
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.SemanticValidationMixin</span></code> mixin, which contains the boilerplate
 that enables semantic validation and the hook functions, that the developer can override and write custom
 functionality that effectively does the semantic validation of the type.</p>
 </div>
@@ -208,11 +209,11 @@ with the semantic validation, which expects particularly one timing type in that
 <p>Hence the SemanticValidationMixin also has an overloaded _setAttribute function, which applies 2 hooks for the types
 in which custom code can enforce the right behaviour. The complexity and layered architecture of the parser limits the
 capability to pass around a context object the same way the semantic validation can so in the
-<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.xml_parsing_context" title="ebu_tt_live.bindings.pyxb_utils.xml_parsing_context"><code class="xref py py-class docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.xml_parsing_context</span></code></a> context manager there is a threadLocal object that
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.xml_parsing_context" title="ebu_tt_live.bindings.pyxb_utils.xml_parsing_context"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.pyxb_utils.xml_parsing_context</span></code></a> context manager there is a threadLocal object that
 keeps a similar dictionary to the one used at the semantic validation. The difference is that the
-<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.CreateFromDocument" title="ebu_tt_live.bindings.CreateFromDocument"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.CreateFromDocument()</span></code></a> function resets the context by using the context manager
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.CreateFromDocument" title="ebu_tt_live.bindings.CreateFromDocument"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.CreateFromDocument()</span></code></a> function resets the context by using the context manager
 class and instead of the context being passed around as a parameter among functions the binding classes call the
-<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context" title="ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context"><code class="xref py py-func docutils literal"><span class="pre">ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context()</span></code></a> function to gain access to the parsing context object.</p>
+<a class="reference internal" href="ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context" title="ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.pyxb_utils.get_xml_parsing_context()</span></code></a> function to gain access to the parsing context object.</p>
 </div>
 
 
@@ -259,7 +260,7 @@ class and instead of the context being passed around as a parameter among functi
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

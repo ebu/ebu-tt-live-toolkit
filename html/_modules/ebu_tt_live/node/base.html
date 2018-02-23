@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.node.base &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.node.base &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -215,15 +215,15 @@
                     <span class="n">provides</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">provides</span><span class="p">()</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span> <span class="o">=</span> <span class="n">producer_carriage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span><span class="o">.</span><span class="n">register_producer_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span> <span class="o">=</span> <span class="n">producer_carriage</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span><span class="o">.</span><span class="n">register_producer_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">producer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_producer_carriage</span>
 
-<div class="viewcode-block" id="AbstractProducerNode.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractProducerNode.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div></div>
+<div class="viewcode-block" id="AbstractProducerNode.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractProducerNode.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AbstractConsumerNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode">[docs]</a><span class="k">class</span> <span class="nc">AbstractConsumerNode</span><span class="p">(</span><span class="n">IConsumerNode</span><span class="p">,</span> <span class="n">__AbstractNode</span><span class="p">):</span>
@@ -241,8 +241,8 @@
 <div class="viewcode-block" id="AbstractConsumerNode.is_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.is_document">[docs]</a>    <span class="k">def</span> <span class="nf">is_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">SubtitleDocument</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">else</span><span class="p">:</span></div>
+            <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="AbstractConsumerNode.limit_sequence_to_one"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.limit_sequence_to_one">[docs]</a>    <span class="k">def</span> <span class="nf">limit_sequence_to_one</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_input_document_sequence</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -251,8 +251,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_first_input_document_sequence</span> <span class="o">!=</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
                 <span class="s1">&#39;Sequences limited to one: expecting: </span><span class="si">{}</span><span class="s1">, received: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_first_input_document_sequence</span><span class="p">,</span> <span class="n">document</span><span class="o">.</span><span class="n">sequence_identifier</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="k">raise</span> <span class="n">UnexpectedSequenceIdentifierError</span><span class="p">(</span><span class="s1">&#39;Rejecting new sequence identifier&#39;</span><span class="p">)</span></div>
+            <span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">UnexpectedSequenceIdentifierError</span><span class="p">(</span><span class="s1">&#39;Rejecting new sequence identifier&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AbstractConsumerNode.check_if_document_seen"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.check_if_document_seen">[docs]</a>    <span class="k">def</span> <span class="nf">check_if_document_seen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_number</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">document</span><span class="p">:</span>
@@ -267,8 +267,8 @@
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_seen_docs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">RingBufferWithCallback</span><span class="p">(</span><span class="n">maxlen</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sequence_number</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+        <span class="k">return</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="AbstractConsumerNode.register_consumer_carriage"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractConsumerNode.register_consumer_carriage">[docs]</a>    <span class="k">def</span> <span class="nf">register_consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">consumer_carriage</span><span class="p">,</span> <span class="n">IConsumerCarriage</span><span class="p">):</span>
@@ -286,12 +286,12 @@
                     <span class="n">provides</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">expects</span><span class="p">()</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span> <span class="o">=</span> <span class="n">consumer_carriage</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span><span class="o">.</span><span class="n">register_consumer_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span> <span class="o">=</span> <span class="n">consumer_carriage</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span><span class="o">.</span><span class="n">register_consumer_node</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span></div>
+    <span class="k">def</span> <span class="nf">consumer_carriage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_consumer_carriage</span>
 
 
 <div class="viewcode-block" id="AbstractCombinedNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.base.AbstractCombinedNode">[docs]</a><span class="k">class</span> <span class="nc">AbstractCombinedNode</span><span class="p">(</span><span class="n">AbstractConsumerNode</span><span class="p">,</span> <span class="n">AbstractProducerNode</span><span class="p">):</span>
@@ -301,8 +301,8 @@
             <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
             <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
             <span class="n">consumer_carriage</span><span class="o">=</span><span class="n">consumer_carriage</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span>
-        <span class="p">)</span></div>
+            <span class="o">**</span><span class="n">kwargs</span></div>
+        <span class="p">)</span>
 </pre></div>
 
            </div>
@@ -339,7 +339,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

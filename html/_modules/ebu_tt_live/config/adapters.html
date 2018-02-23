@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.config.adapters &mdash; EBU-TT-Live Toolkit 2.1 documentation</title>
+  <title>ebu_tt_live.config.adapters &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
         <link rel="up" title="Module code" href="../../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                2.1
+                2.1.1
               </div>
             
           
@@ -176,8 +176,8 @@
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
             <span class="n">conv_type</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
             <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">ckey</span><span class="p">:</span> <span class="n">carg</span> <span class="k">for</span> <span class="n">ckey</span><span class="p">,</span> <span class="n">carg</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">ckey</span> <span class="o">!=</span> <span class="s1">&#39;type&#39;</span><span class="p">}</span>
-            <span class="n">parsed_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_adapters_by_directed_conversion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conv_type</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">parsed_value</span> <span class="ow">or</span> <span class="kc">None</span></div>
+            <span class="n">parsed_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_adapters_by_directed_conversion</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conv_type</span><span class="p">)(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">parsed_value</span> <span class="ow">or</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="ProducerNodeCarriageAdapter"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.adapters.ProducerNodeCarriageAdapter">[docs]</a><span class="k">class</span> <span class="nc">ProducerNodeCarriageAdapter</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
@@ -189,8 +189,8 @@
         <span class="n">instance</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">node_carriage</span><span class="o">.</span><span class="n">ProducerNodeCarriageAdapter</span><span class="p">(</span>
             <span class="n">producer_carriage</span><span class="o">=</span><span class="n">carriage</span><span class="p">,</span>
             <span class="n">producer_node</span><span class="o">=</span><span class="n">producer</span><span class="p">,</span>
-            <span class="n">data_adapters</span><span class="o">=</span><span class="n">adapter_list</span>
-        <span class="p">)</span></div></div>
+            <span class="n">data_adapters</span><span class="o">=</span><span class="n">adapter_list</span></div></div>
+        <span class="p">)</span>
 
 
 <div class="viewcode-block" id="ConsumerNodeCarriageAdapter"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.adapters.ConsumerNodeCarriageAdapter">[docs]</a><span class="k">class</span> <span class="nc">ConsumerNodeCarriageAdapter</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
@@ -204,8 +204,8 @@
             <span class="n">consumer_node</span><span class="o">=</span><span class="n">consumer</span><span class="p">,</span>
             <span class="n">data_adapters</span><span class="o">=</span><span class="n">adapter_list</span>
         <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">instance</span></div></div>
+</div></div>
+        <span class="k">return</span> <span class="n">instance</span>
 </pre></div>
 
            </div>
@@ -242,7 +242,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'2.1',
+            VERSION:'2.1.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
