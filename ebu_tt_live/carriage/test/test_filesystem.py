@@ -77,7 +77,8 @@ class TestFilesystemProducerImpl(TestCase):
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         fs_carriage.emit_data(data, sequence_identifier='testSeq')
-        assert os.listdir(self.test_dir_path) == []
+        # Expected behaviour is to write the message file but fail to write the manifest.
+        assert os.listdir(self.test_dir_path) == ['testSeq_msg_1.xml']
         assert fs_carriage._default_clocks == {}
 
     def test_msg_mid_sequence_missing_availability(self):
@@ -120,16 +121,35 @@ class TestFilesystemProducerImpl(TestCase):
         data = 'live message without availability time'
         # This message does not have enough information to produce a reference clock by itself
         fs_carriage.emit_data(data, sequence_identifier='testSeq')
-        assert len(os.listdir(self.test_dir_path)) == 2  # document, message and manifest
+        assert len(os.listdir(self.test_dir_path)) == 3  # document, message and manifest
         exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
         assert os.path.exists(exported_document_path)
         exported_message_path = os.path.join(self.test_dir_path, 'testSeq_msg_1.xml')
-        assert not os.path.exists(exported_message_path)
+        assert os.path.exists(exported_message_path)
         manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
         assert os.path.exists(manifest_path)
 
+    def test_suppress_manifest(self):
+        # Check that when suppress_manifest is true no manifest file is written
+        data = 'test'
+        node = MagicMock(spec=IProducerNode)
+        node.provides.return_value = six.text_type
+        test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
+        node.resume_producing.side_effect = EndOfData()
+        fs_carriage = FilesystemProducerImpl(self.test_dir_path, suppress_manifest = True)
+        fs_carriage.register_producer_node(node)
+        fs_carriage.resume_producing()
+        fs_carriage.emit_data(data, availability_time=test_time, sequence_identifier='testSeq',
+                              sequence_number=1, time_base='clock', clock_mode='local')
+        exported_document_path = os.path.join(self.test_dir_path, 'testSeq_1.xml')
+        assert os.path.exists(exported_document_path)
+        manifest_path = os.path.join(self.test_dir_path, 'manifest_testSeq.txt')
+        assert not os.path.exists(manifest_path)
+        assert fs_carriage._default_clocks == {}
 
-
+    # We don't check that when there's a circular buffer it works because that's
+    # effectively already tested by test/test_utils.py in that the main thing to
+    # check is that the ring buffer works.
 
 class TestFilesystemConsumerImpl(TestCase):
 

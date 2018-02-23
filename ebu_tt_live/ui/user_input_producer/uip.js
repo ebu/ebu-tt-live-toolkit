@@ -34,6 +34,8 @@ $(document).ready(function() {
         }
     }
 
+// NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
+
     function handleTimeBaseDependingOptions() {
         var selected_time_base = $("#time-base-selector").val();
         if (selected_time_base == "clock") {
@@ -422,7 +424,7 @@ $(document).ready(function() {
 
     $("#sequence-selector").change(handleSequenceSelected);
 
-    $("input[name=sending-type-radio-input").click(function() {
+    $("input[name=sending-type-radio-input]").click(function() {
         if ($(this).is(':checked')) {
             handleSendingTypeDependingOptions();
         }

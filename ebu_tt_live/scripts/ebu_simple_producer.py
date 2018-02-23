@@ -1,3 +1,4 @@
+# NOTE: This script is no longer maintained. Use `ebu-run` instead.
 
 from itertools import cycle
 from twisted.internet import task, reactor

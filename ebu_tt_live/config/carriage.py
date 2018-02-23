@@ -5,10 +5,12 @@ from ebu_tt_live.carriage import filesystem
 from ebu_tt_live.utils import HTTPProxyConfig
 from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE, ERR_NO_SUCH_COMPONENT
 from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
 import urlparse
 import re
 
-
+# Memory carriage mechanism configurators
+# ===========================================
 class DirectCommon(ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option('id', default='default')
@@ -47,51 +49,43 @@ class DirectOutput(DirectCommon):
 
 # File-based carriage mechanism configurators
 # ===========================================
-class FileOutputCommon(ConfigurableComponent):
+class FilesystemOutput(ConfigurableComponent):
     required_config = Namespace()
     required_config.add_option(
         'folder',
         default='./export',
         doc='The output folder/directory. Folder is created if it does not exist. Existing files are overwritten.'
     )
-
-
-class FilesystemOutput(FileOutputCommon):
-
-    required_config = Namespace()
-
-    def __init__(self, config, local_config):
-        super(FilesystemOutput, self).__init__(config, local_config)
-        self.component = filesystem.FilesystemProducerImpl(dirpath=self.config.folder)
-
-
-class SimpleFilesystemOutput(FileOutputCommon):
-    # This does not create a manifest file
-    required_config = Namespace()
     required_config.add_option(
         'filename_pattern',
-        default='export-{counter}.xml',
+        default=CFG_FILENAME_PATTERN,
+        doc='File name pattern. It needs to contain {counter} format parameter.'
+    )
+    required_config.add_option(
+        'message_filename_pattern',
+        default=CFG_MESSAGE_PATTERN,
         doc='File name pattern. It needs to contain {counter} format parameter.'
     )
     required_config.add_option(
         'rotating_buf',
         default=0,
-        doc='Rotating buffer size. This will keep the last N number of files created in the folder.'
+        doc='Rotating buffer size. This will keep the last N number of files created in the folder or all if N is zero.'
     )
-
+    required_config.add_option(
+        'suppress_manifest',
+        default=False,
+        doc='Suppress output of a manifest file (default false)'
+    )
+    
     def __init__(self, config, local_config):
-        super(SimpleFilesystemOutput, self).__init__(config, local_config)
-        if config.rotating_buf:
-            self.component = filesystem.RotatingFolderExport(
-                dir_path=config.folder,
-                file_name_pattern=config.filename_pattern,
-                circular_buf_size=config.rotating_buf
-            )
-        else:
-            self.component = filesystem.SimpleFolderExport(
-                dir_path=config.folder,
-                file_name_pattern=config.filename_pattern
-            )
+        super(FilesystemOutput, self).__init__(config, local_config)
+        self.component = filesystem.FilesystemProducerImpl(
+            dirpath=self.config.folder,
+            file_name_pattern=self.config.filename_pattern,
+            message_file_name_pattern=self.config.message_filename_pattern,
+            circular_buf_size=self.config.rotating_buf,
+            suppress_manifest=self.config.suppress_manifest)
+
 
 
 class FilesystemInput(ConfigurableComponent):
@@ -257,7 +251,6 @@ producer_carriage_by_type = {
     'websocket': WebsocketOutput,
     'websocket-legacy': WebsocketLegacyOutput,
     'filesystem': FilesystemOutput,
-    'filesystem-simple': SimpleFilesystemOutput,
     'direct': DirectOutput
 }
 

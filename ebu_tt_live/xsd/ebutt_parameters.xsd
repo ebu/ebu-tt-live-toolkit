@@ -2,15 +2,18 @@
 <!-- Copyright 2016, EBU, www.ebu.ch -->
 <!-- Version of XML Schema: 0.9 -->
 <!-- Creation: 05/04/2016 -->
-<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9. 
+<!--  The publication of the EBU-TT XML Schema for EBU-Part 3 is intended to support the implementation of the specification in EBU-Tech 3370 version 0.9.
 Please note that the EBU-TT XML Schema is a helping document and NOT normative but informative.-->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-    xmlns:ttp="http://www.w3.org/ns/ttml#parameter" 
+
+<!--# NOTE: This XSD includes legacy SMPTE-related definitions. SMPTE was removed from the specification in version 1.0. -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
     elementFormDefault="qualified"
     targetNamespace="urn:ebu:tt:parameters"
     xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
     <xs:import namespace="http://www.w3.org/ns/ttml#parameter" schemaLocation="parameter.xsd"/>
-    
+
     <xs:attribute name="sequenceIdentifier">
         <xs:annotation>
             <xs:documentation>Every document with the same ebuttp:sequenceIdentifier
@@ -22,7 +25,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
             </xs:restriction>
         </xs:simpleType>
     </xs:attribute>
-    
+
     <xs:attribute name="sequenceNumber">
         <xs:annotation>
             <xs:documentation>Every document with the same ebuttp:sequenceIdentifier
@@ -32,8 +35,8 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
             <xs:restriction base="xs:positiveInteger"/>
         </xs:simpleType>
     </xs:attribute>
-    
-    <xs:attribute name="authorsGroupIdentifier" type="xs:string">
+
+    <xs:attribute name="authorsGroupIdentifier">
         <xs:annotation>
             <xs:documentation>
                 Identifies the group of authors whose sequences relate to the same content and amongst which a Handover Manager
@@ -46,7 +49,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
             </xs:restriction>
         </xs:simpleType>
     </xs:attribute>
-    
+
     <xs:attribute name="authorsGroupControlToken" type="xs:positiveInteger">
         <xs:annotation>
             <xs:documentation>
@@ -55,7 +58,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
             </xs:documentation>
         </xs:annotation>
     </xs:attribute>
-    
+
     <xs:attribute name="referenceClockIdentifier" type="xs:anyURI">
         <xs:annotation>
             <xs:documentation>

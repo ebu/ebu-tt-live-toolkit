@@ -17,6 +17,22 @@ def template_file(xml_file):
                          trim_blocks=True)
     return j2_env.get_template(xml_file)
 
+@given('a first xml file <xml_file_1>')
+def template_file_one(xml_file_1):
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
+                         trim_blocks=True)
+    return j2_env.get_template(xml_file_1)
+
+@then('a second xml file <xml_file_2>')
+@pytest.fixture
+def template_file_two(xml_file_2):
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
+                         trim_blocks=True)
+    return j2_env.get_template(xml_file_2)
+
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 @given('a sequence <sequence_identifier> with timeBase <time_base>')
 def sequence(sequence_identifier, time_base):
@@ -37,6 +53,17 @@ def valid_doc(template_file, template_dict):
     document = EBUTT3Document.create_from_xml(xml_file)
     assert isinstance(document, EBUTT3Document)
 
+@then('the first document is valid')
+def valid_doc(template_file_one, template_dict):
+    xml_file_1 = template_file_one.render(template_dict)
+    document = EBUTT3Document.create_from_xml(xml_file_1)
+    assert isinstance(document, EBUTT3Document)
+
+@then('the second document is valid')
+def valid_doc(template_file_two, template_dict):
+    xml_file_2 = template_file_two.render(template_dict)
+    document = EBUTT3Document.create_from_xml(xml_file_2)
+    assert isinstance(document, EBUTT3Document)
 
 @then('document is invalid')
 def invalid_doc(template_file, template_dict):
@@ -53,13 +80,30 @@ def gen_document(template_file, template_dict):
     document.validate()
     return document
 
-
 @when('the document is generated')
 def when_doc_generated(test_context, template_dict, template_file):
     # This is a more standard-compliant way to do this
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
     test_context['document'] = document
+
+
+@given('the first document is generated')
+def gen_first_document(test_context, template_dict, template_file_one):
+    xml_file_1 = template_file_one.render(template_dict)
+    document1 = EBUTT3Document.create_from_xml(xml_file_1)
+    test_context['document1'] = document1
+    document1.validate()
+    return document1
+
+@then('the second document is generated')
+@pytest.fixture
+def gen_second_document(test_context, template_dict, template_file_two):
+    xml_file_2 = template_file_two.render(template_dict)
+    document2 = EBUTT3Document.create_from_xml(xml_file_2)
+    test_context['document2'] = document2
+    document2.validate()
+    return document2
 
 
 @then('EBUTTD document is valid')

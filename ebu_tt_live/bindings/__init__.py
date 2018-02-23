@@ -440,6 +440,7 @@ class LiveStyledElementMixin(StyledElementMixin):
 
 # EBU TT Live element types
 # =========================
+# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 
 class tt_type(SemanticDocumentMixin, raw.tt_type):
@@ -652,7 +653,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         if self.timeBase == 'smpte':
             return ebuttdt.SMPTETimingType(timedelta_in)
 
-
 raw.tt_type._SetSupersedingClass(tt_type)
 
 
@@ -822,7 +822,6 @@ class br_type(SemanticValidationMixin, raw.br_type):
 
 
 raw.br_type._SetSupersedingClass(br_type)
-
 
 class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):

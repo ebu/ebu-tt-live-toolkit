@@ -1,3 +1,5 @@
+# NOTE: This script is no longer maintained. Use `ebu-run` instead.
+
 import logging
 from argparse import ArgumentParser
 from .common import create_loggers

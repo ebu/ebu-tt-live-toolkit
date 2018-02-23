@@ -23,7 +23,7 @@ packages=[
 
 setup(
     name="ebu-tt-live",
-    version="2.1",
+    version="2.1.1",
     description="EBU-TT Part 3 library implementing Specification EBU-3370",
     install_requires=[
         "PyXB",
@@ -35,7 +35,8 @@ setup(
         "nltk",
         "sortedcontainers",
         "configman",
-        "six"
+        "six",
+        "hyperlink<17.2.0"  # This should be removed if https://github.com/python-hyper/hyperlink/issues/16 is fixed
     ],
     license="BSD3",
     packages=packages,

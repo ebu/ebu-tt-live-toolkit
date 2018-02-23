@@ -109,8 +109,9 @@ gen
 # Generated bindings should not appear in the repo
 ebu_tt_live/bindings/raw
 
-# Test export files from file system carriage
+# Test and non-test export files from file system carriage
 test_export/
+export/
 
 # Node.js file
 node_modules/
@@ -125,5 +126,9 @@ docs/build/*
 !docs/build/index.html
 !docs/build/img
 
+# Test Sequences export folder
+export/
+
 # Mac OS X files
 .DS_Store
+

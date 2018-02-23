@@ -55,4 +55,10 @@ DOC_REQ_SEGMENT = gettext('{sequence_identifier}__{sequence_number}: requesting 
 DOC_SEQ_REQ_SEGMENT = gettext('{sequence_identifier}: requesting segment ({begin} - {end})')
 
 FS_DEFAULT_CLOCK_USED = gettext('Availability time not provided, creating default clock for sequence: {sequence_identifier}')
-FS_MISSING_AVAILABILITY = gettext('Could not resolve availability time for item in sequence: {sequence_identifier}. Item discarded.')
+FS_MISSING_AVAILABILITY = gettext('Could not resolve availability time for item in sequence: {sequence_identifier} after writing {file_path} - no manifest line written.')
+
+# CONFIG
+CFG_FILENAME_PATTERN = gettext('{sequence_identifier}_{counter}.xml')
+CFG_MESSAGE_PATTERN = gettext('{sequence_identifier}_msg_{counter}.xml')
+CFG_MANIFEST_FILENAME_PATTERN = gettext('manifest_{sequence_identifier}.txt')
+CFG_MANIFEST_LINE_PATTERN = gettext('{availability_time},{filename}\n') # FilesystemReader depends on this format, so it isn't really flexible.
