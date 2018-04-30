@@ -137,8 +137,6 @@ class TwistedBackend(BackendBase):
 
     def _ws_create_client_factories(self, connect, producer=None, consumer=None, proxy=None):
         factory_args = {}
-        if proxy:
-            factory_args.update({'host': proxy.host, 'port': proxy.port})
         for dst in connect:
             client_factory = self._websocket.BroadcastClientFactory(
                 url=dst.geturl(),
@@ -147,6 +145,10 @@ class TwistedBackend(BackendBase):
                 **factory_args
             )
             client_factory.protocol = self._websocket.BroadcastClientProtocol
+            if proxy:
+                proxy_dict = {u'host': proxy.host, u'port': proxy.port}
+                client_factory.proxy = proxy_dict
+
             client_factory.connect()
 
     def ws_backend_producer(self, custom_producer, listen=None, connect=None, proxy=None):
