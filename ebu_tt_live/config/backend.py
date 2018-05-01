@@ -145,9 +145,7 @@ class TwistedBackend(BackendBase):
                 **factory_args
             )
             client_factory.protocol = self._websocket.BroadcastClientProtocol
-            if proxy:
-                proxy_dict = {u'host': proxy.host, u'port': proxy.port}
-                client_factory.proxy = proxy_dict
+            client_factory.proxy = proxy
 
             client_factory.connect()
 
