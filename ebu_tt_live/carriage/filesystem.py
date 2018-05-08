@@ -72,20 +72,21 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                  file_name_pattern = CFG_FILENAME_PATTERN, 
                  message_file_name_pattern = CFG_MESSAGE_PATTERN, 
                  circular_buf_size = 0, 
-                 suppress_manifest = False):
+                 suppress_manifest = False,
+                 first_msg_counter = 0):
         self._dirpath = dirpath
         if not os.path.exists(self._dirpath):
             os.makedirs(self._dirpath)
         self._file_name_pattern = file_name_pattern
         self._message_file_name_pattern = message_file_name_pattern
         self._counter = 0
+        self._msg_counter = first_msg_counter
         self._circular_buf_size = circular_buf_size
         if circular_buf_size > 0 :
             self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
         self._suppress_manifest = suppress_manifest
         # Get a set of default clocks
         self._default_clocks = {}
-        self._msg_counter = 0
 
     def _get_default_clock(self, sequence_identifier, time_base, clock_mode=None):
         clock_obj = self._default_clocks.get(sequence_identifier, None)
