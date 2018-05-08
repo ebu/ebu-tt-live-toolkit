@@ -9,6 +9,7 @@ import logging
 import six
 import os
 import time
+import codecs
 
 
 log = logging.getLogger(__name__)
@@ -154,7 +155,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         # can be selected once at the beginning and dereferenced rather than repeating
         # if statements.
         filepath = os.path.join(self._dirpath, filename)
-        with open(filepath, 'w') as destfile:
+        with codecs.open(filepath, mode='w', errors='ignore') as destfile:
             destfile.write(data)
             destfile.flush()
                         
@@ -199,7 +200,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
             new_manifest_line = CFG_MANIFEST_LINE_PATTERN.format(
                 availability_time=timedelta_to_str_manifest(availability_time), 
                 filename=filename)
-            with open(self._manifest_path, 'a') as f:
+            with codecs.open(self._manifest_path, mode='a', errors='ignore') as f:
                 f.write(new_manifest_line)
 
 
@@ -237,11 +238,11 @@ class FilesystemReader(object):
         self._manifest_path = manifest_path
         self._custom_consumer = custom_consumer
         self._do_tail = do_tail
-        with open(manifest_path, 'r') as manifest:
+        with codecs.open(manifest_path, 'r') as manifest:
             self._manifest_lines_iter = iter(manifest.readlines())
 
     def resume_reading(self):
-        with open(self._manifest_path, 'r') as manifest_file:
+        with codecs.open(self._manifest_path, 'r') as manifest_file:
             while True:
                 manifest_line = manifest_file.readline()
                 if not manifest_line:
@@ -257,7 +258,7 @@ class FilesystemReader(object):
                     availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
                     xml_file_path = os.path.join(self._dirpath, xml_file_name)
                     xml_content = None
-                    with open(xml_file_path, 'r') as xml_file:
+                    with codecs.open(xml_file_path, 'r') as xml_file:
                         xml_content = xml_file.read()
                     data = [availability_time_str, xml_content]
                     self._custom_consumer.on_new_data(data)
