@@ -104,10 +104,11 @@ Node type dependent options for [nodeN] : ::
      └─type : ["local" (default) | "auto" | "clock"]
 
    type="ebuttd-encoder"
-   ├─media_time_zero : ["current" (default) | clock time at media time zero TODO: check format]
+   ├─media_time_zero : ["current" (default) | clock time at media time zero in ISO format]
    ├─default_namespace : ["false" (default) | "true"]
    ├─clock
-   │ └─type : ["local" (default) | "auto" | "utc"]
+   │ ├─type : ["local" (default) | "auto" | "utc"]
+   │ └─url : url of source of time - expected to provide a single ISO format time string
    └─override_begin_count : override the counter for the zeroth output document (for filesystem only, beats begin_count)
      ├─first_doc_datetime : datetime when first document would have been e.g. 1970-01-01T00:00:00.0
      └─doc_duration : duration in seconds of each document e.g. 3.84
