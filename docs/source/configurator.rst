@@ -106,8 +106,11 @@ Node type dependent options for [nodeN] : ::
    type="ebuttd-encoder"
    ├─media_time_zero : ["current" (default) | clock time at media time zero TODO: check format]
    ├─default_namespace : ["false" (default) | "true"]
-   └─clock
-     └─type : ["local" (default) | "auto" | "utc"]
+   ├─clock
+   │ └─type : ["local" (default) | "auto" | "utc"]
+   └─override_begin_count : override the counter for the zeroth output document (for filesystem only, beats begin_count)
+     ├─first_doc_datetime : datetime when first document would have been e.g. 1970-01-01T00:00:00.0
+     └─doc_duration : duration in seconds of each document e.g. 3.84
 
    type="buffer-delay"
    └─delay : delay in seconds, default 0
@@ -135,6 +138,7 @@ Output carriage type dependent options for "carriage": ::
    ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder or all if 0, default 0
    ├─suppress_manifest : Whether to suppress writing of a manifest file (e.g. for EBU-TT-D output). Default False
    ├─message_filename_pattern : File name pattern for message documents or EBU-TT-D documents. It can contain {sequence_identifier} and {counter} format parameters, default "{sequence_identifier}_msg_{counter}.xml" 
+   ├─begin_count : value of zeroth {counter} format value: first output file will use this plus 1 - note that ebuttd-encoder can override this.
    └─filename_pattern : File name pattern for EBU-TT-Live documents. It needs to contain {counter} format parameter, which will be populated with the sequence number. Default "{sequence_identifier}_{counter}.xml"
 
    type="websocket"
