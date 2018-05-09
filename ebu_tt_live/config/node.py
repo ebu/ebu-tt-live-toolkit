@@ -262,12 +262,12 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
         doc='Whether to use a default namespace, default false.')
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
+    required_config.clock.add_option('url', doc='URL from which to fetch remote time.')
     required_config.override_begin_count = Namespace()
     required_config.override_begin_count.add_option(
         'first_doc_datetime',
         doc='The time when the document numbered 1 was available, format YYYY-mm-DDTHH:MM:SS',
-        default = datetime.utcnow(),
-        from_string_converter=get_date)
+        default = datetime.utcnow())
     required_config.override_begin_count.add_option(
         'doc_duration',
         default=5.0,
@@ -278,15 +278,17 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
     def _create_component(self, config):
         self._clock = self.config.clock.type(config, self.config.clock)
         if self.config.media_time_zero == 'current':
+            # should use URL?
             mtz = self._clock.component.get_time()
         else:
-            mtz = bindings.ebuttdt.LimitedClockTimingType(str(self.config.media_time_zero)).timedelta
+            mtz = get_date(self.config.media_time_zero)-datetime.min
             
         begin_count = None
         
         if self.config.override_begin_count:
             # override the carriage mech's document count
             fdt = self.config.override_begin_count.first_doc_datetime
+            # should use mtz?
             tn = datetime.utcnow()
             begin_count = int(floor((tn - fdt).total_seconds() / self.config.override_begin_count.doc_duration))
             
@@ -294,7 +296,8 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
             node_id=self.config.id,
             media_time_zero=mtz,
             default_ns=self.config.default_namespace,
-            begin_count=begin_count
+            begin_count=begin_count,
+            clock_url=self.config.clock.url
         )
 
     def __init__(self, config, local_config):
