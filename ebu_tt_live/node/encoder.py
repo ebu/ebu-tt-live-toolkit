@@ -1,11 +1,14 @@
-
-from datetime import timedelta
+import logging
+from datetime import timedelta, datetime
 from .base import AbstractCombinedNode
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.documents import EBUTTDDocument, EBUTT3Document
-#from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
-#from ebu_tt_live.carriage import FilesystemProducerImpl
+from ebu_tt_live.config.clocks import get_date
+import requests
+
+
+log = logging.getLogger(__name__)
 
 
 class EBUTTDEncoder(AbstractCombinedNode):
@@ -22,7 +25,7 @@ class EBUTTDEncoder(AbstractCombinedNode):
     _begin_count = None
 
     def __init__(self, node_id, media_time_zero, default_ns=False, producer_carriage=None,
-                 consumer_carriage=None, begin_count=None, **kwargs):
+                 consumer_carriage=None, begin_count=None, clock_url=None, **kwargs):
         super(EBUTTDEncoder, self).__init__(
             producer_carriage=producer_carriage,
             consumer_carriage=consumer_carriage,
@@ -31,7 +34,15 @@ class EBUTTDEncoder(AbstractCombinedNode):
         )
         self._default_ns = default_ns
         media_clock = MediaClock()
-        media_clock.adjust_time(timedelta(), media_time_zero)
+        if clock_url is None:
+            media_clock.adjust_time(timedelta(), media_time_zero)
+        else:
+            log.info('Getting time from {}'.format(clock_url))
+            r = requests.get(clock_url).text
+            log.info('Got response {}'.format(r))
+            d = get_date(r)
+            t = d - datetime.min
+            media_clock.adjust_time(t, media_time_zero)
         self._begin_count = begin_count
         self._ebuttd_converter = EBUTT3EBUTTDConverter(
             media_clock=media_clock
