@@ -98,6 +98,9 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                 self._default_clocks[sequence_identifier] = clock_obj
         return clock_obj
 
+    def set_message_counter(self, message_counter):
+        self._msg_counter = message_counter
+        
     def check_availability_time(
             self, sequence_identifier, time_base=None, clock_mode=None, availability_time=None):
         """

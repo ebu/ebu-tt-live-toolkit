@@ -4,6 +4,8 @@ from .base import AbstractCombinedNode
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.documents import EBUTTDDocument, EBUTT3Document
+#from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
+#from ebu_tt_live.carriage import FilesystemProducerImpl
 
 
 class EBUTTDEncoder(AbstractCombinedNode):
@@ -13,9 +15,14 @@ class EBUTTDEncoder(AbstractCombinedNode):
     _default_ebuttd_doc = None
     _expects = EBUTT3Document
     _provides = EBUTTDDocument
+    # _begin_count is used to override the first output document count number. when
+    # provided as a constructor value it is stored, and set on the output carriage
+    # impl once before the first time emit_document is called. Then it is reset
+    # to None, which is used as the test to see if it needs to be used.
+    _begin_count = None
 
     def __init__(self, node_id, media_time_zero, default_ns=False, producer_carriage=None,
-                 consumer_carriage=None, **kwargs):
+                 consumer_carriage=None, begin_count=None, **kwargs):
         super(EBUTTDEncoder, self).__init__(
             producer_carriage=producer_carriage,
             consumer_carriage=consumer_carriage,
@@ -25,6 +32,7 @@ class EBUTTDEncoder(AbstractCombinedNode):
         self._default_ns = default_ns
         media_clock = MediaClock()
         media_clock.adjust_time(timedelta(), media_time_zero)
+        self._begin_count = begin_count
         self._ebuttd_converter = EBUTT3EBUTTDConverter(
             media_clock=media_clock
         )
@@ -41,6 +49,13 @@ class EBUTTDEncoder(AbstractCombinedNode):
             converted_doc = EBUTTDDocument.create_from_raw_binding(
                 self._ebuttd_converter.convert_document(document.binding)
             )
+            
+            # If this is the first time, and there's a begin count override, apply it
+            if self._begin_count is not None:
+                # Will fail unless the concrete producer carriage impl is a FilesystemProducerImpl
+                self.producer_carriage.producer_carriage.set_message_counter(self._begin_count)
+                self._begin_count = None
+
             # Specify the time_base since the FilesystemProducerImpl can't derive it otherwise.
             # Hard coded to 'media' because that's all that's permitted in EBU-TT-D. Alternative
             # would be to extract it from the EBUTTDDocument but since it's the only permitted
