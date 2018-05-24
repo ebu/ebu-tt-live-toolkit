@@ -8,6 +8,7 @@ from . import _ebuttm as ebuttm
 from . import _ebuttlm as ebuttlm
 from . import _ebuttp as ebuttp
 from . import _ebutts as ebutts
+from . import _itts as itts
 from . import _ttm as ttm
 from . import _ttp as ttp
 from . import _tts as tts
@@ -45,7 +46,8 @@ namespace_prefix_map = {
     'ebuttm': ebuttm.Namespace,
     'ebutts': ebutts.Namespace,
     'ebuttp': ebuttp.Namespace,
-    'ebuttlm': ebuttlm.Namespace
+    'ebuttlm': ebuttlm.Namespace,
+    'itts': itts.Namespace
 }
 
 
