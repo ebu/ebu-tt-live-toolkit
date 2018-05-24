@@ -4,6 +4,7 @@ from .base import AbstractCombinedNode
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.documents import EBUTTDDocument, EBUTT3Document
+from ebu_tt_live.bindings import d_style_type
 from ebu_tt_live.config.clocks import get_date
 import requests
 
@@ -60,6 +61,13 @@ class EBUTTDEncoder(AbstractCombinedNode):
             converted_doc = EBUTTDDocument.create_from_raw_binding(
                 self._ebuttd_converter.convert_document(document.binding)
             )
+            
+            body_style = d_style_type(id='bodyStyle', 
+                                      fillLineGap=True, 
+                                      fontFamily='reith Sans,proportionalSansSerif',
+                                      fontSize = '160%',
+                                      linePadding = '0.5c')
+            self._ebuttd_converter.add_body_style(converted_doc._ebuttd_content, body_style)
             
             # If this is the first time, and there's a begin count override, apply it
             if self._begin_count is not None:

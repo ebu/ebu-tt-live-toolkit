@@ -361,3 +361,12 @@ class EBUTT3EBUTTDConverter(object):
         converted_bindings = self.convert_element(root_element, self._semantic_dataset)
 
         return converted_bindings
+
+    def add_body_style(self, root_element, style):
+        if style is not None:
+            id = style.id
+            if root_element.body is not None:
+                root_element.head.styling.append(style)
+                root_element.body.style = id
+            
+            
