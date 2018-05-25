@@ -1,3 +1,4 @@
+import logging
 from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
 from .clocks import get_clock, get_date
 from .carriage import get_producer_carriage, get_consumer_carriage
@@ -12,6 +13,10 @@ from ebu_tt_live.strings import ERR_CONF_NO_SUCH_NODE
 from .adapters import ProducerNodeCarriageAdapter, ConsumerNodeCarriageAdapter
 from datetime import datetime, timedelta
 from math import floor
+import requests
+
+log = logging.getLogger(__name__)
+
 
 
 class NodeBase(ConfigurableComponent):
@@ -110,6 +115,11 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
         doc='The time to begin outputting segments according to the clock',
         default='immediate'
     )
+    required_config.add_option('begin_sync_url',
+                               doc='URL from which to fetch the ISO time to align the segments with')
+    required_config.add_option('begin_sync_zero',
+                               default = datetime.min,
+                               doc='Zero ISO time to use to calculate begin delay relative to time fetched from [begin_sync_url].')
 
     _output = None
     _clock = None
@@ -127,6 +137,17 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
             ).timedelta - self._clock.component.get_time()
             self._begin_delay = self._begin_delay.total_seconds()
 
+        begin_sync_url = self.config.begin_sync_url
+        if begin_sync_url is not None:
+            log.info('Getting time from {}'.format(begin_sync_url))
+            r = requests.get(begin_sync_url).text
+            log.info('Got response {}'.format(r))
+            d = get_date(r)
+            t = d - self.config.begin_sync_zero
+            b = t.total_seconds() % self.config.segment_length
+            log.info('Waiting for {}s before beginning'.format(b))
+            self._begin_delay = b
+            
         self.component = processing_node.ReSequencer(
             node_id=self.config.id,
             reference_clock=self._clock.component,
