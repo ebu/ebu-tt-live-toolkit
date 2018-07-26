@@ -11,11 +11,13 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
     elementFormDefault="qualified" attributeFormDefault="qualified">
 	<xs:attribute name="fillLineGap">
 		<xs:annotation>
-			<xs:documentation>Alignment of multiple ‘rows’ of inline areas within a containing block
-				area.</xs:documentation>
+			<xs:documentation>Controls the application of background between successive line areas.</xs:documentation>
 		</xs:annotation>
 		<xs:simpleType>
-			<xs:restriction base="xs:boolean"/>			
+			<xs:restriction base="xs:token">
+				<xs:enumeration value="true"/>
+				<xs:enumeration value="false"/>
+			</xs:restriction>			
 		</xs:simpleType>
 	</xs:attribute>
 </xs:schema>

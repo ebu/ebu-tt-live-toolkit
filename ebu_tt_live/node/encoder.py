@@ -63,7 +63,7 @@ class EBUTTDEncoder(AbstractCombinedNode):
             )
             
             body_style = d_style_type(id='bodyStyle', 
-                                      fillLineGap=True, 
+                                      fillLineGap='true', 
                                       fontFamily='reith Sans,proportionalSansSerif',
                                       fontSize = '160%',
                                       linePadding = '0.5c')
