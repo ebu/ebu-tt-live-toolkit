@@ -1,7 +1,7 @@
 import abc
 import collections
 import threading
-import Queue
+import queue
 import os
 import time
 import types
@@ -114,12 +114,12 @@ class RotatingFileBuffer(RingBufferWithCallback):
     _deletion_thread = None
     _deletion_queue = None
 
-    def __init__(self, maxlen, async=True):
+    def __init__(self, maxlen, asynchronous=True):
         super(RotatingFileBuffer, self).__init__(maxlen=maxlen, callback=self.delete_file)
         # In this case threads make sense since it is I/O we are going to be waiting for and that is releasing the GIL.
         # Deletion is the means for us to send down files for deletion to the other thread(maybe process later)....
-        self._deletion_queue = Queue.Queue()
-        if async is True:
+        self._deletion_queue = queue.Queue()
+        if asynchronous is True:
             self._deletion_thread = StoppableThread(
                 target=self._delete_thread_loop,
                 kwargs={'q': self._deletion_queue}
@@ -150,7 +150,7 @@ class RotatingFileBuffer(RingBufferWithCallback):
     def _do_consume(cls, q, files_waiting, default_wait):
         try:
             files_waiting.append(q.get(timeout=default_wait))
-        except Queue.Empty:
+        except queue.Empty:
             pass
 
         failed_files = cls._do_delete(files_waiting)
@@ -266,7 +266,7 @@ def validate_types_only(value, member_name, class_name):
     if not isinstance(value, tuple):
         value = (value,)
     for item in value:
-        if not isinstance(item, (type, types.ClassType)) and item is not ANY:
+        if not isinstance(item, type) and item is not ANY:
             raise TypeError(
                 'Abstract static member: \'{}.{}\' is not a type or class'.format(
                     class_name,
@@ -319,7 +319,7 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
     def __new__(mcls, name, bases, namespace):
         cls = super(AutoRegisteringABCMeta, mcls).__new__(mcls, name, bases, namespace)
         abstract_members = set(name
-                        for name, value in namespace.items()
+                        for name, value in list(namespace.items())
                         if isinstance(value, AbstractStaticMember))
 
         abstracts = getattr(cls, "__abstractmethods__", set())
@@ -349,7 +349,7 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
         if namespace.get('auto_register_impl') is None:
             cls.auto_register_impl = classmethod(lambda x, y: None)
         cls._abc_static_members = frozenset(abstract_members)
-        cls._abc_interface = '__metaclass__' in namespace.keys()
+        cls._abc_interface = '__metaclass__' in list(namespace.keys())
         return cls
 
     def __call__(cls, *args, **kwargs):
@@ -429,7 +429,7 @@ def compare_xml(want, got):
         return norm_whitespace(child_text(element))
 
     def attrs_dict(element):
-        return dict(element.attributes.items())
+        return dict(list(element.attributes.items()))
 
     def check_element(want_element, got_element):
         if want_element.tagName != got_element.tagName:

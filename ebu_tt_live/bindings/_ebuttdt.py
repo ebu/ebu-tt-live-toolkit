@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from raw._ebuttdt import *
-from raw import _ebuttdt as ebuttdt_raw
+from .raw._ebuttdt import *
+from .raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
 from decimal import Decimal
 import re, logging
@@ -319,10 +319,7 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
+        hours, minutes, seconds, milliseconds = [cls._int_or_none(x) for x in cls._groups_regex.match(instance).groups()]
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
@@ -370,10 +367,7 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
+        hours, minutes, seconds, milliseconds = [cls._int_or_none(x) for x in cls._groups_regex.match(instance).groups()]
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod

@@ -167,4 +167,4 @@ class TestReplaceStylesAndRegions(TestCase):
 
             document.validate()
 
-            print document.get_xml()
+            print(document.get_xml())

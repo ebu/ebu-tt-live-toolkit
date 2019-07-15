@@ -132,3 +132,4 @@ export/
 # Mac OS X files
 .DS_Store
 
+.vscode/settings.json

@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from raw._ttp import *
+from .raw._ttp import *

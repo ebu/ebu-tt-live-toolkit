@@ -82,7 +82,7 @@ class EBUWebsocketProtocolMixin(object):
 
     _sequence_identifier = None
     _action = None
-    _path_format = u'{sequence_identifier}/{action}'
+    _path_format = '{sequence_identifier}/{action}'
     _valid_actions = [
         'publish',
         'subscribe'

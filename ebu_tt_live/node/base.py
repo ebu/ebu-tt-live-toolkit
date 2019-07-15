@@ -104,7 +104,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
         if sequence_identifier is None or sequence_number is None:
             raise Exception()
 
-        if sequence_identifier in self._seen_docs.keys():
+        if sequence_identifier in list(self._seen_docs.keys()):
             if sequence_number in self._seen_docs[sequence_identifier]:
                 return False
 

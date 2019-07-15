@@ -7,7 +7,7 @@ from .common import create_loggers
 from ebu_tt_live.node.distributing import DistributingNode
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.twisted import TwistedConsumer, UserInputServerProtocol, UserInputServerFactory, \
-    BroadcastServerFactory, TwistedPushProducer, BroadcastServerProtocol
+    BroadcastServerFactory, TwistedWSPushProducer, BroadcastServerProtocol
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage, WebsocketProducerCarriage
 from twisted.internet import reactor
@@ -69,7 +69,7 @@ def main():
         broadcast_factory.protocol = BroadcastServerProtocol
         broadcast_factory.listen()
 
-        TwistedPushProducer(
+        TwistedWSPushProducer(
             consumer=broadcast_factory,
             custom_producer=sub_prod_impl
         )

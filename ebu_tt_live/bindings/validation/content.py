@@ -47,7 +47,7 @@ class SubtitleContentContainer(
         if end is not None:
             if end <= self.computed_begin_time:
                 str_lines.append(
-                    u'{} Timings: [({} - {})({} -{})(discarded)]'.format(
+                    '{} Timings: [({} - {})({} -{})(discarded)]'.format(
                         self.__class__.__name__,
                         self.begin,
                         self.end,
@@ -63,7 +63,7 @@ class SubtitleContentContainer(
                 else:
                     res_end_time = self.computed_end_time
                 str_lines.append(
-                    u'{} Timings: [({} - {})({} - {})({} - {})]'.format(
+                    '{} Timings: [({} - {})({} - {})({} - {})]'.format(
                         self.__class__.__name__,
                         self.begin,
                         self.end,
@@ -75,8 +75,8 @@ class SubtitleContentContainer(
                 )
         for item in self.orderedContent():
             if isinstance(item, NonElementContent):
-                str_lines.append(u'{}'.format(item.value))
+                str_lines.append('{}'.format(item.value))
             else:
                 str_lines.append(item.value.content_to_string(begin=begin, end=end))
 
-        return u'\n'.join(str_lines)
+        return '\n'.join(str_lines)
