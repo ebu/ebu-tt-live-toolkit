@@ -1,6 +1,6 @@
 
 from .base import IBroadcaster
-from websocket import BroadcastServerFactory, BroadcastServerProtocol, BroadcastClientFactory, \
+from .websocket import BroadcastServerFactory, BroadcastServerProtocol, BroadcastClientFactory, \
     BroadcastClientProtocol, UserInputServerFactory, UserInputServerProtocol, TwistedWSConsumer, TwistedWSPushProducer, \
     TwistedConsumer, TwistedPullProducer
 from twisted.internet import task

@@ -125,7 +125,7 @@ class EBUTT3EBUTTDConverter(object):
             root_element.head = d_head_type()
         if root_element.head.styling is None:
             root_element.head.styling = d_styling_type()
-        root_element.head.styling.style.extend(adjusted_fonts.values())
+        root_element.head.styling.style.extend(list(adjusted_fonts.values()))
 
     def convert_tt(self, tt_in, dataset):
         dataset['timeBase'] = tt_in.timeBase

@@ -102,8 +102,8 @@ def main():
 
     document.validate()
 
-    print(
+    print((
         document.get_xml()
-    )
+    ))
 
     log.info('XML output printed')

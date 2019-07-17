@@ -234,7 +234,7 @@ def then_fragment_styles_present(test_context, frag_styles):
     styling = fragment.binding.head.styling
     styles_present = []
     if frag_styles:
-        styles_required = map(lambda item: item.strip(), frag_styles.split(','))
+        styles_required = [item.strip() for item in frag_styles.split(',')]
     else:
         styles_required = []
 
@@ -251,7 +251,7 @@ def then_fragment_regions_present(test_context, frag_regions):
     layout = fragment.binding.head.layout
     regions_present = []
     if frag_regions:
-        regions_required = map(lambda item: item.strip(), frag_regions.split(','))
+        regions_required = [item.strip() for item in frag_regions.split(',')]
     else:
         regions_required = []
 

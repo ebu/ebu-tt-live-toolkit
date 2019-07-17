@@ -9,11 +9,10 @@ log = logging.getLogger(__name__)
 # ==========
 
 
-class IDocumentDataAdapter(object):
+class IDocumentDataAdapter(object, metaclass=AutoRegisteringABCMeta):
     """
     This adapter is used to do various conversions on the payload between the carriage and the node
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
     __impl_registry = {}
     _expects = AbstractStaticMember(validate_types_only)
@@ -24,7 +23,7 @@ class IDocumentDataAdapter(object):
         impl_expects = impl_class.expects()
         provides_map = cls.__impl_registry.setdefault(impl_expects, weakref.WeakValueDictionary())
         impl_provides = impl_class.provides()
-        if impl_provides in provides_map.keys():
+        if impl_provides in list(provides_map.keys()):
             log.warning(
                 '({} -> {}) adapter already registered: {}. Ignoring: {} '.format(
                     impl_expects,
@@ -83,14 +82,13 @@ class IDocumentDataAdapter(object):
         raise NotImplementedError()
 
 
-class INodeCarriageAdapter(object):
+class INodeCarriageAdapter(object, metaclass=AutoRegisteringABCMeta):
     """
     This adapter wraps the DocumentDataAdapter conversion logic and shows a dual interface. It responsibility is
     to facilitate direct communication between incompatible carriage mechanisms and processing nodes.
     This is a tricky business because this class does not have a hardcoded expects-provides interface contract.
     It works it out as it goes forward from the parameters.
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
     @abstractproperty
     def data_adapters(self):
