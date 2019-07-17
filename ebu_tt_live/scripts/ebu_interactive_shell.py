@@ -1,7 +1,7 @@
 
 import logging
 from argparse import ArgumentParser
-from common import create_loggers
+from .common import create_loggers
 from ebu_tt_live.documents import EBUTT3Document
 
 

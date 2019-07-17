@@ -424,7 +424,7 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
         self._resolved_begin_time = self.computed_begin_time
         if verbose:
             document_logger.info(
-                u'Document discarded:\n{}'.format(
+                'Document discarded:\n{}'.format(
                     self.content_to_string(end=resolved_end_time)
                 )
             )
@@ -479,7 +479,7 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTT3ObjectBase):
                 )
             )
 
-        return u'\n'.join(str_lines)
+        return '\n'.join(str_lines)
 
     def validate(self):
         # Reset timeline
@@ -803,7 +803,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             self.timeline.add(ends_after)
             if self._verbose:
                 document_logger.info(
-                    u'Document trimmed by next one:\n{}'.format(
+                    'Document trimmed by next one:\n{}'.format(
                         begins_before.element.content_to_string()
                     )
                 )
@@ -833,7 +833,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         ))
         if self._verbose:
             document_logger.info(
-                u'New document inserted:\n{}'.format(
+                'New document inserted:\n{}'.format(
                     document.content_to_string()
                 )
             )
@@ -861,7 +861,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 else:
                     discarded_timing_events.setdefault(item.element, []).append(item)
 
-        for item, events in discarded_timing_events.items():
+        for item, events in list(discarded_timing_events.items()):
             item.discard_document(
                 resolved_end_time=resolved_begin.when,
                 verbose=self._verbose
@@ -884,7 +884,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             if item.element != document:
                 discarded_timing_events.setdefault(item.element, []).append(item)
 
-        for item, events in discarded_timing_events.items():
+        for item, events in list(discarded_timing_events.items()):
             item.discard_document(
                 resolved_end_time=discard_time,
                 verbose=self._verbose

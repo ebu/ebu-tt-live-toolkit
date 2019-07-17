@@ -17,7 +17,7 @@ def parse_adapter_list(value):
     if value is not None:
         for item in value:
             conv_type = item['type']
-            kwargs = {ckey: carg for ckey, carg in item.items() if ckey != 'type'}
+            kwargs = {ckey: carg for ckey, carg in list(item.items()) if ckey != 'type'}
             parsed_value.append(data_adapters_by_directed_conversion.get(conv_type)(**kwargs))
     return parsed_value or None
 

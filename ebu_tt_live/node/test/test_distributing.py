@@ -46,7 +46,7 @@ class TestDistributingNode(TestCase):
 
     def test_check_document_buffer_overflow(self):
         seq_id = 'testSequence01'
-        for item in xrange(100):
+        for item in range(100):
             self.distributing_node.check_if_document_seen(
                 sequence_identifier=seq_id,
                 sequence_number=item

@@ -1,2 +1,2 @@
 # -*- coding: utf-8 -*-
-from raw._ttp import *
+from ebu_tt_live.bindings.raw._ttp import *

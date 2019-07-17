@@ -4,7 +4,7 @@ all: init ui
 	
 init:
 	pip install --upgrade -r requirements.txt
-	pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+	pyxbgen --binding-root=. -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd --module-prefix=ebu_tt_live.bindings
 
 initnpm:
 ifeq ("$(wildcard node_modules)","")
@@ -20,7 +20,7 @@ docs:
 	python setup.py build_sphinx
 
 bindings:
-	pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+	pyxbgen --binding-root=. -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd --module-prefix=ebu_tt_live.bindings
 
 ui: uiclean uibuild
 	
