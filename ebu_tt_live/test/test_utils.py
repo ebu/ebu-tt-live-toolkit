@@ -51,6 +51,7 @@ class RFBCommon(TestCase):
 
     def _create_a_file(self, number):
         created_file = tempfile.NamedTemporaryFile(
+            mode='w+',
             prefix='ebu_tt_live_utils_test',
             suffix='{}.tmp'.format(number),
             delete=False
