@@ -174,7 +174,7 @@ class TwistedWSPushProducer(object):
         for conn in self._connections:
             conn.sendSequenceMessage(
                 sequence_identifier=sequence_identifier,
-                payload=data.encode("utf-8")
+                payload=data
             )
 
     def resumeProducing(self):
@@ -544,7 +544,7 @@ class LegacyBroadcastServerFactory(WebSocketServerFactory):
         log.info("broadcasting message...")
 
         for c in self._clients:
-            c.sendMessageOnChannel(channel, msg.encode("utf-8"), isBinary=False, doNotCompress=False, sync=False)
+            c.sendMessageOnChannel(channel, msg, isBinary=False, doNotCompress=False, sync=False)
 
     def stopFactory(self):
         self.unregisterProducer()

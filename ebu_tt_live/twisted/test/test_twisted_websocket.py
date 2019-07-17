@@ -95,7 +95,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         self.assertEqual(self.sproto.action, 'subscribe')
 
         # At this point we are supposed to be able to send data through
-        doc = 'dummy message'
+        doc = b'dummy message'
         self.sproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -147,7 +147,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         self.assertEqual(self.sproto.action, 'subscribe')
 
         # At this point we are supposed to be able to send data through
-        doc = 'dummy message'
+        doc = b'dummy message'
         self.sproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -182,7 +182,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         self._connect()
 
         # When data arrives from consumer to server
-        self.sproto.dataReceived('consumers should not send data')
+        self.sproto.dataReceived(b'consumers should not send data')
 
         # This must have triggered the connection to be dropped
         self.assertEqual(self.sproto.state, self.sproto.STATE_CLOSED)
@@ -252,7 +252,7 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
         self.assertEqual(self.cproto.action, 'publish')
 
         # Sending data
-        doc = 'producer client sample'
+        doc = b'producer client sample'
         self.cproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -301,7 +301,7 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
         self.assertEqual(self.cproto.action, 'publish')
 
         # Sending data
-        doc = 'producer client sample'
+        doc = b'producer client sample'
         self.cproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -352,7 +352,7 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
 
         self._connect()
 
-        self.cproto.dataReceived('consumers should not send data')
+        self.cproto.dataReceived(b'consumers should not send data')
 
         # This should make the connection kick the bucket
         self.assertEqual(self.cproto.state, self.cproto.STATE_CLOSED)
@@ -379,7 +379,7 @@ class TestWSProducerCarriage(TestCase):
 
     def test_successful_broadcast(self):
 
-        doc = 'test_data'
+        doc = b'test_data'
         self.carriage.emit_data(
             sequence_identifier=self.sequence_identifier,
             data=doc
@@ -410,7 +410,7 @@ class TestWSProducerCarriage(TestCase):
         self.protocol2.sendSequenceMessage.assert_not_called()
 
     def test_delayed_broadcast(self):
-        doc = 'delayed test data'
+        doc = b'delayed test data'
         delay = 5.0
         clock = task.Clock()
         self.carriage._callLater = clock.callLater
@@ -457,7 +457,7 @@ class TestWSConsumerCarriage(TestCase):
 
     def test_successful_reception(self):
 
-        doc = 'document reception test'
+        doc = b'document reception test'
 
         self.assertEqual(self.protocol1.consumer, self.carriage)
         self.assertEqual(self.protocol2.consumer, self.carriage)
