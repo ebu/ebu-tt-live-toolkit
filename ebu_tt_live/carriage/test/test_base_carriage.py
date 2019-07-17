@@ -17,7 +17,7 @@ class DummyDataTypeB(object):
 class TestABCs(TestCase):
 
     def test_interfaces(self):
-        self.assertRaises(TypeError, carriage_interface.ICarriageMechanism)
+        self.assertRaises(TypeError, carriage_interface.ICarriageMechanism())
         self.assertRaises(TypeError, carriage_interface.IProducerCarriage)
         self.assertRaises(TypeError, carriage_interface.IConsumerCarriage)
 
