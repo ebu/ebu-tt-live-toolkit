@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from raw._ebuttdt import *
-from raw import _ebuttdt as ebuttdt_raw
+from ebu_tt_live.bindings.raw._ebuttdt import *
+from ebu_tt_live.bindings.raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
 from decimal import Decimal
 import re, logging
