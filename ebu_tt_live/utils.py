@@ -62,6 +62,8 @@ class ComparableMixin(object):
         """
         pass
 
+    def __hash__(self):
+        return object.__hash__(self)
 
 class RingBufferWithCallback(collections.deque):
     """
