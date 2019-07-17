@@ -553,7 +553,7 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
         else:
             return NotImplemented
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return self._do_div(other)
 
     def _do_eq(self, other):
