@@ -114,7 +114,7 @@ class TestEBUTTDEncoderSuccess(TestCase):
         with self.assertRaises(UnexpectedSequenceIdentifierError) as context:
             self.encoder.process_document(document=second_sequence)
 
-        self.assertTrue('Rejecting new sequence identifier' in context.exception.message)
+        self.assertTrue('Rejecting new sequence identifier' in context.exception.args[0])
 
     def test_basic_operation(self):
         doc = self._create_test_document()
