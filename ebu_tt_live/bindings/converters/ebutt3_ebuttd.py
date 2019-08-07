@@ -1,6 +1,7 @@
 from ebu_tt_live.bindings import tt, ttd, tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
     p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type, d_head_type, d_style_type, \
     d_styling_type, head_type, style_type, styling, layout, d_layout_type, region_type, d_region_type, ebuttdt, StyledElementMixin
+from ebu_tt_live.bindings._ebuttm import headMetadata_type, documentMetadata
 import copy
 import logging
 from pyxb.binding.basis import NonElementContent, ElementContent
@@ -154,6 +155,13 @@ class EBUTT3EBUTTDConverter(object):
                 new_elem.layout = item
             else:
                 new_elem.append(item)
+
+        metadata = headMetadata_type()
+        metadata.documentMetadata = documentMetadata(conformsToStandard = [
+            'http://www.w3.org/ns/ttml/profile/imsc1/text', 
+            'urn:ebu:tt:distribution:2018-04'
+        ])
+        new_elem.metadata = metadata
 
         # We need default values here in case styling or layout is omitted from the source document.
         if not self._children_contain(new_elem, d_styling_type):
