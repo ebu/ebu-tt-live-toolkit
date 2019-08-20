@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ebuttp:sequenceIdentifier="TestSequence"
+        ebuttp:sequenceNumber="1"
+        ttp:clockMode="local"
+        ttp:timeBase="clock"
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:f="urn:foreign">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+      <f:foreignMetadata>Fake metadata</f:foreignMetadata>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+  <tt:body begin="500ms" dur="00:00:05">
+      {% if divs %}
+            {% for div in divs %}
+                 <tt:div xml:id="{{div.id}}">
+                {% if div.p_elements %}
+                        {% for p in div.p_elements %}
+                            <tt:p xml:id="{{p.id}}">
+                                   <tt:span>text</tt:span>
+                            </tt:p>
+                        {% endfor %}
+                    {% endif %}   
+                </tt:div>
+            {% endfor %}
+    {% endif %}
+  </tt:body>
+</tt:tt>

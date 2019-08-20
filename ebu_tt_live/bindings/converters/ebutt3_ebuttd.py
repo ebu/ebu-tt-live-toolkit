@@ -257,6 +257,8 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_div(self, div_in, dataset):
+        if len(div_in.orderedContent()) == 0:
+            return None
         new_elem = d_div_type(
             *self.convert_children(div_in, dataset),
             id=div_in.id,
