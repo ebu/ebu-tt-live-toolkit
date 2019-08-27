@@ -3,6 +3,13 @@ from pytest_bdd import scenarios, given, when, then, parsers
 
 scenarios('features/nesting/ebuttd_nested_elements.feature')
 
+@then('it contains 0 div elements')
+def then_it_contains_no_divs(test_context):
+    document = test_context['ebuttd_document']
+    tree = ET.fromstring(document.get_xml())
+    print(document.get_xml())
+    ve()
+    #elements = tree.findall('{http://www.w3.org/ns/ttml}body/)
 
 @when(parsers.parse('it contains a div with id "{div_id}"'))
 def given_div(test_context, template_dict, div_id):
