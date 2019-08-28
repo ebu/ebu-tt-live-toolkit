@@ -7,6 +7,12 @@ from pyxb.binding.basis import NonElementContent
 
 class ContentContainerMixin(object):
 
+    _pushed_parent_divs = []
+
+    @property
+    def pushed_parent_divs(self):
+        return self._pushed_parent_divs
+
     def is_empty(self):
         """
         This check is made necessary by some splitting edge cases of content. To make empty containers are not included
@@ -20,6 +26,16 @@ class ContentContainerMixin(object):
         if self.is_empty():
             raise DiscardElement()
 
+    def _semantic_push_divs(self, dataset):
+        dataset['div_stack'].append(self._referenced_div)
+    
+    def _semantic_pop_divs(self, dataset):
+        pushed_parent_div = []
+        for div in dataset['div_stack']:
+            if self.id != div.id:
+                pushed_parent_div.append(div)
+        self._pushed_parent_divs = pushed_parent_div
+        dataset['div_stack'].pop()
 
 class SubtitleContentContainer(
         ContentContainerMixin, IDMixin, TimingValidationMixin, SemanticValidationMixin):

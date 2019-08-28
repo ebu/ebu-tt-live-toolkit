@@ -613,6 +613,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # attributes.
         dataset['timing_begin_stack'] = []
         dataset['timing_end_stack'] = []
+        dataset['div_stack'] = []
         dataset['timing_syncbase'] = timedelta()
         dataset['tt_element'] = self
         dataset['styles_stack'] = []
@@ -857,6 +858,9 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         )
         return copied_div
 
+    def merge(self, elem):
+        return self
+
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
         self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
@@ -865,11 +869,14 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         self._semantic_collect_applicable_styles(
             dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
         )
+        self._semantic_collect_applicable_divs( dataset=dataset,  parent_binding=parent_binding, div_type=self)
         self._semantic_push_styles(dataset=dataset)
+        self._semantic_push_divs(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
+        self._semantic_pop_divs(dataset=dataset)
 
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)
