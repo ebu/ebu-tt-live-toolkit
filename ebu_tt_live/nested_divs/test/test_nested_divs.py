@@ -27,6 +27,5 @@ class TestNester(TestCase):
 
         assert expected.get_xml() == unnested.get_xml()
 
-    def test_style_merge_from_parent(self):
-        expected_styles = {"styles": ["s1","s2"]}
-        assert expected_styles == Denester.setup_properties(expected_styles, None, None, None, None)
+    def test_merged_attr(self):
+        pass
