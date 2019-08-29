@@ -10,6 +10,7 @@
         xmlns:tt="http://www.w3.org/ns/ttml"
         xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
         xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
         xmlns:f="urn:foreign">
   <tt:head>
     <tt:metadata>
@@ -17,23 +18,18 @@
       <f:foreignMetadata>Fake metadata</f:foreignMetadata>
     </tt:metadata>
     <tt:styling>
-      <tt:style xml:id="ID001"/>
+      <tt:style xml:id="S1" tts:fontSize="1c 2c"  tts:lineHeight="2c" tts:textAlign="center"/>
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body begin="500ms" dur="00:00:05">
+  <tt:body >
       {% if divs %}
-            {% for div in divs %}
-                 <tt:div xml:id="{{div.id}}">
-                {% if div.p_elements %}
-                        {% for p in div.p_elements %}
-                            <tt:p xml:id="{{p.id}}">
-                                   <tt:span>text</tt:span>
-                            </tt:p>
-                        {% endfor %}
-                    {% endif %}   
-                </tt:div>
-            {% endfor %}
-    {% endif %}
+    {% for div in divs %}
+     
+          <div {% if div.id %} xml:id ="{{div.id}}" {% endif %} begin="10s" end="12s" style="S1">
+                
+          </div>
+     {% endfor %}
+     {% endif %}
   </tt:body>
 </tt:tt>
