@@ -2,6 +2,7 @@ from unittest import TestCase
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.node.denester import Denester
 from ebu_tt_live.bindings import div_type, p_type, span_type
+from ebu_tt_live.bindings._ebuttm import divMetadata_type
 import re
 
 class TestNester(TestCase):
@@ -32,37 +33,123 @@ class TestNester(TestCase):
         expected_xml_2 = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", expected_xml_2)
         self.expected_doc_2 = EBUTT3Document.create_from_xml(expected_xml_2)
 
-    def test_docs_are_equals(self):
-        unnested = self.d.denest(self.actual_doc)
-        assert self.expected_doc.get_xml() == unnested.get_xml()
+        xml_file_5 = "testing/bdd/templates/regions_nested_elements_hardcoded.xml"
+        with open(xml_file_5, 'r') as in_file:
+            input_xml_3 = in_file.read()
+        input_xml_3 = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", input_xml_3)
+        self.actual_doc_3 = EBUTT3Document.create_from_xml(input_xml_3)
+
+        xml_file_6 = "testing/bdd/templates/regions_unnested_elements_hardcoded.xml"
+        with open(xml_file_6, 'r') as in_file:
+            expected_xml_3 = in_file.read()
+        expected_xml_3 = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", expected_xml_3)
+        self.expected_doc_3 = EBUTT3Document.create_from_xml(expected_xml_3)
         
 
     def test_merged_attr_styles_(self):
-        excepted_div = self.expected_doc_2.binding.body.div[0]
-        actual_div = self.actual_doc_2.binding.body.div[0]
-        actual_divs = Denester.denest(actual_div)
-        for div in actual_divs:
-             assert div.style == excepted_div.style
+        excepted_div_attr = {
+            "styles" : ["S1","S2"],
+        }
+        parent_attr = {
+            "styles" : ["S2"],
+            "lang": None,
+            "region": None,
+            "metadata": divMetadata_type(facet=[])
+        }
+        actual_div = self.actual_doc_2.binding.body.div[0].div[0]
+        actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
+        assert excepted_div_attr["styles"] == actual_divs_attr["styles"]
     
 
-    def test_recurse_one_child_div(self):
-        divs =  self.actual_doc.binding.body.div[0]
-        expected_div = self.expected_doc.binding.body.div[0]
-        actual_div = Denester.recurse(divs)
-        print(expected_div.p)
-        print(actual_div[0].p)
-        assert len(actual_div) == 1
-        assert expected_div == actual_div[0]
+    
 
     def test_recurse_many_child(self):
-        expected_divs = self.expected_doc2.binding.body.div
-        nested_divs =  self.actual_doc2.binding.body.div
+        expected_divs = self.expected_doc_2.binding.body.div
+        nested_divs =  self.actual_doc_2.binding.body.div
         unnested_divs =  []
-
         for nested_div in nested_divs:
-            unnested_divs.append(Denester.recurse(nested_div))
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+        assert len(unnested_divs) == len(expected_divs)
 
-        assert nested_divs == expected_divs#
-   
+    def test_merged_attr_lang_only_on_child(self):
+        expected_div_attr = {
+            "styles" : ["S1","S2"],
+            "lang" : "fr"
+        }
+        parent_attr = {
+            "styles" : ["S2"],
+            "lang": None,
+            "region": None,
+            "metadata": divMetadata_type(facet=[])
+        }
+        actual_div = self.actual_doc_2.binding.body.div[0].div[0]
+        actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
+        assert expected_div_attr["lang"] == actual_divs_attr["lang"]
+    
+    def test_merged_attr_lang_only_on_parent(self):
+        expected_div_attr = {
+            "styles" : ["S1","S2"],
+            "lang" : "fr"
+        }
+        parent_attr = {
+            "styles" : ["S2"],
+            "lang" : "fr",
+            "region": None,
+            "metadata": divMetadata_type(facet=[])
+        }
+        actual_div = self.actual_doc.binding.body.div[0].div[0]
+        actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
+        assert expected_div_attr["lang"] == actual_divs_attr["lang"]
+
+    def test_merged_attr_lang_only_on_both_child_and_parent(self):
+        expected_div_attr = {
+            "styles" : ["S1","S2"],
+            "lang" : "en-GB"
+        }
+        parent_attr = {
+            "styles" : ["S2"],
+            "lang" : "fr",
+            "region": None,
+            "metadata": divMetadata_type(facet=[])
+        }
+        actual_div = self.actual_doc.binding.body.div[0].div[1]
+        actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
+        assert expected_div_attr["lang"] == actual_divs_attr["lang"] 
+    
+    def test_merged_attr_different_region(self):
+        expected_divs = self.expected_doc_3.binding.body.div
+        nested_divs =  self.actual_doc_3.binding.body.div
+        unnested_divs =  []
+        for nested_div in nested_divs:
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+        assert len(expected_divs)== len(unnested_divs)
+
+    def test_merged_attr_same_region(self):
+        expected_divs = self.expected_doc_3.binding.body.div
+        nested_divs =  self.actual_doc_3.binding.body.div
+        unnested_divs =  []
+        for nested_div in nested_divs:
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+        assert unnested_divs[0].region == expected_divs[0].region
+
+    def test_combine_same_divs(self):
+        expected_divs = self.expected_doc_2.binding.body.div
+        nested_divs =  self.actual_doc_2.binding.body.div
+        unnested_divs =  []
+        for nested_div in nested_divs:
+            unnested_divs.extend(Denester.combine_divs(Denester.recurse(nested_div)))
+        assert len(unnested_divs) == len(expected_divs)
         
-        
+    def test_merged_metadata(self):
+        expected_divs = self.expected_doc_2.binding.body.div
+        nested_divs =  self.actual_doc_2.binding.body.div
+        unnested_divs =  []
+        for nested_div in nested_divs:
+            unnested_divs.extend(Denester.combine_divs(Denester.recurse(nested_div)))
+        assert len(unnested_divs) == len(expected_divs)
+        i = 0
+        print(unnested_divs)
+        while i < len(unnested_divs):
+            assert len(unnested_divs[i].metadata.facet) == len(expected_divs[i].metadata.facet)
+            i += 1
+

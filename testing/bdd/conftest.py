@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence, EBUTTDDocument
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
 from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.node.denester import Denester
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType, LimitedClockTimingType, CellFontSizeType, lineHeightType
 from datetime import timedelta
@@ -123,7 +124,9 @@ def gen_second_document_fixture(test_context, template_dict, template_file_two):
 @when('the EBU-TT-Live document is converted to EBU-TT-D')
 def convert_to_ebuttd(test_context):
     ebuttd_converter = EBUTT3EBUTTDConverter(None)
-    converted_bindings = ebuttd_converter.convert_document(test_context['document'].binding)
+    doc_xml = Denester.denest(test_context["document"]).get_xml()
+    ebutt3_doc = EBUTT3Document.create_from_xml(doc_xml)
+    converted_bindings = ebuttd_converter.convert_document(ebutt3_doc.binding)
     ebuttd_document = EBUTTDDocument.create_from_raw_binding(converted_bindings)
     test_context['ebuttd_document'] = ebuttd_document
 

@@ -3,13 +3,22 @@ from pytest_bdd import scenarios, given, when, then, parsers
 
 scenarios('features/nesting/ebuttd_nested_elements.feature')
 
-@then('it contains 0 div elements')
+@then('divs with no p elements are removed')
 def then_it_contains_no_divs(test_context):
     document = test_context['ebuttd_document']
     tree = ET.fromstring(document.get_xml())
-    print(document.get_xml())
-    ve()
-    #elements = tree.findall('{http://www.w3.org/ns/ttml}body/)
+    elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div')
+    for element in elements:
+        assert len(list(element)) != 0
+
+@then('no div contains any other divs')
+def then_div_contains_no_divs(test_context):
+    document = test_context['ebuttd_document']
+    tree = ET.fromstring(document.get_xml())
+    elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div')
+    for element in elements:
+        for child in list(element): 
+            assert child.tag != "{http://www.w3.org/ns/ttml}div"
 
 @when(parsers.parse('it contains a div with id "{div_id}"'))
 def given_div(test_context, template_dict, div_id):
@@ -36,4 +45,3 @@ def given_div_has_p_element(test_context, template_dict, div_id, p_id):
          template_dict['divs'][index]['p_elements'] = list()
     p_element = test_context[p_id]
     template_dict['divs'][index]['p_elements'].append(p_element)
-

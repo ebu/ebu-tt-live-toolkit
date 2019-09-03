@@ -22,18 +22,14 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body begin="500ms" dur="00:00:05">
-      <tt:div xml:id="d1" xml:lang="fr">
-        <tt:div xml:id="d2" style="S1"  >
-          <tt:p xml:id="p1">
-                 <tt:span>text</tt:span>
-          </tt:p>
-        </tt:div>
-        <tt:div xml:id="d5" style="S1" xml:lang="en-GB" >
-            <tt:p xml:id="p3">
-                   <tt:span>text</tt:span>
-            </tt:p>
-          </tt:div>
+  <tt:body >
+    <tt:div xml:id="d1" style="S1"  >
+
+    </tt:div>
+    <tt:div xml:id="d2" style="S1"  >
+        <tt:p xml:id="p3">
+
+        </tt:p>
       </tt:div>
   </tt:body>
 </tt:tt>

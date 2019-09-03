@@ -25,12 +25,18 @@
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
       <tt:div xml:id="d2" style="S1 S2" >
+          <tt:metadata>
+              <ebuttm:facet expresses="has">Subtitle_Source_Facet is of type CUE</ebuttm:facet>
+            </tt:metadata>
         <tt:p xml:id="p1">
                 <tt:span>text</tt:span>
         </tt:p>
       </tt:div>
 
       <tt:div xml:id="d3" style="S1 S2" >
+          <tt:metadata>
+              <ebuttm:facet expresses="has">Subtitle_Source_Facet is of type CUE</ebuttm:facet>
+            </tt:metadata>
         <tt:p xml:id="p2">
                 <tt:span>text2</tt:span>
         </tt:p>

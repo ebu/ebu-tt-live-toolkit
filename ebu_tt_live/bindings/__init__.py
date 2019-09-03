@@ -897,14 +897,7 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         self._semantic_copy_verify_referenced_styles(dataset=dataset)
         self._semantic_copy_verify_referenced_region(dataset=dataset)
     
-    def __eq__(self, other):
-        if isinstance(other, div_type):
-             if self.id == other.id and self.style == other.style and len(self.p) == len(other.p):
-                return True
-             else:
-                return False
-        else:
-            return False
+
 
 
 raw.div_type._SetSupersedingClass(div_type)

@@ -20,16 +20,19 @@
     <tt:styling>
       <tt:style xml:id="S1" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center"/>
     </tt:styling>
-    <tt:layout/>
+    <tt:layout>
+        <tt:region xml:id="R1" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+        <tt:region xml:id="R2" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+      </tt:layout>
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
-      <tt:div xml:id="d1" xml:lang="fr">
-        <tt:div xml:id="d2" style="S1"  >
+      <tt:div xml:id="d1" xml:lang="fr" region="R2">
+        <tt:div xml:id="d2" style="S1" region="R1" >
           <tt:p xml:id="p1">
                  <tt:span>text</tt:span>
           </tt:p>
         </tt:div>
-        <tt:div xml:id="d5" style="S1" xml:lang="en-GB" >
+        <tt:div xml:id="d5" style="S1" xml:lang="en-GB" region="R2" >
             <tt:p xml:id="p3">
                    <tt:span>text</tt:span>
             </tt:p>
