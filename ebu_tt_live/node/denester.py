@@ -16,11 +16,25 @@ class Denester():
     @staticmethod
     def denest(document):
         divs = document.binding.body.div
+        unnested_divs = []
         for div in divs:
-            unnested_divs = Denester.recurse(div)
+            unnested_divs.extend(Denester.recurse(div))
         unnested_divs = Denester.combine_divs(unnested_divs)
+        unnested_divs = Denester.check_p_regions(unnested_divs)
         document.binding.body.div = unnested_divs
         return document
+
+    @staticmethod
+    def check_p_regions(divs):
+        for div in divs:
+            if div.region is not None:
+                div.p = [p for p in div.p if p.region == div.region or p.region == None]
+                for p in div.p:
+                    p.region = None
+
+        divs = [div for div in divs if div.p != []]
+
+        return divs
 
     @staticmethod
     def combine_divs(divs):
@@ -98,7 +112,7 @@ class Denester():
         return new_divs
 
 if __name__ == '__main__':
-    xml_file = "testing/bdd/templates/many_nested_elements_hardcoded.xml"
+    xml_file = "testing/bdd/templates/p_regions_nested_elements_hardcoded.xml"
     with open(xml_file, 'r') as in_file:
         input_xml = in_file.read()
     input_xml = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", input_xml)
