@@ -1,6 +1,6 @@
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from pyxb.binding.basis import NonElementContent, ElementContent
-from ebu_tt_live.bindings import div_type, p_type
+from ebu_tt_live.bindings import div_type, p_type, span_type
 from ebu_tt_live.bindings._ebuttm import divMetadata_type
 import copy
 import re
@@ -97,6 +97,10 @@ class Denester():
             elif isinstance(c.value,divMetadata_type):
                 continue
             else:
+                new_spans = []
+                for ic in c.value.orderedContent():
+                    if isinstance(ic.value,span_type):
+                        Denester.recurse_span(ic.value)
                 new_div = div_type(
                     id = div.id,
                     style = None if len(merged_attr["styles"]) == 0  else merged_attr["styles"],
@@ -111,8 +115,27 @@ class Denester():
         
         return new_divs
 
+    @staticmethod
+    def recurse_span(span):
+        new_spans = []
+        for inner_span in span.orderedContent():
+            if isinstance(inner_span.value,span_type):
+                print("span")
+                print(inner_span.value)
+                Denester.recurse_span(inner_span.value)
+            else:
+                print("non-span")
+                print(type(inner_span))
+                print("#" + inner_span.value + "#")
+                
+                # print("loop")
+                # print("line 1" + str(inner_span) + "end1")
+                # print(inner_span.value.orderedContent()[0].value)
+
+                
+
 if __name__ == '__main__':
-    xml_file = "testing/bdd/templates/p_regions_nested_elements_hardcoded.xml"
+    xml_file = "testing/bdd/templates/nested_spans_hardcoded.xml"
     with open(xml_file, 'r') as in_file:
         input_xml = in_file.read()
     input_xml = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", input_xml)

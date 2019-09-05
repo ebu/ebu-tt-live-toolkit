@@ -55,3 +55,14 @@ Feature: Merging nested elements
         Examples:
             | xml_file                                |
             | p_regions_nested_elements_hardcoded.xml |
+
+    Scenario: No span should contain any other span
+        Given an xml file <xml_file>
+        When the document is generated
+        And the EBU-TT-Live document is converted to EBU-TT-D
+        Then EBUTTD document is valid
+        And no span contains any other spans
+
+        Examples:
+            | xml_file                   |
+            | nested_spans_hardcoded.xml |

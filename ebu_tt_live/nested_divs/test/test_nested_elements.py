@@ -44,6 +44,18 @@ class TestNester(TestCase):
             expected_xml_3 = in_file.read()
         expected_xml_3 = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", expected_xml_3)
         self.expected_doc_3 = EBUTT3Document.create_from_xml(expected_xml_3)
+
+        xml_file_7 = "testing/bdd/templates/nested_spans_hardcoded.xml"
+        with open(xml_file_7, 'r') as in_file:
+            input_xml_4 = in_file.read()
+        input_xml_4 = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", input_xml_4)
+        self.actual_doc_4 = EBUTT3Document.create_from_xml(input_xml_4)
+
+        xml_file_8 = "testing/bdd/templates/unnested_spans_hardcoded.xml"
+        with open(xml_file_8, 'r') as in_file:
+            expected_xml_4 = in_file.read()
+        expected_xml_4 = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", expected_xml_4)
+        self.expected_doc_4 = EBUTT3Document.create_from_xml(expected_xml_4)
         
 
     def test_merged_attr_styles_(self):
@@ -59,8 +71,6 @@ class TestNester(TestCase):
         actual_div = self.actual_doc_2.binding.body.div[0].div[0]
         actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
         assert excepted_div_attr["styles"] == actual_divs_attr["styles"]
-    
-
     
 
     def test_recurse_many_child(self):
@@ -153,3 +163,11 @@ class TestNester(TestCase):
             assert len(unnested_divs[i].metadata.facet) == len(expected_divs[i].metadata.facet)
             i += 1
 
+
+    def test_nested_spans(self)
+        expected_spans = self.expected_doc_2.binding.body.div.p.span
+        nested_divs =  self.actual_doc_2.binding.body.div
+        unnested_divs =  []
+        for nested_div in nested_divs:
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+        assert len(unnested_divs) == len(expected_divs)

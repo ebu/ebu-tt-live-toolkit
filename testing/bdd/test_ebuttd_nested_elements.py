@@ -53,6 +53,24 @@ def then_div_contains_no_divs(test_context):
         for child in list(element): 
             assert child.tag != "{http://www.w3.org/ns/ttml}div"
 
+@then('no span contains any other spans')
+def then_span_contains_no_spans(test_context):
+    document = test_context['ebuttd_document']
+    tree = ET.fromstring(document.get_xml())
+    elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div')
+    elements_2 = []
+    elements_3 = []
+    for element in elements:
+            elements_2 += tree.findall('{http://www.w3.org/ns/ttml}p')
+    for element in elements_2:
+            elements_3 += tree.findall('{http://www.w3.org/ns/ttml}span')
+
+
+    for element in elements_3:
+        for child in list(element): 
+            assert child.tag != "{http://www.w3.org/ns/ttml}span"
+    pass
+
 @when(parsers.parse('it contains a div with id "{div_id}"'))
 def given_div(test_context, template_dict, div_id):
     if 'divs' not in template_dict:
