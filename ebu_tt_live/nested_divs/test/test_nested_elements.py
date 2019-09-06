@@ -163,11 +163,10 @@ class TestNester(TestCase):
             assert len(unnested_divs[i].metadata.facet) == len(expected_divs[i].metadata.facet)
             i += 1
 
-
-    def test_nested_spans(self)
+    def test_nested_spans(self):
         expected_spans = self.expected_doc_2.binding.body.div.p.span
-        nested_divs =  self.actual_doc_2.binding.body.div
-        unnested_divs =  []
-        for nested_div in nested_divs:
-            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
-        assert len(unnested_divs) == len(expected_divs)
+        nested_spans =  self.actual_doc_2.binding.body.div.p.span
+        unnested_spans =  []
+        for nested_span in nested_spans:
+            unnested_spans.extend((Denester.combine_divs(Denester.recurse(nested_span))))
+        assert len(unnested_spans) == len(expected_spans)

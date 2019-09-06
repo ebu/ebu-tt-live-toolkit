@@ -53,6 +53,28 @@ class Denester():
         return new_divs
 
     @staticmethod
+    def combine_spans(spans):
+        new_spans = []
+        if len(spans) != 0:
+            new_spans.append(spans[0])
+            i = 1
+            j = 0
+            while i < len(spans):
+                if spans[i].style == spans[i-1].style:
+                    print("hello")
+                    # new_spans[j].p.extend(spans[i].p)
+                    span_temp = span_type(
+                        [new_spans[j].value, spans[i].value]
+                    )
+                    new_spans[j] = span_temp
+                else:
+                    j += 1
+                    new_spans.append(spans[i])
+                i += 1
+        return new_spans
+
+
+    @staticmethod
     def div_attr(div):
         div_attributes =  {}
         div_attributes["styles"]=div.style
@@ -100,7 +122,11 @@ class Denester():
                 new_spans = []
                 for ic in c.value.orderedContent():
                     if isinstance(ic.value,span_type):
-                        Denester.recurse_span(ic.value)
+                        new_spans.extend(Denester.recurse_span(ic.value))
+                        ic = new_spans
+                print(new_spans)
+                new_spans = Denester.combine_spans(new_spans)
+                print(new_spans)
                 new_div = div_type(
                     id = div.id,
                     style = None if len(merged_attr["styles"]) == 0  else merged_attr["styles"],
@@ -116,22 +142,22 @@ class Denester():
         return new_divs
 
     @staticmethod
-    def recurse_span(span):
+    def recurse_span(span, span_styles = []):
+        # span_styles.extend(span.style)
+        if span.style is not None:
+            span_styles = span.style + span_styles
         new_spans = []
-        for inner_span in span.orderedContent():
-            if isinstance(inner_span.value,span_type):
-                print("span")
-                print(inner_span.value)
-                Denester.recurse_span(inner_span.value)
+        for sc in span.orderedContent():
+            if isinstance(sc.value,span_type):
+                new_spans.extend(Denester.recurse_span(sc.value, span_styles))
             else:
-                print("non-span")
-                print(type(inner_span))
-                print("#" + inner_span.value + "#")
-                
-                # print("loop")
-                # print("line 1" + str(inner_span) + "end1")
-                # print(inner_span.value.orderedContent()[0].value)
+                new_span = span_type(
+                    sc.value
+                )
+                new_span.style = span_styles
+                new_spans.append(new_span)
 
+        return new_spans
                 
 
 if __name__ == '__main__':
