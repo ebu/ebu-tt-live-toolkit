@@ -18,20 +18,19 @@
       <ebuttm:documentMetadata />
     </tt:metadata>
     <tt:styling>
-        <tt:style xml:id="S1" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
-        <tt:style xml:id="S2" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
-        <tt:style xml:id="S3" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
-        <tt:style xml:id="S4" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
-        <tt:style xml:id="S5" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
+      <tt:style xml:id="S1" tts:color="#ffff00"/>
+      <tt:style xml:id="S2" tts:color="#ffffff" />
+      <tt:style xml:id="S4" tts:backgroundColor="#000000" />
     </tt:styling>
     <tt:layout />
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
     <tt:div xml:id="d1" xml:lang="fr">
         <tt:p xml:id="p1">
-            <tt:span style="S4 S5">text1</tt:span>
-            <tt:span style="S4 S5">text2</tt:span>
-            <tt:span style="S4 S5">text3</tt:span>
+            <tt:span style="S4">Parent text</tt:span>
+            <tt:span style="S1 S4">text1</tt:span>
+            <tt:span style="S2 S4">text2</tt:span>
+            <tt:span style="S4">text3</tt:span>
         </tt:p>
       </tt:div>
   </tt:body>

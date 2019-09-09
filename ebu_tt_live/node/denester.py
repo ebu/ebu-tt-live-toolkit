@@ -7,12 +7,7 @@ import re
 
 
 class Denester():
-    
-
-    @staticmethod
-    def funcname(parameter_list):
-        pass
-        
+            
     @staticmethod
     def denest(document):
         divs = document.binding.body.div
@@ -52,26 +47,6 @@ class Denester():
                 i += 1
         return new_divs
 
-    @staticmethod
-    def combine_spans(spans):
-        new_spans = []
-        if len(spans) != 0:
-            new_spans.append(spans[0])
-            i = 1
-            j = 0
-            while i < len(spans):
-                if spans[i].style == spans[i-1].style:
-                    print("hello")
-                    # new_spans[j].p.extend(spans[i].p)
-                    span_temp = span_type(
-                        [new_spans[j].value, spans[i].value]
-                    )
-                    new_spans[j] = span_temp
-                else:
-                    j += 1
-                    new_spans.append(spans[i])
-                i += 1
-        return new_spans
 
 
     @staticmethod
@@ -123,10 +98,7 @@ class Denester():
                 for ic in c.value.orderedContent():
                     if isinstance(ic.value,span_type):
                         new_spans.extend(Denester.recurse_span(ic.value))
-                        ic = new_spans
-                print(new_spans)
-                new_spans = Denester.combine_spans(new_spans)
-                print(new_spans)
+                        c.value.span = new_spans
                 new_div = div_type(
                     id = div.id,
                     style = None if len(merged_attr["styles"]) == 0  else merged_attr["styles"],
@@ -143,7 +115,6 @@ class Denester():
 
     @staticmethod
     def recurse_span(span, span_styles = []):
-        # span_styles.extend(span.style)
         if span.style is not None:
             span_styles = span.style + span_styles
         new_spans = []
@@ -156,7 +127,6 @@ class Denester():
                 )
                 new_span.style = span_styles
                 new_spans.append(new_span)
-
         return new_spans
                 
 
