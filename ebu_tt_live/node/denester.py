@@ -1,10 +1,10 @@
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from pyxb.binding.basis import NonElementContent, ElementContent
-from ebu_tt_live.bindings import div_type, p_type, span_type
+from ebu_tt_live.bindings import div_type, p_type, span_type, ebuttdt
 from ebu_tt_live.bindings._ebuttm import divMetadata_type
 import copy
 import re
-
+from datetime import timedelta
 
 class Denester():
             
@@ -17,6 +17,7 @@ class Denester():
         unnested_divs = Denester.combine_divs(unnested_divs)
         unnested_divs = Denester.check_p_regions(unnested_divs)
         document.binding.body.div = unnested_divs
+        print(document.get_xml())
         return document
 
     @staticmethod
@@ -79,9 +80,38 @@ class Denester():
             merged_attributes["metadata"].facet.extend(parent_attr["metadata"].facet)
         if div_attributes["metadata"] is not None:
             merged_attributes["metadata"].facet.extend(div_attributes["metadata"].facet)
+        if parent_attr["begin"] is not None and div_attributes["begin"] is not None:
+             merged_attributes["begin"] = Denester.add_begin_times(parent_attr["begin"], div_attributes["begin"])
+        else:
+             merged_attributes["begin"] = div_attributes["begin"] if parent_attr["begin"] is None else parent_attr["begin"]
+        if parent_attr["end"] is not None and div_attributes["end"] is not None:
+                 merged_attributes["end"] = Denester.add_end_times(parent_attr["end"], div_attributes["end"])
+        else:
+             merged_attributes["end"] = div_attributes["end"] if parent_attr["end"] is None else parent_attr["end"]
         return merged_attributes
-         
+    
+    @staticmethod
+    def create_timedelta_from_time(time):
+         (h, m, s) = time.split(':')
+         return timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+    staticmethod
+    def add_begin_times(parent_begin_time, child_begin_time):
+         parent_begin_timedelta = Denester.create_timedelta_from_time(parent_begin_time)
+         child_begin_timedelta = Denester.create_timedelta_from_time(child_begin_time)
+         return str(parent_begin_timedelta+child_begin_timedelta)
+    
+    @staticmethod
+    def add_end_times(parent_end_time, child_end_time):
+        parent_end_timedelta = Denester.create_timedelta_from_time(parent_end_time)
+        child_end_timedelta = Denester.create_timedelta_from_time(child_end_time)
+        return str(parent_end_timedelta-child_end_timedelta)
 
+    def process_timing_from_timedelta(timing_type):
+    
+        if timing_type is None:
+            return None
+        return ebuttdt.FullClockTimingType.from_timedelta(timing_type)
+    
     @staticmethod
     def recurse( div, merged_attr={"styles": [], "begin": None, "end": None, "lang": None, "region": None, "metadata": divMetadata_type(facet = [])}):
         merged_attr = Denester.merge_attr(merged_attr, Denester.div_attr(div))
@@ -100,13 +130,13 @@ class Denester():
                         new_spans.extend(Denester.recurse_span(ic.value))
                         c.value.span = new_spans
                 new_div = div_type(
-                    id = div.id,
-                    style = None if len(merged_attr["styles"]) == 0  else merged_attr["styles"],
-                    begin = div.begin,
-                    end = div.end,
-                    lang = merged_attr["lang"],
-                    region = merged_attr["region"],
-                    metadata= merged_attr["metadata"]
+                    id=div.id,
+                    style=None if len(merged_attr["styles"]) == 0  else merged_attr["styles"],
+                    begin=Denester.process_timing_from_timedelta(Denester.create_timedelta_from_time(merged_attr["begin"])),
+                    end=Denester.process_timing_from_timedelta(Denester.create_timedelta_from_time(merged_attr["end"])),
+                    lang=merged_attr["lang"],
+                    region=merged_attr["region"],
+                    metadata=merged_attr["metadata"]
                 )   
                 new_div.p.append(c.value)
                 new_divs.append(new_div)
@@ -134,7 +164,7 @@ class Denester():
                 
 
 if __name__ == '__main__':
-    xml_file = "testing/bdd/templates/nested_spans_hardcoded.xml"
+    xml_file = "testing/bdd/templates/nested_elements_hardcoded.xml"
     with open(xml_file, 'r') as in_file:
         input_xml = in_file.read()
     input_xml = re.sub(r"(<ebuttm:documentStartOfProgramme>[^<]*</ebuttm:documentStartOfProgramme>)", r"<!-- \1 -->", input_xml)

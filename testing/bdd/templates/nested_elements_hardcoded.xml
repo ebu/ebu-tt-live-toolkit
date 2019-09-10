@@ -22,9 +22,9 @@
     </tt:styling>
     <tt:layout/>
   </tt:head>
-  <tt:body begin="500ms" dur="00:00:05">
-      <tt:div xml:id="d1" xml:lang="fr">
-        <tt:div xml:id="d2" style="S1"  >
+  <tt:body >
+      <tt:div xml:id="d1" xml:lang="fr" begin="00:00:10" end="00:00:20">
+        <tt:div xml:id="d2" style="S1" begin="00:00:01" end="00:00:05" >
           <tt:p xml:id="p1">
                  <tt:span>text</tt:span>
           </tt:p>
