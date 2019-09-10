@@ -125,7 +125,10 @@ class Denester():
                 new_span = span_type(
                     sc.value
                 )
-                new_span.style = span_styles
+                if len(span_styles) != 0:
+                    new_span.style = span_styles
+                else:
+                    new_span.style = None
                 new_spans.append(new_span)
         return new_spans
                 

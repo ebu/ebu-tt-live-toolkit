@@ -164,9 +164,9 @@ class TestNester(TestCase):
             i += 1
 
     def test_nested_spans(self):
-        expected_spans = self.expected_doc_2.binding.body.div.p.span
-        nested_spans =  self.actual_doc_2.binding.body.div.p.span
+        expected_spans = self.expected_doc_4.binding.body.div[0].p[0].span
+        nested_spans =  self.actual_doc_4.binding.body.div[0].p[0].span
         unnested_spans =  []
         for nested_span in nested_spans:
-            unnested_spans.extend((Denester.combine_divs(Denester.recurse(nested_span))))
+            unnested_spans.extend(Denester.recurse_span(nested_span))
         assert len(unnested_spans) == len(expected_spans)
