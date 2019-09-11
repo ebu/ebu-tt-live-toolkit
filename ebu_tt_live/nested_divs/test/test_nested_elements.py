@@ -4,6 +4,7 @@ from ebu_tt_live.node.denester import Denester
 from ebu_tt_live.bindings import div_type, p_type, span_type
 from ebu_tt_live.bindings._ebuttm import divMetadata_type
 import re
+from datetime import timedelta
 
 class TestNester(TestCase):
     # Given a div within a div, only a single div is returned
@@ -66,7 +67,9 @@ class TestNester(TestCase):
             "styles" : ["S2"],
             "lang": None,
             "region": None,
-            "metadata": divMetadata_type(facet=[])
+            "metadata": divMetadata_type(facet=[]),
+            "begin": None,
+            "end":None
         }
         actual_div = self.actual_doc_2.binding.body.div[0].div[0]
         actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
@@ -83,14 +86,16 @@ class TestNester(TestCase):
 
     def test_merged_attr_lang_only_on_child(self):
         expected_div_attr = {
-            "styles" : ["S1","S2"],
-            "lang" : "fr"
+            "styles": ["S1","S2"],
+            "lang": "fr"
         }
         parent_attr = {
-            "styles" : ["S2"],
+            "styles": ["S2"],
             "lang": None,
             "region": None,
-            "metadata": divMetadata_type(facet=[])
+            "metadata": divMetadata_type(facet=[]),
+            "begin": None,
+            "end": None
         }
         actual_div = self.actual_doc_2.binding.body.div[0].div[0]
         actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
@@ -98,14 +103,16 @@ class TestNester(TestCase):
     
     def test_merged_attr_lang_only_on_parent(self):
         expected_div_attr = {
-            "styles" : ["S1","S2"],
-            "lang" : "fr"
+            "styles": ["S1","S2"],
+            "lang": "fr"
         }
         parent_attr = {
-            "styles" : ["S2"],
-            "lang" : "fr",
+            "styles": ["S2"],
+            "lang": "fr",
             "region": None,
-            "metadata": divMetadata_type(facet=[])
+            "metadata": divMetadata_type(facet=[]),
+            "begin":  None,
+            "end": None
         }
         actual_div = self.actual_doc.binding.body.div[0].div[0]
         actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
@@ -113,19 +120,83 @@ class TestNester(TestCase):
 
     def test_merged_attr_lang_only_on_both_child_and_parent(self):
         expected_div_attr = {
-            "styles" : ["S1","S2"],
-            "lang" : "en-GB"
+            "styles": ["S1","S2"],
+            "lang": "en-GB"
         }
         parent_attr = {
-            "styles" : ["S2"],
-            "lang" : "fr",
+            "styles": ["S2"],
+            "lang": "fr",
             "region": None,
-            "metadata": divMetadata_type(facet=[])
+            "metadata": divMetadata_type(facet=[]),
+            "begin": None,
+            "end": None
         }
         actual_div = self.actual_doc.binding.body.div[0].div[1]
         actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
         assert expected_div_attr["lang"] == actual_divs_attr["lang"] 
+
+    def test_merged_attr_begin_end_times_on_child_and_parent(self):
+        expected_div_attr = {
+            "styles": ["S1","S2"],
+            "region": None,
+            "metadata": divMetadata_type(facet=[]),
+            "lang": "fr",
+            "begin": "00:00:11",
+            "end": "00:00:15"
+        }
+        parent_attr = {
+            "styles": ["S2"],
+            "lang": "fr",
+            "region": None,
+            "metadata": divMetadata_type(facet=[]),
+            "begin": "00:00:10",
+            "end": "00:00:20"
+        }
+        actual_div = self.actual_doc.binding.body.div[0].div[0]
+        actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
+        (h, m, s) = actual_divs_attr["begin"].split(':')
+        actual_begin_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        (h, m, s) = expected_div_attr["begin"].split(':')
+        expected_begin_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        assert expected_begin_time == actual_begin_time
+        (h, m, s) = actual_divs_attr["end"].split(':')
+        actual_end_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        (h, m, s) = expected_div_attr["end"].split(':')
+        expected_end_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        assert expected_begin_time == actual_begin_time
+        assert expected_end_time == actual_end_time
     
+    def test_merged_attr_begin_end_times_on_child_no_end_on_parent(self):
+        expected_div_attr = {
+            "styles": ["S1","S2"],
+            "region": None,
+            "metadata": divMetadata_type(facet=[]),
+            "lang": "fr",
+            "begin": "00:00:11",
+            "end": "00:00:15"
+        }
+        parent_attr = {
+            "styles": ["S2"],
+            "lang": "fr",
+            "region": None,
+            "metadata": divMetadata_type(facet=[]),
+            "begin": "00:00:10",
+            "end": None
+        }
+        actual_div = self.actual_doc.binding.body.div[0].div[0]
+        actual_divs_attr = Denester.merge_attr(parent_attr,Denester.div_attr(actual_div))
+        (h, m, s) = actual_divs_attr["begin"].split(':')
+        actual_begin_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        (h, m, s) = expected_div_attr["begin"].split(':')
+        expected_begin_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        assert expected_begin_time == actual_begin_time
+        (h, m, s) = actual_divs_attr["end"].split(':')
+        actual_end_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        (h, m, s) = expected_div_attr["end"].split(':')
+        expected_end_time = timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+        assert expected_begin_time == actual_begin_time
+        assert expected_end_time == actual_end_time
+
     def test_merged_attr_different_region(self):
         expected_divs = self.expected_doc_3.binding.body.div
         nested_divs =  self.actual_doc_3.binding.body.div

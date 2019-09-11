@@ -87,13 +87,27 @@ class Denester():
         if parent_attr["end"] is not None and div_attributes["end"] is not None:
                  merged_attributes["end"] = Denester.add_end_times(parent_attr["end"], div_attributes["end"])
         else:
-             merged_attributes["end"] = div_attributes["end"] if parent_attr["end"] is None else parent_attr["end"]
+             merged_attributes["end"] = Denester.calculate_end_times(parent_attr, div_attributes, parent_attr["begin"])
         return merged_attributes
-    
+
+    @staticmethod
+    def calculate_end_times(parent_attr, child_attr, time_sync):
+        if child_attr["end"] is not None and parent_attr["end"] is None and time_sync is not None:
+           child_end_timedelta = Denester.create_timedelta_from_time(child_attr["end"])
+           time_sync_delta = Denester.create_timedelta_from_time(time_sync)
+           return str(time_sync_delta+child_end_timedelta)
+        elif parent_attr["end"] is not None and child_attr["end"] is not None:
+             parent_end_timedelta = Denester.create_timedelta_from_time(parent_attr["end"])
+             child_end_timedelta = Denester.create_timedelta_from_time(child_attr["end"])
+             return str(parent_end_timedelta-child_end_timedelta)
+        else:
+            return child_attr["end"]
+
     @staticmethod
     def create_timedelta_from_time(time):
          (h, m, s) = time.split(':')
          return timedelta(hours=int(h), minutes=int(m), seconds=int(s))
+
     staticmethod
     def add_begin_times(parent_begin_time, child_begin_time):
          parent_begin_timedelta = Denester.create_timedelta_from_time(parent_begin_time)
@@ -132,8 +146,8 @@ class Denester():
                 new_div = div_type(
                     id=div.id,
                     style=None if len(merged_attr["styles"]) == 0  else merged_attr["styles"],
-                    begin=Denester.process_timing_from_timedelta(Denester.create_timedelta_from_time(merged_attr["begin"])),
-                    end=Denester.process_timing_from_timedelta(Denester.create_timedelta_from_time(merged_attr["end"])),
+                    begin=Denester.process_timing_from_timedelta(Denester.create_timedelta_from_time(merged_attr["begin"])) if merged_attr["begin"] is not None else merged_attr["begin"],
+                    end=Denester.process_timing_from_timedelta(Denester.create_timedelta_from_time(merged_attr["end"])) if merged_attr["end"] is not None else merged_attr["end"],
                     lang=merged_attr["lang"],
                     region=merged_attr["region"],
                     metadata=merged_attr["metadata"]
