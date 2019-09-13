@@ -871,12 +871,10 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         )
         self._semantic_collect_applicable_divs( dataset=dataset,  parent_binding=parent_binding, div_type=self)
         self._semantic_push_styles(dataset=dataset)
-        self._semantic_push_divs(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
-        self._semantic_pop_divs(dataset=dataset)
 
     def _semantic_before_copy(self, dataset, element_content=None):
         self._assert_in_segment(dataset=dataset, element_content=element_content)

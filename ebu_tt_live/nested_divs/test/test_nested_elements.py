@@ -1,7 +1,7 @@
 from unittest import TestCase
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.node.denester import Denester
-from ebu_tt_live.bindings import div_type, p_type, span_type
+from ebu_tt_live.bindings import div_type, p_type, span_type, style_type
 from ebu_tt_live.bindings._ebuttm import divMetadata_type
 import re
 from datetime import timedelta
@@ -79,9 +79,11 @@ class TestNester(TestCase):
     def test_recurse_many_child(self):
         expected_divs = self.expected_doc_2.binding.body.div
         nested_divs =  self.actual_doc_2.binding.body.div
+        dataset={}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
         unnested_divs =  []
         for nested_div in nested_divs:
-            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div, dataset))))
         assert len(unnested_divs) == len(expected_divs)
 
     def test_merged_attr_lang_only_on_child(self):
@@ -200,44 +202,145 @@ class TestNester(TestCase):
     def test_merged_attr_different_region(self):
         expected_divs = self.expected_doc_3.binding.body.div
         nested_divs =  self.actual_doc_3.binding.body.div
+        dataset={}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling
         unnested_divs =  []
         for nested_div in nested_divs:
-            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div, dataset))))
         assert len(expected_divs)== len(unnested_divs)
 
     def test_merged_attr_same_region(self):
         expected_divs = self.expected_doc_3.binding.body.div
         nested_divs =  self.actual_doc_3.binding.body.div
+        dataset={}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
         unnested_divs =  []
         for nested_div in nested_divs:
-            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div))))
+            unnested_divs.extend((Denester.combine_divs(Denester.recurse(nested_div, dataset))))
         assert unnested_divs[0].region == expected_divs[0].region
 
     def test_combine_same_divs(self):
         expected_divs = self.expected_doc_2.binding.body.div
+        dataset={}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
         nested_divs =  self.actual_doc_2.binding.body.div
         unnested_divs =  []
         for nested_div in nested_divs:
-            unnested_divs.extend(Denester.combine_divs(Denester.recurse(nested_div)))
+            unnested_divs.extend(Denester.combine_divs(Denester.recurse(nested_div, dataset)))
         assert len(unnested_divs) == len(expected_divs)
         
     def test_merged_metadata(self):
         expected_divs = self.expected_doc_2.binding.body.div
         nested_divs =  self.actual_doc_2.binding.body.div
+        dataset={}
+        dataset["styles"] = self.actual_doc_2.binding.head.styling.style
         unnested_divs =  []
         for nested_div in nested_divs:
-            unnested_divs.extend(Denester.combine_divs(Denester.recurse(nested_div)))
+            unnested_divs.extend(Denester.combine_divs(Denester.recurse(nested_div, dataset)))
         assert len(unnested_divs) == len(expected_divs)
         i = 0
-        print(unnested_divs)
+        for div in unnested_divs:
+            print(len(div.metadata.facet))
         while i < len(unnested_divs):
-            assert len(unnested_divs[i].metadata.facet) == len(expected_divs[i].metadata.facet)
+            assert len(expected_divs[i].metadata.facet) == len(unnested_divs[i].metadata.facet)  
             i += 1
 
     def test_nested_spans(self):
         expected_spans = self.expected_doc_4.binding.body.div[0].p[0].span
         nested_spans =  self.actual_doc_4.binding.body.div[0].p[0].span
         unnested_spans =  []
+        dataset={}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
         for nested_span in nested_spans:
-            unnested_spans.extend(Denester.recurse_span(nested_span))
-        assert len(unnested_spans) == len(expected_spans)
+            unnested_spans.extend(Denester.recurse_span(nested_span, dataset))
+        assert len(expected_spans) == len(unnested_spans)
+
+    def test_compute_spans_have_valid_styles(self):
+        nested_spans = self.actual_doc_4.binding.body.div[0].p[0].span
+        dataset={}
+        unnested_spans =  []
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        dataset["document"] = self.actual_doc_4.binding
+        for nested_span in nested_spans:
+            unnested_spans.extend(Denester.recurse_span(nested_span, dataset))
+        self.expected_doc_4.binding.body.div[0].p[0].span = unnested_spans
+        expected_styles = [style.id for style in self.expected_doc_4.binding.head.styling.style]
+        for span in unnested_spans:
+            assert span.style[0] in expected_styles
+
+
+    # yet to remove unused styles, but that is outside scope of denester
+    def test_should_create_new_span_style(self):
+        expected_style = style_type (
+            id="outerinnerYellow",
+            backgroundColor="#000000",
+            color="#ffff00",
+        )
+        dataset = {}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        span_styles =['outer', 'innerYellow']
+        actual_style = Denester.compute_span_merged_styles(span_styles, dataset)
+        assert expected_style.id == actual_style.id
+        
+
+    def test_span_computed_font_size_both_parent_child_have_percentages(self):
+        expected_style_font_size = "300%"
+        span_styles = ["outer", "innerWhite"]
+        dataset = {}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = {} 
+        for style  in dataset["styles"]:
+            if style.id in span_styles:
+                styles[style.id] = style
+        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        assert expected_style_font_size == actual_style_font_size 
+
+    def test_span_computed_font_size_only_child_has_percentage(self):
+        expected_style_font_size = "200%"
+        span_styles = ["outer", "innerYellow"]
+        dataset = {}
+        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
+        styles = {} 
+        for style  in dataset["styles"]:
+            if style.id in span_styles:
+                styles[style.id] = style
+        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        assert expected_style_font_size == actual_style_font_size
+
+    #assuming that child fontsize if absolute it doesn't change
+    def test_span_computed_font_size_both_have_absolute_fontsize(self):
+        expected_style_font_size = "2c"
+        span_styles = ["outerGreen", "innerRed"]
+        dataset = {}
+        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
+        styles = {} 
+        for style  in dataset["styles"]:
+            if style.id in span_styles:
+                styles[style.id] = style
+        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        assert expected_style_font_size == actual_style_font_size
+
+    def test_span_computed_font_size_only_parent_has_absolute_fontsize(self):
+        expected_style_font_size = "1.5c"
+        span_styles = ["outerGreen", "innerYellow"]
+        dataset = {}
+        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
+        styles = {} 
+        for style  in dataset["styles"]:
+            if style.id in span_styles:
+                styles[style.id] = style
+        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        assert expected_style_font_size == actual_style_font_size
+
+    
+    def test_span_computed_font_size_only_child_has_absolute_fontsize(self):
+        expected_style_font_size = "2c"
+        span_styles = ["outer", "innerRed"]
+        dataset = {}
+        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
+        styles = {} 
+        for style  in dataset["styles"]:
+            if style.id in span_styles:
+                styles[style.id] = style
+        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        assert expected_style_font_size == actual_style_font_size

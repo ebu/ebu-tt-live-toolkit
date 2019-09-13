@@ -1,43 +1,47 @@
 <?xml version="1.0" ?>
-<tt:tt
-  ebuttp:sequenceIdentifier="TestSequence"
-  ebuttp:sequenceNumber="1"
-  ttp:clockMode="local"
-  ttp:timeBase="clock"
-  xmlns:ebuttm="urn:ebu:tt:metadata"
-  xmlns:ebuttp="urn:ebu:tt:parameters"
-  xmlns:tt="http://www.w3.org/ns/ttml"
-  xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
-  xmlns:xml="http://www.w3.org/XML/1998/namespace"
-  xmlns:f="urn:foreign"
-  xmlns:tts="http://www.w3.org/ns/ttml#styling"
-  xmlns:ebutts="urn:ebu:tt:style"
-  xml:lang="it" >
-<tt:head>
+<tt:tt ebuttp:sequenceIdentifier="TestSequence" tts:extent="800px 600px" ebuttp:sequenceNumber="1" ttp:clockMode="local" ttp:timeBase="clock" xmlns:ebuttm="urn:ebu:tt:metadata" xmlns:ebuttp="urn:ebu:tt:parameters" xmlns:tt="http://www.w3.org/ns/ttml" xmlns:ttp="http://www.w3.org/ns/ttml#parameter" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:f="urn:foreign" xmlns:tts="http://www.w3.org/ns/ttml#styling" xmlns:ebutts="urn:ebu:tt:style" xml:lang="it">
+  <tt:head>
     <tt:metadata>
       <ebuttm:documentMetadata />
     </tt:metadata>
     <tt:styling>
-      <tt:style xml:id="S1" tts:color="#ffff00"/>
-      <tt:style xml:id="S2" tts:color="#ffffff" />
-      <tt:style xml:id="S4" tts:backgroundColor="#000000" />
+        <tt:style xml:id="innerYellow" tts:color="#ffff00" />
+        <tt:style xml:id="innerRed" tts:color="#FF0000" tts:fontSize="2c" />
+        <tt:style xml:id="innerWhite" tts:color="#ffffff" tts:fontSize="150%" />
+        <tt:style tts:backgroundColor="#000000" xml:id="outer" tts:fontSize="200%"/>
+        <tt:style  tts:backgroundColor="#000000" tts:color="#ffffff" xml:id="outerinnerYellow" />
+        <tt:style tts:backgroundColor="#000000" tts:color="#ffff00" xml:id="outerinnerWhite" tts:fontSize="300%"/>
+        <tt:style xml:id="outerGreen" tts:backgroundColor="#00ff00" tts:fontSize="1.5c" />
+        <tt:style xml:id="outerGreeninnerRed" tts:color="#FF0000" tts:fontSize="2c" />
+        <tt:style xml:id="outerGreeninnerYellow" tts:color="#FF0000" tts:fontSize="2c" />
+        <tt:style xml:id="outerinnerRed" tts:backgroundColor="#000000" tts:color="#ff0000" tts:fontSize="2c" />
     </tt:styling>
-    <tt:layout />
+    <tt:layout>
+        <tt:region xml:id="R1" tts:origin="14% 60%" tts:extent="71.25% 24%" style="outer"/>
+      </tt:layout>
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
     <tt:div xml:id="d1" xml:lang="fr">
-        <tt:p xml:id="p1">
-            <tt:span style="S4">Parent text</tt:span>
-            <tt:span style="S1 S4">text1</tt:span>
-            <tt:span style="S2 S4">text2</tt:span>
-            <tt:span style="S4">text3</tt:span>
-            <tt:span style="S4">
-            </tt:span>
-            <tt:span style="S4">
-            </tt:span>
-            <tt:span style="S4">
-            </tt:span>
-        </tt:p>
-      </tt:div>
+      <tt:p xml:id="p1">
+        <tt:span style="outer">
+            Parent text
+        </tt:span>
+        <tt:span style="outerinnerYellow">text1</tt:span>
+        <tt:span style="outer"></tt:span>
+        <tt:span style="outerinnerYellow">text133</tt:span>
+        <tt:span style="outer"></tt:span>
+        <tt:span style="outerinnerWhite">text2</tt:span>
+        <tt:span style="outer"></tt:span>
+        <tt:span style="outer">text3</tt:span>
+        <tt:span style="outer"></tt:span>
+        <tt:span style="outerinnerRed"></tt:span>
+        <tt:span xml:id="sp7" style="outerinnerRed">text 17</tt:span>
+        <tt:span style="outerGreen"></tt:span>
+        <tt:span style="outerGreen"></tt:span>
+        <tt:span style="outerGreen"></tt:span>
+        <tt:span style="outerGreen"></tt:span>
+        <tt:span xml:id="sp72" style="outerGreeninnerRed">text 17</tt:span>
+      </tt:p>
+    </tt:div>
   </tt:body>
 </tt:tt>
