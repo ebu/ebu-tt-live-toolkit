@@ -5,6 +5,8 @@
       <ebuttm:documentMetadata />
     </tt:metadata>
     <tt:styling>
+      <tt:style xml:id="nest" tts:color="#614a3a" />
+      <tt:style xml:id="nestSizing" tts:color="#614a3a" tts:fontSize="50%" />
       <tt:style xml:id="innerYellow" tts:color="#ffff00" />
       <tt:style xml:id="innerWhite" tts:color="#ffffff" tts:fontSize="150%" />
       <tt:style xml:id="outer" tts:backgroundColor="#000000" tts:fontSize="200%" />
@@ -29,6 +31,14 @@
         <tt:span xml:id="s6" style="outerGreen">
           <tt:span xml:id="sp7" style="innerRed">text 17</tt:span>
           <tt:span style="innerYellow">ff</tt:span>
+        </tt:span>
+        <tt:span xml:id="sp8" style="nest">
+            <tt:span xml:id="sp9" style="nest">qwertyuiop</tt:span>
+        </tt:span>
+        <tt:span xml:id="sp10" style="nestSizing">
+            <tt:span xml:id="sp11" style="nestSizing">
+                <tt:span xml:id="sp12" style="nestSizing">qwertyuiop</tt:span>
+            </tt:span>
         </tt:span>
       </tt:p>
     </tt:div>

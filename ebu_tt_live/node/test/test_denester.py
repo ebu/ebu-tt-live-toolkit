@@ -284,27 +284,29 @@ class TestNester(TestCase):
         
 
     def test_span_computed_font_size_both_parent_child_have_percentages(self):
-        expected_style_font_size = "300%"
+        expected_style_font_size = "300.0%"
         span_styles = ["outer", "innerWhite"]
         dataset = {}
         dataset["styles"] = self.actual_doc_4.binding.head.styling.style
-        styles = {} 
-        for style  in dataset["styles"]:
-            if style.id in span_styles:
-                styles[style.id] = style
-        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size 
 
     def test_span_computed_font_size_only_child_has_percentage(self):
         expected_style_font_size = "200%"
         span_styles = ["outer", "innerYellow"]
         dataset = {}
-        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
-        styles = {} 
-        for style  in dataset["styles"]:
-            if style.id in span_styles:
-                styles[style.id] = style
-        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size
 
     #assuming that child fontsize if absolute it doesn't change
@@ -312,24 +314,26 @@ class TestNester(TestCase):
         expected_style_font_size = "2c"
         span_styles = ["outerGreen", "innerRed"]
         dataset = {}
-        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
-        styles = {} 
-        for style  in dataset["styles"]:
-            if style.id in span_styles:
-                styles[style.id] = style
-        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size
 
     def test_span_computed_font_size_only_parent_has_absolute_fontsize(self):
         expected_style_font_size = "1.5c"
         span_styles = ["outerGreen", "innerYellow"]
         dataset = {}
-        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
-        styles = {} 
-        for style  in dataset["styles"]:
-            if style.id in span_styles:
-                styles[style.id] = style
-        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size
 
     
@@ -337,10 +341,22 @@ class TestNester(TestCase):
         expected_style_font_size = "2c"
         span_styles = ["outer", "innerRed"]
         dataset = {}
-        dataset["styles"] = self.expected_doc_4.binding.head.styling.style
-        styles = {} 
-        for style  in dataset["styles"]:
-            if style.id in span_styles:
-                styles[style.id] = style
-        actual_style_font_size = Denester.calculate_font_size(span_styles, styles)
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size
+
+    def test_duplicate_styles_are_not_created(self):
+        span_styles = ["nest", "nest"]
+        dataset = {}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        assert Denester.compute_span_merged_styles(span_styles, dataset).id == "nest"

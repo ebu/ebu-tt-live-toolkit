@@ -114,7 +114,7 @@ class Denester():
          (h, m, s) = time.split(':')
          return timedelta(hours=int(h), minutes=int(m), seconds=int(s))
 
-    staticmethod
+    @staticmethod
     def add_begin_times(parent_begin_time, child_begin_time):
          parent_begin_timedelta = Denester.create_timedelta_from_time(parent_begin_time)
          child_begin_timedelta = Denester.create_timedelta_from_time(child_begin_time)
@@ -126,8 +126,8 @@ class Denester():
         child_end_timedelta = Denester.create_timedelta_from_time(child_end_time)
         return str(parent_end_timedelta-child_end_timedelta)
 
+    @staticmethod
     def process_timing_from_timedelta(timing_type):
-    
         if timing_type is None:
             return None
         return ebuttdt.FullClockTimingType.from_timedelta(timing_type)
@@ -164,7 +164,7 @@ class Denester():
         return new_divs
 
     @staticmethod
-    def recurse_span(span, dataset ,span_styles = []):
+    def recurse_span(span, dataset, span_styles = []):
         if span.style is not None:
             span_styles = span_styles+span.style
         new_spans = []
@@ -185,63 +185,86 @@ class Denester():
     @staticmethod
     def compute_span_merged_styles(span_styles, dataset):
         new_style = None
-        styles = {}
-        for style  in dataset["styles"]:
-            if style.id in span_styles:
-                styles[style.id] = style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
         new_style = style_type(
             id="".join(span_styles),
-            backgroundColor=Denester.get_value_from_style(span_styles, styles, "backgroundColor"),
-            color=Denester.get_value_from_style(span_styles, styles, "color"),
-            fontFamily=Denester.get_value_from_style(span_styles, styles, "fontFamily"),
-            fontSize=Denester.calculate_font_size(span_styles, styles),
-            fontWeight=Denester.get_value_from_style(span_styles, styles, "fontWeight"),
-            lineHeight=Denester.get_value_from_style(span_styles, styles, "lineHeight"),
-            linePadding=Denester.get_value_from_style(span_styles, styles, "linePadding"),
-            padding=Denester.get_value_from_style(span_styles, styles, "padding"),
-            style=Denester.get_value_from_style(span_styles, styles, "style"),
-            textAlign=Denester.get_value_from_style(span_styles, styles, "textAlign"),
-            textDecoration=Denester.get_value_from_style(span_styles, styles, "textDecoration")
+            backgroundColor=Denester.get_value_from_style(styles, "backgroundColor"),
+            color=Denester.get_value_from_style(styles, "color"),
+            fontFamily=Denester.get_value_from_style(styles, "fontFamily"),
+            fontSize=Denester.calculate_font_size(styles),
+            fontWeight=Denester.get_value_from_style(styles, "fontWeight"),
+            lineHeight=Denester.get_value_from_style(styles, "lineHeight"),
+            linePadding=Denester.get_value_from_style(styles, "linePadding"),
+            padding=Denester.get_value_from_style(styles, "padding"),
+            style=Denester.get_value_from_style(styles, "style"),
+            textAlign=Denester.get_value_from_style(styles, "textAlign"),
+            textDecoration=Denester.get_value_from_style(styles, "textDecoration")
         )
-        Denester.create_new_style(new_style,dataset)
+        new_style = Denester.create_new_style(new_style, dataset)
         return new_style
 
     @staticmethod
     def create_new_style(new_style, dataset):
         for style in dataset["styles"]:
             if new_style.id == style.id:
-                return
+                return new_style
+            if new_style.check_equal(style):
+                new_style.id = style.id
+                return new_style
         dataset["styles"].append(new_style)
+        return new_style
 
     @staticmethod
-    def calculate_font_size(span_styles, styles):
-        parent_font_size = styles[span_styles[0]].fontSize
-        child_font_size = styles[span_styles[1]].fontSize
-        if isinstance(child_font_size, ebuttdt.percentageFontSizeType) == False and child_font_size is not None:
-            return child_font_size
-        elif child_font_size is None and parent_font_size is not None:
-                return parent_font_size
-        elif isinstance(child_font_size, ebuttdt.percentageFontSizeType) and isinstance(parent_font_size, ebuttdt.percentageFontSizeType):
-            return Denester.calculate_percentage_font_size(parent_font_size, child_font_size)
-        else:
-            return None 
+    def calculate_font_size(styles):
+        font_size = None
+
+        for style in styles:
+            if font_size is None: # No existing font size
+                font_size = style.fontSize
+
+            elif isinstance(style.fontSize, ebuttdt.percentageFontSizeType) == False and style.fontSize is not None: # Font size is in c/px
+                font_size = style.fontSize
+
+            elif isinstance(style.fontSize, ebuttdt.percentageFontSizeType) and font_size is not None:
+                # Font size in percent, there is an existing font size (may not be percent)
+                font_size = Denester.calculate_percentage_font_size(font_size, style.fontSize)
+
+        return font_size
+
             
     @staticmethod
-    def calculate_percentage_font_size(parent_font_size, child_font_size):
-        percentage_parent_font_size = parent_font_size.strip("%")
-        percentage_child_font_size = child_font_size.strip("%")
-        calculated_font_size = int(percentage_child_font_size) * int(percentage_parent_font_size)/100
-        return str(int(calculated_font_size))+"%"
+    def calculate_percentage_font_size(current_font_size, nested_font_size):
+        if isinstance(current_font_size, ebuttdt.percentageFontSizeType):
+            stripped_current_font_size = current_font_size.strip("%")
+            stripped_nested_font_size = nested_font_size.strip("%")
+            calculated_font_size = float(stripped_nested_font_size) * (float(stripped_current_font_size)/100)
+
+            return ebuttdt.percentageFontSizeType(str(calculated_font_size)+"%")
+        elif isinstance(current_font_size, str):
+            if current_font_size[-1:] == "x":
+                stripped_current_font_size = current_font_size.strip("px")
+                stripped_nested_font_size = nested_font_size.strip("%")
+                calculated_font_size = float(stripped_nested_font_size) * (float(stripped_current_font_size)/100)
+
+                return (str(calculated_font_size)+"px")
+            else: #current_font_size[-1:] == "c":
+                stripped_current_font_size = current_font_size.strip("c")
+                stripped_nested_font_size = nested_font_size.strip("%")
+                calculated_font_size = float(stripped_nested_font_size) * (float(stripped_current_font_size)/100)
+
+                return (str(calculated_font_size)+"c")
 
 
     @staticmethod
-    def get_value_from_style(span_styles, styles, style_name):
+    def get_value_from_style(styles, style_name):
         value = None
-        for id in span_styles[::-1]: # reversed to as value is set to the last value, and as the list is in priority order it is reveresed
-            if style_name == "fontSize" and getattr(styles[id], style_name) is not None:
-                value = getattr(styles[id], style_name)
-            if getattr(styles[id], style_name) is not None:
-                value = getattr(styles[id], style_name)
+        for style in styles: # list in reverse-priority order, so last item (most important) values inherited
+            if getattr(style, style_name) is not None:
+                value = getattr(style, style_name)
         return value
 
 if __name__ == '__main__':

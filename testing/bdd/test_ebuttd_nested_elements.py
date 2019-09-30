@@ -71,11 +71,43 @@ def then_span_contains_no_spans(test_context):
             assert child.tag != "{http://www.w3.org/ns/ttml}span"
     pass
 
+@then('the second span\'s style is outerinnerYellow')
+def combine_span_styles(test_context):
+    document = test_context['ebuttd_document']
+    tree = ET.fromstring(document.get_xml())
+    elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div/{http://www.w3.org/ns/ttml}p/{http://www.w3.org/ns/ttml}span')
+    assert elements[1].get("style") == "autogenFontStyle_None_200.0 outerinnerYellow"
+
+@then(parsers.parse('there is no style named "{style_name}"'))
+def no_duplicate_styles(test_context, style_name):
+    document = test_context['ebuttd_document']
+    tree = ET.fromstring(document.get_xml())
+    elements = tree.findall('{http://www.w3.org/ns/ttml}head/{http://www.w3.org/ns/ttml}styling/{http://www.w3.org/ns/ttml}style')
+    print(len(elements))
+    for element in elements:
+        print("element")
+        print(element.get("{http://www.w3.org/XML/1998/namespace}id"))
+        assert element.get("{http://www.w3.org/XML/1998/namespace}id") != style_name
+
+
+@then(parsers.parse('any span with the style "{style_name}" also has the style "{size_style}"'))
+def percentage_size_for_nested_styles(test_context, style_name, size_style):
+    document = test_context['ebuttd_document']
+    tree = ET.fromstring(document.get_xml())
+    elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div/{http://www.w3.org/ns/ttml}p/{http://www.w3.org/ns/ttml}span')
+    for element in elements:
+        styles = element.get("style").split(" ")
+        print(styles)
+        if style_name in styles:
+            print(style_name)
+            print(size_style)
+            assert size_style in styles
+
 @when(parsers.parse('it contains a div with id "{div_id}"'))
 def given_div(test_context, template_dict, div_id):
     if 'divs' not in template_dict:
         template_dict['divs'] = list()
-    div = {"id": div_id}    
+    div = {"id": div_id}
     template_dict['divs'].append(div)
     test_context[div_id] = div
       
@@ -83,7 +115,7 @@ def given_div(test_context, template_dict, div_id):
 def when_it_contains_p_element(test_context, template_dict, p_id):
     if 'p_elements' not in template_dict:
         template_dict['p_elements'] = list()
-    p_element = {"id": p_id}    
+    p_element = {"id": p_id}
     template_dict['p_elements'].append(p_element)
     test_context[p_id] = p_element
 

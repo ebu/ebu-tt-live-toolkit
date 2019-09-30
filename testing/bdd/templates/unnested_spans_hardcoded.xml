@@ -5,16 +5,26 @@
       <ebuttm:documentMetadata />
     </tt:metadata>
     <tt:styling>
+        <tt:style xml:id="nest" tts:color="#614a3a" />
+        <tt:style xml:id="nestSizing" tts:color="#614a3a" />
+        <tt:style xml:id="nestSizingnestSizing" tts:color="#614a3a" />
+        <tt:style xml:id="nestSizingnestSizingnestSizing" tts:color="#614a3a" />
         <tt:style xml:id="innerYellow" tts:color="#ffff00" />
-        <tt:style xml:id="innerRed" tts:color="#FF0000" tts:fontSize="2c" />
-        <tt:style xml:id="innerWhite" tts:color="#ffffff" tts:fontSize="150%" />
-        <tt:style tts:backgroundColor="#000000" xml:id="outer" tts:fontSize="200%"/>
-        <tt:style  tts:backgroundColor="#000000" tts:color="#ffffff" xml:id="outerinnerYellow" />
-        <tt:style tts:backgroundColor="#000000" tts:color="#ffff00" xml:id="outerinnerWhite" tts:fontSize="300%"/>
-        <tt:style xml:id="outerGreen" tts:backgroundColor="#00ff00" tts:fontSize="1.5c" />
-        <tt:style xml:id="outerGreeninnerRed" tts:color="#FF0000" tts:fontSize="2c" />
-        <tt:style xml:id="outerGreeninnerYellow" tts:color="#FF0000" tts:fontSize="2c" />
-        <tt:style xml:id="outerinnerRed" tts:backgroundColor="#000000" tts:color="#ff0000" tts:fontSize="2c" />
+        <tt:style xml:id="innerRed" tts:color="#FF0000" />
+        <tt:style xml:id="innerWhite" tts:color="#ffffff" />
+        <tt:style tts:backgroundColor="#000000" xml:id="outer" />
+        <tt:style tts:backgroundColor="#000000" tts:color="#ffffff" xml:id="outerinnerYellow" />
+        <tt:style tts:backgroundColor="#000000" tts:color="#ffff00" xml:id="outerinnerWhite" />
+        <tt:style xml:id="outerGreen" tts:backgroundColor="#00ff00" />
+        <tt:style xml:id="outerGreeninnerRed" tts:color="#FF0000" />
+        <tt:style xml:id="outerGreeninnerYellow" tts:color="#FF0000" />
+        <tt:style xml:id="outerinnerRed" tts:backgroundColor="#000000" tts:color="#ff0000" />
+        <tt:style tts:fontSize="200.0%" xml:id="autogenFontStyle_None_200.0"/>
+        <tt:style tts:fontSize="300.0%" xml:id="autogenFontStyle_None_300.0"/>
+        <tt:style tts:fontSize="75.0%" xml:id="autogenFontStyle_None_75.0"/>
+        <tt:style tts:fontSize="50.0%" xml:id="autogenFontStyle_None_50.0"/>
+        <tt:style tts:fontSize="25.0%" xml:id="autogenFontStyle_None_25.0"/>
+        <tt:style tts:fontSize="12.5%" xml:id="autogenFontStyle_None_12.5"/>
     </tt:styling>
     <tt:layout>
         <tt:region xml:id="R1" tts:origin="14% 60%" tts:extent="71.25% 24%" style="outer"/>
@@ -22,25 +32,33 @@
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
     <tt:div xml:id="d1" xml:lang="fr">
-      <tt:p xml:id="p1">
-        <tt:span style="outer">
+      <tt:p style="autogenFontStyle_None_200.0" xml:id="p1">
+        <tt:span style="autogenFontStyle_None_200.0 outer">
             Parent text
         </tt:span>
-        <tt:span style="outerinnerYellow">text1</tt:span>
-        <tt:span style="outer"></tt:span>
-        <tt:span style="outerinnerYellow">text133</tt:span>
-        <tt:span style="outer"></tt:span>
-        <tt:span style="outerinnerWhite">text2</tt:span>
-        <tt:span style="outer"></tt:span>
-        <tt:span style="outer">text3</tt:span>
-        <tt:span style="outer"></tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outerinnerYellow">text1</tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outer"></tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outerinnerYellow">text133</tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outer"></tt:span>
+        <tt:span style="autogenFontStyle_None_300.0 outerinnerWhite">text2</tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outer"></tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outer">text3</tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outer"></tt:span>
         <tt:span style="outerinnerRed"></tt:span>
-        <tt:span xml:id="sp7" style="outerinnerRed">text 17</tt:span>
+        <tt:span style="autogenFontStyle_None_200.0 outer">text 7</tt:span>
+        <tt:span style="autogenFontStyle_None_75.0 outerGreen"></tt:span>
+        <tt:span xml:id="sp7" style="outerGreeninnerRed">text 17</tt:span>
         <tt:span style="outerGreen"></tt:span>
+        <tt:span style="outerGreeninnerYellow">text 17</tt:span>
         <tt:span style="outerGreen"></tt:span>
-        <tt:span style="outerGreen"></tt:span>
-        <tt:span style="outerGreen"></tt:span>
-        <tt:span xml:id="sp72" style="outerGreeninnerRed">text 17</tt:span>
+        <tt:span xml:id="sp8" style="nest"></tt:span>
+        <tt:span xml:id="sp9" style="nest"></tt:span>
+        <tt:span style="nest"></tt:span>
+        <tt:span xml:id="sp10" style="autogenFontStyle_None_50.0 nestSizing"></tt:span>
+        <tt:span xml:id="sp11" style="autogenFontStyle_None_25.0 nestSizingnestSizing"></tt:span>
+        <tt:span xml:id="sp12" style="autogenFontStyle_None_12.5 nestSizingnestSizingnestSizing"></tt:span>
+        <tt:span style="autogenFontStyle_None_25.0 nestSizingnestSizing"></tt:span>
+        <tt:span style="autogenFontStyle_None_50.0 nestSizing"></tt:span>
       </tt:p>
     </tt:div>
   </tt:body>
