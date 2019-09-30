@@ -7,10 +7,10 @@
     <tt:styling>
       <tt:style xml:id="nest" tts:color="#614a3a" />
       <tt:style xml:id="nestSizing" tts:color="#614a3a" tts:fontSize="50%" />
-      <tt:style xml:id="innerYellow" tts:color="#ffff00" />
-      <tt:style xml:id="innerWhite" tts:color="#ffffff" tts:fontSize="150%" />
+      <tt:style xml:id="innerYellow" tts:color="#FFFF00" />
+      <tt:style xml:id="innerWhite" tts:color="#FFFFFF" tts:fontSize="150%" />
       <tt:style xml:id="outer" tts:backgroundColor="#000000" tts:fontSize="200%" />
-      <tt:style xml:id="outerGreen" tts:backgroundColor="#00ff00" tts:fontSize="1.5c" />
+      <tt:style xml:id="outerGreen" tts:backgroundColor="#00FF00" tts:fontSize="1.5c" />
       <tt:style xml:id="innerRed" tts:color="#FF0000" tts:fontSize="2c" />
     </tt:styling>
     <tt:layout>

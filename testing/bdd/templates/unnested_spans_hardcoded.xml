@@ -9,16 +9,16 @@
         <tt:style xml:id="nestSizing" tts:color="#614a3a" />
         <tt:style xml:id="nestSizingnestSizing" tts:color="#614a3a" />
         <tt:style xml:id="nestSizingnestSizingnestSizing" tts:color="#614a3a" />
-        <tt:style xml:id="innerYellow" tts:color="#ffff00" />
+        <tt:style xml:id="innerYellow" tts:color="#FFFF00" />
         <tt:style xml:id="innerRed" tts:color="#FF0000" />
-        <tt:style xml:id="innerWhite" tts:color="#ffffff" />
+        <tt:style xml:id="innerWhite" tts:color="#FFFFFF" />
         <tt:style tts:backgroundColor="#000000" xml:id="outer" />
-        <tt:style tts:backgroundColor="#000000" tts:color="#ffffff" xml:id="outerinnerYellow" />
-        <tt:style tts:backgroundColor="#000000" tts:color="#ffff00" xml:id="outerinnerWhite" />
-        <tt:style xml:id="outerGreen" tts:backgroundColor="#00ff00" />
+        <tt:style tts:backgroundColor="#000000" tts:color="#FFFF00" xml:id="outerinnerYellow" />
+        <tt:style tts:backgroundColor="#000000" tts:color="#FFFFFF" xml:id="outerinnerWhite" />
+        <tt:style xml:id="outerGreen" tts:backgroundColor="#00FF00" />
         <tt:style xml:id="outerGreeninnerRed" tts:color="#FF0000" />
-        <tt:style xml:id="outerGreeninnerYellow" tts:color="#FF0000" />
-        <tt:style xml:id="outerinnerRed" tts:backgroundColor="#000000" tts:color="#ff0000" />
+        <tt:style xml:id="outerGreeninnerYellow" tts:color="#FFFF00" />
+        <tt:style xml:id="outerinnerRed" tts:backgroundColor="#000000" tts:color="#FF0000" />
         <tt:style tts:fontSize="200.0%" xml:id="autogenFontStyle_None_200.0"/>
         <tt:style tts:fontSize="300.0%" xml:id="autogenFontStyle_None_300.0"/>
         <tt:style tts:fontSize="75.0%" xml:id="autogenFontStyle_None_75.0"/>
