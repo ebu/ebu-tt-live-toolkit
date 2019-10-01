@@ -363,7 +363,7 @@ class TestNester(TestCase):
         actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size
 
-    def test_nesting_within_absolute_fontsize(self):
+    def test_nesting_within_absolute_fontsize_c(self):
         expected_style_font_size = "4c"
         span_styles = ["innerRed", "outer"]
         dataset = {}
@@ -374,8 +374,38 @@ class TestNester(TestCase):
                 if style.id == style_name:
                     styles.append(style)
         actual_style_font_size = Denester.calculate_font_size(styles)
-        print(expected_style_font_size)
-        print(actual_style_font_size)
+        assert expected_style_font_size == actual_style_font_size
+
+    def test_nesting_within_absolute_fontsize_px(self):
+        expected_style_font_size = "750px"
+        style1 = style_type (
+            id="style1",
+            fontSize="500px"
+        )
+        style2 = style_type (
+            id="style2",
+            fontSize="150%"
+        )
+        styles = [style1, style2]
+        actual_style_font_size = Denester.calculate_font_size(styles)
+        assert expected_style_font_size == actual_style_font_size
+
+    def test_nesting_around_absolute_fontsize_px(self):
+        expected_style_font_size = "750px"
+        style1 = style_type (
+            id="style1",
+            fontSize="500px"
+        )
+        style2 = style_type (
+            id="style2",
+            fontSize="150%"
+        )
+        style3 = style_type (
+            id="style2",
+            fontSize="300%"
+        )
+        styles = [style3, style1, style2]
+        actual_style_font_size = Denester.calculate_font_size(styles)
         assert expected_style_font_size == actual_style_font_size
 
     def test_duplicate_styles_are_not_created(self):
