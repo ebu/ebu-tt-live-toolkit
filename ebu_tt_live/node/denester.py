@@ -243,20 +243,20 @@ class Denester():
             stripped_nested_font_size = nested_font_size.strip("%")
             calculated_font_size = float(stripped_nested_font_size) * (float(stripped_current_font_size)/100)
 
-            return ebuttdt.percentageFontSizeType(str(calculated_font_size)+"%")
+            return ebuttdt.percentageFontSizeType('{0:g}%'.format(calculated_font_size))
         elif isinstance(current_font_size, str):
             if current_font_size[-1:] == "x":
                 stripped_current_font_size = current_font_size.strip("px")
                 stripped_nested_font_size = nested_font_size.strip("%")
                 calculated_font_size = float(stripped_nested_font_size) * (float(stripped_current_font_size)/100)
 
-                return (str(calculated_font_size)+"px")
+                return '{0:g}px'.format(calculated_font_size)
             else: #current_font_size[-1:] == "c":
                 stripped_current_font_size = current_font_size.strip("c")
                 stripped_nested_font_size = nested_font_size.strip("%")
                 calculated_font_size = float(stripped_nested_font_size) * (float(stripped_current_font_size)/100)
 
-                return (str(calculated_font_size)+"c")
+                return '{0:g}c'.format(calculated_font_size)
 
 
     @staticmethod

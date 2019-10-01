@@ -281,10 +281,23 @@ class TestNester(TestCase):
         span_styles =['outer', 'innerYellow']
         actual_style = Denester.compute_span_merged_styles(span_styles, dataset)
         assert expected_style.id == actual_style.id
+
+
+    def test_three_styles_should_create_new_span_style(self):
+        expected_style = style_type (
+            id="outerinnerYellowinnerWhite",
+            backgroundColor="#000000",
+            color="#FFFFFF",
+        )
+        dataset = {}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        span_styles =['outer', 'innerYellow', 'innerWhite']
+        actual_style = Denester.compute_span_merged_styles(span_styles, dataset)
+        assert expected_style.id == actual_style.id
         
 
     def test_span_computed_font_size_both_parent_child_have_percentages(self):
-        expected_style_font_size = "300.0%"
+        expected_style_font_size = "300%"
         span_styles = ["outer", "innerWhite"]
         dataset = {}
         dataset["styles"] = self.actual_doc_4.binding.head.styling.style
@@ -348,6 +361,21 @@ class TestNester(TestCase):
                 if style.id == style_name:
                     styles.append(style)
         actual_style_font_size = Denester.calculate_font_size(styles)
+        assert expected_style_font_size == actual_style_font_size
+
+    def test_nesting_within_absolute_fontsize(self):
+        expected_style_font_size = "4c"
+        span_styles = ["innerRed", "outer"]
+        dataset = {}
+        dataset["styles"] = self.actual_doc_4.binding.head.styling.style
+        styles = []
+        for style_name in span_styles: # go through styles in xml
+            for style in dataset["styles"]:
+                if style.id == style_name:
+                    styles.append(style)
+        actual_style_font_size = Denester.calculate_font_size(styles)
+        print(expected_style_font_size)
+        print(actual_style_font_size)
         assert expected_style_font_size == actual_style_font_size
 
     def test_duplicate_styles_are_not_created(self):
