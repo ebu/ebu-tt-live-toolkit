@@ -319,11 +319,12 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and cls._int_or_none('{:0<3}'.format(seconds_fraction_str)[:3]) or 0
+        return timedelta(hours=cls._int_or_none(hours_str), 
+            minutes=cls._int_or_none(minutes_str), 
+            seconds=cls._int_or_none(seconds_str), 
+            milliseconds=milliseconds)
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -370,11 +371,13 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and cls._int_or_none('{:0<3}'.format(seconds_fraction_str)[:3]) or 0
+        return timedelta(hours=cls._int_or_none(hours_str), 
+            minutes=cls._int_or_none(minutes_str), 
+            seconds=cls._int_or_none(seconds_str), 
+            milliseconds=milliseconds)
+        
 
     @classmethod
     def from_timedelta(cls, instance):
