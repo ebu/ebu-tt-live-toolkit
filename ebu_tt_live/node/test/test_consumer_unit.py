@@ -59,7 +59,7 @@ class TestSimpleConsumerUnit(TestCase):
         with self.assertRaises(UnexpectedSequenceIdentifierError) as context:
             self.consumer.process_document(document=second_sequence)
 
-        self.assertTrue('Rejecting new sequence identifier' in context.exception.message)
+        self.assertTrue('Rejecting new sequence identifier' in context.exception.args[0])
 
 
     def test_control_request(self):

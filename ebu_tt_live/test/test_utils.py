@@ -51,6 +51,7 @@ class RFBCommon(TestCase):
 
     def _create_a_file(self, number):
         created_file = tempfile.NamedTemporaryFile(
+            mode='w+',
             prefix='ebu_tt_live_utils_test',
             suffix='{}.tmp'.format(number),
             delete=False
@@ -75,7 +76,7 @@ class TestRotatingFileBufferSync(RFBCommon):
 
     def setUp(self):
         super(TestRotatingFileBufferSync, self).setUp()
-        self.instance = RotatingFileBuffer(maxlen=3, async=False)
+        self.instance = RotatingFileBuffer(maxlen=3, asynchronous=False)
 
     def test_one_file(self):
         file1 = self._create_a_file(1)

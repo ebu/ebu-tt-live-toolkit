@@ -5,14 +5,13 @@ from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, vali
 # ==========
 
 
-class INode(object):
+class INode(object, metaclass=AutoRegisteringABCMeta):
     """
     This is the foundation of all nodes that take part in the processing of subtitle documents.
     The Node should deal with subtitles in a high level interface,
     which is an instance of :class:`<ebu_tt_live.documents.SubtitleDocument>`. That is the interface which should
     be used to communicate with the carriage mechanism. See :class:`<ebu_tt_live.carriage.ICarriageMechanism>`
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
     @abstractmethod
     def process_document(self, document, **kwargs):

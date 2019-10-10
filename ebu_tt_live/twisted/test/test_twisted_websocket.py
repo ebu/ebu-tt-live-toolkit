@@ -44,9 +44,9 @@ class _NewWSCommon(object):
         self.str.clear()
 
         # At this point handshake is supposed to be done
-        self.assertEquals(self.sproto.state, self.sproto.STATE_OPEN)
+        self.assertEqual(self.sproto.state, self.sproto.STATE_OPEN)
         self.sproto.failHandshake.assert_not_called()
-        self.assertEquals(self.cproto.state, self.cproto.STATE_OPEN)
+        self.assertEqual(self.cproto.state, self.cproto.STATE_OPEN)
         self.cproto.failHandshake.assert_not_called()
 
     def _disconnect(self):
@@ -59,12 +59,12 @@ class _NewWSCommon(object):
 
         # Verify transmission success
         # The server should have closed the socket by now
-        self.assertEquals(self.sproto.state, self.sproto.STATE_CLOSED)
+        self.assertEqual(self.sproto.state, self.sproto.STATE_CLOSED)
         self.assertTrue(self.sproto.wasClean)
         self.assertFalse(self.str.connected)
         # And the client needs some help here
         self.ctr.loseConnection()
-        self.assertEquals(self.cproto.state, self.cproto.STATE_CLOSED)
+        self.assertEqual(self.cproto.state, self.cproto.STATE_CLOSED)
         self.assertTrue(self.cproto.wasClean)
 
 
@@ -91,11 +91,11 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
 
         self.cons.register.assert_called_with(self.cproto)
         self.prod.register.assert_called_with(self.sproto)
-        self.assertEquals(self.cproto.action, 'subscribe')
-        self.assertEquals(self.sproto.action, 'subscribe')
+        self.assertEqual(self.cproto.action, 'subscribe')
+        self.assertEqual(self.sproto.action, 'subscribe')
 
         # At this point we are supposed to be able to send data through
-        doc = 'dummy message'
+        doc = b'dummy message'
         self.sproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -143,11 +143,11 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
 
         self.cons.register.assert_called_with(self.cproto)
         self.prod.register.assert_called_with(self.sproto)
-        self.assertEquals(self.cproto.action, 'subscribe')
-        self.assertEquals(self.sproto.action, 'subscribe')
+        self.assertEqual(self.cproto.action, 'subscribe')
+        self.assertEqual(self.sproto.action, 'subscribe')
 
         # At this point we are supposed to be able to send data through
-        doc = 'dummy message'
+        doc = b'dummy message'
         self.sproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -164,7 +164,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         # Now the exception should be raised and the connection should be broken
 
         self.cons.write.assert_called()
-        self.assertEquals(self.cproto.state, self.sproto.STATE_CLOSED)
+        self.assertEqual(self.cproto.state, self.sproto.STATE_CLOSED)
         self.assertFalse(self.cproto.wasClean)
 
     def test_consumer_send_data_error(self):
@@ -182,10 +182,10 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         self._connect()
 
         # When data arrives from consumer to server
-        self.sproto.dataReceived('consumers should not send data')
+        self.sproto.dataReceived(b'consumers should not send data')
 
         # This must have triggered the connection to be dropped
-        self.assertEquals(self.sproto.state, self.sproto.STATE_CLOSED)
+        self.assertEqual(self.sproto.state, self.sproto.STATE_CLOSED)
         self.assertFalse(self.sproto.wasClean)
 
     def test_producer_to_producer_error(self):
@@ -202,7 +202,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
 
     def test_url_encoded_components(self):
         # This test is about getting percent encoded characters work in sequenceId or hostname
-        sequence_id = u'sequence/ünicödé?/Name'
+        sequence_id = 'sequence/ünicödé?/Name'
         self._create_server(url='ws://localhost:9006', producer=self.prod)
         self._create_client(
             url='ws://localhost:9006/sequence%2F%C3%BCnic%C3%B6d%C3%A9%3F%2FName/subscribe',
@@ -213,8 +213,8 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
 
         self._connect()
 
-        self.assertEquals(sequence_id, self.cproto._sequence_identifier)
-        self.assertEquals(sequence_id, self.sproto._sequence_identifier)
+        self.assertEqual(sequence_id, self.cproto._sequence_identifier)
+        self.assertEqual(sequence_id, self.sproto._sequence_identifier)
 
     def tearDown(self):
         self.ctr.loseConnection()
@@ -248,11 +248,11 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
 
         self.cons.register.assert_called_with(self.sproto)
         self.prod.register.assert_called_with(self.cproto)
-        self.assertEquals(self.sproto.action, 'publish')
-        self.assertEquals(self.cproto.action, 'publish')
+        self.assertEqual(self.sproto.action, 'publish')
+        self.assertEqual(self.cproto.action, 'publish')
 
         # Sending data
-        doc = 'producer client sample'
+        doc = b'producer client sample'
         self.cproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -297,11 +297,11 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
 
         self.cons.register.assert_called_with(self.sproto)
         self.prod.register.assert_called_with(self.cproto)
-        self.assertEquals(self.sproto.action, 'publish')
-        self.assertEquals(self.cproto.action, 'publish')
+        self.assertEqual(self.sproto.action, 'publish')
+        self.assertEqual(self.cproto.action, 'publish')
 
         # Sending data
-        doc = 'producer client sample'
+        doc = b'producer client sample'
         self.cproto.sendSequenceMessage(
             sequence_identifier=self.sequence_identifier,
             payload=doc
@@ -314,7 +314,7 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
 
         # The connection should be broken by now
 
-        self.assertEquals(self.sproto.state, self.sproto.STATE_CLOSED)
+        self.assertEqual(self.sproto.state, self.sproto.STATE_CLOSED)
         self.assertFalse(self.sproto.wasClean)
 
     def test_consumer_to_consumer_error(self):
@@ -352,10 +352,10 @@ class TestConsServerToProdClientProtocols(_NewWSCommon, TestCase):
 
         self._connect()
 
-        self.cproto.dataReceived('consumers should not send data')
+        self.cproto.dataReceived(b'consumers should not send data')
 
         # This should make the connection kick the bucket
-        self.assertEquals(self.cproto.state, self.cproto.STATE_CLOSED)
+        self.assertEqual(self.cproto.state, self.cproto.STATE_CLOSED)
         self.assertFalse(self.cproto.wasClean)
 
 
@@ -379,7 +379,7 @@ class TestWSProducerCarriage(TestCase):
 
     def test_successful_broadcast(self):
 
-        doc = 'test_data'
+        doc = b'test_data'
         self.carriage.emit_data(
             sequence_identifier=self.sequence_identifier,
             data=doc
@@ -410,7 +410,7 @@ class TestWSProducerCarriage(TestCase):
         self.protocol2.sendSequenceMessage.assert_not_called()
 
     def test_delayed_broadcast(self):
-        doc = 'delayed test data'
+        doc = b'delayed test data'
         delay = 5.0
         clock = task.Clock()
         self.carriage._callLater = clock.callLater
@@ -457,10 +457,10 @@ class TestWSConsumerCarriage(TestCase):
 
     def test_successful_reception(self):
 
-        doc = 'document reception test'
+        doc = b'document reception test'
 
-        self.assertEquals(self.protocol1.consumer, self.carriage)
-        self.assertEquals(self.protocol2.consumer, self.carriage)
+        self.assertEqual(self.protocol1.consumer, self.carriage)
+        self.assertEqual(self.protocol2.consumer, self.carriage)
 
         self.carriage.write(data=doc)
 

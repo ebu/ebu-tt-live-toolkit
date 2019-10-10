@@ -55,7 +55,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
         if document.binding.head.styling is not None:
             styles = document.binding.head.styling.style
-            print styles
+            print(styles)
             document.binding.head.styling.style = None
 
             self.CollateUniqueVals(styles, old_id_dict, new_id_dict, hash_dict)
@@ -104,7 +104,7 @@ class DeDuplicatorNode(AbstractCombinedNode):
         Replaces starting style and region elements with the unique ones identified in
         CollateUniqueVals
         """
-        for hash_val, new_id in hash_dict.iteritems():
+        for hash_val, new_id in hash_dict.items():
 
             for old_element in element_list:
                 if old_element.id is new_id.id:
@@ -137,14 +137,14 @@ class ComparableElement:
 
         # sorted to make sure that for two elements with the same set of
         # attributes the values are put into the hash string in the same order
-        sortedDict = sorted(attributeDict.items(), key=lambda t: t[0])
+        sortedDict = sorted(list(attributeDict.items()), key=lambda t: t[0])
 
-        concatenatedStyleString = u''
+        concatenatedStyleString = ''
         for key,val in sortedDict:
             styleValue = ReplaceNone(val.value(value))
             concatenatedStyleString += str(styleValue) + '%'
 
-        for key,val in value.wildcardAttributeMap().items():
+        for key,val in list(value.wildcardAttributeMap().items()):
             namespace = ReplaceNone(key.namespaceURI())
             localName = key.localName()
             wildcardValue = ReplaceNone(val)

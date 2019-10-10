@@ -91,7 +91,7 @@ class TestXMLtoEBUTT3Adapter(TestCase):
         self.assertIsInstance(result, self._output_type)
 
     def _assert_kwargs_passtrough(self, result_kwargs, expected_keys):
-        self.assertEquals(set(result_kwargs.keys()), set(expected_keys))
+        self.assertEqual(set(result_kwargs.keys()), set(expected_keys))
 
     def _get_xml(self):
         with open(self._test_xml_path, 'r') as xml_file:
