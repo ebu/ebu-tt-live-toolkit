@@ -11,7 +11,7 @@ scenarios('features/styles/style_attribute_simple.feature')
 scenarios('features/styles/style_attribute_inherited.feature')
 scenarios('features/styles/lineHeight.feature')
 scenarios('features/styles/fontSize_inherited.feature')
-#scenarios('features/styles/padding.feature')
+scenarios('features/styles/padding.feature')
 
 
 @when('it has a cell resolution of <cell_resolution>')
@@ -102,3 +102,9 @@ def when_document_converted(test_context, local_time_mapping):
     test_context['ebuttd_document'] = ebuttd_document
     # TODO: Add the proper assertions
     ebuttd_document.get_xml()
+
+
+@when('region has attribute <region_attribute> set to <S2_value>')
+def when_region_has_attribute(template_dict, region_attribute, S2_value):
+    template_dict['region_attribute'] = region_attribute
+    template_dict['value_2'] = S2_value
