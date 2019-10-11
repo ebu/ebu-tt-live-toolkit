@@ -47,7 +47,7 @@ Alternatively:
     pip install -r requirements.txt
     python setup.py develop
 
-    pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+    pyxbgen --binding-root=. -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd --module-prefix=ebu_tt_live.bindings
 
     npm install nunjucks
     node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
