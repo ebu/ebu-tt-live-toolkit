@@ -28,15 +28,15 @@ install:
   - pip install ghp-import
 
 script:
-  - pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
-  - python setup.py test
+  - make bindings
+  - make test
   - export PR=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
   - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR | jq -r .head.ref`; fi)
   - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
 
 after_success:
   - coveralls
-  - python setup.py build_sphinx
+  - make docs
   - if [ $BRANCH == "master" ]; then ghp-import -n -p -m "Update gh-pages." docs/build; fi
 
 notifications:
