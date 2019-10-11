@@ -153,7 +153,7 @@ html_theme = 'sphinx_rtd_theme'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'EBU-TT-Live Toolkit v1.0.0rc1'
+# html_title = 'EBU-TT-Live Toolkit v1.0.0rc1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
