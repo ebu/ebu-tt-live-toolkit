@@ -68,7 +68,7 @@ class TestDocumentLeaks(TestCase):
         doc = EBUTT3Document.create_from_xml(
             template_file.render(temp_dict)
         )
-        # print 'doc id {} created'.format(id(doc))
+        # print('doc id {} created'.format(id(doc)))
         return doc
 
     def test_single_document_removed(self):
@@ -99,7 +99,7 @@ class TestDocumentLeaks(TestCase):
         doc_reserve = []
         doc_refs = []
 
-        for number in xrange(1, 10):
+        for number in range(1, 10):
             doc = self._generate_document(
                 sequence_number=number,
                 offset=timedelta(seconds=5*number)
@@ -128,7 +128,7 @@ class TestDocumentLeaks(TestCase):
         sequence.add_document(doc1)
         seq_ref = weakref.ref(sequence)
         del doc1
-        for number in xrange(2, 10):
+        for number in range(2, 10):
             doc = self._generate_document(
                 sequence_number=number,
                 offset=timedelta(seconds=5*number)

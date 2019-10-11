@@ -18,7 +18,7 @@ If you would like to contribute or join the Slack team, please contact <subtitli
 Preparing the build environment
 ===============================
 
-Make sure you have python 2.7+. Make sure you have python virtual environment capability.
+Make sure you have Python 3+. Make sure you have python virtual environment capability.
 
 If not you can install virtualenv systemwide from your operating system's package repository
 or by pip:
@@ -61,7 +61,7 @@ Windows users
 =============
 
 Windows is not the best friend of Makefiles. So there is a make.bat file for those who would like to develop using
-Windows. Assuming python 2.7 and virtualenv is installed and are on the PATH. To build the project you will also need node.js. Please read the instructions for your system [here](https://nodejs.org/en/download/package-manager/). Then run :
+Windows. Assuming Python 3+ and virtualenv is installed and are on the PATH. To build the project you will also need node.js. Please read the instructions for your system [here](https://nodejs.org/en/download/package-manager/). Then run :
 
     make
 

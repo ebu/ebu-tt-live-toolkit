@@ -101,7 +101,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     _default_attrs = None
 
     def __repr__(self):
-        return u'<style ID: {id} at {addr}>'.format(
+        return '<style ID: {id} at {addr}>'.format(
             id=self.id,
             addr=hex(id(self))
         )
@@ -384,7 +384,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         else:
             computed.lineHeight = computed_line_height
 
-        for attr_name in cls._simple_attr_defaults.keys():
+        for attr_name in list(cls._simple_attr_defaults.keys()):
             comp_attr_value = cls.compute_simple_attribute(
                 attr_name=attr_name,
                 specified_style=specified_style
@@ -398,7 +398,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                     comp_attr_value
                 )
 
-        for attr_name in cls._inherited_attr_defaults.keys():
+        for attr_name in list(cls._inherited_attr_defaults.keys()):
             comp_attr_value = cls.compute_inherited_attribute(
                 attr_name=attr_name,
                 specified_style=specified_style,

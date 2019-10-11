@@ -102,7 +102,7 @@ def then_handover_parameter_passthrough(given_handover_node, authors_group_ident
 def then_authors_group_selected_sequence_id(given_handover_node, authors_group_selected_sequence_identifiers):
     # NOTE: The comma is a valid sequenceIdentifier character but we use it as a divisor in the test. Make sure
     # the tests use sequence identifiers without commas.
-    seq_ids = map(lambda x: x.strip(), authors_group_selected_sequence_identifiers.split(','))
+    seq_ids = [x.strip() for x in authors_group_selected_sequence_identifiers.split(',')]
     for index, call_args in enumerate(given_handover_node.producer_carriage.emit_data.call_args_list):
         pos_args, kw_args = call_args
         assert kw_args['data'].authors_group_selected_sequence_identifier == seq_ids[index]

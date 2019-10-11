@@ -183,9 +183,8 @@ class TimingValidationMixin(object):
             # All timing containers are complexTypes so we can call orderedContent safely
             # but we don't want to bother with explicitly badly timed elements so filter
             # them out.
-            children = filter(lambda item: isinstance(item, TimingValidationMixin) \
-                              and not item._element_badly_timed(value=None, element=item), \
-                              [x.value for x in self.orderedContent()])
+            children = [item for item in [x.value for x in self.orderedContent()] if isinstance(item, TimingValidationMixin) \
+                              and not item._element_badly_timed(value=None, element=item)]
                               
             # Order of statements is important
             if not children:
@@ -220,9 +219,8 @@ class TimingValidationMixin(object):
         if begin_timedelta is None:
 
             if children is None:
-                children = filter(lambda item: isinstance(item, TimingValidationMixin) \
-                                  and not item._element_badly_timed(value=None, element=item),
-                                  [x.value for x in self.orderedContent()])
+                children = [item for item in [x.value for x in self.orderedContent()] if isinstance(item, TimingValidationMixin) \
+                                  and not item._element_badly_timed(value=None, element=item)]
 
             self._post_calculate_begin(children=children)
 

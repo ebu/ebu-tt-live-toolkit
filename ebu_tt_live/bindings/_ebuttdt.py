@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from raw._ebuttdt import *
-from raw import _ebuttdt as ebuttdt_raw
+from ebu_tt_live.bindings.raw._ebuttdt import *
+from ebu_tt_live.bindings.raw import _ebuttdt as ebuttdt_raw
 from datetime import timedelta
 from decimal import Decimal
 import re, logging
@@ -319,10 +319,7 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
+        hours, minutes, seconds, milliseconds = [cls._int_or_none(x) for x in cls._groups_regex.match(instance).groups()]
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
@@ -370,10 +367,7 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
+        hours, minutes, seconds, milliseconds = [cls._int_or_none(x) for x in cls._groups_regex.match(instance).groups()]
         return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
 
     @classmethod
@@ -559,7 +553,7 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
         else:
             return NotImplemented
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return self._do_div(other)
 
     def _do_eq(self, other):

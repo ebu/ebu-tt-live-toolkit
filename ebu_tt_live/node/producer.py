@@ -64,7 +64,7 @@ class SimpleProducer(AbstractProducerNode):
 
         if self._input_blocks:
             try:
-                lines = self._input_blocks.next()
+                lines = next(self._input_blocks)
             except StopIteration:
                 raise EndOfData(END_OF_DATA)
         else:

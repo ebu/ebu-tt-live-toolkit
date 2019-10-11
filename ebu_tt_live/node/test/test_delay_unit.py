@@ -61,7 +61,7 @@ class TestRetimingDelayNode(TestCase):
         with self.assertRaises(UnexpectedSequenceIdentifierError) as context:
             self.retiming_delay_node.process_document(document=second_sequence)
 
-        self.assertTrue('Rejecting new sequence identifier' in context.exception.message)
+        self.assertTrue('Rejecting new sequence identifier' in context.exception.args[0])
 
     def test_if_metadata_applied_processing_is_defined(self):
 

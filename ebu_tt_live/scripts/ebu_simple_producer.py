@@ -90,7 +90,7 @@ def main():
         )
 
         factory = BroadcastServerFactory(
-            url=u"ws://127.0.0.1:9000",
+            url="ws://127.0.0.1:9000",
             producer=twisted_producer
         )
 

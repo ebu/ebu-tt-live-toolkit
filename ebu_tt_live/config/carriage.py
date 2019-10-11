@@ -6,7 +6,7 @@ from ebu_tt_live.utils import HTTPProxyConfig
 from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE, ERR_NO_SUCH_COMPONENT
 from ebu_tt_live.errors import ConfigurationError
 from ebu_tt_live.strings import CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
-import urlparse
+import urllib.parse
 import re
 
 # Memory carriage mechanism configurators
@@ -115,7 +115,7 @@ class FilesystemInput(ConfigurableComponent):
 # Websocket carriage mechanism configurators
 # ==========================================
 def str_to_url_converter(value):
-    parsed = urlparse.urlparse(value)
+    parsed = urllib.parse.urlparse(value)
     return parsed
 
 

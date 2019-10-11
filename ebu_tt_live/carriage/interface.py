@@ -5,11 +5,10 @@ from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, vali
 # ==========
 
 
-class ICarriageMechanism(object):
+class ICarriageMechanism(object, metaclass=AutoRegisteringABCMeta):
     """
     Basic interface for the carrige mechanisms
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
 
 class IProducerCarriage(ICarriageMechanism):
