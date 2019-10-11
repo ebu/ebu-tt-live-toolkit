@@ -10,6 +10,8 @@ scenarios('features/styles/ebuttd_fontsize_conversion.feature')
 scenarios('features/styles/style_attribute_simple.feature')
 scenarios('features/styles/style_attribute_inherited.feature')
 scenarios('features/styles/lineHeight.feature')
+scenarios('features/styles/fontSize_inherited.feature')
+#scenarios('features/styles/padding.feature')
 
 
 @when('it has a cell resolution of <cell_resolution>')
