@@ -35,9 +35,7 @@ class SimpleConsumer(AbstractConsumerNode):
                 log.info('Creating document sequence from first document {}'.format(
                     document
                 ))
-                self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
-                if self._reference_clock is None:
-                    self._reference_clock = self._sequence.reference_clock
+                self.create_sequence_from_document(document)
             if document.availability_time is None:
                 document.availability_time = self._reference_clock.get_time()
 
@@ -55,6 +53,11 @@ class SimpleConsumer(AbstractConsumerNode):
                         document.sequence_number
                     )
                 )
+
+    def create_sequence_from_document(self, document):
+        self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
+        if self._reference_clock is None:
+            self._reference_clock = self._sequence.reference_clock
 
     @property
     def reference_clock(self):
@@ -100,11 +103,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
             with open(init_document, 'r') as xml_file:
                 xml_content = xml_file.read()
             xml_doc = EBUTT3Document.create_from_xml(xml_content)
-            
-            self._sequence = EBUTT3DocumentSequence.create_from_document(xml_doc, verbose=self._verbose)
-            if self._reference_clock is None:
-                self._reference_clock = self._sequence.reference_clock
-        
+            self.create_sequence_from_document(xml_doc)
 
     @property
     def last_segment_end(self):
