@@ -131,6 +131,9 @@ Note that the resequencer output can contain duplicated ``style`` and ``region``
 elements. These can be cleaned up by passing the output to a DeDuplicator
 node before downstream encoding to other formats.
 
+The resequencer does not begin emitting any documents until it has received
+at least one input document.
+
 Use ``ebu-run`` to start
 this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/sproducer_resequencer_direct_ebuttd_encoder_fs.json``
 
