@@ -38,13 +38,6 @@ class _TimedeltaBindingMixin(object):
     }
 
     @classmethod
-    def _int_or_none(cls, value):
-        try:
-            return int(value)
-        except TypeError:
-            return 0
-
-    @classmethod
     def compatible_timebases(cls):
         return cls._compatible_timebases
 
@@ -324,11 +317,12 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
+        return timedelta(hours=int(hours_str), 
+            minutes=int(minutes_str), 
+            seconds=int(seconds_str), 
+            milliseconds=milliseconds)
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -375,11 +369,13 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
+        return timedelta(hours=int(hours_str), 
+            minutes=int(minutes_str), 
+            seconds=int(seconds_str), 
+            milliseconds=milliseconds)
+        
 
     @classmethod
     def from_timedelta(cls, instance):
