@@ -99,6 +99,7 @@ Node type dependent options for [nodeN] : ::
    ├─sequence_identifier : sequence identifier, default "re-sequencer"
    ├─segment_length : duration of each output segment in seconds, default 2
    ├─begin_output : ["immediate" (default) | {begin time} ] the time at which the first output segment should begin.
+   ├─init_document : File path to a document used to set initial parameters and afterwards start issuing documents (instead of awaiting the first received document), default None
    ├─discard : whether to discard content that has been encoded, default True
    └─clock
      └─type : ["local" (default) | "auto" | "clock"]
