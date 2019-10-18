@@ -18,7 +18,7 @@ If you would like to contribute or join the Slack team, please contact <subtitli
 Preparing the build environment
 ===============================
 
-Make sure you have Python 3+. Make sure you have python virtual environment capability.
+Make sure you have Python 3.7+. Make sure you have python virtual environment capability.
 
 If not you can install virtualenv systemwide from your operating system's package repository
 or by pip:
