@@ -43,14 +43,14 @@ class StyledElementMixin(object):
     def _semantic_collect_applicable_styles(self, dataset, style_type, parent_binding, defer_font_size=False,
                                             extra_referenced_styles=None):
         """
-        This function identifies the styling dependdncy chain for the styled element in question.
+        This function identifies the styling dependency chain for the styled element in question.
 
         :param dataset: Semantic dataset
-        :param style_type: the style_type to be used in the process (there are different style types for EBU-TT D and
-        live).
+        :param style_type: the style_type to be used in the process (there are different style types for EBU-TT D and live).
         :param parent_binding: The immediate parent of the styled element in the document structure
         :param defer_font_size: If True then fontsize can stay percentage in case it could not be calculated
         :param extra_referenced_styles: Used by region to inject its extra style attributes
+
         :return:
         """
 

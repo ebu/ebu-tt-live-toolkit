@@ -103,9 +103,39 @@ example ``ebu-run --admin.conf=ebu_tt_live/examples/config/buffer_delay.json``
 DeDuplicator Node
 -----------------
 This node addresses instances where ``style`` and ``region`` elements and
-attributes are duplicated.
+attributes are duplicated, which can occur for example when sequences are
+resequenced.
 For the default configuration of the node, see:
 ``ebu-run --admin.conf=ebu_tt_live/examples/config/deduplicator_fs.json``
+
+Resequencer Node
+----------------
+This node consumes documents from one sequence and
+creates a new sequence of documents based on the content in that input sequence,
+where every document in the output sequence has the same duration. The
+resequencer repeatedly extracts and then outputs a document of the specified
+duration, then waits for a period equal to that 
+duration before extracting the next document. It can be configured to begin
+extracting the first document immediately when it is run, or to wait until a
+specific time until extracting the first document. 
+
+The resequencer is
+particularly useful upstream of an EBU-TT-D Encoder, to generate segmented
+EBU-TT-D, for example prior to wrapping in fragmented MPEG-4 and serving
+with a DASH or HLS manifest; those onward steps are not part of this project.
+This pattern effectively converts an asynchronous stream of input documents
+into something that can be delivered synchronously downstream, which is
+useful for distribution to media players.
+
+Note that the resequencer output can contain duplicated ``style`` and ``region``
+elements. These can be cleaned up by passing the output to a DeDuplicator
+node before downstream encoding to other formats.
+
+The resequencer does not begin emitting any documents until it has received
+at least one input document.
+
+Use ``ebu-run`` to start
+this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/sproducer_resequencer_direct_ebuttd_encoder_fs.json``
 
 Retiming Delay Node
 -------------------
