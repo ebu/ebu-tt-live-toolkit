@@ -14,6 +14,7 @@ class TestTimecountTimingType(TestCase):
         '1.003s': timedelta(seconds = 1, milliseconds = 3),
         '1.030s': timedelta(seconds = 1, milliseconds = 30),
         '1.300s': timedelta(seconds = 1, milliseconds = 300),
+        '1.3456s': timedelta(seconds = 1, milliseconds = 345.6),
         '1s': timedelta(seconds = 1),
         '1.3m': timedelta(minutes = 1, seconds = 18),
         '1.03m': timedelta(minutes = 1, seconds = 1, milliseconds = 800),
@@ -57,6 +58,7 @@ class TestFullClockTimingType(TestCase):
         '111:22:33.400': timedelta(hours = 111, minutes = 22, seconds = 33, milliseconds = 400),
         '111:22:33.040': timedelta(hours = 111, minutes = 22, seconds = 33, milliseconds = 40),
         '111:22:33.004': timedelta(hours = 111, minutes = 22, seconds = 33, milliseconds = 4),
+        '111:22:33.0045': timedelta(hours = 111, minutes = 22, seconds = 33, milliseconds = 4.5),
     }
 
     _type_class = ebuttdt.FullClockTimingType
@@ -77,7 +79,9 @@ class TestLimitedClockTimingType(TestCase):
         '11:22:33.40': timedelta(hours = 11, minutes = 22, seconds = 33, milliseconds = 400),
         '11:22:33.400': timedelta(hours = 11, minutes = 22, seconds = 33, milliseconds = 400),
         '11:22:33.040': timedelta(hours = 11, minutes = 22, seconds = 33, milliseconds = 40),
-        '11:22:33.004': timedelta(hours = 11, minutes = 22, seconds = 33, milliseconds = 4),    }
+        '11:22:33.004': timedelta(hours = 11, minutes = 22, seconds = 33, milliseconds = 4),
+        '11:22:33.0045': timedelta(hours = 11, minutes = 22, seconds = 33, milliseconds = 4.5),
+    }
     
     _type_class = ebuttdt.LimitedClockTimingType
 
