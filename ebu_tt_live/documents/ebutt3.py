@@ -642,12 +642,12 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         if self.sequence_identifier != document.sequence_identifier or \
                 self._reference_clock.time_base != document.time_base:
             raise IncompatibleSequenceError(
-                ERR_DOCUMENT_NOT_COMPATIBLE
+                ERR_DOCUMENT_NOT_COMPATIBLE.format('ebuttp:sequenceIdentifier or ttp:timeBase')
             )
         if self._reference_clock.time_base == 'clock':
             if self._reference_clock.clock_mode != document.clock_mode:
                 raise IncompatibleSequenceError(
-                    ERR_DOCUMENT_NOT_COMPATIBLE
+                    ERR_DOCUMENT_NOT_COMPATIBLE.format('ttp:clockMode')
                 )
         existing_document = None
         try:
