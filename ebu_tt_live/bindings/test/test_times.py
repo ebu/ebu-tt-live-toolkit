@@ -35,7 +35,8 @@ class TestTimecountTimingType(TestCase):
         '1.30ms': timedelta(milliseconds = 1, microseconds = 300),
         '1.003ms': timedelta(milliseconds = 1, microseconds = 3),
         '1.030ms': timedelta(milliseconds = 1, microseconds = 30),
-        '1.300ms': timedelta(milliseconds = 1, microseconds = 300),        '1ms': timedelta(milliseconds = 1),
+        '1.300ms': timedelta(milliseconds = 1, microseconds = 300),
+        '1ms': timedelta(milliseconds = 1),
     }
 
     _type_class = ebuttdt.TimecountTimingType
