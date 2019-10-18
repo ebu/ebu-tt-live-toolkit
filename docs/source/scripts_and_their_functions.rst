@@ -67,11 +67,11 @@ consumer is listening. See detailed instructions here:
 Distributor
 -----------
 This script mimics a distribution node. To see it forwarding documents from the
-Simple Producer the the Simple Consumer using Websocket, run ``ebu-run
+Simple Producer the Simple Consumer using Websocket, run ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/sproducer_dist_sconsumer_ws.json``. A
 more interesting scenario is distributing documents from the User Input Producer
 to two consumer nodes: ``ebu-run
---admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers``.
+--admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers.json``.
 
 Like the Simple Producer, the Distributor can also save the documents it
 receives to the file system. To do that, create you own configuration file as
@@ -131,8 +131,14 @@ Note that the resequencer output can contain duplicated ``style`` and ``region``
 elements. These can be cleaned up by passing the output to a DeDuplicator
 node before downstream encoding to other formats.
 
-The resequencer does not begin emitting any documents until it has received
-at least one input document.
+In general the resequencer does not begin emitting any documents until it has received
+at least one input document. To immediately start to emit documents an
+initial document can be configured. Necessary initial parameters like
+language or sequence ID are retrieved from that document.
+
+Note that the resequencer accepts only input documents which all have the
+same sequence ID. This sequence ID is determined by the first received input
+document (or the configured initial document instead, if applicable).
 
 Use ``ebu-run`` to start
 this script, for example ``ebu-run --admin.conf=ebu_tt_live/examples/config/sproducer_resequencer_direct_ebuttd_encoder_fs.json``
