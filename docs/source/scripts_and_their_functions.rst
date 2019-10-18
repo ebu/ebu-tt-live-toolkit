@@ -67,7 +67,7 @@ consumer is listening. See detailed instructions here:
 Distributor
 -----------
 This script mimics a distribution node. To see it forwarding documents from the
-Simple Producer the Simple Consumer using Websocket, run ``ebu-run
+Simple Producer to the Simple Consumer using Websocket, run ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/sproducer_dist_sconsumer_ws.json``. A
 more interesting scenario is distributing documents from the User Input Producer
 to two consumer nodes: ``ebu-run
