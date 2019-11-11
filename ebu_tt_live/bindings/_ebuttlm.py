@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from raw._ebuttlm import *
-from raw import _ebuttlm as raw
-from raw import _ebuttp as ebuttp
+from ebu_tt_live.bindings.raw._ebuttlm import *
+from ebu_tt_live.bindings.raw import _ebuttlm as raw
+from ebu_tt_live.bindings.raw import _ebuttp as ebuttp
 from pyxb.utils.domutils import BindingDOMSupport
 
 

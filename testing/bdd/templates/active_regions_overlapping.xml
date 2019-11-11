@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<tt:tt 
+  ebuttp:sequenceIdentifier="ReSequenced1" 
+  ebuttp:sequenceNumber="12" 
+  ttp:cellResolution="32 15" 
+  ttp:timeBase="media" 
+  xml:lang="en-GB" 
+  xmlns:ebuttp="urn:ebu:tt:parameters" 
+  xmlns:ebutts="urn:ebu:tt:style" 
+  xmlns:tt="http://www.w3.org/ns/ttml" 
+  xmlns:ttp="http://www.w3.org/ns/ttml#parameter" 
+  xmlns:tts="http://www.w3.org/ns/ttml#styling" 
+  xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:layout>
+      {% for region in regions %}
+      <tt:region tts:displayAlign="after" {% if region.extent %} tts:extent="{{ region.extent }}" {% endif %} {% if region.origin %} tts:origin="{{region.origin }}" {% endif %} tts:overflow="visible" tts:writingMode="lrtb" xml:id="{{region.id}}" />
+      {% endfor %}
+    </tt:layout>
+  </tt:head>
+  <tt:body>
+    <tt:div>
+      {% if p_elements %}
+      {% for p_element in p_elements %}
+      <tt:p {% if p_element.region %} region="{{p_element.region}}" {% endif %} {% if p_element.id %} xml:id="{{p_element.id}}" {% endif %} {% if p_element.begin %} begin="{{p_element.begin}}" {% endif %} {% if p_element.end %} end="{{ p_element.end }}" {% endif %}></tt:p>
+      {% endfor %}
+      {% endif %}
+    </tt:div>
+
+  </tt:body>
+</tt:tt>

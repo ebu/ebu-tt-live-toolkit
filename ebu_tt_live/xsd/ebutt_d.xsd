@@ -21,7 +21,7 @@
 		
 		<xs:sequence>
 			<xs:element ref="ttm:copyright" minOccurs="0"/>
-			<xs:element name="metadata" type="tt:d_metadata_type" minOccurs="0">
+			<xs:element name="metadata" type="ebuttm:headMetadata_type" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>Generic container for metadata information that applies to
 						the whole document.</xs:documentation>

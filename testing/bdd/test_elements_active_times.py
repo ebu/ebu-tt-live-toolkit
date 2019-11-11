@@ -5,7 +5,6 @@ from pytest_bdd import scenarios, when, then
 scenarios('features/timing/elements_active_times.feature')
 scenarios('features/timing/elements_active_times_empty_body.feature')
 
-
 @when('it has timeBase <time_base>')
 def when_time_base(time_base, template_dict):
     template_dict['time_base'] = time_base
@@ -20,66 +19,10 @@ def when_seq_id(sequence_identifier, template_dict):
 def when_sequence_number(sequence_number, template_dict):
     template_dict['sequence_number'] = sequence_number
 
-
-@when('it has body begin time <body_begin>')
-def when_body_begin(body_begin, template_dict):
-    template_dict['body_begin'] = body_begin
-
-
-@when('it has body duration <body_dur>')
-def when_body_dur(body_dur, template_dict):
-    template_dict['body_dur'] = body_dur
-
-
-@when('it has body end time <body_end>')
-def when_body_end(body_end, template_dict):
-    template_dict['body_end'] = body_end
-
-
-@when('it has div begin time <div_begin>')
-def when_div_begin(div_begin, template_dict):
-    template_dict['div_begin'] = div_begin
-
-
-@when('it has div end time <div_end>')
-def when_div_end(div_end, template_dict):
-    template_dict['div_end'] = div_end
-
-
-@when('it has p begin time <p_begin>')
-def when_p_begin(p_begin, template_dict):
-    template_dict['p_begin'] = p_begin
-
-
-@when('it has p end time <p_end>')
-def when_p_end(p_end, template_dict):
-    template_dict['p_end'] = p_end
-
-
-@when('it has span1 begin time <span1_begin>')
-def when_span1_begin(span1_begin, template_dict):
-    template_dict['span1_begin'] = span1_begin
-
-
-@when('it has span1 end time <span1_end>')
-def when_span1_end(span1_end, template_dict):
-    template_dict['span1_end'] = span1_end
-
-
-@when('it has span2 begin time <span2_begin>')
-def when_span2_begin(span2_begin, template_dict):
-    template_dict['span2_begin'] = span2_begin
-
-
-@when('it has span2 end time <span2_end>')
-def when_span2_end(span2_end, template_dict):
-    template_dict['span2_end'] = span2_end
-
-
 @when('it is available at <availability_time>')
-def when_doc_available(test_context, availability_time):
+def when_doc_available(test_context, availability_time, template_dict):
     if availability_time:
-        test_context['document'].availability_time = FullClockTimingType(availability_time).timedelta
+        template_dict['availability_time'] = FullClockTimingType(availability_time).timedelta
 
 
 @then('body active begin time is <body_active_begin>')

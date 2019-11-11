@@ -1,0 +1,193 @@
+<?xml version="1.0" ?>
+<tt:tt
+  ebuttp:sequenceIdentifier="1"
+        ebuttp:sequenceNumber="1"
+        ttp:timeBase="media"
+        ttp:frameRate="25"
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+{% if not body %}
+  <tt:body
+{% if body_begin %}
+  {% if body_begin == "*?Empty?*" %}
+      begin=""
+  {% else %}
+      begin="{{ body_begin }}"
+  {% endif %}
+{% endif %}
+{% if body_end %}
+  {% if body_end == "*?Empty?*" %}
+      end=""
+  {% else %}
+      end="{{ body_end }}"
+  {% endif%}
+{% endif %}
+{% if body_dur %}
+  {% if body_dur == "*?Empty?*" %}
+      dur=""
+  {% else %}
+      dur="{{ body_dur }}"
+  {% endif %}
+{% endif %}
+    >
+
+{% if div_begin or div_end or p_begin or p_end or span1_begin or span1_end or span2_begin or span2_end or span3_begin or span3_end %}
+    <tt:div
+{% if div_begin %}
+  {% if div_begin == "*?Empty?*" %}
+        begin=""
+  {% else %}
+        begin="{{ div_begin }}"
+  {% endif %}
+{% endif %}
+{% if div_end %}
+  {% if div_end == "*?Empty?*" %}
+        end=""
+  {% else %}
+        end="{{ div_end }}"
+  {% endif%}
+{% endif %}
+      >
+
+{% if p_begin or p_end or span1_begin or span1_end or span2_begin or span2_end %}
+      <tt:p
+{% if p_begin %}
+  {% if p_begin == "*?Empty?*" %}
+        begin=""
+  {% else %}
+        begin="{{ p_begin }}"
+  {% endif %}
+{% endif %}
+{% if p_end %}
+  {% if p_end == "*?Empty?*" %}
+        end=""
+  {% else %}
+        end="{{ p_end }}"
+  {% endif%}
+{% endif %}
+        xml:id="ID005">
+
+{% if span1_begin or span1_end %}
+        <tt:span
+{% if span1_begin %}
+  {% if span1_begin == "*?Empty?*" %}
+                begin=""
+  {% else %}
+                begin="{{ span1_begin }}"
+  {% endif %}
+{% endif %}
+{% if span1_end %}
+  {% if span1_end == "*?Empty?*" %}
+                end=""
+  {% else %}
+                end="{{ span1_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text...
+              {% if nestedSpan_begin or nestedSpan_end %}
+              <tt:span
+                {% if nestedSpan_begin %}
+                  {% if nestedSpan_begin == "*?Empty?*" %}
+                                begin=""
+                  {% else %}
+                                begin="{{ nestedSpan_begin }}"
+                  {% endif %}
+                {% endif %}
+                {% if nestedSpan_end %}
+                  {% if nestedSpan_end == "*?Empty?*" %}
+                                end=""
+                  {% else %}
+                                end="{{ nestedSpan_end }}"
+                  {% endif%}
+                {% endif %}
+                              >
+                              Some example text...
+                
+                              
+                            </tt:span>
+                {% endif %}
+
+            </tt:span>
+{% endif %}
+
+{% if span2_begin or span2_end %}
+            <tt:span
+{% if span2_begin %}
+  {% if span2_begin == "*?Empty?*" %}
+                begin=""
+  {% else %}
+                begin="{{ span2_begin }}"
+  {% endif %}
+{% endif %}
+{% if span2_end %}
+  {% if span2_end == "*?Empty?*" %}
+                end=""
+  {% else %}
+                end="{{ span2_end }}"
+  {% endif%}
+{% endif %}
+              >
+              Some example text 2...
+            </tt:span>
+{% endif %}
+      </tt:p>
+{% endif %}
+
+{% if p1_begin or p1_end or span3_begin or span3_end %}
+<tt:p
+{% if p1_begin %}
+  {% if p1_begin == "*?Empty?*" %}
+        begin=""
+  {% else %}
+        begin="{{ p1_begin }}"
+  {% endif %}
+{% endif %}
+{% if p1_end %}
+  {% if p1_end == "*?Empty?*" %}
+        end=""
+  {% else %}
+        end="{{ p1_end }}"
+  {% endif%}
+{% endif %}
+        xml:id="ID009">
+        {% if span3_begin or span3_end %}
+          <tt:span
+              {% if span3_begin %}
+              {% if span3_begin == "*?Empty?*" %}
+          begin=""
+             {% else %}
+          begin="{{ span3_begin }}"
+              {% endif %}
+              {% endif %}
+              {% if span3_end %}
+              {% if span3_end == "*?Empty?*" %}
+          end=""
+              {% else %}
+          end="{{ span3_end }}"
+              {% endif%}
+              {% endif %}
+          >
+              Some example text 3...
+          </tt:span>
+        {% endif %}
+      </tt:p>
+{% endif %}
+    </tt:div>
+{% endif %}
+  </tt:body>
+{% endif %}
+</tt:tt>

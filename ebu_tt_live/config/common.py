@@ -6,7 +6,7 @@ from configman import RequiredConfig, Namespace, converters
 from ebu_tt_live.strings import ERR_CONF_ONE_BACKEND_ONLY
 from ebu_tt_live.errors import ConfigurationError
 
-runtime_template_regex = re.compile(ur'[*]{2}.*?[*]{2}')
+runtime_template_regex = re.compile(r'[*]{2}.*?[*]{2}')
 converters = converters
 
 log = logging.getLogger(__name__)
@@ -55,8 +55,8 @@ class ConfigurableComponent(RequiredConfig):
     @classmethod
     def _resolve_runtime_variable_match(cls, matchobj):
         # Give this function to re.sub to do the replacement for you
-        var_loc = matchobj.group(0).replace(u'**', u'')
-        var_loc = var_loc.split(u'.')
+        var_loc = matchobj.group(0).replace('**', '')
+        var_loc = var_loc.split('.')
         node_id, attr_names = var_loc[0], var_loc[1:]
         node = current_app.get_node(node_id)
         result = node

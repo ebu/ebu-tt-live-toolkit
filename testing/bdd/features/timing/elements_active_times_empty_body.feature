@@ -39,8 +39,8 @@ Feature: Computed element active begin and end times
     And it has body begin time <body_begin>
     And it has body duration <body_dur>
     And it has body end time <body_end>
-    And the document is generated
     And it is available at <availability_time>
+    And the document is generated
     Then body active begin time is <body_active_begin>
     And body active end time is <body_active_end>
 
