@@ -7,6 +7,19 @@ branches:
   except:
   - gh-pages
 
+before_install:
+  - echo "Checking for java"
+  - java -version
+  - openssl aes-256-cbc -K $encrypted_f18bb5b3c3d4_key -iv $encrypted_f18bb5b3c3d4_iv -in publish-key.enc -out ~/.ssh/publish-key -d
+  - chmod u=rw,og= ~/.ssh/publish-key
+  - echo "Host github.com" >> ~/.ssh/config
+  - echo "    IdentityFile ~/.ssh/publish-key" >> ~/.ssh/config
+  - sudo apt-get -qq update
+  - sudo apt-get install graphviz
+  - git --version
+  - git remote set-url origin git@github.com:ebu/ebu-tt-live-toolkit.git
+  - git fetch origin -f gh-pages:gh-pages
+
 install:
   - pip install pip==19.2.3
   - make
