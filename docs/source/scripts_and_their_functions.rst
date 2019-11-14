@@ -107,6 +107,17 @@ attributes are duplicated.
 For the default configuration of the node, see:
 ``ebu-run --admin.conf=ebu_tt_live/examples/config/deduplicator_fs.json``
 
+Denester Node
+-------------
+This node flattens nested ``div`` and ``span`` elements such that no
+``div`` ends up containing a ``div`` and no ``span`` ends up containing
+a ``span``. It also removes any ``p`` elements that specify a ``region``
+attribute that differs from a specified region on an ancester element.
+
+If nested ``div`` or ``span`` elements might be present in a document, the
+Denester node should be used to flatten them before passing them to the
+EBU-TT-D Encoder, because EBU-TT-D does not permit such nested elements.
+
 Retiming Delay Node
 -------------------
 This script modifies the times within each Document and issues them without

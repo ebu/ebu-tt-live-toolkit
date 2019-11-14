@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ebuttp:sequenceIdentifier="TestSequence"
+        ebuttp:sequenceNumber="1"
+        ttp:clockMode="local"
+        ttp:timeBase="clock"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:f="urn:foreign"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
+        xmlns:ebutts="urn:ebu:tt:style"
+        xml:lang="it" >
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:layout>
+        <tt:region xml:id="R1" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+        <tt:region xml:id="R2" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+        <tt:region xml:id="R3" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+        <tt:region xml:id="R4" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+        <tt:region xml:id="R5" tts:origin="14% 60%" tts:extent="71.25% 24%" />
+      </tt:layout>
+  </tt:head>
+  <tt:body begin="123ms" dur="00:00:05">
+    <tt:div xml:id="D1"
+    {% if div_region != "*empty?*" %}
+    region="{{ div_region }}"
+    {% endif %}
+    >
+
+      <tt:p xml:id="P1"
+      {% if p1_region != "*empty?*" %}
+      region="{{ p1_region }}"
+      {% endif %}
+      >
+      hello
+      </tt:p>
+
+      {% if p2_region %}
+      <tt:p xml:id="P2" region="{{ p2_region }}" >
+      hello2
+      </tt:p>
+      {% endif %}
+    </tt:div>
+  </tt:body>
+</tt:tt>

@@ -98,7 +98,7 @@ class _TimedeltaBindingMixin(object):
 
 def cells_to_pixels(cells_in, root_extent, cell_resolution):
     if not isinstance(root_extent, PixelExtentType):
-        raise Exception()
+        raise ExtentMissingError(root_extent)
     if cells_in.horizontal is not None:
         # 2dimensional
         return cells_in.horizontal * root_extent.horizontal / cell_resolution.horizontal, \
@@ -109,7 +109,7 @@ def cells_to_pixels(cells_in, root_extent, cell_resolution):
 
 def pixels_to_cells(pixels_in, root_extent, cell_resolution):
     if not isinstance(root_extent, PixelExtentType):
-        raise Exception()
+        raise ExtentMissingError(root_extent)
     if pixels_in.horizontal is not None:
         return pixels_in.horizontal * cell_resolution.horizontal / root_extent.horizontal, \
                pixels_in.vertical * cell_resolution.vertical / root_extent.vertical
@@ -139,13 +139,20 @@ def named_color_to_rgba(named_color):
         "aqua": "00ffffff",
         "cyan": "00ffffff"
     }
-    return '#{}'.format(color_map[named_color])
+    return '#{}'.format(color_map[named_color.lower()])
 
 
 def convert_cell_region_to_percentage(cells_in, cell_resolution):
     return '{}% {}%'.format(
-        (float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100,
-        (float(cells_in.vertical) / float(cell_resolution.vertical)) * 100
+        round((float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100, 2),
+        round((float(cells_in.vertical) / float(cell_resolution.vertical)) * 100, 2)
+    )
+
+
+def convert_pixel_region_to_percentage(pixels_in, extent):
+    return '{}% {}%'.format(
+        round((float(pixels_in.horizontal) / float(extent.horizontal)) * 100, 2),
+        round((float(pixels_in.vertical) / float(extent.vertical)) * 100, 2)
     )
 
 
@@ -319,8 +326,12 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = [cls._int_or_none(x) for x in cls._groups_regex.match(instance).groups()]
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and cls._int_or_none('{:0<3}'.format(seconds_fraction_str)[:3]) or 0
+        return timedelta(hours=cls._int_or_none(hours_str), 
+            minutes=cls._int_or_none(minutes_str), 
+            seconds=cls._int_or_none(seconds_str), 
+            milliseconds=milliseconds)
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -367,8 +378,13 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = [cls._int_or_none(x) for x in cls._groups_regex.match(instance).groups()]
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and cls._int_or_none('{:0<3}'.format(seconds_fraction_str)[:3]) or 0
+        return timedelta(hours=cls._int_or_none(hours_str), 
+            minutes=cls._int_or_none(minutes_str), 
+            seconds=cls._int_or_none(seconds_str), 
+            milliseconds=milliseconds)
+        
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -511,6 +527,20 @@ class CellLengthType(ebuttdt_raw.cellLengthType):
 
 
 ebuttdt_raw.cellLengthType._SetSupersedingClass(CellLengthType)
+
+
+class PaddingType(SizingValidationMixin, ebuttdt_raw.paddingType):
+    _groups_regex = re.compile('([+-]?\d*(\.\d+)?(px|c|%))(\s([+-]?\d*(\.\d+)?(px|c|%)))?(\s([+-]?\d*(\.\d+)?(px|c|%)))?(\s([+-]?\d*(\.\d+)?(px|c|%)))?')
+
+
+    def _semantic_validate_sizing_context(self, dataset):
+        if 'px' in self:
+            extent = dataset['tt_element'].extent
+            if not isinstance(extent, ebuttdt_raw.pixelExtentType):
+                raise ExtentMissingError(self)
+
+ebuttdt_raw.paddingType._SetSupersedingClass(PaddingType)
+
 
 
 class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):

@@ -70,6 +70,11 @@ class BufferDelayNode {
   +process_document()
 }
 
+class DenesterNode{
+  ..methods..
+  +process_document()
+}
+
 class RetimingDelayNode{
   ..methods..
   +process_document()

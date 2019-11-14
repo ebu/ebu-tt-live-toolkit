@@ -53,7 +53,8 @@
     </tt:head>
 
     
-<tt:body dur="5s" ttm:role="caption">
+<!-- <tt:body dur="5s" ttm:role="caption"> -->
+<tt:body ttm:role="caption">
         <tt:div>
             <tt:metadata>
                 <ebuttm:facet expresses="has">Subtitle_Source_Facet is of type VOICE</ebuttm:facet>

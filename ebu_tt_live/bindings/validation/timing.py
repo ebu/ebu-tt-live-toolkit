@@ -1,9 +1,9 @@
 from datetime import timedelta
 
 from ebu_tt_live.bindings import get_xml_parsing_context
-from ebu_tt_live.errors import LogicError, SemanticValidationError, OutsideSegmentError
+from ebu_tt_live.errors import LogicError, SemanticValidationError, OutsideSegmentError, OverlappingActiveElementsError
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_TIMING_TYPE
-
+import itertools
 
 class TimingValidationMixin(object):
     """
@@ -21,6 +21,7 @@ class TimingValidationMixin(object):
     @property
     def computed_end_time(self):
         return self._computed_end_time
+
 
     def _pre_timing_set_attribute(self, attr_en, attr_use):
         # Pass in the timing_attribute_name to the context to help the timing type constructor refuse creation
@@ -77,11 +78,16 @@ class TimingValidationMixin(object):
             self._semantic_dataset['timing_syncbase'] += proposed_begin
 
         # If we have a non-zero availability time we need to factor it in BUT the syncbase stays
-        if self._semantic_dataset['availability_time']:
-            self._computed_begin_time = max(self._semantic_dataset['timing_syncbase'],
-                                            self._semantic_dataset['availability_time'])
-        else:
+        # this checks if it is a ttd doc
+        if 'ttd_element' in self._semantic_dataset:
             self._computed_begin_time = self._semantic_dataset['timing_syncbase']
+        else:
+            #assuming that this is a live document
+            if self._semantic_dataset['availability_time']:
+                self._computed_begin_time = max(self._semantic_dataset['timing_syncbase'],
+                                                self._semantic_dataset['availability_time'])
+            else:
+                self._computed_begin_time = self._semantic_dataset['timing_syncbase']
 
     def _pre_calculate_begin(self):
         self._pre_assign_begin(self._begin_timedelta)
@@ -103,7 +109,12 @@ class TimingValidationMixin(object):
         earliest_child_computed_begin = min(children_computed_begin_times)
         if earliest_child_computed_begin > self._computed_begin_time:
             # Adjustment scenario
-            self._computed_begin_time = earliest_child_computed_begin
+            # If no parent element specified a begin time, then we have found
+            # a case for the "earliest specified computed begin time" as per the
+            # specification and we can adjust the begin time to match the
+            # children's begin time.
+            if len(self._semantic_dataset['timing_begin_stack']) == 0:
+                self._computed_begin_time = earliest_child_computed_begin
 
     def _semantic_preprocess_timing(self, dataset, element_content):
         """
@@ -230,7 +241,10 @@ class TimingValidationMixin(object):
     # The inspected values are all attributes of the element so they do not
     # take part in the traversal directly we process them in the timed element's context instead: body, div, p, span
     def _semantic_timebase_validation(self, dataset, element_content):
-        time_base = dataset['tt_element'].timeBase
+        if 'tt_element' in dataset:
+            time_base = dataset['tt_element'].timeBase
+        else:
+            time_base = dataset['ttd_element'].timeBase
         if self.begin is not None:
             if hasattr(self.begin, 'compatible_timebases'):
                 # Check typing of begin attribute against the timebase
@@ -265,8 +279,36 @@ class TimingValidationMixin(object):
         # Register on timeline
         doc.add_to_timeline(self)
 
+
     # This section covers the copying operations of timed containers.
 
+    # this semantic validation only applies on ebu-tt-d type elements where the the origin and extent units are in %
+    def _semantic_validate_active_areas(self, dataset):
+        # Get the document instance
+        doc = dataset['document']
+        if self.computed_begin_time is not None and self.computed_end_time is not None:
+            affected_elements = doc.lookup_range_on_timeline(self.computed_begin_time, self.computed_end_time)
+            if len(affected_elements) > 1:
+                for elem1, elem2 in itertools.combinations(affected_elements, 2):
+                  if elem1 != elem2:
+                    if elem1.region is not None and elem2.region is not None \
+                        and elem1.region != elem2.region: #checking if the elements have regions
+                        # Getting coordinates from the attribute eg ['14% 16%']
+                        elem1_region = dataset['elements_by_id'][elem1.region]
+                        elem2_region = dataset['elements_by_id'][elem2.region]
+                        origins_1 = elem1_region.origin.split(' ')
+                        origins_2 = elem2_region.origin.split(' ')
+                        l1 =  [float(origin.strip('%')) for origin in origins_1] 
+                        l2 =  [float(origin.strip('%')) for origin in origins_2] 
+                        extents_1 = elem1_region.extent.split(' ')
+                        extents_2 = elem1_region.extent.split(' ')
+                        r1 = [float(extent.strip('%')) for extent in extents_1] 
+                        r2 = [float(extent.strip('%')) for extent in extents_2] 
+                        # Checking for overlapping rectangles
+                        if l1[0] < r2[0] and r1[0] > l2[0] and l1[1] > r2[1] and r1[1] < l2[1]:
+                            raise OverlappingActiveElementsError(self)
+    
+ 
     def is_in_segment(self, begin=None, end=None):
         if begin is not None:
             if self.computed_end_time is not None and self.computed_end_time <= begin:
@@ -286,7 +328,7 @@ class TimingValidationMixin(object):
     def is_timed_leaf(self):
         return False
 
-    def _semantic_copy_apply_leaf_timing(self, copied_instance, dataset, element_content=None):
+    def _semantic_copy_apply_leaf_timing(self, copied_instance, dataset ,element_content=None):
         if not copied_instance.is_timed_leaf():
             copied_instance.begin = None
             copied_instance.end = None
@@ -357,6 +399,35 @@ class BodyTimingValidationMixin(TimingValidationMixin):
             end_timedelta = self._semantic_dataset['timing_end_stack'].pop()
 
         return end_timedelta
+
+    def _post_calculate_begin(self, children):
+        """
+        The computed begin time shall be moved down to match that of the earliest child begin time in case the container
+        does not specify a begin time itself. NOTE: This does not modify the syncbase.
+
+        :param children:
+        :return:
+        """
+
+        if not children:
+            if 'availability_time' in self._semantic_dataset:
+                if self.begin is None:
+                    self._computed_begin_time = self._semantic_dataset['availability_time']
+                if self.end is None and self.dur is not None:
+                    self._computed_end_time = self._computed_begin_time + self._dur_timedelta
+            return
+
+        children_computed_begin_times = [item.computed_begin_time for item in children]
+
+        earliest_child_computed_begin = min(children_computed_begin_times)
+        if 'availability_time' in self._semantic_dataset:
+            earliest_child_computed_begin = max(earliest_child_computed_begin, self._semantic_dataset['availability_time'])
+        
+        if earliest_child_computed_begin > self._computed_begin_time:
+            # Adjustment scenario
+            self._computed_begin_time = earliest_child_computed_begin
+            if self.dur is not None and self.begin is None:
+                self._computed_end_time = self._computed_begin_time + self._dur_timedelta
 
     def _semantic_timebase_validation(self, dataset, element_content):
 

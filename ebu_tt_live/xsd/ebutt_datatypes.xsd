@@ -218,25 +218,25 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 	</xs:simpleType>
 	<xs:simpleType name="namedColorType">
 		<xs:restriction base="xs:token">
-			<xs:enumeration value="transparent"/>
-			<xs:enumeration value="black"/>
-			<xs:enumeration value="silver"/>
-			<xs:enumeration value="gray"/>
-			<xs:enumeration value="white"/>
-			<xs:enumeration value="maroon"/>
-			<xs:enumeration value="red"/>
-			<xs:enumeration value="purple"/>
-			<xs:enumeration value="fuchsia"/>
-			<xs:enumeration value="magenta"/>
-			<xs:enumeration value="green"/>
-			<xs:enumeration value="lime"/>
-			<xs:enumeration value="olive"/>
-			<xs:enumeration value="yellow"/>
-			<xs:enumeration value="navy"/>
-			<xs:enumeration value="blue"/>
-			<xs:enumeration value="teal"/>
-			<xs:enumeration value="aqua"/>
-			<xs:enumeration value="cyan"/>
+			<xs:pattern value="[Tt][Rr][Aa][Nn][Ss][Pp][Aa][Rr][Ee][Nn][Tt]"/>
+			<xs:pattern value="[Bb][Ll][Aa][Cc][Kk]"/>
+			<xs:pattern value="[Ss][Ii][Ll][Vv][Ee][Rr]"/>
+			<xs:pattern value="[Gg][Rr][Aa][Yy]"/>
+			<xs:pattern value="[Ww][Hh][Ii][Tt][Ee]"/>
+			<xs:pattern value="[Mm][Aa][Rr][Oo][Oo][Nn]"/>
+			<xs:pattern value="[Rr][Ee][Dd]"/>
+			<xs:pattern value="[Pp][Uu][Rr][Pp][Ll][Ee]"/>
+			<xs:pattern value="[Ff][Uu][Cc][Hh][Ss][Ii][Aa]"/>
+			<xs:pattern value="[Mm][Aa][Gg][Ee][Nn][Tt][Aa]"/>
+			<xs:pattern value="[Gg][Rr][Ee][Ee][Nn]"/>
+			<xs:pattern value="[Ll][Ii][Mm][Ee]"/>
+			<xs:pattern value="[Oo][Ll][Ii][Vv][Ee]"/>
+			<xs:pattern value="[Yy][Ee][Ll][Ll][Oo][Ww]"/>
+			<xs:pattern value="[Nn][Aa][Vv][Yy]"/>
+			<xs:pattern value="[Bb][Ll][Uu][Ee]"/>
+			<xs:pattern value="[Tt][Ee][Aa][Ll]"/>
+			<xs:pattern value="[Aa][Qq][Uu][Aa]"/>
+			<xs:pattern value="[Cc][Yy][Aa][Nn]"/>
 		</xs:restriction>
 	</xs:simpleType>
 

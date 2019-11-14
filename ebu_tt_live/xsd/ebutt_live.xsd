@@ -193,6 +193,12 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 					application.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute ref="xml:lang">
+			<xs:annotation>
+				<xs:documentation>Language identifier that overwrites the language identification of
+					the enclosed subtitle content.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="region" type="xs:IDREF">
 			<xs:annotation>
 				<xs:documentation>Application of layout and style information through reference of a

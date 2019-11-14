@@ -1,4 +1,4 @@
-from pytest_bdd import when, scenarios, then
+from pytest_bdd import when, scenarios, then, parsers
 from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.bindings import ebuttdt
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
@@ -13,11 +13,13 @@ scenarios('features/styles/lineHeight.feature')
 
 
 @when('it has a cell resolution of <cell_resolution>')
+@when(parsers.parse('it has a cell resolution of "{cell_resolution}"'))
 def when_cell_resolution(template_dict, cell_resolution):
     template_dict['cell_resolution'] = cell_resolution
 
 
 @when('it has extent of <extent>')
+@when(parsers.parse('it has extent of "{extent}"'))
 def when_extent(template_dict, extent):
     template_dict['extent'] = extent
 

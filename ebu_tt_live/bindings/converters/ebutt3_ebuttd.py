@@ -38,6 +38,11 @@ class EBUTT3EBUTTDConverter(object):
         if time_base == 'smpte':
             raise NotImplementedError()
 
+    def _process_timing_from_timedelta(self, timing_type):
+        if timing_type is None:
+            return None
+        return ebuttdt.FullClockTimingType.from_timedelta(timing_type)
+
     def _adjusted_font_style_map(self):
         return self._semantic_dataset.setdefault(self._dataset_key_for_font_styles, {})
 
@@ -110,8 +115,17 @@ class EBUTT3EBUTTDConverter(object):
 
             if isinstance(computed_line_height, ebuttdt.CellLineHeightType):
                 adjusted_style.lineHeight = ebuttdt.PercentageLineHeightType(
-                    computed_line_height.vertical / computed_font_size.vertical * 100
+                    '{0:g}%'.format(round(computed_line_height.vertical / computed_font_size.vertical * 100, 2))
                 )
+            elif isinstance(computed_line_height, ebuttdt.PercentageLineHeightType):
+                adjusted_style.lineHeight = computed_line_height
+            elif isinstance(computed_line_height, ebuttdt.PixelLineHeightType):
+                adjusted_style.lineHeight = ebuttdt.PercentageLineHeightType(
+                    '{0:g}%'.format(round((computed_line_height.vertical / dataset['extent'].vertical)/ computed_font_size.vertical * 100, 2))
+                )
+            elif computed_line_height == 'normal':
+                adjusted_style.lineHeight = computed_line_height
+                
             if celem.style is None:
                 celem.style = [
                     adjusted_style.id
@@ -131,6 +145,7 @@ class EBUTT3EBUTTDConverter(object):
     def convert_tt(self, tt_in, dataset):
         dataset['timeBase'] = tt_in.timeBase
         dataset['cellResolution'] = tt_in.cellResolution
+        dataset['extent'] = tt_in.extent
         new_elem = ttd(
             head=self.convert_element(tt_in.head, dataset),
             body=self.convert_element(tt_in.body, dataset),
@@ -157,8 +172,8 @@ class EBUTT3EBUTTDConverter(object):
                 new_elem.append(item)
 
         metadata = headMetadata_type()
-        metadata.documentMetadata = documentMetadata(conformsToStandard = [
-            'http://www.w3.org/ns/ttml/profile/imsc1/text', 
+        metadata.documentMetadata = documentMetadata(conformsToStandard=[
+            'http://www.w3.org/ns/ttml/profile/imsc1/text',
             'urn:ebu:tt:distribution:2018-04'
         ])
         new_elem.metadata = metadata
@@ -188,10 +203,27 @@ class EBUTT3EBUTTDConverter(object):
         if origin is not None:
             if isinstance(origin, ebuttdt.cellOriginType):
                 origin = ebuttdt.convert_cell_region_to_percentage(origin, dataset['cellResolution'])
+            elif isinstance(origin, ebuttdt.pixelOriginType):
+                origin = ebuttdt.convert_pixel_region_to_percentage(origin, dataset['extent'])
         extent = region_in.extent
         if extent is not None:
             if isinstance(extent, ebuttdt.cellExtentType):
                 extent = ebuttdt.convert_cell_region_to_percentage(extent, dataset['cellResolution'])
+            elif isinstance(extent, ebuttdt.pixelExtentType):
+                extent = ebuttdt.convert_pixel_region_to_percentage(extent, dataset['extent'])
+
+        if region_in.padding == None:
+            region_validated_styles = [style for style in region_in.validated_styles if style.id in region_in.style]
+            for region_style in region_validated_styles:
+                parent_styles = region_style.ordered_styles(dataset)
+                if parent_styles:
+                    for parent_style in parent_styles:
+                        if parent_style.padding:
+                            region_in.padding = parent_style.padding
+                else:
+                 if region_style.padding:
+                    region_in.padding = region_style.padding
+
         new_elem = d_region_type(
             *self.convert_children(region_in, dataset),
             id=region_in.id,
@@ -216,32 +248,36 @@ class EBUTT3EBUTTDConverter(object):
         return new_elem
 
     def convert_style(self, style_in, dataset):
-        color = style_in.color
+        ordered_styles = style_in.ordered_styles(dataset)
+        computed_style = style_type(id=style_in.id)
+        for s in ordered_styles:
+            computed_style.add(s)
+        color = computed_style.color
         if color is not None:
             if isinstance(color, ebuttdt.namedColorType):
                 color = ebuttdt.named_color_to_rgba(color)
-        backgroundColor = style_in.backgroundColor
+        backgroundColor = computed_style.backgroundColor
         if backgroundColor is not None:
             if isinstance(backgroundColor, ebuttdt.namedColorType):
                 backgroundColor = ebuttdt.named_color_to_rgba(backgroundColor)
         new_elem = d_style_type(
-            *self.convert_children(style_in, dataset),
-            id=style_in.id,
-            style=style_in.style,  # there is no ordering requirement in styling so too soon to deconflict here
-            direction=style_in.direction,
-            fontFamily=style_in.fontFamily,
+            *self.convert_children(computed_style, dataset),
+            id=computed_style.id,
+            style=computed_style.style,  # there is no ordering requirement in styling so too soon to deconflict here
+            direction=computed_style.direction,
+            fontFamily=computed_style.fontFamily,
             fontSize=None,  # This will be regenerated in separate style. This is necessary due to % fontSize conversions
             lineHeight=None,  # lineHeight also receives the fontSize treatment
-            textAlign=style_in.textAlign,
+            textAlign=computed_style.textAlign,
             color=color,
             backgroundColor=backgroundColor,
-            fontStyle=style_in.fontStyle,
-            fontWeight=style_in.fontWeight,
-            textDecoration=style_in.textDecoration,
-            unicodeBidi=style_in.unicodeBidi,
-            wrapOption=style_in.wrapOption,
-            padding=style_in.padding,
-            linePadding=style_in.linePadding,
+            fontStyle=computed_style.fontStyle,
+            fontWeight=computed_style.fontWeight,
+            textDecoration=computed_style.textDecoration,
+            unicodeBidi=computed_style.unicodeBidi,
+            wrapOption=computed_style.wrapOption,
+            padding=computed_style.padding,
+            linePadding=computed_style.linePadding,
             _strict_keywords=False
         )
         return new_elem
@@ -252,11 +288,14 @@ class EBUTT3EBUTTDConverter(object):
         new_elem = d_body_type(
             *self.convert_children(body_in, dataset),
             agent=body_in.agent,
-            role=body_in.role
+            role=body_in.role,
+            style=body_in.style
         )
         return new_elem
 
     def convert_div(self, div_in, dataset):
+        if len(div_in.orderedContent()) == 0:
+            return None
         new_elem = d_div_type(
             *self.convert_children(div_in, dataset),
             id=div_in.id,
@@ -270,8 +309,8 @@ class EBUTT3EBUTTDConverter(object):
         new_elem = d_p_type(
             *self.convert_children(p_in, dataset),
             space=p_in.space,
-            begin=self._process_timing_type(p_in.begin, dataset=dataset),
-            end=self._process_timing_type(p_in.end, dataset=dataset),
+            begin=None if p_in.is_timed_leaf()==False else self._process_timing_from_timedelta(p_in.computed_begin_time),
+            end=None if p_in.is_timed_leaf()==False else self._process_timing_from_timedelta(p_in.computed_end_time),
             lang=p_in.lang,
             id=p_in.id,
             region=p_in.region,
@@ -285,8 +324,8 @@ class EBUTT3EBUTTDConverter(object):
         new_elem = d_span_type(
             *self.convert_children(span_in, dataset),
             space=span_in.space,
-            begin=self._process_timing_type(span_in.begin, dataset=dataset),
-            end=self._process_timing_type(span_in.end, dataset=dataset),
+            begin=self._process_timing_from_timedelta(span_in.computed_begin_time),
+            end=self._process_timing_from_timedelta(span_in.computed_end_time),
             lang=span_in.lang,
             id=span_in.id,
             style=span_in.style,

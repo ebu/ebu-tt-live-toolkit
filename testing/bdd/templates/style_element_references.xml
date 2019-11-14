@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ebuttp:sequenceIdentifier="TestSequence"
+        ebuttp:sequenceNumber="1"
+        ttp:timeBase="media"
+        {% if cell_resolution %} ttp:cellResolution="{{ cell_resolution }}" {% endif %}
+        {% if extent %} tts:extent="{{ extent }}" {% endif %}
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:f="urn:foreign">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+      <f:foreignMetadata>Fake metadata</f:foreignMetadata>
+    </tt:metadata>
+    {% if styles %}
+    <tt:styling>
+      {% for style in styles %}
+        <tt:style xml:id="{{ style.id }}" {% if style.style %} style="{{ style.style }}" {% endif %}
+        {% if style.color %} tts:color="{{ style.color }}" {% endif %}
+        {% if style.backgroundColor %} tts:backgroundColor="{{ style.backgroundColor }}" {% endif %}
+        {% if style.fontFamily %} tts:fontFamily="{{ style.fontFamily }}" {% endif %} 
+        {% if style.padding %} tts:padding="{{style.padding}}" {% endif %}
+        {% if style.lineHeight %} tts:lineHeight="{{style.lineHeight}}" {% endif %}
+        {% if style.fontSize %} tts:fontSize="{{style.fontSize}}" {% endif %}  />
+        {% endfor %}
+    </tt:styling>
+    {% endif %}
+    <tt:layout>
+       {%if regions%}
+        {% for region in regions%}
+          <tt:region xml:id="{{region.id}}"
+            {% if region.style %} style="{{region.style}}" {% endif %}
+            {% if region.padding %} tts:padding="{{region.padding}}" {% endif %}
+            tts:displayAlign="after"
+            tts:extent="{% if region.extent %}{{region.extent}}{% else %}71.25% 24%{% endif %}"
+            tts:origin="{% if region.origin %}{{region.origin}}{% else %}14.375% 60%{% endif %}"
+            tts:overflow="visible"
+            tts:writingMode="lrtb"/>
+        {% endfor %}
+      {% endif %}
+    </tt:layout>
+  </tt:head>
+  <tt:body begin="500ms" dur="00:00:05">
+      <tt:div>
+        <tt:p begin="500ms" end="3420ms" xml:id="ID006" {% if text_region %} region="{{text_region}}" {% endif %}>
+          <tt:span {% if text_style %} style="{{text_style}}" {% endif %} >Some example text...</tt:span>
+          <tt:br/>
+          <tt:span>And another line</tt:span>
+        </tt:p>
+      </tt:div>
+  </tt:body>
+</tt:tt>
+
