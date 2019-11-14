@@ -24,8 +24,8 @@ Feature: Compute fontSize on a single EBU-TT Live element
 
     Examples:
     | xml_file                      | extent | cell_resolution | S1_value | S2_value | S3_value | S4_value  | S5_value | S6_value |
-    | ebuttd_fontsize_convert.xml   |        | 32 15           | 100%     | 100%     | 100%     | 100%      | 100%     | 100%     |
-    | ebuttd_fontsize_convert.xml   |        | 32 15           | 50%      | 100%     | 100%     | 100%      | 1c       | 1c       |
+    | ebuttd_fontsize_convert.xml   |        | 40 22           | 100%     | 100%     | 100%     | 100%      | 100%     | 100%     |
+    | ebuttd_fontsize_convert.xml   |        | 40 22           | 50%      | 100%     | 100%     | 100%      | 1c       | 1c       |
 
 
 

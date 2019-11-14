@@ -80,3 +80,11 @@ node Package
     :members:
     :undoc-members:
     :show-inheritance:
+
+:mod:`denester` Module
+----------------------
+
+.. automodule:: ebu_tt_live.node.denester
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -145,8 +145,8 @@ Feature: Computed element active begin and end times
     And it has body end time <body_end>
     And it has div begin time <div_begin>
     And it has div end time <div_end>
-    And the document is generated
     And it is available at <availability_time>
+    And the document is generated
     Then body active begin time is <body_active_begin>
     And body active end time is <body_active_end>
     And div active begin time is <div_active_begin>
@@ -159,3 +159,8 @@ Feature: Computed element active begin and end times
     |            | 00:01:00 |          |           |          |                   | 00:00:00          | 00:01:00        | 00:00:00         | 00:01:00       |
     |            | 00:01:00 |          |           |          | 00:00:05          | 00:00:05          | 00:01:05        | 00:00:05         | 00:01:05       |
     |            | 00:01:00 | 00:00:50 |           |          |                   | 00:00:00          | 00:00:50        | 00:00:00         | 00:00:50       |
+@skip
+# Skipping tests where body has dur and there's a div with times because denester doesn't deal with them yet.
+    |            | 00:00:05 |          | 01:00:00  |          |                   | 01:00:00          | 01:00:05        | 01:00:00         | 01:00:05       |
+    |            | 00:00:05 |          | 00:00:05  | 00:00:12 |                   | 00:00:05          | 00:00:10        | 00:00:05         | 00:00:10       |
+    

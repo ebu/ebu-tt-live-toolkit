@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ebuttp:sequenceIdentifier="TestSequence"
+        ebuttp:sequenceNumber="1"
+        ttp:clockMode="local"
+        ttp:timeBase="clock"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:ebuttp="urn:ebu:tt:parameters"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace"
+        xmlns:f="urn:foreign"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
+        xmlns:ebutts="urn:ebu:tt:style"
+        xml:lang="it" >
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="S1" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center"/>
+      <tt:style xml:id="S2" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center"/>
+    </tt:styling>
+    <tt:layout/>
+  </tt:head>
+  <tt:body begin="500ms" dur="00:00:05">
+      <tt:div xml:id="d2" style="S1 S2" >
+          <tt:metadata>
+              <ebuttm:facet expresses="has">Subtitle_Source_Facet is of type CUE</ebuttm:facet>
+            </tt:metadata>
+        <tt:p xml:id="p1">
+                <tt:span>text</tt:span>
+        </tt:p>
+      </tt:div>
+
+      <tt:div xml:id="d3" style="S1 S2" >
+          <tt:metadata>
+              <ebuttm:facet expresses="has">Subtitle_Source_Facet is of type CUE</ebuttm:facet>
+            </tt:metadata>
+        <tt:p xml:id="p2">
+                <tt:span>text2</tt:span>
+        </tt:p>
+      </tt:div>
+  </tt:body>
+</tt:tt>

@@ -125,6 +125,9 @@ Node type dependent options for [nodeN] : ::
 
    type="distributor" : No options
 
+   type="denester"
+   └─sequence_identifier : sequence identifier, default "Denester1"
+
 Output carriage type dependent options for "carriage": ::
 
    type="direct"

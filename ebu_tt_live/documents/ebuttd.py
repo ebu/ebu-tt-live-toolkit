@@ -3,16 +3,16 @@ from xml.dom import minidom
 from .base import SubtitleDocument, TimeBase
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings.converters.ebutt3_ebuttd import EBUTT3EBUTTDConverter
-
-
+from ebu_tt_live.documents.time_utils import TimelineUtilMixin
+from datetime import timedelta
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
 
-class EBUTTDDocument(SubtitleDocument):
+class EBUTTDDocument(SubtitleDocument, TimelineUtilMixin):
 
-    _implicit_ns = False
     _ebuttd_content = None
+    _implicit_ns = None
 
     def __init__(self, lang):
         self._ebuttd_content = bindings.ttd(
@@ -30,7 +30,9 @@ class EBUTTDDocument(SubtitleDocument):
         self._implicit_ns = value
 
     def validate(self):
-        self._ebuttd_content.validateBinding()
+        self._ebuttd_content.validateBinding(
+            document=self
+        )
 
     @classmethod
     def create_from_xml(cls, xml):
