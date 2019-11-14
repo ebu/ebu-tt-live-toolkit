@@ -38,13 +38,6 @@ class _TimedeltaBindingMixin(object):
     }
 
     @classmethod
-    def _int_or_none(cls, value):
-        try:
-            return int(value)
-        except TypeError:
-            return 0
-
-    @classmethod
     def compatible_timebases(cls):
         return cls._compatible_timebases
 
@@ -327,10 +320,10 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :return:
         """
         hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
-        milliseconds = seconds_fraction_str and cls._int_or_none('{:0<3}'.format(seconds_fraction_str)[:3]) or 0
-        return timedelta(hours=cls._int_or_none(hours_str), 
-            minutes=cls._int_or_none(minutes_str), 
-            seconds=cls._int_or_none(seconds_str), 
+        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
+        return timedelta(hours=int(hours_str), 
+            minutes=int(minutes_str), 
+            seconds=int(seconds_str), 
             milliseconds=milliseconds)
 
     @classmethod
@@ -379,11 +372,12 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :return:
         """
         hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
-        milliseconds = seconds_fraction_str and cls._int_or_none('{:0<3}'.format(seconds_fraction_str)[:3]) or 0
-        return timedelta(hours=cls._int_or_none(hours_str), 
-            minutes=cls._int_or_none(minutes_str), 
-            seconds=cls._int_or_none(seconds_str), 
+        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
+        return timedelta(hours=int(hours_str), 
+            minutes=int(minutes_str), 
+            seconds=int(seconds_str), 
             milliseconds=milliseconds)
+
         
 
     @classmethod
