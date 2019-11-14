@@ -380,6 +380,7 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
 
         
 
+
     @classmethod
     def from_timedelta(cls, instance):
         """

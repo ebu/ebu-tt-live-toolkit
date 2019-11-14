@@ -68,7 +68,7 @@ class TestDocumentLeaks(TestCase):
         doc = EBUTT3Document.create_from_xml(
             template_file.render(temp_dict)
         )
-        # print 'doc id {} created'.format(id(doc))
+        # print('doc id {} created'.format(id(doc)))
         return doc
 
     def test_single_document_removed(self):
