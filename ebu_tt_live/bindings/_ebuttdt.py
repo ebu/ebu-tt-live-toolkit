@@ -326,6 +326,7 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
             seconds=int(seconds_str), 
             milliseconds=milliseconds)
 
+
     @classmethod
     def from_timedelta(cls, instance):
         """
