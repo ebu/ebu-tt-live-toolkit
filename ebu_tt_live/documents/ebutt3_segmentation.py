@@ -158,6 +158,7 @@ class EBUTT3Segmenter(RecursiveOperation):
             self._segment.head.styling = None
         if len(self._segment.head.layout.region) == 0:
             self._segment.head.layout.region = None
+            self._segment.head.layout = None
 
     def compute_document_segment(self):
         # Init

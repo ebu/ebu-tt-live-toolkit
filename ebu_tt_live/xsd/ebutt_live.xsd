@@ -97,7 +97,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 		</xs:annotation>
 		<xs:sequence>
 		    <xs:element name="metadata" type="ebuttm:anyMetadata_type" minOccurs="0"/>
-			<xs:element name="region" type="tt:region" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="region" type="tt:region" minOccurs="1" maxOccurs="unbounded"/>
 		</xs:sequence>
 
 	</xs:complexType>

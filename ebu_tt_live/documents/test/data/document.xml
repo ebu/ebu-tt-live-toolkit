@@ -9,6 +9,7 @@
         xmlns:ebuttp="urn:ebu:tt:parameters"
         xmlns:tt="http://www.w3.org/ns/ttml"
         xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
         xmlns:xml="http://www.w3.org/XML/1998/namespace">
   <tt:head>
     <tt:metadata>
@@ -17,7 +18,9 @@
     <tt:styling>
       <tt:style xml:id="ID001"/>
     </tt:styling>
-    <tt:layout/>
+    <tt:layout>
+      <tt:region xml:id="r1" tts:origin="0% 0%" tts:extent="100% 100%"/>
+    </tt:layout>
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
     <tt:div>
