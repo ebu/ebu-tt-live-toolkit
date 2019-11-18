@@ -939,7 +939,7 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
         output = []
 
         for item in children:
-            log.debug('processing child: {} of {}'.format(item.value, element))
+            #log.debug('processing child: {} of {}'.format(item.value, element))
             if isinstance(item, NonElementContent):
                 copied_stuff = copy.copy(item.value)
                 output.append(copied_stuff)

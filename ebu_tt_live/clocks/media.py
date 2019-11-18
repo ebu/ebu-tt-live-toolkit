@@ -25,7 +25,7 @@ class MediaClock(Clock):
         return current_time
 
     def get_media_time(self, real_clock_timedelta):
-        return self._reference_mapping.remote + (real_clock_timedelta - self._reference_mapping.local)
+        return timedelta(days=self._reference_mapping.remote.days) + (real_clock_timedelta - self._reference_mapping.local)
 
     def get_real_clock_time(self):
         return self._reference_mapping.remote + (self.get_machine_time() - self._reference_mapping.local)

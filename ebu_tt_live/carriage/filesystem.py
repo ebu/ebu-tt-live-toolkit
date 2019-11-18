@@ -9,6 +9,7 @@ import logging
 import six
 import os
 import time
+import codecs
 
 
 log = logging.getLogger(__name__)
@@ -72,20 +73,21 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                  file_name_pattern = CFG_FILENAME_PATTERN, 
                  message_file_name_pattern = CFG_MESSAGE_PATTERN, 
                  circular_buf_size = 0, 
-                 suppress_manifest = False):
+                 suppress_manifest = False,
+                 first_msg_counter = 0):
         self._dirpath = dirpath
         if not os.path.exists(self._dirpath):
             os.makedirs(self._dirpath)
         self._file_name_pattern = file_name_pattern
         self._message_file_name_pattern = message_file_name_pattern
         self._counter = 0
+        self._msg_counter = first_msg_counter
         self._circular_buf_size = circular_buf_size
         if circular_buf_size > 0 :
             self._circular_buf = RotatingFileBuffer(maxlen=circular_buf_size)
         self._suppress_manifest = suppress_manifest
         # Get a set of default clocks
         self._default_clocks = {}
-        self._msg_counter = 0
 
     def _get_default_clock(self, sequence_identifier, time_base, clock_mode=None):
         clock_obj = self._default_clocks.get(sequence_identifier, None)
@@ -96,6 +98,9 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
                 self._default_clocks[sequence_identifier] = clock_obj
         return clock_obj
 
+    def set_message_counter(self, message_counter):
+        self._msg_counter = message_counter
+        
     def check_availability_time(
             self, sequence_identifier, time_base=None, clock_mode=None, availability_time=None):
         """
@@ -153,7 +158,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
         # can be selected once at the beginning and dereferenced rather than repeating
         # if statements.
         filepath = os.path.join(self._dirpath, filename)
-        with open(filepath, 'w') as destfile:
+        with codecs.open(filepath, mode='w', errors='ignore') as destfile:
             destfile.write(data)
             destfile.flush()
                         
@@ -198,7 +203,7 @@ class FilesystemProducerImpl(AbstractProducerCarriage):
             new_manifest_line = CFG_MANIFEST_LINE_PATTERN.format(
                 availability_time=timedelta_to_str_manifest(availability_time), 
                 filename=filename)
-            with open(self._manifest_path, 'a') as f:
+            with codecs.open(self._manifest_path, mode='a', errors='ignore') as f:
                 f.write(new_manifest_line)
 
 
@@ -236,11 +241,11 @@ class FilesystemReader(object):
         self._manifest_path = manifest_path
         self._custom_consumer = custom_consumer
         self._do_tail = do_tail
-        with open(manifest_path, 'r') as manifest:
+        with codecs.open(manifest_path, 'r') as manifest:
             self._manifest_lines_iter = iter(manifest.readlines())
 
     def resume_reading(self):
-        with open(self._manifest_path, 'r') as manifest_file:
+        with codecs.open(self._manifest_path, 'r') as manifest_file:
             while True:
                 manifest_line = manifest_file.readline()
                 if not manifest_line:
@@ -256,7 +261,7 @@ class FilesystemReader(object):
                     availability_time_str, xml_file_name = manifest_line.rstrip().split(',')
                     xml_file_path = os.path.join(self._dirpath, xml_file_name)
                     xml_content = None
-                    with open(xml_file_path, 'r') as xml_file:
+                    with codecs.open(xml_file_path, 'r') as xml_file:
                         xml_content = xml_file.read()
                     data = [availability_time_str, xml_content]
                     self._custom_consumer.on_new_data(data)
