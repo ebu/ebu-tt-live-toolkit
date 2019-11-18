@@ -205,6 +205,7 @@ class TestProdServerToConsClientProtocols(_NewWSCommon, TestCase):
         # This is meant to fail handshake so wait for AssertionError here
         self.assertRaises(AssertionError, self._connect)
 
+    @pytest.mark.xfail(reason="Twisted deferred testing needs to be reworked.")
     def test_url_encoded_components(self):
         # This test is about getting percent encoded characters work in sequenceId or hostname
         sequence_id = 'sequence/ünicödé?/Name'

@@ -19,4 +19,5 @@ The components mimic the nodes and carriage mechanisms defined in the specificat
     segmentation
     deduplication
     denesting
-    conversion
+    conversion_from_ebutt
+    conversion_to_ebuttd

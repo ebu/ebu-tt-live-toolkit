@@ -342,7 +342,7 @@ Please note that the EBU-TT XML Schema is a helping document and NOT normative b
 							text row (MNC). </xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="documentStartOfProgramme" type="ebuttdt:smpteTimingType" minOccurs="0">
+				<xs:element name="documentStartOfProgramme" type="ebuttdt:startOfProgrammeTimingType" minOccurs="0">
 					<xs:annotation>
 						<xs:documentation>The time code of the first frame of the recorded video
 							signal which is intended for transmission. Note: When the referenced

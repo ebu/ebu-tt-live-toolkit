@@ -23,12 +23,15 @@
         xmlns:xml="http://www.w3.org/XML/1998/namespace">
   <tt:head>
     <tt:metadata>
-      <ebuttm:documentMetadata/>
+      <ebuttm:documentMetadata>
+      {% if start_of_programme %}
+        <ebuttm:documentStartOfProgramme>{{ start_of_programme }}</ebuttm:documentStartOfProgramme>
+       {% endif %}
+      </ebuttm:documentMetadata>
     </tt:metadata>
     <tt:styling>
       <tt:style xml:id="ID001"/>
     </tt:styling>
-    <tt:layout/>
   </tt:head>
   <tt:body
 {% if body_begin %}

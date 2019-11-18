@@ -3,6 +3,7 @@ from .common import create_loggers
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings import _ebuttdt as datatypes
+from ebu_tt_live.bindings import load_types_for_document
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from pyxb import BIND
 from datetime import timedelta, datetime
@@ -14,6 +15,7 @@ def main():
     create_loggers(logging.INFO)
     log.info('Dummy XML Encoder')
 
+    load_types_for_document('ebutt3')
     tt = bindings.tt(
         sequenceIdentifier='testSequence001',
         sequenceNumber='1',

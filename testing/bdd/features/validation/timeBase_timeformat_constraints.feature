@@ -194,3 +194,29 @@ Feature: ttp:timeBase-related attribute constraints
     | timeBase_timeformat.xml | smpte     | 11.11:11     |           |
     | timeBase_timeformat.xml | smpte     | 11.11        |           |
     | timeBase_timeformat.xml | smpte     | 11:11:11:111 |           |
+
+Scenario: Times in documentStartOfProgramme do not cause processing or validation error
+  Given an xml file <xml_file>
+  When it has timeBase <time_base>
+  And it has documentStartOfProgramme <start_time>
+  Then document is valid
+
+  Examples:
+  | xml_file                        | time_base  | start_time   |
+  | timeBase_timeformat.xml         | media      | 00:00:00.000 |
+  | timeBase_timeformat.xml         | clock      | 00:00:00.000 |
+  | timeBase_timeformat.xml         | smpte      | 10:00:00:00  |
+
+# Element based time validation is not yet implemented
+@skip
+Scenario: Times in documentStartOfProgramme do cause validation error
+  Given an xml file <xml_file>
+  When it has timeBase <time_base>
+  And it has documentStartOfProgramme <start_time>
+  Then document is invalid
+
+  Examples:
+  | xml_file                        | time_base  | start_time   |
+  | timeBase_timeformat.xml         | media      | 00:00:00:00  |
+  | timeBase_timeformat.xml         | clock      | 00:00:60     |
+  | timeBase_timeformat.xml         | smpte      | 10:00:00.00  |

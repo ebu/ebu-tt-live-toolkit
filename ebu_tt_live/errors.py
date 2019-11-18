@@ -22,6 +22,10 @@ class TimeFormatOverflowError(Exception):
     pass
 
 
+class TimeNegativeError(Exception):
+    pass
+
+
 class XMLParsingFailed(Exception):
     pass
 

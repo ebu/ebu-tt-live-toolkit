@@ -96,9 +96,9 @@ Feature: Merging nested elements
         And the EBU-TT-Live document is denested
         And the EBU-TT-Live document is converted to EBU-TT-D
         Then EBUTTD document is valid
-        And any span with the style "nestSizing" also has the style "autogenFontStyle_None_50.0"
-        And any span with the style "nestSizingnestSizing" also has the style "autogenFontStyle_None_25.0"
-        And any span with the style "nestSizingnestSizingnestSizing" also has the style "autogenFontStyle_None_12.5"
+        And any span with the style "nestSizing" also has the style "autogenFontStyle_None_50.0_n"
+        And any span with the style "nestSizingnestSizing" also has the style "autogenFontStyle_None_25.0_n"
+        And any span with the style "nestSizingnestSizingnestSizing" also has the style "autogenFontStyle_None_12.5_n"
 
         Examples:
             | xml_file                   |

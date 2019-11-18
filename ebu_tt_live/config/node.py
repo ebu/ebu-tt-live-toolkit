@@ -192,16 +192,42 @@ class RetimingDelay(ConsumerMixin, ProducerMixin, NodeBase):
         self._create_input(config)
         self._create_output(config)
 
+
 class Denester(ConsumerMixin, ProducerMixin, NodeBase):
     required_config = Namespace()
+    required_config.add_option('id', default='denester')
+    required_config.add_option(
+        'sequence_identifier',
+        default='DenestedSequence1')
 
     def _create_component(self, config):
         self.component = processing_node.DenesterNode(
-            node_id=self.config.id
+            node_id=self.config.id,
+            sequence_identifier=self.config.sequence_identifier
         )
 
     def __init__(self, config, local_config):
         super(RetimingDelay, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
+
+
+class ElementRemover(ConsumerMixin, ProducerMixin, NodeBase):
+    required_config = Namespace()
+    required_config.add_option('sequence_identifier',
+                               default='RemovedElementSequence1')
+    required_config.add_option('remove_list', default='')
+
+    def _create_component(self, config):
+        self.component = processing_node.ElementRemoverNode(
+            node_id=self.config.id,
+            sequence_identifier=self.config.sequence_identifier,
+            remove_list=self.config.remove_list
+        )
+
+    def __init__(self, config, local_config):
+        super(ElementRemover, self).__init__(config, local_config)
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
@@ -260,11 +286,35 @@ class SimpleProducer(ProducerMixin, NodeBase):
         self.backend.call_periodically(self.component.resume_producing, interval=self.config.interval)
 
 
+class EBUTT1EBUTT3Producer(ProducerMixin, ConsumerMixin, NodeBase):
+    required_config = Namespace()
+    required_config.add_option('id', default='ebutt1-ebutt3-producer')
+    required_config.add_option('sequence_identifier', default='SequenceFromEBUTT1')
+    required_config.add_option('use_doc_id_as_sequence_id', default=False)
+    required_config.add_option('smpte_start_of_programme', default=None)
+
+
+    def _create_component(self, config):
+        self.component = processing_node.EBUTT1EBUTT3ProducerNode(
+            node_id=self.config.id,
+            sequence_identifier=self.config.sequence_identifier,
+            use_document_identifier_as_sequence_identifier=self.config.use_doc_id_as_sequence_id,
+            smpte_start_of_programme=self.config.smpte_start_of_programme
+        )
+
+    def __init__(self, config, local_config):
+        super(EBUTT1EBUTT3Producer, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
+
+
 class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
 
     required_config = Namespace()
     required_config.add_option('id', default='ebuttd-encoder')
     required_config.add_option('media_time_zero', default='current')
+    required_config.add_option('calculate_active_area', default=False)
     required_config.add_option('default_namespace', default=False)
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
@@ -280,6 +330,7 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
         self.component = processing_node.EBUTTDEncoder(
             node_id=self.config.id,
             media_time_zero=mtz,
+            calculate_active_area=self.config.calculate_active_area,
             default_ns=self.config.default_namespace
         )
 
@@ -325,6 +376,7 @@ class Handover(ConsumerMixin, ProducerMixin, NodeBase):
 
         self.backend.register_component_start(self)
 
+
 class DeDuplicator(ConsumerMixin, ProducerMixin, NodeBase):
     required_config = Namespace()
     required_config.add_option('id', default='de-duplicator')
@@ -354,7 +406,9 @@ nodes_by_type = {
     'simple-producer': SimpleProducer,
     'resequencer': ReSequencer,
     'deduplicator': DeDuplicator,
+    'ebutt1-ebutt3-producer': EBUTT1EBUTT3Producer,
     'ebuttd-encoder': EBUTTDEncoder,
+    'element-remover': ElementRemover,
     'buffer-delay': BufferDelay,
     'retiming-delay': RetimingDelay,
     'distributor': Distributor,

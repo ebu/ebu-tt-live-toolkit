@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xml:lang="en"
+    targetNamespace="http://www.w3.org/ns/ttml/profile/imsc1#parameter">
+    <xs:attribute name="activeArea">
+        <xs:annotation>
+            <xs:documentation>Area within the Root Container Region that 
+                the author intends to be minimally visible to the viewer.</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+            <xs:restriction>
+                <xs:simpleType>
+                    <xs:list>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:pattern value="\+?(\d*\.\d+|\d+)%"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:list>
+                </xs:simpleType>
+                <xs:length value="4"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+</xs:schema>

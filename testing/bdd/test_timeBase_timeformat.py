@@ -51,3 +51,7 @@ def when_span_begin(span_begin, template_dict):
 @when('it has span end time <span_end>')
 def when_span_end(span_end, template_dict):
     template_dict['span_end'] = span_end
+
+@when('it has documentStartOfProgramme <start_time>')
+def when_documentStartOfProgramme(start_time, template_dict):
+    template_dict['start_of_programme'] = start_time

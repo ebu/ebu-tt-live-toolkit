@@ -4,6 +4,7 @@ from ebu_tt_live.adapters import document_data, node_carriage
 
 
 data_adapters_by_directed_conversion = {
+    'xml->ebutt1': document_data.XMLtoEBUTT1Adapter,
     'xml->ebutt3': document_data.XMLtoEBUTT3Adapter,
     'xml->ebuttd': document_data.XMLtoEBUTTDAdapter,
     'ebutt3->xml': document_data.EBUTT3toXMLAdapter,

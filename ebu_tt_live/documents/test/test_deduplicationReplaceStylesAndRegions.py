@@ -5,11 +5,11 @@ from ebu_tt_live.bindings import ebuttdt as datatypes
 from ebu_tt_live.bindings import ebuttm as metadata
 from ebu_tt_live.node import deduplicator
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.bindings import style_type, region_type, div_type, p_type, span_type, br_type, ebuttdt
+from ebu_tt_live.bindings import load_types_for_document
 
 
 class TestReplaceStylesAndRegions(TestCase):
-
+        load_types_for_document('ebutt3')
         tt = bindings.tt(
             sequenceIdentifier='testSequence001',
             sequenceNumber='1',

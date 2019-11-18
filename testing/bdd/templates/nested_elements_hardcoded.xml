@@ -20,7 +20,6 @@
     <tt:styling>
       <tt:style xml:id="S1" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center"/>
     </tt:styling>
-    <tt:layout/>
   </tt:head>
   <tt:body >
       <tt:div xml:id="d1" xml:lang="fr" begin="00:00:10" end="00:00:20">

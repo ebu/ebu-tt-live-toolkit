@@ -9,7 +9,6 @@
       <tt:style xml:id="S2" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
       <tt:style xml:id="S5" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:lineHeight="2c" tts:textAlign="center" />
     </tt:styling>
-    <tt:layout />
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
     <tt:div xml:id="d1" style="S2">

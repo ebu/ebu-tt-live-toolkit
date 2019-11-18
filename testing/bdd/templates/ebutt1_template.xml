@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<tt:tt
+        {% if timeBase %}
+          ttp:timeBase="{{timeBase}}"
+          {% if timeBase == 'smpte' %}
+            ttp:frameRate="25"
+            ttp:dropMode="nonDrop"
+            ttp:markerMode="continuous"
+          {% elif timeBase == 'clock' %}
+            ttp:clockMode="local"
+          {% endif %}
+        {% else %}
+          ttp:timeBase="media"
+        {% endif %}
+        {% if authorsGroupControlToken %} ebuttp:authorsGroupControlToken="1" {% endif %}
+        {% if authorsGroupIdentifier %} ebuttp:authorsGroupIdentifier="group" {% endif %}
+        {% if referenceClockIdentifier %} ebuttp:referenceClockIdentifier="uri://clock" {% endif %}
+        {% if sequenceIdentifier %} ebuttp:sequenceIdentifier="TestSequence" {% endif %}
+        {% if sequenceNumber %} ebuttp:sequenceNumber="1" {% endif %}
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        {% if ebuttp %} xmlns:ebuttp="urn:ebu:tt:parameters" {% endif %}
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      {% if head_metadata_documentIdentifier %}
+      <ebuttm:documentIdentifier>headDocId</ebuttm:documentIdentifier>
+      {% endif %}
+      <ebuttm:documentMetadata>
+        {% if doc_metadata_documentIdentifier %}
+        <ebuttm:documentIdentifier>docMetaDocId</ebuttm:documentIdentifier>
+        {% endif %}
+      </ebuttm:documentMetadata>
+    </tt:metadata>
+    {% if styling %}
+    <tt:styling>
+      {% if style %}
+      <tt:style xml:id="ID001"/>
+      {% endif %}
+    </tt:styling>
+    {% endif %}
+    {% if layout %}
+    <tt:layout>
+      {% if region %}
+      <tt:region xml:id="R1" tts:extent="50% 10%" tts:origin="25% 70%"/>
+      {% endif %}
+    </tt:layout>
+    {% endif %}
+  </tt:head>
+  <tt:body {% if dur %} dur="00:00:05" {% endif %}>
+    <tt:div>
+      <tt:p begin="{% if timeBase == 'smpte' %}00:00:00:12{% else %}500ms{% endif %}" end="{% if timeBase == 'smpte' %}00:00:03:12{% else %}3420ms{% endif %}" xml:id="ID005">
+        <tt:span>Some example text...</tt:span>
+        <tt:br/>
+        <tt:span>And another line</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

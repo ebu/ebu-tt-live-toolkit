@@ -65,3 +65,19 @@ raw Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`_ittp` Module
+-------------------
+
+.. automodule:: ebu_tt_live.bindings.raw._ittp
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`_itts` Module
+-------------------
+
+.. automodule:: ebu_tt_live.bindings.raw._itts
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

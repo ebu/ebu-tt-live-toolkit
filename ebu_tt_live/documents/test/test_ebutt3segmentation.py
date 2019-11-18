@@ -4,14 +4,14 @@ from datetime import timedelta
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import ebuttdt as datatypes
 from ebu_tt_live.bindings import ebuttm as metadata
-from ebu_tt_live.documents.converters import ebutt3_to_ebuttd
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.bindings import div_type, p_type, span_type, br_type, ebuttdt
+from ebu_tt_live.bindings import load_types_for_document
 
 
 class TestEBUTT3DocumentSegment(TestCase):
 
     def test_simple(self):
+        load_types_for_document('ebutt3')
         tt = bindings.tt(
             sequenceIdentifier='testSequence001',
             sequenceNumber='1',
@@ -79,6 +79,7 @@ class TestEBUTT3DocumentSegment(TestCase):
         document.extract_segment(deconflict_ids=True)
 
     def test_trimmed_1(self):
+        load_types_for_document('ebutt3')
         tt = bindings.tt(
             sequenceIdentifier='testSequence001',
             sequenceNumber='1',

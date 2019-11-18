@@ -24,7 +24,16 @@ class EBUTTDDocument(SubtitleDocument, TimelineUtilMixin):
             lang=lang
         )
 
-    def set_implicit_ns(self, value):
+    @property
+    def binding(self):
+        return self._ebuttd_content
+
+    @property
+    def implicit_ns(self):
+        return self._implicit_ns
+
+    @implicit_ns.setter
+    def implicit_ns(self, value):
         if not isinstance(value, bool):
             raise ValueError()
         self._implicit_ns = value

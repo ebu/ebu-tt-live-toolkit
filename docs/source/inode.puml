@@ -113,6 +113,7 @@ AbstractProducerNode <|-- AbstractCombinedNode
 AbstractProducerNode <|-- SimpleProducer
 AbstractProducerNode <|-- ReSequencer
 AbstractConsumerNode <|-- SimpleConsumer
+AbstractCombinedNode <|-- Denester
 AbstractCombinedNode <|-- EBUTTDEncoder
 AbstractCombinedNode <|-- BufferDelayNode
 AbstractCombinedNode <|-- RetimingDelayNode

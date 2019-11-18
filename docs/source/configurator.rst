@@ -65,7 +65,9 @@ The more detailed options are: ::
 
     nodes
     ├─[nodeN] : a node to configure - any from node1 to node9
-    │ ├─type : ["simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" | "buffer-delay" | "retiming-delay" | "distributor" | "handover" | "deduplicator"]
+    │ ├─type : [ "simple-consumer" | "simple-producer" | "resequencer" | "ebuttd-encoder" |
+    │ │          "buffer-delay" | "retiming-delay" | "distributor" | 
+    │ │          "handover" | "deduplicator" | "denester" | "element_remover" ]
     │ ├─output : the output settings for the node, if applicable
     │ │ ├─carriage : the carriage mechanism to use to get incoming documents
     │ │ │ ├─type : ["direct" | "filesystem" | "websocket" | "websocket-legacy"]
@@ -89,7 +91,8 @@ Node type dependent options for [nodeN] : ::
      └─type : ["auto" (default) | "utc" | "local"]
 
    type="simple-producer"
-   ├─show_time : Whether to put the current time in the output text (true) or use the default text file input (false, default)
+   ├─show_time : Whether to put the current time in the output text (true) or use the default
+   │             text file input (false, default)
    ├─sequence_identifier : sequence identifier, default "TestSequence1"
    ├─interval : period between each document in seconds, default 2
    └─clock
@@ -98,14 +101,29 @@ Node type dependent options for [nodeN] : ::
    type="resequencer"
    ├─sequence_identifier : sequence identifier, default "re-sequencer"
    ├─segment_length : duration of each output segment in seconds, default 2
-   ├─begin_output : ["immediate" (default) | {begin time} ] the time at which the first output segment should begin.
+   ├─begin_output : ["immediate" (default) | {begin time} ] the time at which the first output
+   │                segment should begin.
    ├─discard : whether to discard content that has been encoded, default True
    └─clock
      └─type : ["local" (default) | "auto" | "clock"]
 
+   type="ebutt1-ebutt3-producer"
+   ├─sequence_identifier : sequence identifier, default "SequenceFromEBUTT1"
+   ├─use_doc_id_as_sequence_id : whether to use the ebuttm:documentIdentifier
+   │                             element contents as the output sequence
+   │                             identifier if it is present, default False
+   └─smpte_start_of_programme : start of programme timecode override in case
+                                you know better than the document start of
+                                programme metadata, default None
+
    type="ebuttd-encoder"
    ├─media_time_zero : ["current" (default) | clock time at media time zero TODO: check format]
-   ├─default_namespace : ["false" (default) | "true"]
+   ├─default_namespace : ["false" (default) | "true"] Whether to specify that tt
+   │                     namespace elements should be prefixed (false) or put
+   │                     into a default namespace and not prefixed (true)
+   ├─calculate_active_area : ["false" (default) | "true"] whether to
+   │                         post-calculate the ittp:activeArea attribute on the
+   │                         tt element based on the actived regions 
    └─clock
      └─type : ["local" (default) | "auto" | "utc"]
 
@@ -128,22 +146,36 @@ Node type dependent options for [nodeN] : ::
    type="denester"
    └─sequence_identifier : sequence identifier, default "Denester1"
 
+   type="element_remover"
+   ├─sequence_identifier : sequence identifier, default "RemovedElementSequence1"
+   └─remove_list : a single string that is a comma separated list of elements to remove,
+                   default is an empty string
+
 Output carriage type dependent options for "carriage": ::
 
    type="direct"
    └─id : id of the 'pipe' to write to, default "default"
 
    type="filesystem"
-   ├─folder : The output folder/directory. Folder is created if it does not exist. Existing files are overwritten, default "./export"
-   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files created in the folder or all if 0, default 0
-   ├─suppress_manifest : Whether to suppress writing of a manifest file (e.g. for EBU-TT-D output). Default False
-   ├─message_filename_pattern : File name pattern for message documents or EBU-TT-D documents. It can contain {sequence_identifier} and {counter} format parameters, default "{sequence_identifier}_msg_{counter}.xml" 
-   └─filename_pattern : File name pattern for EBU-TT-Live documents. It needs to contain {counter} format parameter, which will be populated with the sequence number. Default "{sequence_identifier}_{counter}.xml"
+   ├─folder : The output folder/directory. Folder is created if it does not exist.
+   │          Existing files are overwritten, default "./export"
+   ├─rotating_buf : Rotating buffer size. This will keep the last N number of files
+   │                created in the folder or all if 0, default 0
+   ├─suppress_manifest : Whether to suppress writing of a manifest file
+   │                     (e.g. for EBU-TT-D output). Default False
+   ├─message_filename_pattern : File name pattern for message documents or EBU-TT-D documents.
+   │                            It can contain {sequence_identifier} and {counter} format
+   │                            parameters, default "{sequence_identifier}_msg_{counter}.xml" 
+   └─filename_pattern : File name pattern for EBU-TT-Live documents.
+                        It needs to contain {counter} format parameter, which will be populated
+                        with the sequence number. Default "{sequence_identifier}_{counter}.xml"
 
    type="websocket"
    ├─proxy : HTTP proxy in format ADDR:PORT
-   ├─listen : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-   └─connect : List of /publish connections to make. Expected values are URL strings which will be parsed; if one does not conform to the pattern a config error will be generated..
+   ├─listen : Socket to listen on for /subscribe connection requests i.e: ws://ADDR:PORT,
+   │          default "ws://localhost:9001"
+   └─connect : List of /publish connections to make. Expected values are URL strings which will
+     │         be parsed; if one does not conform to the pattern a config error will be generated.
      └─Example: ws://<host>:<port>/<sequenceIdentifier>/publish
 
    type="websocket-legacy"
@@ -155,13 +187,17 @@ Input carriage type dependent options for "carriage": ::
    └─id : id of the pipe to read from, default "default"
 
    type="filesystem"
-   ├─manifest_file : The timing manifest file for importing files. Files are required to be in the same folder as the manifest file.
+   ├─manifest_file : The timing manifest file for importing files.
+   │                 Files are required to be in the same folder as the manifest file.
    └─tail : Keep the manifest open and wait for new input much like UNIX's tail -f command
 
    type="websocket"
    ├─proxy : HTTP proxy in format ADDR:PORT
-   ├─listen : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT, default "ws://localhost:9001"
-   └─connect : List of /subscribe connections to make. Expected values are URL strings which will be parsed; if one does not conform to the pattern a config error will be generated..
+   ├─listen : Socket to listen on for /publish connection requests i.e: ws://ADDR:PORT,
+   │          default "ws://localhost:9001"
+   └─connect : List of /subscribe connections to make. Expected values are URL strings
+     │         which will be parsed; if one does not conform to the pattern a config error
+     │         will be generated..
      └─Example: ws://<host>:<port>/<sequenceIdentifier>/subscribe
 
    type="websocket-legacy"
@@ -171,6 +207,7 @@ Input carriage type dependent options for "carriage": ::
 Adapters will be automatically selected if not specified, or can be manually specified: ::
 
     adapters
+    ├─xml->ebutt1 : XML serialisation to EBU-TT Part 1
     ├─xml->ebutt3 : XML serialisation to EBU-TT Part 3
     ├─xml->ebuttd : XML serialisation to EBU-TT-D
     ├─ebutt3->xml : EBU-TT Part 3 to XML serialisation

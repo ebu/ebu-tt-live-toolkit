@@ -41,6 +41,14 @@ node Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`ebutt1_ebutt3_producer` Module
+------------------------------------
+
+.. automodule:: ebu_tt_live.node.ebutt1_ebutt3_producer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 :mod:`encoder` Module
 ---------------------
 
@@ -74,7 +82,7 @@ node Package
     :show-inheritance:
 
 :mod:`deduplicator` Module
-----------------------
+--------------------------
 
 .. automodule:: ebu_tt_live.node.deduplicator
     :members:
@@ -85,6 +93,14 @@ node Package
 ----------------------
 
 .. automodule:: ebu_tt_live.node.denester
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+:mod:`element_remover` Module
+-----------------------------
+
+.. automodule:: ebu_tt_live.node.element_remover
     :members:
     :undoc-members:
     :show-inheritance:

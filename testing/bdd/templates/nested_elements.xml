@@ -20,7 +20,6 @@
     <tt:styling>
       <tt:style xml:id="S1" tts:fontSize="1c 2c"  tts:lineHeight="2c" tts:textAlign="center"/>
     </tt:styling>
-    <tt:layout/>
   </tt:head>
   <tt:body >
       {% if divs %}

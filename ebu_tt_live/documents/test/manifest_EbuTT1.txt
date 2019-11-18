@@ -1,0 +1,1 @@
+00:00:00.0,converter_ericsson1_smpte_with_start_of_programme_and_sub_zero.xml

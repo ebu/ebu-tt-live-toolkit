@@ -1,3 +1,4 @@
+from ebu_tt_live.project import description, name, version
 
 try:
     from setuptools import setup
@@ -22,9 +23,9 @@ packages=[
 ]
 
 setup(
-    name="ebu-tt-live",
-    version="2.1.1",
-    description="EBU-TT Part 3 library implementing Specification EBU-3370",
+    name=name,
+    version=version,
+    description=description,
     install_requires=[
         "PyXB",
         "ipdb>=0.10.1,<0.10.3",  # This will eventually be removed from here

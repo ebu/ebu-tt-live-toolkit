@@ -1,10 +1,11 @@
 from unittest import TestCase
 from datetime import timedelta, datetime
-from ebu_tt_live.documents import EBUTT3Document,EBUTT3ObjectBase, EBUTTLiveMessage, EBUTTAuthorsGroupControlRequest
+from ebu_tt_live.documents import EBUTT3Document, EBUTTAuthorsGroupControlRequest
+from ebu_tt_live.documents.base import EBUTTDocumentBase
 import os
 import six
 from ebu_tt_live.utils import compare_xml
-from pyxb.exceptions_ import SimpleFacetValueError
+from pyxb.exceptions_ import MissingAttributeError, SimpleFacetValueError
 
 
 class TestEBUTT3Document(TestCase):
@@ -62,7 +63,7 @@ class TestEBUTT3Document(TestCase):
         file_path = os.path.join(os.path.dirname(__file__), 'data', 'message.xml')
         with open(file_path) as xml_file:
             xml = xml_file.read()
-        instance = EBUTT3ObjectBase.create_from_xml(xml)
+        instance = EBUTTDocumentBase.create_from_xml(xml)
 
         self.assertIsInstance(instance, EBUTTAuthorsGroupControlRequest)
         self.assertEqual(instance.sequence_identifier, 'TestSequence')
@@ -75,7 +76,7 @@ class TestEBUTT3Document(TestCase):
         file_path = os.path.join(os.path.dirname(__file__), 'data', 'message.xml')
         with open(file_path) as xml_file:
             xml = xml_file.read()
-        instance = EBUTT3ObjectBase.create_from_xml(xml)
+        instance = EBUTTDocumentBase.create_from_xml(xml)
 
         re_xml = instance.get_xml()
 
@@ -102,4 +103,26 @@ class TestEBUTT3Document(TestCase):
             time_base='media',
             lang='en-GB',
             authors_group_identifier=''
+        )
+
+    def test_required_sequence_identifier(self):
+        self.assertRaises(
+            MissingAttributeError,
+            EBUTT3Document,
+            sequence_identifier=None,
+            sequence_number=1,
+            time_base='media',
+            lang='en-GB',
+            authors_group_identifier='agIdTest'
+        )
+
+    def test_required_sequence_number(self):
+        self.assertRaises(
+            MissingAttributeError,
+            EBUTT3Document,
+            sequence_identifier='testSeq',
+            sequence_number=None,
+            time_base='media',
+            lang='en-GB',
+            authors_group_identifier='agIdTest'
         )

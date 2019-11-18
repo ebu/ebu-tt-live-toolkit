@@ -55,7 +55,6 @@ class DeDuplicatorNode(AbstractCombinedNode):
 
         if document.binding.head.styling is not None:
             styles = document.binding.head.styling.style
-            print(styles)
             document.binding.head.styling.style = None
 
             self.CollateUniqueVals(styles, old_id_dict, new_id_dict, hash_dict)

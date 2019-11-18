@@ -1,0 +1,21 @@
+{
+    "nodes": {
+        "node1": {
+            "id": "producer1",
+            "type": "ebutt1-ebutt3-producer",
+            "show_time": false,
+            "sequence_identifier": "SequenceFromEBUTT1",
+            "input": {
+                "carriage": {
+                    "type": "filesystem",
+                    "manifest_file": "export/ebutt1_manifest.txt"
+                }
+            },
+            "output": {
+                "carriage": {
+                    "type": "filesystem"
+                }
+            }
+        }
+    }
+}

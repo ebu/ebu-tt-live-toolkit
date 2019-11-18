@@ -15,17 +15,17 @@ Feature: EBU-TT-D lineHeight conversion
         When the document is generated
         And the EBU-TT-Live document is denested
         And the EBU-TT-Live document is converted to EBU-TT-D
-        Then the ebu_tt_d document contains style "autogenFontStyle_None_200.0" with attribute "lineHeight" set to <ebu_tt_d_value>
+        Then the ebu_tt_d document contains style <style_id> with attribute "lineHeight" set to <ebu_tt_d_value>
 
         Examples:
-            | lineHeight | fontSize | ebu_tt_d_value |
-            | 2c         | 2c       | 100%           |
-            | 3c         | 2c       | 150%           |
-            | 1c         | 2c       | 50%            |
-            | 100%       | 2c       | 100%           |
-            | 120%       | 2c       | 120%           |
-            | 120.2%     | 2c       | 120.2%         |
-            | 120.36%    | 2c       | 120.36%        |
-            | 120.123%   | 2c       | 120.12%        |
-            | normal     | 2c       | normal         |
+            | lineHeight | fontSize | style_id                           | ebu_tt_d_value |
+            | 2c         | 2c       | autogenFontStyle_None_200.0_100.0  | 100%           |
+            | 3c         | 2c       | autogenFontStyle_None_200.0_150.0  | 150%           |
+            | 1c         | 2c       | autogenFontStyle_None_200.0_50.0   | 50%            |
+            | 100%       | 2c       | autogenFontStyle_None_200.0_100.0  | 100%           |
+            | 120%       | 2c       | autogenFontStyle_None_200.0_120.0  | 120%           |
+            | 120.2%     | 2c       | autogenFontStyle_None_200.0_120.2  | 120.2%         |
+            | 120.36%    | 2c       | autogenFontStyle_None_200.0_120.36 | 120.36%        |
+            | 120.123%   | 2c       | autogenFontStyle_None_200.0_120.12 | 120.12%        |
+            | normal     | 2c       | autogenFontStyle_None_200.0_n      | normal         |
 

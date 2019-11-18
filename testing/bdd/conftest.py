@@ -12,7 +12,8 @@ import os
 import unittest
 
 denester_node = DenesterNode(
-    node_id = "denester_node"
+    node_id = "denester_node",
+    sequence_identifier = "denestedSequenceT"
 );
 
 @given('an xml file <xml_file>')
@@ -132,7 +133,7 @@ def gen_second_document_fixture(test_context, template_dict, template_file_two):
 
 @when('the EBU-TT-Live document is denested')
 def convert_to_ebuttd(test_context):
-    test_context["document"] = denester_node.process_document(test_context["document"])
+    test_context["document"] = DenesterNode.denest(test_context["document"])
 
 @when('the EBU-TT-Live document is converted to EBU-TT-D')
 def convert_to_ebuttd(test_context):

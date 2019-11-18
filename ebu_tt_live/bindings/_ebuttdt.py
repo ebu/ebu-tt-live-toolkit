@@ -70,20 +70,25 @@ class _TimedeltaBindingMixin(object):
             # This means we are in XML parsing context. There should be a timeBase and a timing_attribute_name in the
             # context object.
             time_base = context['timeBase']
-            timing_att_name = context['timing_attribute_name']
-            if time_base not in cls._compatible_timebases[timing_att_name]:
-                log.debug(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                    attr_name=timing_att_name,
-                    attr_type=cls,
-                    attr_value=args,
-                    time_base=time_base
-                ))
-                raise pyxb.SimpleTypeValueError(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                    attr_name=timing_att_name,
-                    attr_type=cls,
-                    attr_value=args,
-                    time_base=time_base
-                ))
+            # It is possible for a timing type to exist as the value of an element not an attribute,
+            # in which case no timing_attribute_name is in the context; in that case don't attempt
+            # to validate the data against a timebase. At the moment this only affects the
+            # documentStartOfProgramme metadata element.
+            if 'timing_attribute_name' in context:
+                timing_att_name = context['timing_attribute_name']
+                if time_base not in cls._compatible_timebases[timing_att_name]:
+                    log.debug(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_name=timing_att_name,
+                        attr_type=cls,
+                        attr_value=args,
+                        time_base=time_base
+                    ))
+                    raise pyxb.SimpleTypeValueError(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_name=timing_att_name,
+                        attr_type=cls,
+                        attr_value=args,
+                        time_base=time_base
+                    ))
         for item in args:
             if isinstance(item, timedelta):
                 result.append(cls.from_timedelta(item))

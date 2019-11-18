@@ -59,7 +59,7 @@ def combine_span_styles(test_context):
     document = test_context['ebuttd_document']
     tree = ET.fromstring(document.get_xml())
     elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div/{http://www.w3.org/ns/ttml}p/{http://www.w3.org/ns/ttml}span')
-    assert elements[1].get("style") == "autogenFontStyle_None_200.0 outerinnerYellow"
+    assert elements[1].get("style") == "autogenFontStyle_None_200.0_n outerinnerYellow"
 
 @then(parsers.parse('there is no style named "{style_name}"'))
 def no_duplicate_styles(test_context, style_name):

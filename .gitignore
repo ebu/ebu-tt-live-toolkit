@@ -104,6 +104,9 @@ ENV/
 out
 gen
 
+# VSCode project files
+.vscode/
+
 # Oxygen XML project files
 *.xpr
 
@@ -134,4 +137,3 @@ export/
 
 # Mac OS X files
 .DS_Store
-

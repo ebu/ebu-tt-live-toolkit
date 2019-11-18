@@ -44,15 +44,6 @@ documents Package
     :undoc-members:
     :show-inheritance:
 
-:mod:`bindings_converters` Module
----------------------------------
-
-.. automodule:: ebu_tt_live.bindings.converters.ebutt3_ebuttd
-    :members:
-    :private-members:
-    :undoc-members:
-    :show-inheritance:
-
 :mod:`document_converters` Module
 ---------------------------------
 

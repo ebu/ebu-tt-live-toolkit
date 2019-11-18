@@ -90,6 +90,15 @@ def then_converted_document_has_style(test_context, style_name, attribute, ebu_t
     assert len(elements) == 1
     assert elements[0].get('{http://www.w3.org/ns/ttml#styling}%s' % attribute) == ebu_tt_d_value
 
+@then(parsers.parse('the ebu_tt_d document contains style <style_id> with attribute "{attribute}" set to <ebu_tt_d_value>'))
+def then_converted_document_has_style_with_attribute_and_value(test_context, style_id, attribute, ebu_tt_d_value):
+    ebuttd_document = test_context['ebuttd_document']
+    tree = ET.fromstring(ebuttd_document.get_xml())
+    elements = tree.findall('{http://www.w3.org/ns/ttml}head/'
+                            '{http://www.w3.org/ns/ttml}styling/'
+                            '{http://www.w3.org/ns/ttml}style[@{http://www.w3.org/XML/1998/namespace}id="%s"]' % style_id)
+    assert len(elements) == 1
+    assert elements[0].get('{http://www.w3.org/ns/ttml#styling}%s' % attribute) == ebu_tt_d_value
 
 @then(parsers.parse('the ebu_tt_d document contains region "{region_id}" with attribute "{attribute}" set to "{value}"'))
 def then_converted_document_has_region_with_styling_attribute(test_context, region_id, attribute, value):

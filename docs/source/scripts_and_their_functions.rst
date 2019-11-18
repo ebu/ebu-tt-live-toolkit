@@ -23,7 +23,7 @@ into a sequence of EBU-TT Live documents using natural language processing. Use
 The default carriage mechanism is WebSocket, so you will need to listen to
 ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just
 that. After you launch the Simple Producer, open `docs/build/ui/test/index.html <../ui/test/index.html>`_
-or the `current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/test/>`_ in your
+or the `current release pre-built test page <http://ebu.github.io/ebu-tt-live-toolkit/ui/test/>`_ in your
 browser. The 'Broadcast message' field should be populated with the correct
 address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can
 also change the identifier for the sequence. The documents should appear in the
@@ -58,7 +58,7 @@ activated and the code built, start one, with a command line such as  ``ebu-run
 --admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json`` -
 this one runs a simple consumer. Then, in your browser, open
 `docs/build/ui/user_input_producer/index.html <../ui/user_input_producer/index.html>`_ or the
-`current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/>`_ and click
+`current release pre-built UIP page <http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/>`_ and click
 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You
 should see the documents arriving in the command line window where the simple
 consumer is listening. See detailed instructions here:
@@ -128,6 +128,25 @@ Retiming Delay Node is primarily intended for delaying explicitly timed
 documents. Use ``ebu-run`` to start this script, for example ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/retiming_delay.json.``
 
+EBU-TT-1 Producer
+-----------------
+This script produces an EBU-TT Part 3 document from an EBU-TT Part 1 source.
+If SMPTE timecode is used (``ttp:timeBase="smpte"``) then the script looks for
+an ``ebuttm:documentStartOfProgramme`` element in the input document, and if
+present, maps that to the zero media time, and discards any elements that
+begin or end before that time. If that element is absent, then times are
+converted assuming that media time zero is SMPTE timecode ``00:00:00:00``.
+Alternatively both of those values can be overridden by specifying a
+start of programme timecode to use with the ``smpte_start_of_programme``
+configuration parameter.
+The timecode conversion currently assumes that
+the timecode is continuous.
+
+The default output sequence identifier can be specified. There is also a
+parameter to allow the value of the input ``ebuttm:documentIdentifier`` element
+to be used as the output sequence identifier, if present, overriding the
+specified default.
+
 EBU-TT-D Encoder
 ----------------
 This script is an extension of simple consumer and is responsible for
@@ -144,3 +163,15 @@ To see the Encoder in action, using output from the Simple Producer and the
 IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter.
 Since EBU-TT-D generation was not part of this project, this functionality was
 implemented only partially and should not be used as complete reference.
+
+Element Remover
+---------------
+This script iterates through the EBU-TT Part 3 and EBU-TT Metadata elements
+in the document and removes any whose element name matches one of the names
+in the ``remove_list``, supplied as a configuration parameter. The elements
+are removed regardless of their location in the hierarchy.
+
+The list is a comma separated list of names, with optional white space.
+
+For example, to remove all elements called ``documentReadingSpeed`` or
+``binaryData`` set the ``remove_list`` to ``documentReadingSpeed, binaryData``.

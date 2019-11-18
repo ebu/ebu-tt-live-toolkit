@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<tt:tt
+        ttp:clockMode="local"
+        ttp:timeBase="clock"
+        xml:lang="en-GB"
+        xmlns:ebuttm="urn:ebu:tt:metadata"
+        xmlns:tt="http://www.w3.org/ns/ttml"
+        xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+        xmlns:tts="http://www.w3.org/ns/ttml#styling"
+        xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style xml:id="ID001"/>
+    </tt:styling>
+    <tt:layout>
+      <tt:region xml:id="R1" tts:extent="50% 10%" tts:origin="25% 70%"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body begin="500ms">
+    <tt:div>
+      <tt:p begin="500ms" end="3420ms" xml:id="ID005">
+        <tt:span>Some example text...</tt:span>
+        <tt:br/>
+        <tt:span>And another line</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>
