@@ -75,6 +75,10 @@ class FilesystemOutput(ConfigurableComponent):
         default=False,
         doc='Suppress output of a manifest file (default false)'
     )
+    required_config.add_option(
+        'begin_count',
+        default=0,
+        doc='Value to begin counting at for patterns including {counter}; the first output value will be this plus 1.')
     
     def __init__(self, config, local_config):
         super(FilesystemOutput, self).__init__(config, local_config)
@@ -83,7 +87,8 @@ class FilesystemOutput(ConfigurableComponent):
             file_name_pattern=self.config.filename_pattern,
             message_file_name_pattern=self.config.message_filename_pattern,
             circular_buf_size=self.config.rotating_buf,
-            suppress_manifest=self.config.suppress_manifest)
+            suppress_manifest=self.config.suppress_manifest,
+            first_msg_counter=self.config.begin_count)
 
 
 
