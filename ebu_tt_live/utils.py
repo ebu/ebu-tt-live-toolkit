@@ -358,8 +358,6 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
         instance = super(AutoRegisteringABCMeta, cls).__call__(*args, **kwargs)
         return instance
 
-HTTPProxyConfig = collections.namedtuple('HTTPProxyConfig', ['host', 'port'])
-
 
 # The following section is taken from https://github.com/django/django/blob/master/django/test/utils.py
 # This is a relatively simple XML comparator implementation based on Python's minidom library.

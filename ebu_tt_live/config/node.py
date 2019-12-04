@@ -102,6 +102,7 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
     required_config.add_option('segment_length', default=2.0)
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
+    required_config.add_option('init_document', default=None)
     required_config.add_option('discard', default=True)
     required_config.add_option(
         'begin_output',
@@ -128,6 +129,7 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
         self.component = processing_node.ReSequencer(
             node_id=self.config.id,
             reference_clock=self._clock.component,
+            init_document=self.config.init_document,
             discard=self.config.discard,
             segment_length=self.config.segment_length,
             sequence_identifier=self.config.sequence_identifier

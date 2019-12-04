@@ -35,9 +35,7 @@ class SimpleConsumer(AbstractConsumerNode):
                 log.info('Creating document sequence from first document {}'.format(
                     document
                 ))
-                self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
-                if self._reference_clock is None:
-                    self._reference_clock = self._sequence.reference_clock
+                self.create_sequence_from_document(document)
             if document.availability_time is None:
                 document.availability_time = self._reference_clock.get_time()
 
@@ -55,6 +53,11 @@ class SimpleConsumer(AbstractConsumerNode):
                         document.sequence_number
                     )
                 )
+
+    def create_sequence_from_document(self, document):
+        self._sequence = EBUTT3DocumentSequence.create_from_document(document, verbose=self._verbose)
+        if self._reference_clock is None:
+            self._reference_clock = self._sequence.reference_clock
 
     @property
     def reference_clock(self):
@@ -77,7 +80,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
     _provides = EBUTT3Document
 
     def __init__(self, node_id, reference_clock, segment_length, discard, sequence_identifier,
-                 consumer_carriage=None, producer_carriage=None, **kwargs):
+                 consumer_carriage=None, producer_carriage=None, init_document=None, **kwargs):
         super(ReSequencer, self).__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage,
@@ -91,6 +94,16 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
         self._segment_counter = 1
         self._sequence_identifier = sequence_identifier
         self._discard = discard
+        
+        if init_document is not None:
+            # Create sequence from init document, in order to immediately start document output
+            log.info('Creating document sequence from init document {}'.format(
+                init_document
+            ))
+            with open(init_document, 'r') as xml_file:
+                xml_content = xml_file.read()
+            xml_doc = EBUTT3Document.create_from_xml(xml_content)
+            self.create_sequence_from_document(xml_doc)
 
     @property
     def last_segment_end(self):

@@ -38,13 +38,6 @@ class _TimedeltaBindingMixin(object):
     }
 
     @classmethod
-    def _int_or_none(cls, value):
-        try:
-            return int(value)
-        except TypeError:
-            return 0
-
-    @classmethod
     def compatible_timebases(cls):
         return cls._compatible_timebases
 
@@ -70,20 +63,25 @@ class _TimedeltaBindingMixin(object):
             # This means we are in XML parsing context. There should be a timeBase and a timing_attribute_name in the
             # context object.
             time_base = context['timeBase']
-            timing_att_name = context['timing_attribute_name']
-            if time_base not in cls._compatible_timebases[timing_att_name]:
-                log.debug(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                    attr_name=timing_att_name,
-                    attr_type=cls,
-                    attr_value=args,
-                    time_base=time_base
-                ))
-                raise pyxb.SimpleTypeValueError(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                    attr_name=timing_att_name,
-                    attr_type=cls,
-                    attr_value=args,
-                    time_base=time_base
-                ))
+            # It is possible for a timing type to exist as the value of an element not an attribute,
+            # in which case no timing_attribute_name is in the context; in that case don't attempt
+            # to validate the data against a timebase. At the moment this only affects the
+            # documentStartOfProgramme metadata element.
+            if 'timing_attribute_name' in context:
+                timing_att_name = context['timing_attribute_name']
+                if time_base not in cls._compatible_timebases[timing_att_name]:
+                    log.debug(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_name=timing_att_name,
+                        attr_type=cls,
+                        attr_value=args,
+                        time_base=time_base
+                    ))
+                    raise pyxb.SimpleTypeValueError(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                        attr_name=timing_att_name,
+                        attr_type=cls,
+                        attr_value=args,
+                        time_base=time_base
+                    ))
         for item in args:
             if isinstance(item, timedelta):
                 result.append(cls.from_timedelta(item))
@@ -319,11 +317,12 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
+        return timedelta(hours=int(hours_str), 
+            minutes=int(minutes_str), 
+            seconds=int(seconds_str), 
+            milliseconds=milliseconds)
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -370,11 +369,13 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours, minutes, seconds, milliseconds = map(
-            lambda x: cls._int_or_none(x),
-            cls._groups_regex.match(instance).groups()
-        )
-        return timedelta(hours=hours, minutes=minutes, seconds=seconds, milliseconds=milliseconds)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
+        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
+        return timedelta(hours=int(hours_str), 
+            minutes=int(minutes_str), 
+            seconds=int(seconds_str), 
+            milliseconds=milliseconds)
+        
 
     @classmethod
     def from_timedelta(cls, instance):

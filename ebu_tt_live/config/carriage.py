@@ -2,7 +2,6 @@ from .common import ConfigurableComponent, Namespace
 from ebu_tt_live.carriage.direct import DirectCarriageImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage, WebsocketConsumerCarriage
 from ebu_tt_live.carriage import filesystem
-from ebu_tt_live.utils import HTTPProxyConfig
 from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE, ERR_NO_SUCH_COMPONENT
 from ebu_tt_live.errors import ConfigurationError
 from ebu_tt_live.strings import CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
@@ -134,10 +133,7 @@ def parse_proxy_address(value):
     match = proxy_regex.match(value)
     if match:
         # Ignoring the protocol part for now as it is only a http proxy
-        result = HTTPProxyConfig(
-            host=match.group('host'),
-            port=int(match.group('port'))
-        )
+        result = {u'host': match.group('host'), u'port': int(match.group('port'))}
     elif value:
         # In this case something was provided that isn't a falsy value but the parsing failed.
         raise ConfigurationError(

@@ -25,13 +25,20 @@ def template_file_one(xml_file_1):
     return j2_env.get_template(xml_file_1)
 
 @then('a second xml file <xml_file_2>')
-@pytest.fixture
 def template_file_two(xml_file_2):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
                          trim_blocks=True)
     return j2_env.get_template(xml_file_2)
 
+# Calling fixtures directly is deprecated, this solution described at
+# https://docs.pytest.org/en/latest/deprecations.html#calling-fixtures-directly
+# seems to work, creating a named fixture rather than defining the "then"
+# step as a fixture directly.
+@pytest.fixture(name='template_file_two')
+def template_file_two_fixture(xml_file_2):
+    return template_file_two(xml_file_2)
+    
 # NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
 @given('a sequence <sequence_identifier> with timeBase <time_base>')
@@ -97,7 +104,6 @@ def gen_first_document(test_context, template_dict, template_file_one):
     return document1
 
 @then('the second document is generated')
-@pytest.fixture
 def gen_second_document(test_context, template_dict, template_file_two):
     xml_file_2 = template_file_two.render(template_dict)
     document2 = EBUTT3Document.create_from_xml(xml_file_2)
@@ -105,6 +111,13 @@ def gen_second_document(test_context, template_dict, template_file_two):
     document2.validate()
     return document2
 
+# Calling fixtures directly is deprecated, this solution described at
+# https://docs.pytest.org/en/latest/deprecations.html#calling-fixtures-directly
+# seems to work, creating a named fixture rather than defining the "then"
+# step as a fixture directly.
+@pytest.fixture(name='gen_second_document')
+def gen_second_document_fixture(test_context, template_dict, template_file_two):
+    return gen_second_document(test_context, template_dict, template_file_two)
 
 @then('EBUTTD document is valid')
 def then_ebuttd_document_valid(test_context):

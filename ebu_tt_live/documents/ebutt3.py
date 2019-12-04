@@ -642,12 +642,12 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
         if self.sequence_identifier != document.sequence_identifier or \
                 self._reference_clock.time_base != document.time_base:
             raise IncompatibleSequenceError(
-                ERR_DOCUMENT_NOT_COMPATIBLE
+                ERR_DOCUMENT_NOT_COMPATIBLE.format('ebuttp:sequenceIdentifier or ttp:timeBase')
             )
         if self._reference_clock.time_base == 'clock':
             if self._reference_clock.clock_mode != document.clock_mode:
                 raise IncompatibleSequenceError(
-                    ERR_DOCUMENT_NOT_COMPATIBLE
+                    ERR_DOCUMENT_NOT_COMPATIBLE.format('ttp:clockMode')
                 )
         existing_document = None
         try:
@@ -706,7 +706,7 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
             clock_mode=self._reference_clock.clock_mode,
             sequence_identifier=self._sequence_identifier,
             authors_group_identifier=self.authors_group_identifier,
-            sequence_number=self._last_sequence_number,
+            sequence_number=kwargs.get('sequence_number', self._last_sequence_number),
             lang=self._lang
         )
 
@@ -992,15 +992,16 @@ class EBUTT3DocumentSequence(TimelineUtilMixin, CloningDocumentSequence):
                 
             begin = doc_ending
 
+        current_sequence_number = sequence_number is not None and sequence_number or 1
         if not document_segments:
             # TODO: This is good question what now? no documents found for range
-            document = self.create_compatible_document()
+            document = self.create_compatible_document(sequence_number=current_sequence_number)
             # comp_doc.set_begin(begin)
             # comp_doc.set_end(end)
         else:
             splicer = EBUTT3Splicer(
                 sequence_identifier='{}_resegmented'.format(self.sequence_identifier),
-                sequence_number=sequence_number is not None and sequence_number or 1,
+                sequence_number=current_sequence_number,
                 document_segments=document_segments
             )
             document = EBUTT3Document.create_from_raw_binding(splicer.spliced_document)
