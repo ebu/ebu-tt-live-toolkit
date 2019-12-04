@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>validation package &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>validation package &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
-        <link rel="up" title="bindings Package" href="ebu_tt_live.bindings.html"/>
-        <link rel="next" title="carriage Package" href="ebu_tt_live.carriage.html"/>
-        <link rel="prev" title="raw Package" href="ebu_tt_live.bindings.raw.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="carriage Package" href="ebu_tt_live.carriage.html" />
+    <link rel="prev" title="raw Package" href="ebu_tt_live.bindings.raw.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -135,7 +129,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EBU-TT-Live Toolkit</a>
@@ -143,9 +137,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -741,24 +736,25 @@ It is meant to be used by the containing element and its attributes as well so t
 <dl class="method">
 <dt id="ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_collect_applicable_styles">
 <code class="descname">_semantic_collect_applicable_styles</code><span class="sig-paren">(</span><em>dataset</em>, <em>style_type</em>, <em>parent_binding</em>, <em>defer_font_size=False</em>, <em>extra_referenced_styles=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/bindings/validation/presentation.html#StyledElementMixin._semantic_collect_applicable_styles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.bindings.validation.presentation.StyledElementMixin._semantic_collect_applicable_styles" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function identifies the styling dependdncy chain for the styled element in question.</p>
+<dd><p>This function identifies the styling dependency chain for the styled element in question.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>dataset</strong> – Semantic dataset</li>
-<li><strong>style_type</strong> – the style_type to be used in the process (there are different style types for EBU-TT D and</li>
+<li><strong>style_type</strong> – the style_type to be used in the process (there are different style types for EBU-TT D and live).</li>
+<li><strong>parent_binding</strong> – The immediate parent of the styled element in the document structure</li>
+<li><strong>defer_font_size</strong> – If True then fontsize can stay percentage in case it could not be calculated</li>
+<li><strong>extra_referenced_styles</strong> – Used by region to inject its extra style attributes</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
 </td>
 </tr>
 </tbody>
 </table>
-<p>live).
-:param parent_binding: The immediate parent of the styled element in the document structure
-:param defer_font_size: If True then fontsize can stay percentage in case it could not be calculated
-:param extra_referenced_styles: Used by region to inject its extra style attributes
-:return:</p>
 </dd></dl>
 
 <dl class="method">
@@ -873,9 +869,7 @@ implemented by the subclasses of this class to make sure the container checks fo
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -884,7 +878,7 @@ implemented by the subclasses of this class to make sure the container checks fo
         <a href="ebu_tt_live.carriage.html" class="btn btn-neutral float-right" title="carriage Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ebu_tt_live.bindings.raw.html" class="btn btn-neutral" title="raw Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ebu_tt_live.bindings.raw.html" class="btn btn-neutral float-left" title="raw Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -893,11 +887,11 @@ implemented by the subclasses of this class to make sure the container checks fo
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -910,36 +904,15 @@ implemented by the subclasses of this class to make sure the container checks fo
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

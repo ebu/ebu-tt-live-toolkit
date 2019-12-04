@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>DeDuplication of EBU-TT-Live documents &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>DeDuplication of EBU-TT-Live documents &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
-        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
-        <link rel="next" title="Conversion of EBU-TT-Live documents to EBU-TT-D documents" href="conversion.html"/>
-        <link rel="prev" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Conversion of EBU-TT-Live documents to EBU-TT-D documents" href="conversion.html" />
+    <link rel="prev" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -116,7 +110,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EBU-TT-Live Toolkit</a>
@@ -124,9 +118,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -181,10 +176,9 @@ document(s) with the
 <a class="reference internal" href="ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.DeDuplicatorNode.CollateUniqueVals" title="ebu_tt_live.node.deduplicator.DeDuplicatorNode.CollateUniqueVals"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.node.deduplicator.DeDuplicatorNode.CollateUniqueVals()</span></code></a> function.</p>
 <p>Because <code class="docutils literal notranslate"><span class="pre">style</span></code> and <code class="docutils literal notranslate"><span class="pre">region</span></code> elements can have <code class="docutils literal notranslate"><span class="pre">style</span></code> attributes, these
 are deduplicated first. At this stage, it’s possible that where two identical elements
-that differed only in their style references, these may end up looking the same.</p>
-<blockquote>
-<div>Each element is then passed through the</div></blockquote>
-<p><a class="reference internal" href="ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.ComparableElement" title="ebu_tt_live.node.deduplicator.ComparableElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.node.deduplicator.ComparableElement</span></code></a> class, which processes
+that differed only in their style references, these may end up looking the same.
+Each element is then passed through the
+<a class="reference internal" href="ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.ComparableElement" title="ebu_tt_live.node.deduplicator.ComparableElement"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.node.deduplicator.ComparableElement</span></code></a> class, which processes
 each attribute, omitting the <code class="docutils literal notranslate"><span class="pre">xml:id</span></code> and using the
 <a class="reference internal" href="ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.ReplaceNone" title="ebu_tt_live.node.deduplicator.ReplaceNone"><code class="xref py py-func docutils literal notranslate"><span class="pre">ebu_tt_live.node.deduplicator.ReplaceNone()</span></code></a> function to replace empty
 attributes with a non-legal character to avoid collisions, and assigns a hash
@@ -213,9 +207,7 @@ maintaining the hierarchy in which they were declared.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -224,7 +216,7 @@ maintaining the hierarchy in which they were declared.</p>
         <a href="conversion.html" class="btn btn-neutral float-right" title="Conversion of EBU-TT-Live documents to EBU-TT-D documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="segmentation.html" class="btn btn-neutral" title="Segmentation of EBU-TT-Live document sequences" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="segmentation.html" class="btn btn-neutral float-left" title="Segmentation of EBU-TT-Live document sequences" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -233,11 +225,11 @@ maintaining the hierarchy in which they were declared.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -250,36 +242,15 @@ maintaining the hierarchy in which they were declared.</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

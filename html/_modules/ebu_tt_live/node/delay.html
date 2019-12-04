@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.node.delay &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.node.delay &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -143,8 +138,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -159,14 +152,14 @@
 <span></span>
 <span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">AbstractCombinedNode</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="k">import</span> <span class="n">LimitedClockTimingType</span><span class="p">,</span> <span class="n">FullClockTimingType</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.pyxb_utils</span> <span class="k">import</span> <span class="n">RecursiveOperation</span><span class="p">,</span> <span class="n">StopBranchIteration</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.validation.timing</span> <span class="k">import</span> <span class="n">TimingValidationMixin</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">UnexpectedSequenceIdentifierError</span>
+<span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">AbstractCombinedNode</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings._ebuttdt</span> <span class="kn">import</span> <span class="n">LimitedClockTimingType</span><span class="p">,</span> <span class="n">FullClockTimingType</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="kn">import</span> <span class="n">_ebuttm</span> <span class="k">as</span> <span class="n">metadata</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="kn">import</span> <span class="n">EBUTT3Document</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.pyxb_utils</span> <span class="kn">import</span> <span class="n">RecursiveOperation</span><span class="p">,</span> <span class="n">StopBranchIteration</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.validation.timing</span> <span class="kn">import</span> <span class="n">TimingValidationMixin</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">UnexpectedSequenceIdentifierError</span>
 
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -179,7 +172,7 @@
     <span class="n">_expects</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
     <span class="n">_provides</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">fixed_delay</span><span class="p">,</span> <span class="n">document_sequence</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">fixed_delay</span><span class="p">,</span> <span class="n">document_sequence</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RetimingDelayNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
             <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
@@ -233,8 +226,8 @@
                         <span class="n">document</span><span class="o">.</span><span class="n">sequence_number</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span></div></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="BufferDelayNode"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.BufferDelayNode">[docs]</a><span class="k">class</span> <span class="nc">BufferDelayNode</span><span class="p">(</span><span class="n">AbstractCombinedNode</span><span class="p">):</span>
@@ -243,7 +236,7 @@
     <span class="n">_expects</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
     <span class="n">_provides</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">fixed_delay</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">fixed_delay</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BufferDelayNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
             <span class="n">producer_carriage</span><span class="o">=</span><span class="n">producer_carriage</span><span class="p">,</span>
@@ -252,8 +245,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span> <span class="o">=</span> <span class="n">fixed_delay</span>
 
 <div class="viewcode-block" id="BufferDelayNode.process_document"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.BufferDelayNode.process_document">[docs]</a>    <span class="k">def</span> <span class="nf">process_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_fixed_delay</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="update_children_timing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.update_children_timing">[docs]</a><span class="k">def</span> <span class="nf">update_children_timing</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">):</span>
@@ -283,8 +276,8 @@
                     <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
                     <span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">begin</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
 
-            <span class="k">else</span><span class="p">:</span></div>
-                <span class="n">update_children_timing</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">update_children_timing</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="update_body_timing"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.update_body_timing">[docs]</a><span class="k">def</span> <span class="nf">update_body_timing</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">timebase</span><span class="p">,</span> <span class="n">delay_int</span><span class="p">):</span>
@@ -309,8 +302,8 @@
             <span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">LimitedClockTimingType</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">timebase</span> <span class="o">==</span> <span class="s1">&#39;media&#39;</span><span class="p">:</span>
-            <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span></div>
-            <span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span>
+            <span class="n">delay</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">delay_int</span><span class="p">))</span>
+            <span class="n">body</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">FullClockTimingType</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="o">+</span> <span class="n">delay</span><span class="o">.</span><span class="n">timedelta</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="is_explicitly_timed"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.is_explicitly_timed">[docs]</a><span class="k">def</span> <span class="nf">is_explicitly_timed</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
@@ -328,8 +321,8 @@
 
             <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">is_explicitly_timed</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">res</span><span class="p">:</span></div>
-                    <span class="k">return</span> <span class="n">res</span>
+                <span class="k">if</span> <span class="n">res</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">res</span></div>
 
 
 <div class="viewcode-block" id="UntimedPathFinder"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.UntimedPathFinder">[docs]</a><span class="k">class</span> <span class="nc">UntimedPathFinder</span><span class="p">(</span><span class="n">RecursiveOperation</span><span class="p">):</span>
@@ -337,7 +330,7 @@
     <span class="n">_path_found</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">_timed_element_stack</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_timed_element_stack</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UntimedPathFinder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">root_element</span><span class="p">,</span>
@@ -369,8 +362,8 @@
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">path_found</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path_found</span>
+    <span class="k">def</span> <span class="nf">path_found</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_path_found</span></div>
 
 
 <div class="viewcode-block" id="has_a_leaf_with_no_timing_path"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.delay.has_a_leaf_with_no_timing_path">[docs]</a><span class="k">def</span> <span class="nf">has_a_leaf_with_no_timing_path</span><span class="p">(</span><span class="n">element</span><span class="p">):</span>
@@ -382,14 +375,12 @@
 
     <span class="n">finder</span> <span class="o">=</span> <span class="n">UntimedPathFinder</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
     <span class="n">finder</span><span class="o">.</span><span class="n">proceed</span><span class="p">()</span>
-</div>
-    <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">path_found</span>
+
+    <span class="k">return</span> <span class="n">finder</span><span class="o">.</span><span class="n">path_found</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -398,11 +389,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -415,36 +406,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

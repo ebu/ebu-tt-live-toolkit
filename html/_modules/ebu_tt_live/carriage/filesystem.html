@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.carriage.filesystem &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.carriage.filesystem &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -143,8 +138,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -156,13 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.carriage.filesystem</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">AbstractProducerCarriage</span><span class="p">,</span> <span class="n">AbstractConsumerCarriage</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3Document</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">EndOfData</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.clocks</span> <span class="k">import</span> <span class="n">get_clock</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">RotatingFileBuffer</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">FS_DEFAULT_CLOCK_USED</span><span class="p">,</span> <span class="n">FS_MISSING_AVAILABILITY</span><span class="p">,</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MESSAGE_PATTERN</span><span class="p">,</span> <span class="n">CFG_MANIFEST_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MANIFEST_LINE_PATTERN</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">AbstractProducerCarriage</span><span class="p">,</span> <span class="n">AbstractConsumerCarriage</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="kn">import</span> <span class="n">EBUTT3Document</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">EndOfData</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.clocks</span> <span class="kn">import</span> <span class="n">get_clock</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="kn">import</span> <span class="n">RotatingFileBuffer</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="kn">import</span> <span class="n">FS_DEFAULT_CLOCK_USED</span><span class="p">,</span> <span class="n">FS_MISSING_AVAILABILITY</span><span class="p">,</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MESSAGE_PATTERN</span><span class="p">,</span> <span class="n">CFG_MANIFEST_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MANIFEST_LINE_PATTERN</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -176,14 +169,14 @@
         <span class="n">hours</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
         <span class="n">hours</span> <span class="o">+=</span> <span class="n">timed</span><span class="o">.</span><span class="n">days</span> <span class="o">*</span> <span class="mi">24</span>
         <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">seconds</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="n">milliseconds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">microseconds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">)</span>
+        <span class="n">milliseconds</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">timed</span><span class="o">.</span><span class="n">microseconds</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">.</span><span class="si">{:03d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="timestr_manifest_to_timedelta"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.timestr_manifest_to_timedelta">[docs]</a><span class="k">def</span> <span class="nf">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">timestr</span><span class="p">):</span>
         <span class="n">hours</span><span class="p">,</span> <span class="n">minutes</span><span class="p">,</span> <span class="n">rest</span> <span class="o">=</span> <span class="n">timestr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
-        <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hours</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">),</span> <span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span> <span class="n">milliseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">milliseconds</span><span class="p">))</span>
+        <span class="n">seconds</span><span class="p">,</span> <span class="n">milliseconds</span> <span class="o">=</span> <span class="n">rest</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">hours</span><span class="p">),</span> <span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">),</span> <span class="n">seconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">),</span> <span class="n">milliseconds</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">milliseconds</span><span class="p">))</span></div>
 
 <span class="c1"># NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.</span>
 
@@ -225,7 +218,7 @@
     <span class="n">_default_clocks</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_msg_counter</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
                  <span class="n">dirpath</span><span class="p">,</span> 
                  <span class="n">file_name_pattern</span> <span class="o">=</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> 
                  <span class="n">message_file_name_pattern</span> <span class="o">=</span> <span class="n">CFG_MESSAGE_PATTERN</span><span class="p">,</span> 
@@ -277,15 +270,15 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">clock_obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">availability_time</span> <span class="o">=</span> <span class="n">clock_obj</span><span class="o">.</span><span class="n">get_real_clock_time</span><span class="p">()</span>
-</div>
-        <span class="k">return</span> <span class="n">availability_time</span>
+
+        <span class="k">return</span> <span class="n">availability_time</span></div>
 
 <div class="viewcode-block" id="FilesystemProducerImpl.resume_producing"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.resume_producing">[docs]</a>    <span class="k">def</span> <span class="nf">resume_producing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">producer_node</span><span class="o">.</span><span class="n">resume_producing</span><span class="p">()</span>
-            <span class="k">except</span> <span class="n">EndOfData</span><span class="p">:</span></div>
-                <span class="k">break</span>
+            <span class="k">except</span> <span class="n">EndOfData</span><span class="p">:</span>
+                <span class="k">break</span></div>
 
 <div class="viewcode-block" id="FilesystemProducerImpl.emit_data"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemProducerImpl.emit_data">[docs]</a>    <span class="k">def</span> <span class="nf">emit_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                   <span class="n">time_base</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delay</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">clock_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -356,8 +349,8 @@
             <span class="n">new_manifest_line</span> <span class="o">=</span> <span class="n">CFG_MANIFEST_LINE_PATTERN</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">availability_time</span><span class="o">=</span><span class="n">timedelta_to_str_manifest</span><span class="p">(</span><span class="n">availability_time</span><span class="p">),</span> 
                 <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></div></div>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_manifest_line</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">new_manifest_line</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="FilesystemConsumerImpl"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemConsumerImpl">[docs]</a><span class="k">class</span> <span class="nc">FilesystemConsumerImpl</span><span class="p">(</span><span class="n">AbstractConsumerCarriage</span><span class="p">):</span>
@@ -372,8 +365,8 @@
         <span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="k">if</span> <span class="n">xml_content</span><span class="p">:</span>
-            <span class="n">availability_time</span> <span class="o">=</span> <span class="n">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">availability_time_str</span><span class="p">)</span></div></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">xml_content</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span><span class="p">)</span>
+            <span class="n">availability_time</span> <span class="o">=</span> <span class="n">timestr_manifest_to_timedelta</span><span class="p">(</span><span class="n">availability_time_str</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consumer_node</span><span class="o">.</span><span class="n">process_document</span><span class="p">(</span><span class="n">xml_content</span><span class="p">,</span> <span class="n">availability_time</span><span class="o">=</span><span class="n">availability_time</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="FilesystemReader"><a class="viewcode-back" href="../../../ebu_tt_live.carriage.html#ebu_tt_live.carriage.filesystem.FilesystemReader">[docs]</a><span class="k">class</span> <span class="nc">FilesystemReader</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -389,7 +382,7 @@
     <span class="n">_manifest_time_format</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_do_tail</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest_path</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">,</span> <span class="n">do_tail</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest_path</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="p">,</span> <span class="n">do_tail</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dirpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">manifest_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_manifest_path</span> <span class="o">=</span> <span class="n">manifest_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span> <span class="o">=</span> <span class="n">custom_consumer</span>
@@ -416,14 +409,12 @@
                     <span class="n">xml_content</span> <span class="o">=</span> <span class="kc">None</span>
                     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">xml_file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
                         <span class="n">xml_content</span> <span class="o">=</span> <span class="n">xml_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-                    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span><span class="p">]</span></div></div>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">availability_time_str</span><span class="p">,</span> <span class="n">xml_content</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_custom_consumer</span><span class="o">.</span><span class="n">on_new_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -432,11 +423,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -449,36 +440,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

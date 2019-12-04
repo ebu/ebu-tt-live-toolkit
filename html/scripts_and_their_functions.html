@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scripts and their functions &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>Scripts and their functions &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
-        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
-        <link rel="next" title="Configuration files and ebu-run" href="configurator.html"/>
-        <link rel="prev" title="Direct Carriage Mechanism" href="direct_carriage_mechanism.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configuration files and ebu-run" href="configurator.html" />
+    <link rel="prev" title="Direct Carriage Mechanism" href="direct_carriage_mechanism.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,6 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#handover-manager">Handover Manager</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#buffer-delay-node">Buffer Delay Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#deduplicator-node">DeDuplicator Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#resequencer-node">Resequencer Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#retiming-delay-node">Retiming Delay Node</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ebu-tt-d-encoder">EBU-TT-D Encoder</a></li>
 </ul>
@@ -128,7 +123,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EBU-TT-Live Toolkit</a>
@@ -136,9 +131,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -248,11 +244,11 @@ consumer is listening. See detailed instructions here:
 <div class="section" id="distributor">
 <h2>Distributor<a class="headerlink" href="#distributor" title="Permalink to this headline">¶</a></h2>
 <p>This script mimics a distribution node. To see it forwarding documents from the
-Simple Producer the the Simple Consumer using Websocket, run <code class="docutils literal notranslate"><span class="pre">ebu-run</span>
+Simple Producer to the Simple Consumer using Websocket, run <code class="docutils literal notranslate"><span class="pre">ebu-run</span>
 <span class="pre">--admin.conf=ebu_tt_live/examples/config/sproducer_dist_sconsumer_ws.json</span></code>. A
 more interesting scenario is distributing documents from the User Input Producer
 to two consumer nodes: <code class="docutils literal notranslate"><span class="pre">ebu-run</span>
-<span class="pre">--admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers</span></code>.</p>
+<span class="pre">--admin.conf=ebu_tt_live/examples/config/user_input_producer_dist_consumers.json</span></code>.</p>
 <p>Like the Simple Producer, the Distributor can also save the documents it
 receives to the file system. To do that, create you own configuration file as
 described in <a class="reference internal" href="configurator.html"><span class="doc">Configuration files and ebu-run</span></a> and pass this file to <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code>.</p>
@@ -283,9 +279,40 @@ example <code class="docutils literal notranslate"><span class="pre">ebu-run</sp
 <div class="section" id="deduplicator-node">
 <h2>DeDuplicator Node<a class="headerlink" href="#deduplicator-node" title="Permalink to this headline">¶</a></h2>
 <p>This node addresses instances where <code class="docutils literal notranslate"><span class="pre">style</span></code> and <code class="docutils literal notranslate"><span class="pre">region</span></code> elements and
-attributes are duplicated.
+attributes are duplicated, which can occur for example when sequences are
+resequenced.
 For the default configuration of the node, see:
 <code class="docutils literal notranslate"><span class="pre">ebu-run</span> <span class="pre">--admin.conf=ebu_tt_live/examples/config/deduplicator_fs.json</span></code></p>
+</div>
+<div class="section" id="resequencer-node">
+<h2>Resequencer Node<a class="headerlink" href="#resequencer-node" title="Permalink to this headline">¶</a></h2>
+<p>This node consumes documents from one sequence and
+creates a new sequence of documents based on the content in that input sequence,
+where every document in the output sequence has the same duration. The
+resequencer repeatedly extracts and then outputs a document of the specified
+duration, then waits for a period equal to that
+duration before extracting the next document. It can be configured to begin
+extracting the first document immediately when it is run, or to wait until a
+specific time until extracting the first document.</p>
+<p>The resequencer is
+particularly useful upstream of an EBU-TT-D Encoder, to generate segmented
+EBU-TT-D, for example prior to wrapping in fragmented MPEG-4 and serving
+with a DASH or HLS manifest; those onward steps are not part of this project.
+This pattern effectively converts an asynchronous stream of input documents
+into something that can be delivered synchronously downstream, which is
+useful for distribution to media players.</p>
+<p>Note that the resequencer output can contain duplicated <code class="docutils literal notranslate"><span class="pre">style</span></code> and <code class="docutils literal notranslate"><span class="pre">region</span></code>
+elements. These can be cleaned up by passing the output to a DeDuplicator
+node before downstream encoding to other formats.</p>
+<p>In general the resequencer does not begin emitting any documents until it has received
+at least one input document. To immediately start to emit documents an
+initial document can be configured. Necessary initial parameters like
+language or sequence ID are retrieved from that document.</p>
+<p>Note that the resequencer accepts only input documents which all have the
+same sequence ID. This sequence ID is determined by the first received input
+document (or the configured initial document instead, if applicable).</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">ebu-run</span></code> to start
+this script, for example <code class="docutils literal notranslate"><span class="pre">ebu-run</span> <span class="pre">--admin.conf=ebu_tt_live/examples/config/sproducer_resequencer_direct_ebuttd_encoder_fs.json</span></code></p>
 </div>
 <div class="section" id="retiming-delay-node">
 <h2>Retiming Delay Node<a class="headerlink" href="#retiming-delay-node" title="Permalink to this headline">¶</a></h2>
@@ -316,9 +343,7 @@ implemented only partially and should not be used as complete reference.</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -327,7 +352,7 @@ implemented only partially and should not be used as complete reference.</p>
         <a href="configurator.html" class="btn btn-neutral float-right" title="Configuration files and ebu-run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="direct_carriage_mechanism.html" class="btn btn-neutral" title="Direct Carriage Mechanism" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="direct_carriage_mechanism.html" class="btn btn-neutral float-left" title="Direct Carriage Mechanism" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -336,11 +361,11 @@ implemented only partially and should not be used as complete reference.</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -353,36 +378,15 @@ implemented only partially and should not be used as complete reference.</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

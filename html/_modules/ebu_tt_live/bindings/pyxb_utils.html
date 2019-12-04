@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings.pyxb_utils &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.bindings.pyxb_utils &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="ebu_tt_live.bindings" href="../bindings.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -145,8 +140,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -164,9 +157,9 @@
 
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">StopBranchIteration</span>
-<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="k">import</span> <span class="n">NonElementContent</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">,</span> <span class="n">complexTypeDefinition</span>
-<span class="kn">from</span> <span class="nn">pyxb.exceptions_</span> <span class="k">import</span> <span class="n">NotComplexContentError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">StopBranchIteration</span>
+<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="kn">import</span> <span class="n">NonElementContent</span><span class="p">,</span> <span class="n">ElementContent</span><span class="p">,</span> <span class="n">complexTypeDefinition</span>
+<span class="kn">from</span> <span class="nn">pyxb.exceptions_</span> <span class="kn">import</span> <span class="n">NotComplexContentError</span>
 
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -189,14 +182,14 @@
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Accessing xml_parsing_context: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__xml_parsing_context</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">parsing</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
         <span class="c1"># We are not in parsing mode</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
-    <span class="k">return</span> <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">context</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">context</span></div>
 
 
 <div class="viewcode-block" id="reset_xml_parsing_context"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.reset_xml_parsing_context">[docs]</a><span class="k">def</span> <span class="nf">reset_xml_parsing_context</span><span class="p">(</span><span class="n">parsing</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Resetting xml_parsing_context: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">__xml_parsing_context</span><span class="p">))</span>
-    <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">{}</span></div>
-    <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">parsing</span> <span class="o">=</span> <span class="n">parsing</span>
+    <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">__xml_parsing_context</span><span class="o">.</span><span class="n">parsing</span> <span class="o">=</span> <span class="n">parsing</span></div>
 
 
 <div class="viewcode-block" id="xml_parsing_context"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.xml_parsing_context">[docs]</a><span class="k">class</span> <span class="nc">xml_parsing_context</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -206,11 +199,11 @@
 <span class="sd">    document is parsed. This prevents unwanted correlation between documents.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">reset_xml_parsing_context</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span></div>
-        <span class="n">reset_xml_parsing_context</span><span class="p">()</span>
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
+        <span class="n">reset_xml_parsing_context</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="RecursiveOperation"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation">[docs]</a><span class="k">class</span> <span class="nc">RecursiveOperation</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -225,7 +218,7 @@
     <span class="n">_post_order</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_children_iterator</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">children_iterator</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">post_order</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">children_iterator</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This class requires a root element to operate on and an optional filter function to help limit the elements</span>
 <span class="sd">        selected for the operations defined in the hook functions thereby reducing their complexity and improving</span>
@@ -301,8 +294,8 @@
                 <span class="n">value</span><span class="o">=</span><span class="n">element_value</span><span class="p">,</span> <span class="n">non_element</span><span class="o">=</span><span class="n">element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">proc_value</span>
 
-<div class="viewcode-block" id="RecursiveOperation.proceed"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation.proceed">[docs]</a>    <span class="k">def</span> <span class="nf">proceed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recursive_step</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_root_element</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<div class="viewcode-block" id="RecursiveOperation.proceed"><a class="viewcode-back" href="../../../ebu_tt_live.bindings.html#ebu_tt_live.bindings.pyxb_utils.RecursiveOperation.proceed">[docs]</a>    <span class="k">def</span> <span class="nf">proceed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_recursive_step</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_root_element</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_before_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
@@ -313,14 +306,12 @@
     <span class="k">def</span> <span class="nf">_process_non_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">non_element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_after_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="nf">_after_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -329,11 +320,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -346,36 +337,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

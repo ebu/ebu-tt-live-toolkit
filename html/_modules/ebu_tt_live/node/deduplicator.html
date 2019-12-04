@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.node.deduplicator &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.node.deduplicator &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -143,8 +138,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -156,15 +149,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.node.deduplicator</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="k">import</span> <span class="n">AbstractCombinedNode</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="k">import</span> <span class="n">EBUTT3DocumentSequence</span><span class="p">,</span> <span class="n">EBUTT3Document</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.pyxb_utils</span> <span class="k">import</span> <span class="n">RecursiveOperation</span><span class="p">,</span> <span class="n">StopBranchIteration</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">DOC_RECEIVED</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">SequenceNumberCollisionError</span><span class="p">,</span> <span class="n">UnexpectedSequenceIdentifierError</span>
-<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="k">import</span> <span class="n">ElementContent</span><span class="p">,</span> <span class="n">complexTypeDefinition</span>
-<span class="kn">from</span> <span class="nn">pyxb</span> <span class="k">import</span> <span class="n">BIND</span>
-<span class="kn">from</span> <span class="nn">pyxb.namespace</span> <span class="k">import</span> <span class="n">ExpandedName</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="k">import</span> <span class="n">bindings</span>
+<span></span><span class="kn">from</span> <span class="nn">.base</span> <span class="kn">import</span> <span class="n">AbstractCombinedNode</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.documents</span> <span class="kn">import</span> <span class="n">EBUTT3DocumentSequence</span><span class="p">,</span> <span class="n">EBUTT3Document</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings.pyxb_utils</span> <span class="kn">import</span> <span class="n">RecursiveOperation</span><span class="p">,</span> <span class="n">StopBranchIteration</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="kn">import</span> <span class="n">DOC_RECEIVED</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">SequenceNumberCollisionError</span><span class="p">,</span> <span class="n">UnexpectedSequenceIdentifierError</span>
+<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="kn">import</span> <span class="n">ElementContent</span><span class="p">,</span> <span class="n">complexTypeDefinition</span>
+<span class="kn">from</span> <span class="nn">pyxb</span> <span class="kn">import</span> <span class="n">BIND</span>
+<span class="kn">from</span> <span class="nn">pyxb.namespace</span> <span class="kn">import</span> <span class="n">ExpandedName</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live</span> <span class="kn">import</span> <span class="n">bindings</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 
 
@@ -180,7 +173,7 @@
     <span class="n">_expects</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
     <span class="n">_provides</span> <span class="o">=</span> <span class="n">EBUTT3Document</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> \
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">sequence_identifier</span><span class="p">,</span> <span class="n">consumer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> \
                  <span class="n">producer_carriage</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DeDuplicatorNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">node_id</span><span class="o">=</span><span class="n">node_id</span><span class="p">,</span>
@@ -203,8 +196,8 @@
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove_duplication</span><span class="p">(</span><span class="n">document</span><span class="o">=</span><span class="n">document</span><span class="p">)</span>
 
-                <span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
-                <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="n">document</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">producer_carriage</span><span class="o">.</span><span class="n">emit_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">document</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DeDuplicatorNode.remove_duplication"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.DeDuplicatorNode.remove_duplication">[docs]</a>    <span class="k">def</span> <span class="nf">remove_duplication</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
         <span class="n">old_id_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">({})</span>
@@ -231,8 +224,8 @@
 
         <span class="n">replace_id_refs</span> <span class="o">=</span> <span class="n">ReplaceStylesAndRegions</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">binding</span><span class="p">,</span> \
                                                       <span class="n">old_id_dict</span><span class="p">,</span> \
-                                                      <span class="n">new_id_dict</span><span class="p">)</span></div>
-        <span class="n">replace_id_refs</span><span class="o">.</span><span class="n">proceed</span><span class="p">()</span>
+                                                      <span class="n">new_id_dict</span><span class="p">)</span>
+        <span class="n">replace_id_refs</span><span class="o">.</span><span class="n">proceed</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="DeDuplicatorNode.CollateUniqueVals"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.DeDuplicatorNode.CollateUniqueVals">[docs]</a>    <span class="k">def</span> <span class="nf">CollateUniqueVals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_list</span><span class="p">,</span> <span class="n">old_id_dict</span><span class="p">,</span> <span class="n">new_id_dict</span><span class="p">,</span> \
                           <span class="n">hash_dict</span><span class="p">):</span>
@@ -253,8 +246,8 @@
                 <span class="n">unique_val</span> <span class="o">=</span> <span class="n">ComparableElement</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="c1"># stores references of original &lt;xml:id&gt; to &lt;my_hash&gt;</span>
                 <span class="n">old_id_dict</span><span class="p">[</span><span class="n">value</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_val</span><span class="o">.</span><span class="n">my_hash</span>
-                <span class="c1"># stores references of &lt;my_hash&gt; to element</span></div>
-                <span class="n">hash_dict</span><span class="p">[</span><span class="n">unique_val</span><span class="o">.</span><span class="n">my_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="c1"># stores references of &lt;my_hash&gt; to element</span>
+                <span class="n">hash_dict</span><span class="p">[</span><span class="n">unique_val</span><span class="o">.</span><span class="n">my_hash</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="DeDuplicatorNode.AppendNewElements"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.DeDuplicatorNode.AppendNewElements">[docs]</a>    <span class="k">def</span> <span class="nf">AppendNewElements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_list</span><span class="p">,</span> <span class="n">element_to_append_to</span><span class="p">,</span> <span class="n">old_id_dict</span><span class="p">,</span> \
                           <span class="n">new_id_dict</span><span class="p">,</span> <span class="n">hash_dict</span><span class="p">):</span>
@@ -267,8 +260,8 @@
             <span class="k">for</span> <span class="n">old_element</span> <span class="ow">in</span> <span class="n">element_list</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">old_element</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="n">new_id</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
                     <span class="n">element_to_append_to</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_id</span><span class="p">)</span>
-</div></div>
-            <span class="n">new_id_dict</span><span class="p">[</span><span class="n">hash_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_id</span><span class="o">.</span><span class="n">id</span>
+
+            <span class="n">new_id_dict</span><span class="p">[</span><span class="n">hash_val</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_id</span><span class="o">.</span><span class="n">id</span></div></div>
 
 <div class="viewcode-block" id="ReplaceNone"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.ReplaceNone">[docs]</a><span class="k">def</span> <span class="nf">ReplaceNone</span><span class="p">(</span><span class="n">attr_value</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -278,15 +271,15 @@
     <span class="k">if</span> <span class="n">attr_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;|&quot;</span> <span class="c1"># &#39;|&#39; is a non-legal character and this is used to prevent</span>
                    <span class="c1"># collisions between similar attributes</span>
-    <span class="k">else</span><span class="p">:</span></div>
-        <span class="k">return</span> <span class="n">attr_value</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">attr_value</span></div>
 
 
 <div class="viewcode-block" id="ComparableElement"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.ComparableElement">[docs]</a><span class="k">class</span> <span class="nc">ComparableElement</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes all the attributes of an element and returns a hash value</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="n">attributeDict</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">_AttributeMap</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -310,21 +303,21 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">my_hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">concatenatedStyleString</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">other</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_hash</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">my_hash</span>
 
-    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_hash</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">my_hash</span></div>
 
 
 <div class="viewcode-block" id="ReplaceStylesAndRegions"><a class="viewcode-back" href="../../../ebu_tt_live.node.html#ebu_tt_live.node.deduplicator.ReplaceStylesAndRegions">[docs]</a><span class="k">class</span> <span class="nc">ReplaceStylesAndRegions</span><span class="p">(</span><span class="n">RecursiveOperation</span><span class="p">):</span>
     <span class="n">old_id_dict</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">new_id_dict</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">,</span> <span class="n">old_id_dict</span><span class="p">,</span> <span class="n">new_id_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root_element</span><span class="p">,</span> <span class="n">old_id_dict</span><span class="p">,</span> <span class="n">new_id_dict</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">(</span><span class="n">ReplaceStylesAndRegions</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
                 <span class="n">root_element</span>
             <span class="p">)</span>
@@ -376,14 +369,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">_process_non_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">non_element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></div>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="nf">_process_non_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">non_element</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">pass</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -392,11 +383,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -409,36 +400,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

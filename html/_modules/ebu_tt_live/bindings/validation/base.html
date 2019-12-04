@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings.validation.base &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.bindings.validation.base &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../../index.html"/>
-        <link rel="up" title="ebu_tt_live.bindings" href="../../bindings.html"/> 
-
-  
-  <script src="../../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -145,8 +140,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -166,11 +159,11 @@
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">six</span>
 
-<span class="kn">from</span> <span class="nn">pyxb.namespace</span> <span class="k">import</span> <span class="n">ExpandedName</span>
+<span class="kn">from</span> <span class="nn">pyxb.namespace</span> <span class="kn">import</span> <span class="n">ExpandedName</span>
 
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">SemanticValidationError</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">DOC_SYNTACTIC_VALIDATION_SUCCESSFUL</span><span class="p">,</span> <span class="n">ERR_SEMANTIC_ID_UNIQUENESS</span>
-<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="k">import</span> <span class="n">NonElementContent</span><span class="p">,</span> <span class="n">ElementContent</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">SemanticValidationError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="kn">import</span> <span class="n">DOC_SYNTACTIC_VALIDATION_SUCCESSFUL</span><span class="p">,</span> <span class="n">ERR_SEMANTIC_ID_UNIQUENESS</span>
+<span class="kn">from</span> <span class="nn">pyxb.binding.basis</span> <span class="kn">import</span> <span class="n">NonElementContent</span><span class="p">,</span> <span class="n">ElementContent</span>
 
 <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">document_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;document_logger&#39;</span><span class="p">)</span>
@@ -192,24 +185,24 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_pre</span><span class="p">[</span><span class="n">uri_tuple</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_en</span><span class="p">,</span> <span class="n">value_lex</span><span class="p">)</span>
         <span class="n">au</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">SemanticValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_setAttribute</span><span class="p">(</span><span class="n">attr_en</span><span class="p">,</span> <span class="n">value_lex</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">uri_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_post</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_post</span><span class="p">[</span><span class="n">uri_tuple</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">au</span><span class="p">)</span></div>
-        <span class="k">return</span> <span class="n">au</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attr_en_post</span><span class="p">[</span><span class="n">uri_tuple</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="n">au</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">au</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_before_traversal"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_traversal">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Semantic validation preprocess hook.</span>
 <span class="sd">        :param dataset: semantic context object</span>
 <span class="sd">        :param element_content: the element itself</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_after_traversal"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_traversal">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_after_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Semantic validation postprocess hook.</span>
 <span class="sd">        :param dataset: semantic context object</span>
 <span class="sd">        :param element_content: the element itself</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._do_link_copy_with_copied_parent"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._do_link_copy_with_copied_parent">[docs]</a>    <span class="k">def</span> <span class="nf">_do_link_copy_with_copied_parent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">,</span> <span class="n">parent_binding</span><span class="p">):</span>
         <span class="n">celem</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="bp">self</span><span class="p">]</span>
@@ -218,8 +211,8 @@
 
         <span class="k">if</span> <span class="n">element_content</span><span class="o">.</span><span class="n">elementDeclaration</span><span class="o">.</span><span class="n">isPlural</span><span class="p">():</span>
             <span class="n">cparent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">celem</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span></div>
-            <span class="nb">setattr</span><span class="p">(</span><span class="n">cparent</span><span class="p">,</span> <span class="n">element_content</span><span class="o">.</span><span class="n">elementDeclaration</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="o">.</span><span class="n">localName</span><span class="p">(),</span> <span class="n">celem</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">cparent</span><span class="p">,</span> <span class="n">element_content</span><span class="o">.</span><span class="n">elementDeclaration</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="o">.</span><span class="n">localName</span><span class="p">(),</span> <span class="n">celem</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_before_copy"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_copy">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_before_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -227,8 +220,8 @@
 <span class="sd">        :param dataset:</span>
 <span class="sd">        :param element_content:</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_before_subtree_copy"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_before_subtree_copy">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_before_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -236,8 +229,8 @@
 <span class="sd">        :param dataset:</span>
 <span class="sd">        :param element_content:</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_after_subtree_copy"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_after_subtree_copy">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_after_subtree_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -245,8 +238,8 @@
 <span class="sd">        :param dataset:</span>
 <span class="sd">        :param element_content:</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_attributes_missing"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_attributes_missing">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_attributes_missing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_names</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -254,8 +247,8 @@
 <span class="sd">        :param attr_names: The attributes that were defined on the element.</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attr_names</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span></div>
-        <span class="k">return</span> <span class="n">result</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attr_names</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_attributes_present"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_attributes_present">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_attributes_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_names</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -263,8 +256,8 @@
 <span class="sd">        :param attr_names: The missing attributes that were not defined.</span>
 <span class="sd">        :return:</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attr_names</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span></div>
-        <span class="k">return</span> <span class="n">result</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">attr_names</span> <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_copy"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_copy">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -272,21 +265,21 @@
 <span class="sd">        It can be customised by classes. The default is the shallow copy.</span>
 <span class="sd">        :param dataset:</span>
 <span class="sd">        :return: cloned element</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin.merge"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin.merge">[docs]</a>    <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_elem</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Try and merge the contents of 2 elements of the same type.</span>
 <span class="sd">        :param other_elem:</span>
 <span class="sd">        :return:</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._find_deconflicted_elem_by_id"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._find_deconflicted_elem_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">_find_deconflicted_elem_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elem_id</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">old_elem</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;tt_element&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_element_by_id</span><span class="p">(</span><span class="n">elem_id</span><span class="p">)</span>
-        <span class="n">new_elem</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">old_elem</span><span class="p">]</span></div>
-        <span class="k">return</span> <span class="n">new_elem</span>
+        <span class="n">new_elem</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;instance_mapping&#39;</span><span class="p">][</span><span class="n">old_elem</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">new_elem</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin._semantic_deconflicted_ids"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin._semantic_deconflicted_ids">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_deconflicted_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -305,8 +298,8 @@
             <span class="n">new_elem_ids</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">elem_id</span> <span class="ow">in</span> <span class="n">old_elem_ids</span><span class="p">:</span>
                 <span class="n">new_elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_find_deconflicted_elem_by_id</span><span class="p">(</span><span class="n">elem_id</span><span class="o">=</span><span class="n">elem_id</span><span class="p">,</span> <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
-                <span class="n">new_elem_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_elem</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
-            <span class="k">return</span> <span class="n">new_elem_ids</span>
+                <span class="n">new_elem_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_elem</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">new_elem_ids</span></div>
 
 <div class="viewcode-block" id="SemanticValidationMixin.get_attribute_value"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticValidationMixin.get_attribute_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_attribute_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">att_name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -319,8 +312,8 @@
         <span class="c1"># NOTE: At this point we should go to attribute map locate the attribute but for that the namespace has to be</span>
         <span class="c1"># located too because its fully qualified name is required... etc. cutting corners here as we don&#39;t mix local</span>
         <span class="c1"># and namespaced attributes of the same name so fairly safe to just take the localname bit. But this</span>
-        <span class="c1"># is not a fully XML compliant way to support all possibilities in all cases.</span></div></div>
-        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_en</span><span class="o">.</span><span class="n">localName</span><span class="p">())</span>
+        <span class="c1"># is not a fully XML compliant way to support all possibilities in all cases.</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_en</span><span class="o">.</span><span class="n">localName</span><span class="p">())</span></div></div>
 
 
 <div class="viewcode-block" id="SemanticDocumentMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin">[docs]</a><span class="k">class</span> <span class="nc">SemanticDocumentMixin</span><span class="p">(</span><span class="n">SemanticValidationMixin</span><span class="p">):</span>
@@ -330,8 +323,8 @@
 <div class="viewcode-block" id="SemanticDocumentMixin._semantic_before_validation"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin._semantic_before_validation">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_before_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.</span>
-<span class="sd">        &quot;&quot;&quot;</span></div>
-        <span class="k">pass</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="SemanticDocumentMixin.validateBinding"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.SemanticDocumentMixin.validateBinding">[docs]</a>    <span class="k">def</span> <span class="nf">validateBinding</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Check whether the binding content matches its content model.</span>
@@ -351,8 +344,8 @@
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;semantic_dataset&quot;</span><span class="p">:</span> <span class="n">result</span>
-            <span class="p">}</span></div></div>
-        <span class="k">return</span> <span class="kc">True</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
 <div class="viewcode-block" id="IDMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.IDMixin">[docs]</a><span class="k">class</span> <span class="nc">IDMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -367,8 +360,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tp_ebu_id_deconflict</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">sequence_number</span><span class="o">=</span><span class="n">seq_num</span><span class="p">,</span>
-                <span class="n">original_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span></div>
-            <span class="p">)</span>
+                <span class="n">original_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+            <span class="p">)</span></div>
 
 <div class="viewcode-block" id="IDMixin._semantic_register_id"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.base.IDMixin._semantic_register_id">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_register_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">):</span>
         <span class="n">ebid</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;elements_by_id&#39;</span><span class="p">]</span>
@@ -378,14 +371,12 @@
                     <span class="n">ERR_SEMANTIC_ID_UNIQUENESS</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span>
                     <span class="p">)</span>
-                <span class="p">)</span></div></div>
-            <span class="n">ebid</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span>
+                <span class="p">)</span>
+            <span class="n">ebid</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span></div></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -394,11 +385,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -411,36 +402,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

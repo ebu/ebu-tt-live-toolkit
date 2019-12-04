@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Timing resolution and consumer logic &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>Timing resolution and consumer logic &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
-        <link rel="up" title="Overview of the EBU-TT live toolkit." href="overview.html"/>
-        <link rel="next" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html"/>
-        <link rel="prev" title="User input producer" href="user_input_producer.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Segmentation of EBU-TT-Live document sequences" href="segmentation.html" />
+    <link rel="prev" title="User input producer" href="user_input_producer.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -120,7 +114,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EBU-TT-Live Toolkit</a>
@@ -128,9 +122,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -188,7 +183,7 @@ timeline where possible collisions are detected and resolved with the possible d
 begin and end events on an absolute timeline. For this we hook into the Depth First Search that the validation framework
 uses to process element validation. It is very important to note that the begin and end times can be
 calculated either as the algorithm cascades down or on its way up in case information derived from children is required.</p>
-<img src="_images/graphviz-2f94a68d995752b5619d94b03f7410b43726322e.png" alt="digraph shells {
+<div class="graphviz"><img src="_images/graphviz-f25d6b9780daebd90ab95099d8ed81a543e15e64.png" alt="digraph shells {
     size=&quot;7,8&quot;;
     node [fontsize=24, shape = plaintext];
     &quot;Document level&quot; -&gt; L1 -&gt; L2 -&gt; L3 -&gt; L4;
@@ -210,7 +205,7 @@ calculated either as the algorithm cascades down or on its way up in case inform
     /* ’invisible’ edges to adjust node placement */
     edge [style=invis];
     L4 -&gt; span1;
-}" />
+}" class="graphviz" /></div>
 <p>The classes involved in the timing resolution are in the diagram below. For every type of element in the XSD there is
 a python binding class defined. For the sake of simplicity the diagram only contains a fraction of them to provide
 enough context but omits the parts that are irrelevant to the timing resolution logic.</p>
@@ -282,7 +277,7 @@ TimingValidationMixin &lt;|-- p_type
 TimingValidationMixin &lt;|-- span_type
 
 &#64;enduml
-" />
+"/>
 </p>
 <p class="caption"><span class="caption-text">Classes involved in timing resolution (Simplified)</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
@@ -302,17 +297,17 @@ and call the <a class="reference internal" href="ebu_tt_live.bindings.validation
 in the before traversal and
 <a class="reference internal" href="ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing" title="ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing</span></code></a> in the after
 traversal hook. The following code sample is from the implementation of the div_type class.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_semantic_before_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_register_id</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_timebase_validation</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_preprocess_timing</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_set_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">region_type</span><span class="o">=</span><span class="n">region_type</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_collect_applicable_styles</span><span class="p">(</span>
-        <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">style_type</span><span class="o">=</span><span class="n">style_type</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="o">=</span><span class="bp">True</span>
+        <span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">style_type</span><span class="o">=</span><span class="n">style_type</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="n">parent_binding</span><span class="p">,</span> <span class="n">defer_font_size</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_push_styles</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">_semantic_after_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_semantic_after_traversal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent_binding</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_postprocess_timing</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="n">element_content</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_unset_region</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">)</span>
 </pre></div>
@@ -465,7 +460,7 @@ User &lt;- root
 deactivate root
 
 &#64;enduml
-" />
+"/>
 </p>
 <p class="caption"><span class="caption-text">Timing validation of document tree (head element omitted as it is irrelevant to timing)</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
@@ -481,9 +476,7 @@ end times and detects collisions. If there are any, the collisions are resolved 
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -492,7 +485,7 @@ end times and detects collisions. If there are any, the collisions are resolved 
         <a href="segmentation.html" class="btn btn-neutral float-right" title="Segmentation of EBU-TT-Live document sequences" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="user_input_producer.html" class="btn btn-neutral" title="User input producer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="user_input_producer.html" class="btn btn-neutral float-left" title="User input producer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -501,11 +494,11 @@ end times and detects collisions. If there are any, the collisions are resolved 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -518,36 +511,15 @@ end times and detects collisions. If there are any, the collisions are resolved 
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

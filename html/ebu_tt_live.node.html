@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>node Package &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>node Package &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,43 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="index.html"/>
-        <link rel="up" title="Source code reference" href="ebu_tt_live.html"/>
-        <link rel="next" title="scripts Package" href="ebu_tt_live.scripts.html"/>
-        <link rel="prev" title="examples Package" href="ebu_tt_live.examples.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="scripts Package" href="ebu_tt_live.scripts.html" />
+    <link rel="prev" title="examples Package" href="ebu_tt_live.examples.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -67,7 +61,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -112,7 +106,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.delay"><code class="docutils literal notranslate"><span class="pre">delay</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.distributing"><code class="docutils literal notranslate"><span class="pre">distributing</span></code> Module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.handover"><code class="docutils literal notranslate"><span class="pre">handover</span></code> Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#deduplicator-module"><code class="docutils literal notranslate"><span class="pre">deduplicator</span></code> Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-ebu_tt_live.node.deduplicator"><code class="docutils literal notranslate"><span class="pre">deduplicator</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ebu_tt_live.scripts.html">scripts Package</a></li>
@@ -135,7 +129,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">EBU-TT-Live Toolkit</a>
@@ -143,9 +137,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -386,7 +381,7 @@ A node must implement this method.</p>
 <span id="consumer-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">consumer</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.consumer" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="ebu_tt_live.node.consumer.ReSequencer">
-<em class="property">class </em><code class="descclassname">ebu_tt_live.node.consumer.</code><code class="descname">ReSequencer</code><span class="sig-paren">(</span><em>node_id</em>, <em>reference_clock</em>, <em>segment_length</em>, <em>discard</em>, <em>sequence_identifier</em>, <em>consumer_carriage=None</em>, <em>producer_carriage=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#ReSequencer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.ReSequencer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ebu_tt_live.node.consumer.</code><code class="descname">ReSequencer</code><span class="sig-paren">(</span><em>node_id</em>, <em>reference_clock</em>, <em>segment_length</em>, <em>discard</em>, <em>sequence_identifier</em>, <em>consumer_carriage=None</em>, <em>producer_carriage=None</em>, <em>init_document=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#ReSequencer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.ReSequencer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ebu_tt_live.node.base.AbstractProducerNode" title="ebu_tt_live.node.base.AbstractProducerNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.node.base.AbstractProducerNode</span></code></a>, <a class="reference internal" href="#ebu_tt_live.node.consumer.SimpleConsumer" title="ebu_tt_live.node.consumer.SimpleConsumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ebu_tt_live.node.consumer.SimpleConsumer</span></code></a></p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.node.consumer.ReSequencer.auto_register_impl">
@@ -446,6 +441,11 @@ A node must implement this method.</p>
 <dl class="classmethod">
 <dt id="ebu_tt_live.node.consumer.SimpleConsumer.auto_register_impl">
 <em class="property">classmethod </em><code class="descname">auto_register_impl</code><span class="sig-paren">(</span><em>y</em><span class="sig-paren">)</span><a class="headerlink" href="#ebu_tt_live.node.consumer.SimpleConsumer.auto_register_impl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ebu_tt_live.node.consumer.SimpleConsumer.create_sequence_from_document">
+<code class="descname">create_sequence_from_document</code><span class="sig-paren">(</span><em>document</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/consumer.html#SimpleConsumer.create_sequence_from_document"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.consumer.SimpleConsumer.create_sequence_from_document" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -740,9 +740,9 @@ configuration<ul>
 </dd></dl>
 
 </div>
-<div class="section" id="deduplicator-module">
-<h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">deduplicator</span></code> Module<a class="headerlink" href="#deduplicator-module" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-ebu_tt_live.node.deduplicator"></span><dl class="class">
+<div class="section" id="module-ebu_tt_live.node.deduplicator">
+<span id="deduplicator-module"></span><h2><code class="xref py py-mod docutils literal notranslate"><span class="pre">deduplicator</span></code> Module<a class="headerlink" href="#module-ebu_tt_live.node.deduplicator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
 <dt id="ebu_tt_live.node.deduplicator.ComparableElement">
 <em class="property">class </em><code class="descclassname">ebu_tt_live.node.deduplicator.</code><code class="descname">ComparableElement</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ebu_tt_live/node/deduplicator.html#ComparableElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ebu_tt_live.node.deduplicator.ComparableElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes all the attributes of an element and returns a hash value</p>
@@ -826,9 +826,7 @@ prevent ‘collisions’</p>
 
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -837,7 +835,7 @@ prevent ‘collisions’</p>
         <a href="ebu_tt_live.scripts.html" class="btn btn-neutral float-right" title="scripts Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ebu_tt_live.examples.html" class="btn btn-neutral" title="examples Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ebu_tt_live.examples.html" class="btn btn-neutral float-left" title="examples Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -846,11 +844,11 @@ prevent ‘collisions’</p>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -863,36 +861,15 @@ prevent ‘collisions’</p>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.bindings.validation.timing &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.bindings.validation.timing &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../../index.html"/>
-        <link rel="up" title="ebu_tt_live.bindings" href="../../bindings.html"/> 
-
-  
-  <script src="../../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -145,8 +140,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -158,11 +151,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.bindings.validation.timing</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">timedelta</span>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
 
-<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="k">import</span> <span class="n">get_xml_parsing_context</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">LogicError</span><span class="p">,</span> <span class="n">SemanticValidationError</span><span class="p">,</span> <span class="n">OutsideSegmentError</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.bindings</span> <span class="kn">import</span> <span class="n">get_xml_parsing_context</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">LogicError</span><span class="p">,</span> <span class="n">SemanticValidationError</span><span class="p">,</span> <span class="n">OutsideSegmentError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="kn">import</span> <span class="n">ERR_SEMANTIC_VALIDATION_TIMING_TYPE</span>
 
 
 <div class="viewcode-block" id="TimingValidationMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin">[docs]</a><span class="k">class</span> <span class="nc">TimingValidationMixin</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -186,36 +179,36 @@
         <span class="c1"># Pass in the timing_attribute_name to the context to help the timing type constructor refuse creation</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">get_xml_parsing_context</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># This means we are in XML parsing mode</span></div>
-            <span class="n">context</span><span class="p">[</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr_en</span><span class="o">.</span><span class="n">localName</span><span class="p">()</span>
+            <span class="c1"># This means we are in XML parsing mode</span>
+            <span class="n">context</span><span class="p">[</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">attr_en</span><span class="o">.</span><span class="n">localName</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._post_timing_set_attribute"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_timing_set_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">_post_timing_set_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_use</span><span class="p">):</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">get_xml_parsing_context</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Clean up after successful creation</span></div>
-            <span class="n">context</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="c1"># Clean up after successful creation</span>
+            <span class="n">context</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timing_attribute_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._pre_init_variables"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_init_variables">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_init_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">begin</span><span class="o">.</span><span class="n">timedelta</span> <span class="ow">or</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="o">.</span><span class="n">timedelta</span> <span class="ow">or</span> <span class="kc">None</span>
         <span class="c1"># We make sure end time is always none at the beginning because it can cause a LogicError with a stale value</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="kc">None</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span> <span class="o">=</span> <span class="n">dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span> <span class="o">=</span> <span class="n">dataset</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._element_badly_timed"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._element_badly_timed">[docs]</a>    <span class="k">def</span> <span class="nf">_element_badly_timed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">element</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
-                <span class="n">element</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \</div>
-                <span class="n">element</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">element</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span>
+                <span class="n">element</span><span class="o">.</span><span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
+                <span class="n">element</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">element</span><span class="o">.</span><span class="n">begin</span><span class="p">)</span></div>
         
 <div class="viewcode-block" id="TimingValidationMixin._post_cleanup_variables"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_cleanup_variables">[docs]</a>    <span class="k">def</span> <span class="nf">_post_cleanup_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span></div>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timedelta</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timedelta</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._pre_assign_end"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_assign_end">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_assign_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proposed_end</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_end_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proposed_end</span><span class="p">)</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="n">proposed_end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_end_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proposed_end</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_computed_end_time</span> <span class="o">=</span> <span class="n">proposed_end</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._pre_calculate_end"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_end">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_calculate_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
@@ -226,8 +219,8 @@
             <span class="c1"># New end</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">proposed_end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_syncbase&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timedelta</span>
-            <span class="c1"># If we have it assign it</span></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_end</span><span class="p">(</span><span class="n">proposed_end</span><span class="p">)</span>
+            <span class="c1"># If we have it assign it</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_end</span><span class="p">(</span><span class="n">proposed_end</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._pre_assign_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_assign_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_assign_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proposed_begin</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">proposed_begin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -240,11 +233,11 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;availability_time&#39;</span><span class="p">]:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_syncbase&#39;</span><span class="p">],</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;availability_time&#39;</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_syncbase&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_syncbase&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="TimingValidationMixin._pre_calculate_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_calculate_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span><span class="p">)</span>
+<div class="viewcode-block" id="TimingValidationMixin._pre_calculate_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._pre_calculate_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_calculate_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._post_calculate_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_calculate_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_post_calculate_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -262,8 +255,8 @@
 
         <span class="n">earliest_child_computed_begin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">children_computed_begin_times</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">earliest_child_computed_begin</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span><span class="p">:</span>
-            <span class="c1"># Adjustment scenario</span></div>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="n">earliest_child_computed_begin</span>
+            <span class="c1"># Adjustment scenario</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_computed_begin_time</span> <span class="o">=</span> <span class="n">earliest_child_computed_begin</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._semantic_preprocess_timing"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_preprocess_timing">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_preprocess_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -283,8 +276,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_pre_calculate_end</span><span class="p">()</span>
 
         <span class="c1"># These assignments must happen last otherwise the syncbase will be wrong</span>
-        <span class="c1"># in calculations happening after syncbase adjustment.</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_calculate_begin</span><span class="p">()</span>
+        <span class="c1"># in calculations happening after syncbase adjustment.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_calculate_begin</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._post_pop_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_pop_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_post_pop_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">begin_timedelta</span> <span class="o">=</span> <span class="kc">None</span>
@@ -294,8 +287,8 @@
             <span class="c1"># and replaced with self._begin_timedelta</span>
             <span class="n">begin_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_begin_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_syncbase&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="n">begin_timedelta</span>
-</div>
-        <span class="k">return</span> <span class="n">begin_timedelta</span>
+
+        <span class="k">return</span> <span class="n">begin_timedelta</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._post_pop_end"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._post_pop_end">[docs]</a>    <span class="k">def</span> <span class="nf">_post_pop_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">end_timedelta</span> <span class="o">=</span> <span class="kc">None</span>
@@ -303,8 +296,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timedelta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># We pushed on the stack it is time to pop it</span>
             <span class="n">end_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_end_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-</div>
-        <span class="k">return</span> <span class="n">end_timedelta</span>
+
+        <span class="k">return</span> <span class="n">end_timedelta</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._semantic_postprocess_timing"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_postprocess_timing">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_postprocess_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -385,8 +378,8 @@
                                   <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">orderedContent</span><span class="p">()])</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_post_calculate_begin</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">)</span>
-</div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_post_cleanup_variables</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post_cleanup_variables</span><span class="p">()</span></div>
 
     <span class="c1"># The mixin approach is used since there are multiple timed element types.</span>
     <span class="c1"># The inspected values are all attributes of the element so they do not</span>
@@ -417,15 +410,15 @@
                             <span class="n">attr_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
                             <span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;end&#39;</span><span class="p">,</span>
                             <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span>
-                        <span class="p">)</span></div>
-                    <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._semantic_manage_timeline"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_manage_timeline">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_manage_timeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
         <span class="c1"># Get the document instance</span>
         <span class="n">doc</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;document&#39;</span><span class="p">]</span>
 
-        <span class="c1"># Register on timeline</span></div>
-        <span class="n">doc</span><span class="o">.</span><span class="n">add_to_timeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="c1"># Register on timeline</span>
+        <span class="n">doc</span><span class="o">.</span><span class="n">add_to_timeline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
     <span class="c1"># This section covers the copying operations of timed containers.</span>
 
@@ -435,18 +428,18 @@
                 <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">computed_begin_time</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">False</span></div>
-        <span class="k">return</span> <span class="kc">True</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._assert_in_segment"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._assert_in_segment">[docs]</a>    <span class="k">def</span> <span class="nf">_assert_in_segment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_in_segment</span><span class="p">(</span>
             <span class="n">begin</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;segment_begin&#39;</span><span class="p">],</span>
             <span class="n">end</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;segment_end&#39;</span><span class="p">]</span>
-        <span class="p">):</span></div>
-            <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="n">OutsideSegmentError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="TimingValidationMixin.is_timed_leaf"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
-        <span class="k">return</span> <span class="kc">False</span>
+<div class="viewcode-block" id="TimingValidationMixin.is_timed_leaf"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin.is_timed_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_timed_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="TimingValidationMixin._semantic_copy_apply_leaf_timing"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.TimingValidationMixin._semantic_copy_apply_leaf_timing">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_copy_apply_leaf_timing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">copied_instance</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">copied_instance</span><span class="o">.</span><span class="n">is_timed_leaf</span><span class="p">():</span>
@@ -468,8 +461,8 @@
                     <span class="n">trimmed_end</span> <span class="o">=</span> <span class="n">segment_end</span>
 
             <span class="c1"># Create compatible timing types</span>
-            <span class="n">copied_instance</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">tt_elem</span><span class="o">.</span><span class="n">get_timing_type</span><span class="p">(</span><span class="n">trimmed_begin</span><span class="p">)</span></div></div>
-            <span class="n">copied_instance</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">tt_elem</span><span class="o">.</span><span class="n">get_timing_type</span><span class="p">(</span><span class="n">trimmed_end</span><span class="p">)</span>
+            <span class="n">copied_instance</span><span class="o">.</span><span class="n">begin</span> <span class="o">=</span> <span class="n">tt_elem</span><span class="o">.</span><span class="n">get_timing_type</span><span class="p">(</span><span class="n">trimmed_begin</span><span class="p">)</span>
+            <span class="n">copied_instance</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">tt_elem</span><span class="o">.</span><span class="n">get_timing_type</span><span class="p">(</span><span class="n">trimmed_end</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="BodyTimingValidationMixin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin">[docs]</a><span class="k">class</span> <span class="nc">BodyTimingValidationMixin</span><span class="p">(</span><span class="n">TimingValidationMixin</span><span class="p">):</span>
@@ -480,12 +473,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="BodyTimingValidationMixin._pre_init_variables"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_init_variables">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_init_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">BodyTimingValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_pre_init_variables</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">)</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dur_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dur</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="o">.</span><span class="n">timedelta</span> <span class="ow">or</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BodyTimingValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_pre_init_variables</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dur_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dur</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="o">.</span><span class="n">timedelta</span> <span class="ow">or</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="BodyTimingValidationMixin._post_cleanup_variables"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._post_cleanup_variables">[docs]</a>    <span class="k">def</span> <span class="nf">_post_cleanup_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dur_timedelta</span></div>
-        <span class="nb">super</span><span class="p">(</span><span class="n">BodyTimingValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_post_cleanup_variables</span><span class="p">()</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dur_timedelta</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BodyTimingValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_post_cleanup_variables</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BodyTimingValidationMixin._pre_calculate_end"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_end">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_calculate_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># This is all for the body element because of the dur attribute</span>
@@ -505,11 +498,11 @@
             <span class="nb">super</span><span class="p">(</span><span class="n">BodyTimingValidationMixin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_pre_calculate_end</span><span class="p">()</span>
             <span class="c1"># WARNING this assigns it so we are done</span>
             <span class="k">return</span>
-        <span class="c1"># If one of our special ifs worked let&#39;s assign the value here.</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_end</span><span class="p">(</span><span class="n">proposed_end</span><span class="p">)</span>
+        <span class="c1"># If one of our special ifs worked let&#39;s assign the value here.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_end</span><span class="p">(</span><span class="n">proposed_end</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BodyTimingValidationMixin._pre_calculate_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_calculate_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span><span class="p">)</span>
+<div class="viewcode-block" id="BodyTimingValidationMixin._pre_calculate_begin"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._pre_calculate_begin">[docs]</a>    <span class="k">def</span> <span class="nf">_pre_calculate_begin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_assign_begin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_begin_timedelta</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BodyTimingValidationMixin._post_pop_end"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._post_pop_end">[docs]</a>    <span class="k">def</span> <span class="nf">_post_pop_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">end_timedelta</span> <span class="o">=</span> <span class="kc">None</span>
@@ -517,8 +510,8 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_timedelta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dur_timedelta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># We pushed on the stack it is time to pop it</span>
             <span class="n">end_timedelta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_semantic_dataset</span><span class="p">[</span><span class="s1">&#39;timing_end_stack&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-</div>
-        <span class="k">return</span> <span class="n">end_timedelta</span>
+
+        <span class="k">return</span> <span class="n">end_timedelta</span></div>
 
 <div class="viewcode-block" id="BodyTimingValidationMixin._semantic_timebase_validation"><a class="viewcode-back" href="../../../../ebu_tt_live.bindings.validation.html#ebu_tt_live.bindings.validation.timing.BodyTimingValidationMixin._semantic_timebase_validation">[docs]</a>    <span class="k">def</span> <span class="nf">_semantic_timebase_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">element_content</span><span class="p">):</span>
 
@@ -536,14 +529,12 @@
                             <span class="n">attr_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dur</span><span class="p">,</span>
                             <span class="n">attr_name</span><span class="o">=</span><span class="s1">&#39;dur&#39;</span><span class="p">,</span>
                             <span class="n">time_base</span><span class="o">=</span><span class="n">time_base</span>
-                        <span class="p">)</span></div></div>
-                    <span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span></div></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -552,11 +543,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -569,36 +560,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

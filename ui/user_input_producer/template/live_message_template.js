@@ -1,7 +1,7 @@
 (function() {(window.nunjucksPrecompiled = window.nunjucksPrecompiled || {})["ebu_tt_live/ui/user_input_producer/template/live_message_template.xml"] = (function() {
 function root(env, context, frame, runtime, cb) {
-var lineno = null;
-var colno = null;
+var lineno = 0;
+var colno = 0;
 var output = "";
 try {
 var parentTemplate = null;

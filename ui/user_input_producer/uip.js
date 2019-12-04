@@ -178,6 +178,11 @@ $(document).ready(function() {
                 'urn:ebu:tt:livemessage', 'sender'
             )[0].firstChild.nodeValue
         );
+        clonedElement.find('.payload').text(
+          message.getElementsByTagNameNS(
+            'urn:ebu:tt:livemessage', 'payload'
+          )[0].firstChild.nodeValue
+        );
 
         clonedElement.removeClass('message-item-template');
         clonedElement.addClass('result-list-item');
@@ -512,7 +517,7 @@ $(document).ready(function() {
 
     function renderHandoverMessageTemplate(template_data) {
         var rendered_document = nunjucks.render(
-          'ebu_tt_live/ui/user_input_producer/template/live_message_template.xml',
+          'template/live_message_template.xml',
           template_data
         );
         return rendered_document;
@@ -572,7 +577,7 @@ $(document).ready(function() {
             var timeout = computeScheduledSendTimeout(media_offset);
             var template_data = createTemplateDict();
             var rendered_document = nunjucks.render(
-              'ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml',
+              'template/user_input_producer_template.xml',
               template_data
             );
 
@@ -588,7 +593,7 @@ $(document).ready(function() {
 
     function asyncSubmit() {
         var template_data = createTemplateDict();
-        var rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+        var rendered_document = nunjucks.render('template/user_input_producer_template.xml', template_data);
         renderSendDocument(rendered_document);
         sequence_numbers[sequence_identifier] += 1;
         localStorage.sequence_numbers = JSON.stringify(sequence_numbers);
@@ -600,7 +605,7 @@ $(document).ready(function() {
         // If doc in not null then it was already rendered (needed for scheduled times : the document
         // has to be rendered when the sending is scheduled not at effective sending time.
         if (doc == null) {
-          rendered_document = nunjucks.render('ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml', template_data);
+          rendered_document = nunjucks.render('template/user_input_producer_template.xml', template_data);
         } else {
           rendered_document = doc;
         }

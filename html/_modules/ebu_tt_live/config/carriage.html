@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ebu_tt_live.config.carriage &mdash; EBU-TT-Live Toolkit 2.1.1 documentation</title>
+  <title>ebu_tt_live.config.carriage &mdash; EBU-TT-Live Toolkit 2.1.2 documentation</title>
   
 
   
@@ -17,41 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
-  
-  
-    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="../../../genindex.html"/>
-        <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="EBU-TT-Live Toolkit 2.1.1 documentation" href="../../../index.html"/>
-        <link rel="up" title="Module code" href="../../index.html"/> 
-
-  
-  <script src="../../../_static/js/modernizr.min.js"></script>
-
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -65,7 +59,7 @@
             
             
               <div class="version">
-                2.1.1
+                2.1.2
               </div>
             
           
@@ -103,7 +97,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+      <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../index.html">EBU-TT-Live Toolkit</a>
@@ -111,9 +105,10 @@
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
 
@@ -143,8 +138,6 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
-        
       </li>
     
   </ul>
@@ -156,14 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ebu_tt_live.config.carriage</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="k">import</span> <span class="n">ConfigurableComponent</span><span class="p">,</span> <span class="n">Namespace</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage.direct</span> <span class="k">import</span> <span class="n">DirectCarriageImpl</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage.websocket</span> <span class="k">import</span> <span class="n">WebsocketProducerCarriage</span><span class="p">,</span> <span class="n">WebsocketConsumerCarriage</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage</span> <span class="k">import</span> <span class="n">filesystem</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.utils</span> <span class="k">import</span> <span class="n">HTTPProxyConfig</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">ERR_CONF_PROXY_CONF_VALUE</span><span class="p">,</span> <span class="n">ERR_NO_SUCH_COMPONENT</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="k">import</span> <span class="n">ConfigurationError</span>
-<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="k">import</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MESSAGE_PATTERN</span>
+<span></span><span class="kn">from</span> <span class="nn">.common</span> <span class="kn">import</span> <span class="n">ConfigurableComponent</span><span class="p">,</span> <span class="n">Namespace</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage.direct</span> <span class="kn">import</span> <span class="n">DirectCarriageImpl</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage.websocket</span> <span class="kn">import</span> <span class="n">WebsocketProducerCarriage</span><span class="p">,</span> <span class="n">WebsocketConsumerCarriage</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.carriage</span> <span class="kn">import</span> <span class="n">filesystem</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="kn">import</span> <span class="n">ERR_CONF_PROXY_CONF_VALUE</span><span class="p">,</span> <span class="n">ERR_NO_SUCH_COMPONENT</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.errors</span> <span class="kn">import</span> <span class="n">ConfigurationError</span>
+<span class="kn">from</span> <span class="nn">ebu_tt_live.strings</span> <span class="kn">import</span> <span class="n">CFG_FILENAME_PATTERN</span><span class="p">,</span> <span class="n">CFG_MESSAGE_PATTERN</span>
 <span class="kn">import</span> <span class="nn">urlparse</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
@@ -175,7 +167,7 @@
 
     <span class="n">_components</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
             <span class="n">local_config</span><span class="o">=</span><span class="n">local_config</span><span class="p">,</span>
@@ -193,16 +185,16 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_components</span><span class="p">[</span><span class="n">local_config</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">component</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">instance</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">component</span>
-</div></div>
-        <span class="k">return</span> <span class="n">instance</span>
+
+        <span class="k">return</span> <span class="n">instance</span></div></div>
 
 
-<div class="viewcode-block" id="DirectInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectInput">[docs]</a><span class="k">class</span> <span class="nc">DirectInput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span></div>
-    <span class="k">pass</span>
+<div class="viewcode-block" id="DirectInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectInput">[docs]</a><span class="k">class</span> <span class="nc">DirectInput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span>
+    <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="DirectOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectOutput">[docs]</a><span class="k">class</span> <span class="nc">DirectOutput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span></div>
-    <span class="k">pass</span>
+<div class="viewcode-block" id="DirectOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.DirectOutput">[docs]</a><span class="k">class</span> <span class="nc">DirectOutput</span><span class="p">(</span><span class="n">DirectCommon</span><span class="p">):</span>
+    <span class="k">pass</span></div>
 
 
 <span class="c1"># File-based carriage mechanism configurators</span>
@@ -235,14 +227,14 @@
         <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;Suppress output of a manifest file (default false)&#39;</span>
     <span class="p">)</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FilesystemOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">FilesystemProducerImpl</span><span class="p">(</span>
             <span class="n">dirpath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span>
             <span class="n">file_name_pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">filename_pattern</span><span class="p">,</span>
             <span class="n">message_file_name_pattern</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">message_filename_pattern</span><span class="p">,</span>
-            <span class="n">circular_buf_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rotating_buf</span><span class="p">,</span></div>
-            <span class="n">suppress_manifest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">suppress_manifest</span><span class="p">)</span>
+            <span class="n">circular_buf_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">rotating_buf</span><span class="p">,</span>
+            <span class="n">suppress_manifest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">suppress_manifest</span><span class="p">)</span></div>
 
 
 
@@ -256,7 +248,7 @@
     <span class="p">)</span>
     <span class="n">_fs_reader</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FilesystemInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">FilesystemConsumerImpl</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fs_reader</span> <span class="o">=</span> <span class="n">filesystem</span><span class="o">.</span><span class="n">FilesystemReader</span><span class="p">(</span>
@@ -266,23 +258,23 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FilesystemInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fs_reader</span><span class="o">.</span><span class="n">resume_reading</span><span class="p">()</span>
+<div class="viewcode-block" id="FilesystemInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.FilesystemInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fs_reader</span><span class="o">.</span><span class="n">resume_reading</span><span class="p">()</span></div></div>
 
 
 <span class="c1"># Websocket carriage mechanism configurators</span>
 <span class="c1"># ==========================================</span>
 <div class="viewcode-block" id="str_to_url_converter"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.str_to_url_converter">[docs]</a><span class="k">def</span> <span class="nf">str_to_url_converter</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
-    <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">parsed</span>
+    <span class="n">parsed</span> <span class="o">=</span> <span class="n">urlparse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parsed</span></div>
 
 
 <div class="viewcode-block" id="parse_url_list"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.parse_url_list">[docs]</a><span class="k">def</span> <span class="nf">parse_url_list</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
     <span class="n">parsed_value</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="n">parsed_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_to_url_converter</span><span class="p">(</span><span class="n">item</span><span class="p">))</span></div>
-    <span class="k">return</span> <span class="n">parsed_value</span>
+            <span class="n">parsed_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_to_url_converter</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">parsed_value</span></div>
 
 <span class="n">proxy_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^((?P&lt;protocol&gt;.+?)://)?(?P&lt;host&gt;[^:]+?):(?P&lt;port&gt;[0-9]+)$&#39;</span><span class="p">)</span>
 
@@ -292,23 +284,20 @@
     <span class="n">match</span> <span class="o">=</span> <span class="n">proxy_regex</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
         <span class="c1"># Ignoring the protocol part for now as it is only a http proxy</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">HTTPProxyConfig</span><span class="p">(</span>
-            <span class="n">host</span><span class="o">=</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">),</span>
-            <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">))</span>
-        <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="sa">u</span><span class="s1">&#39;host&#39;</span><span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">),</span> <span class="sa">u</span><span class="s1">&#39;port&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">))}</span>
     <span class="k">elif</span> <span class="n">value</span><span class="p">:</span>
         <span class="c1"># In this case something was provided that isn&#39;t a falsy value but the parsing failed.</span>
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_CONF_PROXY_CONF_VALUE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">value</span><span class="o">=</span><span class="n">value</span>
             <span class="p">)</span>
-        <span class="p">)</span></div>
-    <span class="k">return</span> <span class="n">result</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
 
 
 <div class="viewcode-block" id="WebsocketLegacyBase"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyBase">[docs]</a><span class="k">class</span> <span class="nc">WebsocketLegacyBase</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
-    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span></div>
-    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ws://localhost:9001&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">str_to_url_converter</span><span class="p">)</span>
+    <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
+    <span class="n">required_config</span><span class="o">.</span><span class="n">add_option</span><span class="p">(</span><span class="s1">&#39;uri&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ws://localhost:9001&#39;</span><span class="p">,</span> <span class="n">from_string_converter</span><span class="o">=</span><span class="n">str_to_url_converter</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="WebsocketLegacyOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyOutput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketLegacyOutput</span><span class="p">(</span><span class="n">WebsocketLegacyBase</span><span class="p">):</span>
@@ -316,13 +305,13 @@
     <span class="n">_backend_producer</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_looping_call</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WebsocketLegacyOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">WebsocketProducerCarriage</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="WebsocketLegacyOutput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyOutput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_producer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_producer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
+<div class="viewcode-block" id="WebsocketLegacyOutput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyOutput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_producer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_producer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="WebsocketLegacyInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyInput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketLegacyInput</span><span class="p">(</span><span class="n">WebsocketLegacyBase</span><span class="p">):</span>
@@ -336,13 +325,13 @@
         <span class="n">from_string_converter</span><span class="o">=</span><span class="n">parse_proxy_address</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WebsocketLegacyInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">component</span> <span class="o">=</span> <span class="n">WebsocketConsumerCarriage</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">register_component_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="WebsocketLegacyInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></div></div>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_consumer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_consumer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span>
+<div class="viewcode-block" id="WebsocketLegacyInput.start"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketLegacyInput.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backend_consumer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">wsl_backend_consumer</span><span class="p">(</span><span class="n">uri</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">custom_consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="WebsocketBase"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketBase">[docs]</a><span class="k">class</span> <span class="nc">WebsocketBase</span><span class="p">(</span><span class="n">ConfigurableComponent</span><span class="p">):</span>
@@ -359,8 +348,8 @@
         <span class="s1">&#39;proxy&#39;</span><span class="p">,</span>
         <span class="n">doc</span><span class="o">=</span><span class="s1">&#39;HTTP proxy in format ADDR:PORT&#39;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">from_string_converter</span><span class="o">=</span><span class="n">parse_proxy_address</span></div>
-    <span class="p">)</span>
+        <span class="n">from_string_converter</span><span class="o">=</span><span class="n">parse_proxy_address</span>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="WebsocketOutput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketOutput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketOutput</span><span class="p">(</span><span class="n">WebsocketBase</span><span class="p">):</span>
@@ -368,7 +357,7 @@
     <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
     <span class="n">_backend_producer</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WebsocketOutput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
         <span class="c1"># from_string_converter does not work for lists in configman :( Doing it manually here</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span> <span class="o">=</span> <span class="n">parse_url_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span><span class="p">)</span>
@@ -380,8 +369,8 @@
             <span class="n">custom_producer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
             <span class="n">listen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">listen</span><span class="p">,</span>
             <span class="n">connect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span>
-            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span></div></div>
-        <span class="p">)</span>
+            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span>
+        <span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="WebsocketInput"><a class="viewcode-back" href="../../../ebu_tt_live.config.html#ebu_tt_live.config.carriage.WebsocketInput">[docs]</a><span class="k">class</span> <span class="nc">WebsocketInput</span><span class="p">(</span><span class="n">WebsocketBase</span><span class="p">):</span>
@@ -389,7 +378,7 @@
     <span class="n">required_config</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">()</span>
     <span class="n">_backend_consumer</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WebsocketInput</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">local_config</span><span class="p">)</span>
         <span class="c1"># from_string_converter does not work for lists in configman :( Doing it manually here</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span> <span class="o">=</span> <span class="n">parse_url_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span><span class="p">)</span>
@@ -401,8 +390,8 @@
             <span class="n">custom_consumer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">component</span><span class="p">,</span>
             <span class="n">listen</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">listen</span><span class="p">,</span>
             <span class="n">connect</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span>
-            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span></div></div>
-        <span class="p">)</span>
+            <span class="n">proxy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">proxy</span>
+        <span class="p">)</span></div></div>
 
 
 <span class="n">producer_carriage_by_type</span> <span class="o">=</span> <span class="p">{</span>
@@ -420,8 +409,8 @@
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_NO_SUCH_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">type_name</span><span class="o">=</span><span class="n">carriage_type</span>
-            <span class="p">)</span></div>
-        <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
 
 
 <span class="n">consumer_carriage_by_type</span> <span class="o">=</span> <span class="p">{</span>
@@ -439,14 +428,12 @@
         <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span>
             <span class="n">ERR_NO_SUCH_COMPONENT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">type_name</span><span class="o">=</span><span class="n">carriage_type</span>
-            <span class="p">)</span></div>
-        <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
 </pre></div>
 
            </div>
-           <div class="articleComments">
-            
-           </div>
+           
           </div>
           <footer>
   
@@ -455,11 +442,11 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2017, European Broadcasting Union.
+        &copy; Copyright 2017, European Broadcasting Union
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -472,36 +459,15 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../../',
-            VERSION:'2.1.1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>
