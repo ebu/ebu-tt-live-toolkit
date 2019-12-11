@@ -1,5 +1,5 @@
 from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
-from .clocks import get_clock
+from .clocks import get_clock, get_date
 from .carriage import get_producer_carriage, get_consumer_carriage
 from ebu_tt_live import documents
 from ebu_tt_live import bindings
@@ -10,6 +10,8 @@ from ebu_tt_live.utils import tokenize_english_document
 from ebu_tt_live.errors import ConfigurationError
 from ebu_tt_live.strings import ERR_CONF_NO_SUCH_NODE
 from .adapters import ProducerNodeCarriageAdapter, ConsumerNodeCarriageAdapter
+from datetime import datetime, timedelta
+from math import floor
 
 
 class NodeBase(ConfigurableComponent):
@@ -252,10 +254,26 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
 
     required_config = Namespace()
     required_config.add_option('id', default='ebuttd-encoder')
-    required_config.add_option('media_time_zero', default='current')
-    required_config.add_option('default_namespace', default=False)
+    required_config.add_option(
+        'media_time_zero', 
+        default='current',
+        doc='The clock equivalent time to use for media time zero, defaults to the current time.')
+    required_config.add_option(
+        'default_namespace', 
+        default=False,
+        doc='Whether to use a default namespace, default false.')
     required_config.clock = Namespace()
     required_config.clock.add_option('type', default='local', from_string_converter=get_clock)
+    required_config.override_begin_count = Namespace()
+    required_config.override_begin_count.add_option(
+        'first_doc_datetime',
+        doc='The time when the document numbered 1 was available, format YYYY-mm-DDTHH:MM:SS',
+        default = datetime.utcnow(),
+        from_string_converter=get_date)
+    required_config.override_begin_count.add_option(
+        'doc_duration',
+        default=5.0,
+        doc='The duration of each document in seconds, default 5')
 
     _clock = None
 
@@ -265,10 +283,20 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
             mtz = self._clock.component.get_time()
         else:
             mtz = bindings.ebuttdt.LimitedClockTimingType(str(self.config.media_time_zero)).timedelta
+            
+        begin_count = None
+        
+        if self.config.override_begin_count:
+            # override the carriage mech's document count
+            fdt = self.config.override_begin_count.first_doc_datetime
+            tn = datetime.utcnow()
+            begin_count = int(floor((tn - fdt).total_seconds() / self.config.override_begin_count.doc_duration))
+            
         self.component = processing_node.EBUTTDEncoder(
             node_id=self.config.id,
             media_time_zero=mtz,
-            default_ns=self.config.default_namespace
+            default_ns=self.config.default_namespace,
+            begin_count=begin_count
         )
 
     def __init__(self, config, local_config):
