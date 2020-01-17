@@ -1,12 +1,18 @@
 from .base import AbstractCombinedNode
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.bindings import div_type, span_type, ebuttdt, style_type
+from ebu_tt_live.bindings import div_type, p_type, span_type, ebuttdt, \
+    style_type
 from ebu_tt_live.bindings._ebuttm import divMetadata_type
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 import logging
 from datetime import timedelta
+from collections import namedtuple
 
 log = logging.getLogger(__name__)
+
+
+ElementTimes = namedtuple('ElementTimes', ['begin', 'end'])
+ELEMENT_TIMES_KEY = 'element_times'
 
 
 class DenesterNode(AbstractCombinedNode):
@@ -75,24 +81,43 @@ class DenesterNode(AbstractCombinedNode):
         else:
             dataset["styles"] = []
         dataset["document"] = document.binding
+        dataset[ELEMENT_TIMES_KEY] = [
+            ElementTimes(
+                begin=document.binding.body.begin,
+                end=document.binding.body.end)
+            ]
         for div in divs:
             unnested_divs.extend(DenesterNode.recurse(div, dataset))
         unnested_divs = DenesterNode.combine_divs(unnested_divs)
         unnested_divs = DenesterNode.check_p_regions(unnested_divs)
-        document.binding.body.div = unnested_divs
+        document.binding.body.div.clear()
+        # Remove the old divs from the body's ordered content, before
+        # adding the new divs. Note that, as is, this will remove only
+        # div elements from the body, and append new divs, so if there
+        # are foreign namespace elements interleaved with the div
+        # children, the interleaving will break.
+        # A better pattern for this is in `recurse_span`, but there
+        # wasn't enough time to implement that here.
+        for e in reversed(document.binding.body.orderedContent()):
+            if isinstance(e.value, div_type):
+                document.binding.body.orderedContent().remove(e)
+        # If we extend body.div then the new elements don't get added
+        # to the body's ordered content list, but extending body, they do.
+        document.binding.body.extend(unnested_divs)
 
         return document
 
     @staticmethod
     def check_p_regions(divs):
         """
+        Discard p elements not in parent's region.
+
         Keeps only p elements where the region matches the parent
         div region or is None.
 
         Then removes region from remaining P elements as it will be
         the same as the div region
         """
-
         for div in divs:
             if div.region is not None:
                 div.p = [p for p in div.p
@@ -109,6 +134,8 @@ class DenesterNode(AbstractCombinedNode):
     @staticmethod
     def combine_divs(divs):
         """
+        Combine the list of unnested divs.
+
         Takes the list of unnested divs, where one was created to
         contain each P element, and attempts to combine them.
 
@@ -145,6 +172,7 @@ class DenesterNode(AbstractCombinedNode):
         div_attributes["region"] = div.region
         div_attributes["begin"] = div.begin
         div_attributes["end"] = div.end
+        div_attributes["metadata"] = div.metadata
         return div_attributes
 
     @staticmethod
@@ -160,7 +188,8 @@ class DenesterNode(AbstractCombinedNode):
             "begin": None,
             "end": None,
             "lang": None,
-            "region": None
+            "region": None,
+            "metadata": None,
             }
 
         if not isinstance(parent_attr["begin"], timedelta) \
@@ -224,7 +253,36 @@ class DenesterNode(AbstractCombinedNode):
                     parent_attr,
                     div_attributes,
                     parent_attr["begin"])
+
+        if parent_attr["metadata"] is not None or \
+                div_attributes["metadata"] is not None:
+            merged_metadata = divMetadata_type()
+            if parent_attr["metadata"] is not None:
+                DenesterNode._extend_element(
+                    merged_metadata,
+                    parent_attr["metadata"].orderedContent()
+                )
+            if div_attributes["metadata"] is not None:
+                DenesterNode._extend_element(
+                    merged_metadata,
+                    div_attributes["metadata"].orderedContent()
+                )
+            merged_attributes["metadata"] = merged_metadata
+
         return merged_attributes
+
+    @staticmethod
+    def _extend_element(element, ordered_content):
+        """
+        Append each new element to the target.
+
+        It seems like you should just be able to append each element
+        in the ordered_content, but that doesn't work for foreign namespace
+        content where there's no binding. Happily, appending the .value
+        of each element works for everything.
+        """
+        for e in ordered_content:
+            element.append(e.value)
 
     @staticmethod
     def calculate_end_times(parent_attr, child_attr, time_sync):
@@ -244,6 +302,30 @@ class DenesterNode(AbstractCombinedNode):
         return ebuttdt.FullClockTimingType.from_timedelta(timing_type)
 
     @staticmethod
+    def _calculate_pushed_end(dataset):
+        earliest_pushed_end = None
+        syncbase = timedelta(seconds=0)
+        for i in range(len(dataset[ELEMENT_TIMES_KEY])):
+            this_end = earliest_pushed_end
+            # This end time is calculated relative to the parent
+            # (previous) element's
+            if dataset[ELEMENT_TIMES_KEY][i].end is not None:
+                this_end = \
+                    syncbase + dataset[ELEMENT_TIMES_KEY][i].end.timedelta
+
+            if earliest_pushed_end is None and this_end is not None:
+                earliest_pushed_end = this_end
+            elif earliest_pushed_end is not None and this_end is not None \
+                    and this_end < earliest_pushed_end:
+                earliest_pushed_end = this_end
+
+            # calculate the sync base for the next end time
+            if dataset[ELEMENT_TIMES_KEY][i].begin is not None:
+                syncbase += dataset[ELEMENT_TIMES_KEY][i].begin.timedelta
+
+        return earliest_pushed_end
+
+    @staticmethod
     def recurse(div,
                 dataset,
                 merged_attr={
@@ -251,39 +333,58 @@ class DenesterNode(AbstractCombinedNode):
                     "begin": None,
                     "end": None,
                     "lang": None,
-                    "region": None
+                    "region": None,
+                    "metadata": None
                     }):
         merged_attr = DenesterNode.merge_attr(
             merged_attr, DenesterNode.div_attr(div))
-        new_divs = []
+        new_div_ordered_content = []
+        dataset[ELEMENT_TIMES_KEY].append(
+            ElementTimes(begin=div.begin, end=div.end)
+        )
+        pushed_end_time = DenesterNode._calculate_pushed_end(dataset)
         for c in div.orderedContent():
             if isinstance(c.value, div_type):
                 if div.region != c.value.region \
                    and c.value.region is not None \
                    and div.region is not None:
                     continue
-                new_divs.extend(
+                new_div_ordered_content.extend(
                     DenesterNode.recurse(
                         c.value, dataset, merged_attr))
             elif isinstance(c.value, divMetadata_type):
+                # We handle metadata like an attribute and merge it, so
+                # we don't need to add it to new_div_ordered_content
                 continue
-            else:
-                new_spans = []
+            elif isinstance(c.value, p_type):
+                # We make a separate new div for every p, and later on,
+                # merge divs that look the same
+                dataset[ELEMENT_TIMES_KEY].append(
+                    ElementTimes(begin=c.value.begin, end=c.value.end)
+                )
+                pushed_end_time = DenesterNode._calculate_pushed_end(dataset)
+
+                new_ordered_content = []
                 for ic in c.value.orderedContent():
                     if isinstance(ic.value, span_type):
-                        new_spans.extend(
+                        new_ordered_content.extend(
                             DenesterNode.recurse_span(
                                 ic.value, dataset))
-                c.value.span = new_spans
+                    else:
+                        new_ordered_content.append(ic.value)
+                # Removing elements has to be done in two places. pyxb
+                # maintains a list of elements of each plural type, as well as
+                # a list of ordered content that specifies the overall order
+                # of elements.
+                # We need to clear off both otherwise one or other will
+                # come back to haunt us later, for example generating orphan
+                # elements warnings for elements in the ordered content list
+                # but not in the plural binding list for their type.
+                c.value.span.clear()
+                c.value.br.clear()
+                c.value.orderedContent().clear()
+                c.value.extend(new_ordered_content)
                 for span in c.value.span:
-                    # The following lines address some test cases but are not a
-                    # general solution, so commented out, however see comments
-                    # on line immediately below.
-                    # if c.value.begin is not None:
-                    #     p_time = c.value.computed_begin_time
-                    # else:
-                    #     p_time = div.computed_begin_time
-
                     # The following line fails if the parent p element's
                     # computed begin time has been
                     # advanced to its earliest child's computed begin time and
@@ -292,13 +393,31 @@ class DenesterNode(AbstractCombinedNode):
                     # has a dur but no begin or end times. This may well be
                     # some kind of bug or incorrect behaviour, but it's hard
                     # to sort out without breaking a bunch of stuff.
-                    p_time = c.value.computed_begin_time
+                    p_begin_time = c.value.computed_begin_time
+                    p_end_time = c.value.computed_end_time
 
-                    span.compBegin = span.compBegin - p_time
-                    span.compEnd = span.compEnd - p_time
+                    if span.compBegin != p_begin_time:
+                        span.compBegin = span.compBegin - p_begin_time
+                        span.begin = ebuttdt.FullClockTimingType(
+                            span.compBegin)
+                    else:
+                        span.compBegin = span.compBegin - p_begin_time
 
-                    span.begin = ebuttdt.FullClockTimingType(span.compBegin)
-                    span.end = ebuttdt.FullClockTimingType(span.compEnd)
+                    if span.compEnd != p_end_time or \
+                       span.compEnd != pushed_end_time:
+                        # Two reasons we might be here.
+                        # Normal case - our span end time is different
+                        # from the parent's end time, so we'd better specify.
+                        # OR
+                        # Special case - here we have the same computed time as
+                        # the parent, but the parent didn't push it onto us, so
+                        # we must be the source of it.
+                        span.compEnd = span.compEnd - p_begin_time
+                        span.end = ebuttdt.FullClockTimingType(span.compEnd)
+                    else:
+                        span.compEnd = span.compEnd - p_begin_time
+
+                dataset[ELEMENT_TIMES_KEY].pop()
 
                 new_div = div_type(
                     id=div.id,
@@ -317,44 +436,85 @@ class DenesterNode(AbstractCombinedNode):
                     if merged_attr["end"] is not None
                     else merged_attr["end"],
                     lang=merged_attr["lang"],
-                    region=merged_attr["region"]
+                    region=merged_attr["region"],
+                    metadata=merged_attr["metadata"]
                     )
-                new_div.p.append(c.value)
-                new_divs.append(new_div)
+                new_div.append(c.value)
+                new_div_ordered_content.append(new_div)
+            else:
+                # some foreign type we don't recognise
+                log.warn(
+                    '[denester] Dropping an unexpected element {}'.format(
+                        c.value))
 
-        return new_divs
+        dataset[ELEMENT_TIMES_KEY].pop()
+
+        return new_div_ordered_content
 
     @staticmethod
     def recurse_span(span, dataset, span_styles=[]):
         if span.style is not None:
             span_styles = span_styles+span.style
-        new_spans = []
+        # We're going to create a new ordered list of content for this span,
+        # and return that. If any of the children is a span, we're going to
+        # extract its content and create a new span for it, appending it to
+        # the ordered list of content
+        new_ordered_content = []
+        # If the span contains a mix of content like character content and br
+        # elements we can simply append each of those within a single span,
+        # but we need to close that span if we encounter a child span.
+        # Maintain a working span to which we will append the non-span children
+        # in order. Start without one, and make it whenever we need it.
+        working_span = None
         for sc in span.orderedContent():
             if isinstance(sc.value, span_type):
-                new_spans.extend(
+                # Stash the current working span in the ordered content list
+                if working_span is not None:
+                    new_ordered_content.append(working_span)
+                    working_span = None
+                # Extend the ordered content list recursively
+                new_ordered_content.extend(
                     DenesterNode.recurse_span(
                         sc.value, dataset, span_styles))
             else:
-                new_span = span_type(
-                    sc.value
-                )
-
-                new_span.compBegin = span.computed_begin_time
-                new_span.compEnd = span.computed_end_time
-
-                if len(span_styles) != 0:
-                    new_span.style = DenesterNode.compute_span_merged_styles(
-                        span_styles,
-                        dataset).id if len(span_styles) > 1 else span_styles
+                # We have a non-span child
+                if working_span is not None:
+                    working_span.append(sc.value)
                 else:
-                    new_span.style = None
-                new_spans.append(new_span)
-        return new_spans
+                    # We have no working span, so make one, and set it up
+                    # with the right times and styles
+                    working_span = span_type(
+                        sc.value
+                    )
+
+                    working_span.compBegin = span.computed_begin_time
+                    working_span.compEnd = span.computed_end_time
+
+                    if len(span_styles) > 1:
+                        working_span.style = \
+                            DenesterNode.compute_span_merged_styles(
+                                span_styles,
+                                dataset).id
+                    elif len(span_styles) == 1:
+                        working_span.style = span_styles
+                    else:
+                        working_span.style = None
+
+        # If we have a working span we haven't stopped working on, we
+        # won't have appended it to our ordered content list, so add it now.
+        if working_span is not None:
+            new_ordered_content.append(working_span)
+
+        # We're going to add new versions of the contents of this span later,
+        # so we don't need anything in it, so clear it down.
+        span.reset()
+
+        return new_ordered_content
 
     @staticmethod
     def compute_span_merged_styles(span_styles, dataset):
         """
-        Combines all the nested styles of the span to create a new one
+        Combine all the nested styles of the span to create a new one.
         """
         new_style = None
         styles = []

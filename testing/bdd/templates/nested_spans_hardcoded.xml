@@ -22,8 +22,8 @@
       <tt:p xml:id="p1">
         <tt:span xml:id="sp0" style="outer">
           Parent text
-          <tt:span xml:id="sp1" style="innerYellow">text1</tt:span>
-          <tt:span xml:id="sp2" style="innerYellow">text133</tt:span>
+          <tt:span xml:id="sp1" style="innerYellow">text1<tt:br/></tt:span>
+          <tt:span xml:id="sp2" style="innerYellow">text133</tt:span><tt:br/>
           <tt:span xml:id="sp3" style="innerWhite">text2</tt:span>
           <tt:span xml:id="sp4">text3</tt:span>
           <tt:span xml:id="sp5" style="innerRed">text 7</tt:span>

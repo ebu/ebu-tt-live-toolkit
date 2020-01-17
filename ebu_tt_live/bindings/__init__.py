@@ -1451,13 +1451,20 @@ class d_tt_type(SemanticDocumentMixin, raw.d_tt_type):
             encoding=None,
             bds=None,
             root_only=False,
-            element_name=None):
+            element_name=None,
+            indent=None,
+            newl=None):
         dom = self.toDOM(self.__check_bds(bds), element_name=element_name)
         if root_only:
             dom = dom.documentElement
+        if indent is None:
+            indent = '  '
+        if newl is None:
+            newl = '\n'
         return dom.toprettyxml(
             encoding=encoding,
-            indent='  '
+            indent=indent,
+            newl=newl
         )
 
     def _semantic_before_traversal(

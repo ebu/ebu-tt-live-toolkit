@@ -112,11 +112,21 @@ Denester Node
 This node flattens nested ``div`` and ``span`` elements such that no
 ``div`` ends up containing a ``div`` and no ``span`` ends up containing
 a ``span``. It also removes any ``p`` elements that specify a ``region``
-attribute that differs from a specified region on an ancester element.
+attribute that differs from a specified region on an ancestor element.
 
 If nested ``div`` or ``span`` elements might be present in a document, the
 Denester node should be used to flatten them before passing them to the
 EBU-TT-D Encoder, because EBU-TT-D does not permit such nested elements.
+
+Resequencer
+-----------
+This node receives input documents from one sequence and periodically issues
+a document corresponding to a segment of time. Each time a document is
+issued the time of the next segment is incremented. For example this node
+can be used to extract a 5s chunk of subtitles every 5s.
+
+This node may be used upstream of the EBU-TT-D Encoder to generate an
+ongoing sequence of subtitle documents from a streaming source.
 
 Retiming Delay Node
 -------------------
@@ -150,19 +160,27 @@ specified default.
 EBU-TT-D Encoder
 ----------------
 This script is an extension of simple consumer and is responsible for
-resegmenting and converting the incoming EBU-TT Live documents into EBU-TT-D
-documents that can be later used to be embedded in video streams such as DASH.
+converting the incoming EBU-TT Live documents into EBU-TT-D
+documents that can later be embedded in video streams for example by
+wrapping MPEG 4 (ISO BMFF) and serving with a manifest such as DASH or HLS,
+or for serving as a sidecar distribution subtitle file.
+
 There are configuration file options for controlling the media time conversion
-reference point and the segmentation interval; these are described in
+reference point and the output file name format; these are described in
 :doc:`configurator`.
 
 To see the Encoder in action, using output from the Simple Producer and the
 'direct' carriage mechanism, run ``ebu-run
 --admin.conf=ebu_tt_live/examples/config/sproducer_ebuttd_direct.json``.
 
-IMPORTANT: the Encoder is not a complete EBU-TT Live to EBU-TT-D converter.
-Since EBU-TT-D generation was not part of this project, this functionality was
-implemented only partially and should not be used as complete reference.
+IMPORTANT: the Encoder depends on some features of its input document.
+In particular, EBU-TT-D does not permit nested ``div`` or ``span`` elements,
+and the Encoder cannot deal with input documents that have these. One way
+to avoid this is to pass the input file through the Denester before encoding.
+
+If segments of EBU-TT-D are needed, use the Resequencer upstream of the
+Encoder to generate documents
+corresponding to the desired periods on the timeline, prior to encoding.
 
 Element Remover
 ---------------

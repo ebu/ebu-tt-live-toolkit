@@ -18,14 +18,14 @@ Feature: EBU-TT-D lineHeight conversion
         Then the ebu_tt_d document contains style <style_id> with attribute "lineHeight" set to <ebu_tt_d_value>
 
         Examples:
-            | lineHeight | fontSize | style_id                           | ebu_tt_d_value |
-            | 2c         | 2c       | autogenFontStyle_None_200.0_100.0  | 100%           |
-            | 3c         | 2c       | autogenFontStyle_None_200.0_150.0  | 150%           |
-            | 1c         | 2c       | autogenFontStyle_None_200.0_50.0   | 50%            |
-            | 100%       | 2c       | autogenFontStyle_None_200.0_100.0  | 100%           |
-            | 120%       | 2c       | autogenFontStyle_None_200.0_120.0  | 120%           |
-            | 120.2%     | 2c       | autogenFontStyle_None_200.0_120.2  | 120.2%         |
-            | 120.36%    | 2c       | autogenFontStyle_None_200.0_120.36 | 120.36%        |
-            | 120.123%   | 2c       | autogenFontStyle_None_200.0_120.12 | 120.12%        |
-            | normal     | 2c       | autogenFontStyle_None_200.0_n      | normal         |
+            | lineHeight | fontSize | style_id                          | ebu_tt_d_value |
+            | 2c         | 2c       | autogenFontStyle_n_200.00_100.00  | 100%           |
+            | 3c         | 2c       | autogenFontStyle_n_200.00_150.00  | 150%           |
+            | 1c         | 2c       | autogenFontStyle_n_200.00_50.00   | 50%            |
+            | 100%       | 2c       | autogenFontStyle_n_200.00_100.00  | 100%           |
+            | 120%       | 2c       | autogenFontStyle_n_200.00_120.00  | 120%           |
+            | 120.2%     | 2c       | autogenFontStyle_n_200.00_120.20  | 120.2%         |
+            | 120.36%    | 2c       | autogenFontStyle_n_200.00_120.36  | 120.36%        |
+            | 120.123%   | 2c       | autogenFontStyle_n_200.00_120.12  | 120.12%        |
+            | normal     | 2c       | autogenFontStyle_n_200.00_n       | normal         |
 

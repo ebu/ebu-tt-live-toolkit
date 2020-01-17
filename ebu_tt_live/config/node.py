@@ -207,7 +207,7 @@ class Denester(ConsumerMixin, ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(RetimingDelay, self).__init__(config, local_config)
+        super(Denester, self).__init__(config, local_config)
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
@@ -412,7 +412,8 @@ nodes_by_type = {
     'buffer-delay': BufferDelay,
     'retiming-delay': RetimingDelay,
     'distributor': Distributor,
-    'handover': Handover
+    'handover': Handover,
+    'denester': Denester
 }
 
 

@@ -74,9 +74,11 @@ class EBUTTDDocument(SubtitleDocument, TimelineUtilMixin):
                 namespace_prefix_map=bindings.namespace_prefix_map
             )
 
-    def get_xml(self):
+    def get_xml(self, indent=None, newl=None):
         return self._ebuttd_content.toxml(
-            bds=self._get_bds()
+            bds=self._get_bds(),
+            indent=indent,
+            newl=newl
         )
 
     def get_dom(self):

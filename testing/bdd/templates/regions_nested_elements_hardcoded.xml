@@ -27,16 +27,18 @@
   </tt:head>
   <tt:body begin="500ms" dur="00:00:05">
       <tt:div xml:id="d1" xml:lang="fr" region="R2">
+        <tt:metadata><f:bar>fbarmetadata</f:bar></tt:metadata>
         <tt:div xml:id="d2" style="S1" region="R1" >
           <tt:p xml:id="p1">
-                 <tt:span>text</tt:span>
+            <tt:span>text</tt:span>
           </tt:p>
         </tt:div>
         <tt:div xml:id="d5" style="S1" xml:lang="en-GB" region="R2" >
-            <tt:p xml:id="p3">
-                   <tt:span>text</tt:span>
-            </tt:p>
-          </tt:div>
+          <tt:metadata><ebuttm:facet>emfacet</ebuttm:facet></tt:metadata>
+          <tt:p xml:id="p3">
+            <tt:span>text</tt:span>
+          </tt:p>
+        </tt:div>
       </tt:div>
   </tt:body>
 </tt:tt>

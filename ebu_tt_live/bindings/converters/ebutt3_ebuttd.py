@@ -7,7 +7,7 @@ from ebu_tt_live.bindings._ebuttm import headMetadata_type, documentMetadata
 from ebu_tt_live.bindings._ebuttdt import PercentageExtentType, \
     PercentageOriginType, PercentageLineHeightType, \
     CellFontSizeType, PercentageFontSizeType
-from ebu_tt_live.project import description, name, version
+from ebu_tt_live.project import name, version
 from ebu_tt_live.errors import InvalidRegionExtentType, \
     InvalidRegionOriginType, \
     SemanticValidationError
@@ -28,6 +28,7 @@ class EBUTT3EBUTTDConverter(object):
 
     _media_clock = None
     _font_size_style_template = 'autogenFontStyle_{}_{}_{}'
+    _number_template = '{:.2f}'
     _dataset_key_for_font_styles = 'adjusted_sizing_styles'
     _semantic_dataset = None
 
@@ -82,11 +83,13 @@ class EBUTT3EBUTTDConverter(object):
         adjusted_line_height = 'n'
 
         if isinstance(line_height, PercentageLineHeightType):
-            adjusted_line_height = line_height.vertical
+            adjusted_line_height = self._number_template.format(line_height.vertical)
 
+        h = 'n' if horizontal is None else self._number_template.format(horizontal)
+        v = 'n' if vertical is None else self._number_template.format(vertical)
         font_style_id = \
             self._font_size_style_template.format(
-                horizontal, vertical, adjusted_line_height)
+                h, v, adjusted_line_height)
         adjusted_font_style_map = self._adjusted_font_style_map()
         if font_style_id in adjusted_font_style_map:
             instance = adjusted_font_style_map[font_style_id]
@@ -96,10 +99,10 @@ class EBUTT3EBUTTDConverter(object):
             if vertical is not None:
                 if horizontal is None:
                     font_size = ebuttdt.PercentageFontSizeType(
-                        vertical)
+                        round(vertical, 2))
                 else:
                     font_size = ebuttdt.PercentageFontSizeType(
-                        horizontal, vertical)
+                        round(horizontal, 2), round(vertical, 2))
 
             instance = d_style_type(
                 id=font_style_id,
@@ -315,6 +318,7 @@ class EBUTT3EBUTTDConverter(object):
 
     def convert_head(self, head_in, dataset):
         new_elem = d_head_type(
+            copyright=head_in.copyright
         )
         head_children = self.convert_children(head_in, dataset)
         for item in head_children:
@@ -508,7 +512,8 @@ class EBUTT3EBUTTDConverter(object):
             id=div_in.id,
             region=div_in.region,
             style=div_in.style,
-            agent=div_in.agent
+            agent=div_in.agent,
+            lang=div_in.lang
         )
 
         if new_elem.region is not None:
@@ -516,13 +521,22 @@ class EBUTT3EBUTTDConverter(object):
 
         return new_elem
 
+    def _child_spans_specify_times(self, p_in, dataset):
+        for s in p_in.span:
+            if s.begin is not None or s.end is not None:
+                return True
+        return False
+
     def convert_p(self, p_in, dataset):
+        specify_times = not self._child_spans_specify_times(p_in, dataset)
+        dataset['span_specify_times'] = not specify_times
+
         new_elem = d_p_type(
             *self.convert_children(p_in, dataset),
             space=p_in.space,
-            begin=None if p_in.is_timed_leaf() is False else
+            begin=None if specify_times is False else
             self._process_timing_from_timedelta(p_in.computed_begin_time),
-            end=None if p_in.is_timed_leaf() is False else
+            end=None if specify_times is False else
             self._process_timing_from_timedelta(p_in.computed_end_time),
             lang=p_in.lang,
             id=p_in.id,
@@ -531,17 +545,22 @@ class EBUTT3EBUTTDConverter(object):
             agent=p_in.agent,
             role=p_in.role
         )
+
         if new_elem.region is not None:
             dataset['activated_region_ids'].add(new_elem.region)
         return new_elem
 
     def convert_span(self, span_in, dataset):
+        specify_times = dataset['span_specify_times']
+
         new_elem = d_span_type(
             *self.convert_children(span_in, dataset),
             space=span_in.space,
-            begin=self._process_timing_from_timedelta(
+            begin=None if specify_times is False else
+            self._process_timing_from_timedelta(
                 span_in.computed_begin_time),
-            end=self._process_timing_from_timedelta(span_in.computed_end_time),
+            end=None if specify_times is False else
+            self._process_timing_from_timedelta(span_in.computed_end_time),
             lang=span_in.lang,
             id=span_in.id,
             style=span_in.style,
