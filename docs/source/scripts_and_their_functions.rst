@@ -112,7 +112,7 @@ Denester Node
 This node flattens nested ``div`` and ``span`` elements such that no
 ``div`` ends up containing a ``div`` and no ``span`` ends up containing
 a ``span``. It also removes any ``p`` elements that specify a ``region``
-attribute that differs from a specified region on an ancester element.
+attribute that differs from a specified region on an ancestor element.
 
 If nested ``div`` or ``span`` elements might be present in a document, the
 Denester node should be used to flatten them before passing them to the
