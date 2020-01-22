@@ -23,7 +23,7 @@ into a sequence of EBU-TT Live documents using natural language processing. Use
 The default carriage mechanism is WebSocket, so you will need to listen to
 ``ws://127.0.0.1:9000``. Conveniently, we've created an HTML page that does just
 that. After you launch the Simple Producer, open `docs/build/ui/test/index.html <../ui/test/index.html>`_
-or the `current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/test/>`_ in your
+or the `current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/test/>`__ in your
 browser. The 'Broadcast message' field should be populated with the correct
 address (``ws://localhost:9000``). Click 'Connect' and then 'Subscribe'. You can
 also change the identifier for the sequence. The documents should appear in the
@@ -58,7 +58,7 @@ activated and the code built, start one, with a command line such as  ``ebu-run
 --admin.conf ebu_tt_live/examples/config/user_input_producer_consumer.json`` -
 this one runs a simple consumer. Then, in your browser, open
 `docs/build/ui/user_input_producer/index.html <../ui/user_input_producer/index.html>`_ or the
-`current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/>`_ and click
+`current release pre-built page <http://ebu.github.io/ebu-tt-live-toolkit/ui/user_input_producer/>`__ and click
 'Connect'. Select the sending mode (manual, scheduled or asynchronous). You
 should see the documents arriving in the command line window where the simple
 consumer is listening. See detailed instructions here:
