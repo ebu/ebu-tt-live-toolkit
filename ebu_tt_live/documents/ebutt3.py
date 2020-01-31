@@ -4,7 +4,8 @@ from .base import SubtitleDocument, TimeBase, CloningDocumentSequence, \
 from .ebutt3_segmentation import EBUTT3Segmenter
 from .ebutt3_splicer import EBUTT3Splicer
 from ebu_tt_live.bindings import _ebuttm as metadata, _ebuttlm as ebuttlm, \
-    tt, CreateFromDocument, load_types_for_document, p_type
+    tt, CreateFromDocument, load_types_for_document, p_type, \
+    BindingDOMSupport, Namespace, namespace_prefix_map
 from ebu_tt_live.strings import ERR_DOCUMENT_SEQUENCE_MISMATCH, \
     ERR_DOCUMENT_NOT_COMPATIBLE, ERR_DOCUMENT_NOT_PART_OF_SEQUENCE, \
     ERR_DOCUMENT_SEQUENCE_INCONSISTENCY, DOC_DISCARDED, DOC_TRIMMED, \
@@ -123,6 +124,8 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTTDocumentBase):
 
     # The XML binding holding the content of the document
     _ebutt3_content = None
+    _implicit_ns = None
+
     # The availability time can be set by the carriage implementation for
     # example
     _availability_time = None
@@ -135,6 +138,9 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTTDocumentBase):
 
     # The sequence the document belongs to
     _sequence = None
+
+    # Encoding to use when creating XML representations
+    _encoding = 'UTF-8'
 
     def __init__(self,
                  time_base, sequence_number, sequence_identifier, lang,
@@ -348,6 +354,16 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTTDocumentBase):
 
         return '\n'.join(str_lines)
 
+    @property
+    def implicit_ns(self):
+        return self._implicit_ns
+
+    @implicit_ns.setter
+    def implicit_ns(self, value):
+        if not isinstance(value, bool):
+            raise ValueError()
+        self._implicit_ns = value
+
     def validate(self):
         # Reset timeline
         self.reset_timeline()
@@ -400,8 +416,24 @@ class EBUTT3Document(TimelineUtilMixin, SubtitleDocument, EBUTTDocumentBase):
     def binding(self):
         return self._ebutt3_content
 
-    def get_xml(self):
-        return self._ebutt3_content.toxml()
+    def _get_bds(self):
+        if self._implicit_ns:
+            return BindingDOMSupport(
+                namespace_prefix_map=namespace_prefix_map,
+                default_namespace=Namespace
+            )
+        else:
+            return BindingDOMSupport(
+                namespace_prefix_map=namespace_prefix_map
+            )
+
+    def get_xml(self, indent='  ', newl='\n'):
+        return str(self._ebutt3_content.toxml(
+            encoding=self._encoding,
+            bds=self._get_bds(),
+            indent=indent,
+            newl=newl
+        ), encoding=self._encoding)
 
     def get_dom(self):
         return self._ebutt3_content.toDOM()
