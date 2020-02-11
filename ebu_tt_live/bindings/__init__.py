@@ -1863,6 +1863,16 @@ _document_specific_types = {
 
 
 def load_types_for_document(doc_type):
+    """
+    Set the superseding types for PyXB object construction.
+
+    When switching context between EBU-TT Part 1 and EBU-TT Part 3
+    the same XSD is used, but we want to make different Python
+    objects. Call this helper function to specify the new context
+    before processing XML.
+
+    :param doc_type: document type, must be ebutt1 or ebutt3.
+    """
     if doc_type not in _document_specific_types:
         raise KeyError(
             'Invalid parameter. Valid types are %s' %
