@@ -8,6 +8,7 @@ bindings Package
     :members:
     :undoc-members:
     :show-inheritance:
+    :private-members:
 
 :mod:`_ebuttdt` Module
 ----------------------

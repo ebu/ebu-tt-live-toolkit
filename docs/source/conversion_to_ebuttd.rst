@@ -8,8 +8,6 @@ creates an EBUTTDDocument from an EBUTT3Document using the helper class
 This class manages various possible complications, including a significant set
 of constraints about font size. 
 
-Note that conversion to EBU-TT-D was not in scope for this project and therefore it was not implemented fully.  
-
 Here's some documentation from the coding process that captures some of our
 internal conversation about how to map font sizes, to give an idea of the
 complexity.

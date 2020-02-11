@@ -53,6 +53,14 @@ documents Package
     :undoc-members:
     :show-inheritance:
 
+:mod:`ebutt1` Module
+--------------------
+
+.. automodule:: ebu_tt_live.documents.ebutt1
+    :members:
+    :private-members:
+    :undoc-members:
+    :show-inheritance:
 
 :mod:`ebuttd` Module
 --------------------
