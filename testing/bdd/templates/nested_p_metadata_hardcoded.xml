@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tt:tt
+	ebuttp:sequenceIdentifier="TestSequence"
+	ebuttp:sequenceNumber="1"
+	ttp:clockMode="local"
+	ttp:timeBase="clock"
+	xmlns:ebuttm="urn:ebu:tt:metadata"
+	xmlns:ebuttp="urn:ebu:tt:parameters"
+	xmlns:tt="http://www.w3.org/ns/ttml"
+	xmlns:ttm="http://www.w3.org/ns/ttml#metadata"
+	xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+	xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	xmlns:f="urn:foreign"
+	xmlns:tts="http://www.w3.org/ns/ttml#styling"
+	xmlns:ebutts="urn:ebu:tt:style"
+	xml:lang="en"
+	>
+<tt:head>
+<tt:metadata>
+<ebuttm:documentMetadata></ebuttm:documentMetadata>
+<ttm:agent type="person" xml:id="Sp1">
+<ttm:name type="other">
+					New 1
+</ttm:name>
+</ttm:agent>
+<ttm:agent type="person" xml:id="Sp2">
+<ttm:name type="other">
+					New 2
+</ttm:name>
+</ttm:agent>
+</tt:metadata>
+<tt:styling>
+<tt:style xml:id="S1" tts:fontSize="1c 2c" ebutts:linePadding="1c" tts:textAlign="start" tts:lineHeight="2c" />
+<tt:style xml:id="S2" tts:textAlign="center" />
+<tt:style xml:id="S3" tts:color="white" tts:backgroundColor="black" />
+<tt:style xml:id="S7" tts:color="cyan" tts:backgroundColor="black" />
+</tt:styling>
+<tt:layout>
+<tt:region xml:id="R41" tts:origin="0c 1c" tts:extent="40c 2c" tts:displayAlign="after" />
+<tt:region xml:id="R61" tts:origin="8c 3c" tts:extent="24c 2c" tts:displayAlign="after" />
+<tt:region xml:id="R149" tts:origin="4c 1c" tts:extent="4c 2c" tts:displayAlign="after" />
+</tt:layout>
+</tt:head>
+<tt:body ttm:role="caption">
+<tt:div style="S1">
+<tt:p xml:id="C550" region="R41" style="S2" begin="10:26:27.92" end="10:26:29.44"><tt:span style="S3">Yes, it is.</tt:span></tt:p>
+<tt:p xml:id="C551_1" region="R149" begin="10:26:31.16" end="10:26:33.36" style="S2"><tt:metadata></tt:metadata><tt:span style="S3">BELL</tt:span></tt:p>
+<tt:p xml:id="C551_2" region="R61" begin="10:26:31.16" end="10:26:33.36" style="S2"><tt:metadata></tt:metadata><tt:span style="S7">Row, row, row your boat.</tt:span></tt:p>
+<tt:p xml:id="C552" region="R41" style="S2" begin="10:26:33.36" end="10:26:35.56"><tt:span style="S3">Correct. Next category...</tt:span></tt:p>
+</tt:div>
+</tt:body>
+</tt:tt>

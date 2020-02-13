@@ -133,12 +133,26 @@ def gen_second_document_fixture(test_context, template_dict, template_file_two):
 
 @when('the EBU-TT-Live document is denested')
 def convert_to_ebuttd(test_context):
+    print('denester input')
+    print(test_context["document"].get_xml())
     test_context["document"] = DenesterNode.denest(test_context["document"])
+    print('denester output')
+    print(test_context["document"].get_xml())
+
+@then('the EBU-TT-Live document is valid')
+def then_ebutt3_document_valid(test_context):
+    ebutt3_document = test_context['document']
+    ebutt3_document.validate()
+    print('valid EBU-TT-Live document:')
+    print(ebutt3_document.get_xml())
+    assert isinstance(ebutt3_document, EBUTT3Document)
 
 @when('the EBU-TT-Live document is converted to EBU-TT-D')
 def convert_to_ebuttd(test_context):
     ebuttd_converter = EBUTT3EBUTTDConverter(None)
     doc_xml = test_context["document"].get_xml()
+    print('convert to EBU-TT-D. Incoming doc:')
+    print(doc_xml)
     ebutt3_doc = EBUTT3Document.create_from_xml(doc_xml)
     converted_bindings = ebuttd_converter.convert_document(ebutt3_doc.binding)
     ebuttd_document = EBUTTDDocument.create_from_raw_binding(converted_bindings)
@@ -148,6 +162,8 @@ def convert_to_ebuttd(test_context):
 def then_ebuttd_document_valid(test_context):
     ebuttd_document = test_context['ebuttd_document']
     ebuttd_document.validate()
+    print('valid EBU-TT-D document:')
+    print(ebuttd_document.get_xml())
     assert isinstance(ebuttd_document, EBUTTDDocument)
 
 def timestr_to_timedelta(time_str, time_base):

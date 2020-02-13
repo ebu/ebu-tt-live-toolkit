@@ -2,7 +2,7 @@ from .base import AbstractCombinedNode
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.bindings import div_type, p_type, span_type, ebuttdt, \
     style_type
-from ebu_tt_live.bindings._ebuttm import divMetadata_type
+from ebu_tt_live.bindings._ebuttm import divMetadata_type, pMetadata_type
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 import logging
 from datetime import timedelta
@@ -364,12 +364,24 @@ class DenesterNode(AbstractCombinedNode):
                 )
                 pushed_end_time = DenesterNode._calculate_pushed_end(dataset)
 
+                # p elements can contain 0 or 1 metadata child elements, and
+                # then a sequence of character content, span elements or br
+                # elements, as well as any foreign elements.
+                # The way PyXB handles the metadata element is that it is in
+                # the orderedContent(), as the first element, but it cannot
+                # be added back to the element by extending the element with
+                # the metadata object in an ordered list of elements. Instead
+                # we need to look after it separately and set it before
+                # extending the element with the other ordered content.
                 new_ordered_content = []
+                metadata = None
                 for ic in c.value.orderedContent():
                     if isinstance(ic.value, span_type):
                         new_ordered_content.extend(
                             DenesterNode.recurse_span(
                                 ic.value, dataset))
+                    elif isinstance(ic.value, pMetadata_type):
+                        metadata = ic.value
                     else:
                         new_ordered_content.append(ic.value)
                 # Removing elements has to be done in two places. pyxb
@@ -383,6 +395,10 @@ class DenesterNode(AbstractCombinedNode):
                 c.value.span.clear()
                 c.value.br.clear()
                 c.value.orderedContent().clear()
+                # If we have metadata we must set it before extending, because
+                # it has to be the first child element (as per the XSD)
+                if metadata is not None:
+                    c.value.metadata = metadata
                 c.value.extend(new_ordered_content)
                 for span in c.value.span:
                     # The following line fails if the parent p element's

@@ -115,3 +115,13 @@ Feature: Merging nested elements
         Examples:
             | xml_file                   |
             | nested_spans_hardcoded.xml |
+
+    Scenario: p elements with metadata can be denested
+        Given an xml file <xml_file>
+        When the document is generated
+        And the EBU-TT-Live document is denested
+        Then the EBU-TT-Live document is valid
+
+        Examples:
+            | xml_file                        |
+            | nested_p_metadata_hardcoded.xml |
