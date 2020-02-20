@@ -256,8 +256,8 @@ class SimpleProducer(ProducerMixin, NodeBase):
         if self.config.show_time:
             subtitle_tokens = None  # Instead of text we provide the availability time as content.
         else:
-            # Let's read our example conversation
-            full_text = get_example_data('simple_producer.txt')
+            # Let's read our example conversation, assuming it is UTF-8 encoded
+            full_text = get_example_data('simple_producer.txt').decode('utf-8')
             # if do_export:
             #     subtitle_tokens = iter(tokenize_english_document(full_text))
             # else:
