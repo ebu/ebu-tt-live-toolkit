@@ -24,11 +24,29 @@ log = logging.getLogger(__name__)
 DEFAULT_CELL_FONT_SIZE = CellFontSizeType('1c')
 
 
+def roundAndStrip(value, dp):
+    """
+    Round the supplied value to dp decimal places and tidy the end.
+
+    After rounding, strips any trailing zeros after the decimal point,
+    and the decimal point itself if that's the last thing we're left with.
+    """
+    if (dp < 0):
+        value = round(value, dp)
+        dp = 0
+    template = '{{:.{}f}}'.format(dp)
+    rv = template.format(value)
+    if (dp > 0):
+        rv = rv.rstrip('0').rstrip('.')
+    return rv
+
+
 class EBUTT3EBUTTDConverter(object):
 
     _media_clock = None
     _font_size_style_template = 'autogenFontStyle_{}_{}_{}'
-    _number_template = '{:.2f}'
+    _fontSize_max_dp = 2
+    _activeArea_max_dp = 3
     _dataset_key_for_font_styles = 'adjusted_sizing_styles'
     _semantic_dataset = None
 
@@ -83,10 +101,13 @@ class EBUTT3EBUTTDConverter(object):
         adjusted_line_height = 'n'
 
         if isinstance(line_height, PercentageLineHeightType):
-            adjusted_line_height = self._number_template.format(line_height.vertical)
+            adjusted_line_height = roundAndStrip(
+                line_height.vertical, self._fontSize_max_dp)
 
-        h = 'n' if horizontal is None else self._number_template.format(horizontal)
-        v = 'n' if vertical is None else self._number_template.format(vertical)
+        h = 'n' if horizontal is None \
+            else roundAndStrip(horizontal, self._fontSize_max_dp)
+        v = 'n' if vertical is None \
+            else roundAndStrip(vertical, self._fontSize_max_dp)
         font_style_id = \
             self._font_size_style_template.format(
                 h, v, adjusted_line_height)
@@ -98,11 +119,12 @@ class EBUTT3EBUTTDConverter(object):
             font_size = None
             if vertical is not None:
                 if horizontal is None:
-                    font_size = ebuttdt.PercentageFontSizeType(
-                        round(vertical, 2))
+                    font_size = \
+                        roundAndStrip(vertical, self._fontSize_max_dp) + '%'
                 else:
-                    font_size = ebuttdt.PercentageFontSizeType(
-                        round(horizontal, 2), round(vertical, 2))
+                    font_size = \
+                        roundAndStrip(horizontal, self._fontSize_max_dp) + '% ' \
+                        + roundAndStrip(vertical, self._fontSize_max_dp) + '%'
 
             instance = d_style_type(
                 id=font_style_id,
@@ -271,8 +293,12 @@ class EBUTT3EBUTTDConverter(object):
 
             if region_found:
                 document.activeArea = '{}% {}% {}% {}%'.format(
-                    left, top, right - left, bottom - top
+                    roundAndStrip(left, self._activeArea_max_dp),
+                    roundAndStrip(top, self._activeArea_max_dp),
+                    roundAndStrip(right - left, self._activeArea_max_dp),
+                    roundAndStrip(bottom - top, self._activeArea_max_dp)
                 )
+                log.info('Found active regions, set document.activeArea to {}'.format(document.activeArea))
             else:
                 log.warn('None of the active regions found')
         else:

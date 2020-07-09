@@ -19,13 +19,13 @@ Feature: EBU-TT-D lineHeight conversion
 
         Examples:
             | lineHeight | fontSize | style_id                          | ebu_tt_d_value |
-            | 2c         | 2c       | autogenFontStyle_n_200.00_100.00  | 100%           |
-            | 3c         | 2c       | autogenFontStyle_n_200.00_150.00  | 150%           |
-            | 1c         | 2c       | autogenFontStyle_n_200.00_50.00   | 50%            |
-            | 100%       | 2c       | autogenFontStyle_n_200.00_100.00  | 100%           |
-            | 120%       | 2c       | autogenFontStyle_n_200.00_120.00  | 120%           |
-            | 120.2%     | 2c       | autogenFontStyle_n_200.00_120.20  | 120.2%         |
-            | 120.36%    | 2c       | autogenFontStyle_n_200.00_120.36  | 120.36%        |
-            | 120.123%   | 2c       | autogenFontStyle_n_200.00_120.12  | 120.12%        |
-            | normal     | 2c       | autogenFontStyle_n_200.00_n       | normal         |
+            | 2c         | 2c       | autogenFontStyle_n_200_100  | 100%           |
+            | 3c         | 2c       | autogenFontStyle_n_200_150  | 150%           |
+            | 1c         | 2c       | autogenFontStyle_n_200_50   | 50%            |
+            | 100%       | 2c       | autogenFontStyle_n_200_100  | 100%           |
+            | 120%       | 2c       | autogenFontStyle_n_200_120  | 120%           |
+            | 120.2%     | 2c       | autogenFontStyle_n_200_120.2  | 120.2%         |
+            | 120.36%    | 2c       | autogenFontStyle_n_200_120.36  | 120.36%        |
+            | 120.123%   | 2c       | autogenFontStyle_n_200_120.12  | 120.12%        |
+            | normal     | 2c       | autogenFontStyle_n_200_n       | normal         |
 

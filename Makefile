@@ -8,9 +8,9 @@ init:
 
 initnpm:
 ifeq ("$(wildcard node_modules)","")
-	npm install nunjucks
+	npm install nunjucks@3.2.0
 else 
-	npm update nunjucks
+	npm update nunjucks@3.2.0
 endif
 
 test:

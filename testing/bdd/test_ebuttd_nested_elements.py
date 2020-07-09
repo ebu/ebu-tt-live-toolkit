@@ -59,7 +59,7 @@ def combine_span_styles(test_context):
     document = test_context['ebuttd_document']
     tree = ET.fromstring(document.get_xml())
     elements = tree.findall('{http://www.w3.org/ns/ttml}body/{http://www.w3.org/ns/ttml}div/{http://www.w3.org/ns/ttml}p/{http://www.w3.org/ns/ttml}span')
-    assert elements[1].get("style") == "autogenFontStyle_n_200.00_n outerinnerYellow"
+    assert elements[1].get("style") == "autogenFontStyle_n_200_n outerinnerYellow"
 
 @then('the second span contains a br')
 def second_span_contains_br(test_context):

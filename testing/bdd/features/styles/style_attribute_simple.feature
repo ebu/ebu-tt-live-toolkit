@@ -21,15 +21,20 @@ Feature: Compute style attribute on a single EBU-TT Live element
 
     Examples:
     | R1_value | S1_value  | S2_value | S3_value       | S4_value | style_attribute     | elem_id | computed_value |
-    |          |           |          |                |          | tts:backgroundColor | span1   | transparent    |  # default value
-    |          | blue      |          |                |          | tts:backgroundColor | span1   | transparent    |  # does not inherit from region
-    |          |           |          | blue           |          | tts:backgroundColor | span1   | transparent    |  # does not inherit from parent
-    |          |           |          |                | blue     | tts:backgroundColor | span1   | blue           |  # does compute if specified directly
+    # default value:
+    |          |           |          |                |          | tts:backgroundColor | span1   | transparent    |
+    # does not inherit from region:
+    |          | blue      |          |                |          | tts:backgroundColor | span1   | transparent    |
+    # does not inherit from parent:
+    |          |           |          | blue           |          | tts:backgroundColor | span1   | transparent    |
+    # does compute if specified directly:
+    |          |           |          |                | blue     | tts:backgroundColor | span1   | blue           |
     |          |           |          |                |          | tts:padding         | span1   | 0px            |
     |          |           |          |                | 10px     | tts:padding         | span1   | 10px           |
     |          | 10px      |          |                |          | tts:padding         | span1   | 0px            |
     |          | 10px      |          |                |          | tts:padding         | R1      | 10px           |
-    | 10px     | 20px      |          |                |          | tts:padding         | R1      | 10px           |  # padding defined directly on region overrides S1
+    # padding defined directly on region overrides S1:
+    | 10px     | 20px      |          |                |          | tts:padding         | R1      | 10px           |
     |          |           |          |                |          | tts:unicodeBidi     | span1   | normal         |
     |          |           |          | embed          |          | tts:unicodeBidi     | span1   | normal         |
     |          |           |          |                | embed    | tts:unicodeBidi     | span1   | embed          |

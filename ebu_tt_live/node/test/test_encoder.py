@@ -154,7 +154,7 @@ class TestEBUTTDEncoderSuccess(TestCase):
         self.assertIsNotNone(output_doc.binding.activeArea)
         self.assertEqual(
             output_doc.binding.activeArea.xsdLiteral(),
-            '25.0% 75.0% 37.5% 25.0%')
+            '25% 75% 37.5% 25%')
 
     def test_calculate_active_area_two_regions_one_unreferenced(self):
         doc = self._create_test_document()
@@ -179,7 +179,7 @@ class TestEBUTTDEncoderSuccess(TestCase):
         self.assertIsNotNone(output_doc.binding.activeArea)
         self.assertEqual(
             output_doc.binding.activeArea.xsdLiteral(),
-            '25.0% 75.0% 37.5% 25.0%')
+            '25% 75% 37.5% 25%')
 
     def test_calculate_active_area_two_regions_both_unreferenced(self):
         doc = self._create_test_document()
@@ -216,7 +216,7 @@ class TestEBUTTDEncoderSuccess(TestCase):
         self.assertIsNotNone(output_doc.binding.activeArea)
         self.assertEqual(
             output_doc.binding.activeArea.xsdLiteral(),
-            '12.5% 75.0% 50.0% 33.33%')
+            '12.5% 75% 50% 33.33%')
 
     def test_metadata(self):
         doc = self._create_test_document()
