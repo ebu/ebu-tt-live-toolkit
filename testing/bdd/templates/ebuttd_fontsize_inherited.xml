@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<tt:tt ebuttp:sequenceIdentifier="testSequence001"
+       ebuttp:sequenceNumber="1"
+       ttp:clockMode="local"
+{% if cell_resolution and cell_resolution != "*?Empty?*" %}
+       ttp:cellResolution="{{ cell_resolution }}"
+{% endif %}
+{% if extent and extent != "*?Empty?*" %}
+       tts:extent="{{ extent }}"
+{% endif %}
+       ttp:timeBase="clock"
+       xml:lang="en-GB"
+       xmlns:ebuttm="urn:ebu:tt:metadata"
+       xmlns:ebuttp="urn:ebu:tt:parameters"
+       xmlns:tt="http://www.w3.org/ns/ttml"
+       xmlns:ttp="http://www.w3.org/ns/ttml#parameter"
+       xmlns:tts="http://www.w3.org/ns/ttml#styling"
+       xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <tt:head>
+    <tt:metadata>
+      <ebuttm:documentMetadata/>
+    </tt:metadata>
+    <tt:styling>
+      <tt:style {% if region_fontSize and region_fontSize != "" %} tts:fontSize="{{ region_fontSize }}" {% endif %}xml:id="Sregion"/>
+      <tt:style {% if div_fontSize and div_fontSize != "" %} tts:fontSize="{{ div_fontSize }}" {% endif %}xml:id="Sdiv"/>
+      <tt:style {% if p_fontSize and p_fontSize != "" %} tts:fontSize="{{ p_fontSize }}" {% endif %}xml:id="Sp"/>
+    </tt:styling>
+    <tt:layout>
+      <tt:region style="Sregion" tts:origin="0c 0c" tts:extent="10c 10c" xml:id="R1"/>
+    </tt:layout>
+  </tt:head>
+  <tt:body begin="00:00:00.500" dur="00:00:10">
+    <tt:div xml:id="div1" region="R1" style="Sdiv">
+      <tt:p xml:id="p1" style="Sp">
+        <tt:span begin="00:00:01" end="00:00:02" xml:id="span1">Some example text...</tt:span>
+      </tt:p>
+    </tt:div>
+  </tt:body>
+</tt:tt>

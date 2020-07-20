@@ -98,7 +98,11 @@ def then_converted_document_has_style_with_attribute_and_value(test_context, sty
                             '{http://www.w3.org/ns/ttml}styling/'
                             '{http://www.w3.org/ns/ttml}style[@{http://www.w3.org/XML/1998/namespace}id="%s"]' % style_id)
     assert len(elements) == 1
-    assert elements[0].get('{http://www.w3.org/ns/ttml#styling}%s' % attribute) == ebu_tt_d_value
+    actual = elements[0].get('{http://www.w3.org/ns/ttml#styling}%s' % attribute)
+    if ebu_tt_d_value != '':
+        assert actual == ebu_tt_d_value
+    else:
+        assert actual is None
 
 @then(parsers.parse('the ebu_tt_d document contains region "{region_id}" with attribute "{attribute}" set to "{value}"'))
 def then_converted_document_has_region_with_styling_attribute(test_context, region_id, attribute, value):

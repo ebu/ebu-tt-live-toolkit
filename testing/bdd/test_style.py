@@ -7,6 +7,8 @@ from datetime import timedelta
 
 
 scenarios('features/styles/ebuttd_fontsize_conversion.feature')
+scenarios('features/styles/ebuttd_fontsize_inheritance.feature')
+scenarios('features/styles/ebuttd_fontsize_same_style_ref.feature')
 scenarios('features/styles/style_attribute_simple.feature')
 scenarios('features/styles/style_attribute_inherited.feature')
 scenarios('features/styles/lineHeight.feature')
@@ -22,6 +24,24 @@ def when_cell_resolution(template_dict, cell_resolution):
 @when(parsers.parse('it has extent of "{extent}"'))
 def when_extent(template_dict, extent):
     template_dict['extent'] = extent
+
+
+@when('it has region fontSize of <region_fontSize>')
+@when(parsers.parse('it has region fontSize of "{region_fontSize}"'))
+def when_region_fontSize(template_dict, region_fontSize):
+    template_dict['region_fontSize'] = region_fontSize
+
+
+@when('it has div fontSize of <div_fontSize>')
+@when(parsers.parse('it has div fontSize of "{div_fontSize}"'))
+def when_div_fontSize(template_dict, div_fontSize):
+    template_dict['div_fontSize'] = div_fontSize
+
+
+@when('it has p fontSize of <p_fontSize>')
+@when(parsers.parse('it has p fontSize of "{p_fontSize}"'))
+def when_p_fontSize(template_dict, p_fontSize):
+    template_dict['p_fontSize'] = p_fontSize
 
 
 @when('it contains style S1 with <style_attribute> value <S1_value>')
@@ -102,3 +122,58 @@ def when_document_converted(test_context, local_time_mapping):
     test_context['ebuttd_document'] = ebuttd_document
     # TODO: Add the proper assertions
     ebuttd_document.get_xml()
+
+
+@then('the EBUTTD has region fontSize <ttd_region_fontSize>')
+def then_EBUTTD_has_region_fontSize(test_context, ttd_region_fontSize):
+    ttd_doc = test_context['ebuttd_document']
+    region = ttd_doc.get_element_by_id('R1')
+    fontSize = region.specified_style.get_attribute_value('fontSize')
+    if ttd_region_fontSize == '':
+        assert fontSize is None
+    else:
+        assert fontSize == ttd_region_fontSize
+
+
+@then('the EBUTTD has div fontSize <ttd_div_fontSize>')
+def then_EBUTTD_has_div_fontSize(test_context, ttd_div_fontSize):
+    ttd_doc = test_context['ebuttd_document']
+    div = ttd_doc.get_element_by_id('div1')
+    fontSize = div.specified_style.get_attribute_value('fontSize')
+    if ttd_div_fontSize == '':
+        assert fontSize is None
+    else:
+        assert fontSize == ttd_div_fontSize
+
+
+@then('the EBUTTD has div lineHeight of <ttd_div_lineHeight>')
+def then_EBUTTD_has_div_lineHeight(test_context, ttd_div_lineHeight):
+    ttd_doc = test_context['ebuttd_document']
+    div = ttd_doc.get_element_by_id('div1')
+    lineHeight = div.specified_style.get_attribute_value('lineHeight')
+    if ttd_div_lineHeight == '':
+        assert lineHeight is None
+    else:
+        assert lineHeight == ttd_div_lineHeight
+
+
+@then('the EBUTTD has p fontSize of <ttd_p_fontSize>')
+def then_EBUTTD_has_p_fontSize(test_context, ttd_p_fontSize):
+    ttd_doc = test_context['ebuttd_document']
+    p = ttd_doc.get_element_by_id('p1')
+    fontSize = p.specified_style.get_attribute_value('fontSize')
+    if ttd_p_fontSize == '':
+        assert fontSize is None
+    else:
+        assert fontSize == ttd_p_fontSize
+
+
+@then('the EBUTTD has p lineHeight of <ttd_p_lineHeight>')
+def then_EBUTTD_has_p_lineHeight(test_context, ttd_p_lineHeight):
+    ttd_doc = test_context['ebuttd_document']
+    p = ttd_doc.get_element_by_id('p1')
+    lineHeight = p.specified_style.get_attribute_value('lineHeight')
+    if ttd_p_lineHeight == '':
+        assert lineHeight is None
+    else:
+        assert lineHeight == ttd_p_lineHeight

@@ -89,3 +89,6 @@ class EBUTTDDocument(SubtitleDocument, TimelineUtilMixin):
         return self._ebuttd_content.toDOM(
             bds=self._get_bds()
         )
+
+    def get_element_by_id(self, elem_id, elem_type=None):
+        return self.binding.get_element_by_id(elem_id=elem_id, elem_type=elem_type)

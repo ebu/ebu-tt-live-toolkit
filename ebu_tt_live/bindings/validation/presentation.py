@@ -67,7 +67,7 @@ class StyledElementMixin(object):
             # Styles cascade
             for style_id in self.style:
                 try:
-                    style = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
+                    style = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=self._compatible_style_type)
                     for style_binding in style.ordered_styles(dataset=dataset):
                         if style_binding not in referenced_styles:
                             referenced_styles.append(style_binding)
