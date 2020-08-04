@@ -15,20 +15,13 @@ scenarios('features/timing/bufferDelayNode.feature')
 # functions for scenario: BufferDelayNode delays emission by no less than the delay period
 
 
-@fixture('module')
-def temp_dir():
-    new_dir = mkdtemp()
-    yield new_dir
-    rmtree(new_dir)
-
-
 @given('the buffer delay node delays it by <delay_offset>')
-def given_buffer_delay(delay_offset, test_context, gen_document, temp_dir):
+def given_buffer_delay(delay_offset, test_context, gen_document, tmpdir):
 
     gen_document.availability_time = LimitedClockTimingType('00:00:00.0').timedelta
 
     # the first delay node applies no delay
-    carriage_delay1 = FilesystemProducerImpl(os.path.join(temp_dir, 'initial'))
+    carriage_delay1 = FilesystemProducerImpl(os.path.join(tmpdir, 'initial'))
     delay_float1 = LimitedClockTimingType('00:00:00.0').timedelta.total_seconds()
 
     buffer_delay_node1 = BufferDelayNode(
@@ -51,7 +44,7 @@ def given_buffer_delay(delay_offset, test_context, gen_document, temp_dir):
     )
 
     # the second delay node applies a delay of delay_offset
-    carriage_delay2 = FilesystemProducerImpl(os.path.join(temp_dir, 'buffer'))
+    carriage_delay2 = FilesystemProducerImpl(os.path.join(tmpdir, 'buffer'))
     delay_float2 = LimitedClockTimingType(delay_offset).timedelta.total_seconds()
 
     buffer_delay_node2 = BufferDelayNode(
@@ -76,10 +69,10 @@ def given_buffer_delay(delay_offset, test_context, gen_document, temp_dir):
 
 
 @given('the document is emitted')
-def given_document_emitted(test_context, temp_dir):
+def given_document_emitted(test_context, tmpdir):
 
     # read the availability time from the manifest file stored in initial/tmp
-    manifest_path = os.path.join(temp_dir, 'initial', 'manifest_delayTest.txt')
+    manifest_path = os.path.join(tmpdir, 'initial', 'manifest_delayTest.txt')
     avail_time = ''
 
     with open(manifest_path, 'r') as f:
@@ -89,7 +82,7 @@ def given_document_emitted(test_context, temp_dir):
     test_context['doc'].avail_time = avail_time
 
     # read the emission time from the manifest file stored in buffer/tmp
-    manifest_path = os.path.join(temp_dir, 'buffer', 'manifest_delayTest.txt')
+    manifest_path = os.path.join(tmpdir, 'buffer', 'manifest_delayTest.txt')
     emission_time = ''
 
     with open(manifest_path, 'r') as f:
