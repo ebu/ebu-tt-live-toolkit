@@ -6,7 +6,7 @@ sphinx-autobuild
 sphinxcontrib-plantuml
 recommonmark
 sphinx-rtd-theme
-pytest-bdd
+pytest-bdd<3.3.0
 pytest-cov
 pytest-mock
 pytest-twisted
