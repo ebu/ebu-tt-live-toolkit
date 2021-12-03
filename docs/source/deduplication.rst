@@ -13,7 +13,7 @@ After copying ``styling`` and ``layout`` into a ``list()`` and setting them up f
 Because ``style`` and ``region`` elements can have ``style`` attributes, these
 are deduplicated first. At this stage, it's possible that where two identical elements
 that differed only in their style references, these may end up looking the same.
- Each element is then passed through the
+Each element is then passed through the
 :py:class:`ebu_tt_live.node.deduplicator.ComparableElement` class, which processes
 each attribute, omitting the ``xml:id`` and using the
 :py:func:`ebu_tt_live.node.deduplicator.ReplaceNone` function to replace empty
