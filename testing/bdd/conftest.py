@@ -177,7 +177,12 @@ computed_style_attribute_casting = {
 }
 
 
+@pytest.fixture
+def computed_value():
+    return ''
+
 @then(parsers.parse('the computed {style_attribute} in {elem_id} is {computed_value}'))
+@then(parsers.parse('the computed {style_attribute} in {elem_id} is'))
 def then_computed_style_value_is(style_attribute, elem_id, computed_value, test_context):
     document = test_context['document']
     elem = document.get_element_by_id(elem_id)

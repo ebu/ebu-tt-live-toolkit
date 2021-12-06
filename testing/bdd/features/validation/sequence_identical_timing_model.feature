@@ -23,13 +23,13 @@ Feature: Every document in a sequence shall have an identical timing model as de
     And it has markerMode <marker_mode1>
     And doc1 is added to the sequence
     And we create a new document
-    And it has sequenceNumber 2
-    And it has timeBase <time_base2>
-    And it has clockMode <clock_mode2>
-    And it has frameRate <frame_rate2>
-    And it has frameRateMultiplier <frame_rate_multiplier2>
-    And it has dropMode <drop_mode2>
-    And it has markerMode <marker_mode2>
+    And it has sequenceNumber2 2
+    And it has timeBase2 <time_base2>
+    And it has clockMode2 <clock_mode2>
+    And it has frameRate2 <frame_rate2>
+    And it has frameRateMultiplier2 <frame_rate_multiplier2>
+    And it has dropMode2 <drop_mode2>
+    And it has markerMode2 <marker_mode2>
     Then adding doc2 to the sequence results in an error
 
     Examples:
@@ -59,13 +59,13 @@ Feature: Every document in a sequence shall have an identical timing model as de
     And it has markerMode <marker_mode1>
     And doc1 is added to the sequence
     And we create a new document
-    And it has sequenceNumber 2
-    And it has timeBase <time_base2>
-    And it has clockMode <clock_mode2>
-    And it has frameRate <frame_rate2>
-    And it has frameRateMultiplier <frame_rate_multiplier2>
-    And it has dropMode <drop_mode2>
-    And it has markerMode <marker_mode2>
+    And it has sequenceNumber2 2
+    And it has timeBase2 <time_base2>
+    And it has clockMode2 <clock_mode2>
+    And it has frameRate2 <frame_rate2>
+    And it has frameRateMultiplier2 <frame_rate_multiplier2>
+    And it has dropMode2 <drop_mode2>
+    And it has markerMode2 <marker_mode2>
     Then adding doc2 to the sequence does not raise any error
 
     Examples:

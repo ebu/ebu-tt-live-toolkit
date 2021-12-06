@@ -14,12 +14,12 @@ trusted_timedeltas = [
 ]
 
 
-@when('it has timeBase <time_base>')
+@when(parsers.parse('it has timeBase {time_base}'))
 def when_time_base(time_base, template_dict):
     template_dict['time_base'] = time_base
 
 
-@when('it has body begin time <body_begin>')
+@when(parsers.parse('it has body begin time {body_begin}'))
 def when_body_begin(body_begin, template_dict):
     template_dict['body_begin'] = body_begin
 

@@ -114,12 +114,12 @@ Feature: Delay of a document sequence
   # SPEC-CONFORMANCE.md R113 R117
   Scenario: RetimingDelayNode changes sequence ID but not authoring delay
     Given an xml file <xml_file>
-    And it has <sequence_id_1>
-    And it has <authoring_delay>
+    And it has sequence id <sequence_id_1>
+    And it has authoring delay <authoring_delay>
     And the document is generated
     When the retiming delay node delays it by <delay>
-    Then the updated document has <sequence_id_2>
-    And the updated document has <authoring_delay>
+    Then the updated document has sequence id <sequence_id_2>
+    And the updated document has authoring delay <authoring_delay>
 
     Examples:
     | sequence_id_1 | authoring_delay | delay    | sequence_id_2    |
@@ -130,7 +130,7 @@ Feature: Delay of a document sequence
   # The above scenario brings up a problem with the incoming sequence identifier matching the produced one
   Scenario: Retiming delay receives matching sequence identifier
     Given an xml file <xml_file>
-    And it has <sequence_id_1>
+    And it has sequence id <sequence_id_1>
     And the document is generated
     Then the retiming delay node with <produced_sequence> will reject it
 

@@ -10,7 +10,7 @@ scenarios('features/validation/sequence_identical_timing_model.feature')
 # the sequence is created later from the first document and assigning a fixture
 # after its creation function is not possible. So we store the documents in an
 # array and create the sequence in the final thens
-@given('a test sequence')
+@given('a test sequence', target_fixture='doc_list')
 def doc_list(template_dict):
     doc_list = []
     return doc_list
@@ -21,32 +21,62 @@ def when_sequence_number(sequence_number, template_dict):
     template_dict['sequence_number'] = sequence_number
 
 
-@when('it has timeBase <time_base1>')
+@pytest.fixture
+def time_base1():
+    return None
+
+@when(parsers.parse('it has timeBase {time_base1}'))
+@when(parsers.parse('it has timeBase'))
 def when_time_base1(time_base1, template_dict):
     template_dict['time_base'] = time_base1
 
 
-@when('it has clockMode <clock_mode1>')
+@pytest.fixture
+def clock_mode1():
+    return None
+
+@when(parsers.parse('it has clockMode {clock_mode1}'))
+@when(parsers.parse('it has clockMode'))
 def when_clock_mode1(clock_mode1, template_dict):
     template_dict['clock_mode'] = clock_mode1
 
 
-@when('it has frameRate <frame_rate1>')
+@pytest.fixture
+def frame_rate1():
+    return None
+
+@when(parsers.parse('it has frameRate {frame_rate1}'))
+@when(parsers.parse('it has frameRate'))
 def when_frame_rate1(frame_rate1, template_dict):
     template_dict['frame_rate'] = frame_rate1
 
 
-@when('it has frameRateMultiplier <frame_rate_multiplier1>')
+@pytest.fixture
+def frame_rate_multiplier1():
+    return None
+
+@when(parsers.parse('it has frameRateMultiplier {frame_rate_multiplier1}'))
+@when(parsers.parse('it has frameRateMultiplier'))
 def when_frame_rate_multiplier1(frame_rate_multiplier1, template_dict):
     template_dict['frame_rate_multiplier'] = frame_rate_multiplier1
 
 
-@when('it has dropMode <drop_mode1>')
+@pytest.fixture
+def drop_mode1():
+    return None
+
+@when(parsers.parse('it has dropMode {drop_mode1}'))
+@when(parsers.parse('it has dropMode'))
 def when_drop_mode1(drop_mode1, template_dict):
     template_dict['drop_mode'] = drop_mode1
 
 
-@when('it has markerMode <marker_mode1>')
+@pytest.fixture
+def marker_mode1():
+    return None
+
+@when(parsers.parse('it has markerMode {marker_mode1}'))
+@when(parsers.parse('it has markerMode'))
 def when_marker_mode1(marker_mode1, template_dict):
     template_dict['marker_mode'] = marker_mode1
 
@@ -63,37 +93,72 @@ def when_create_new_document(template_dict):
     template_dict['sequence_num'] = None
 
 
-@when('it has timeBase <time_base2>')
+@pytest.fixture
+def time_base2():
+    return None
+
+@when(parsers.parse('it has timeBase2 {time_base2}'))
+@when(parsers.parse('it has timeBase2'))
 def when_time_base2(time_base2, template_dict):
     template_dict['time_base'] = time_base2
 
 
-@when('it has clockMode <clock_mode2>')
+@pytest.fixture
+def clock_mode2():
+    return None
+
+@when(parsers.parse('it has clockMode2 {clock_mode2}'))
+@when(parsers.parse('it has clockMode2'))
 def when_clock_mode2(clock_mode2, template_dict):
     template_dict['clock_mode'] = clock_mode2
 
 
-@when('it has frameRate <frame_rate2>')
+@pytest.fixture
+def frame_rate2():
+    return None
+
+@when(parsers.parse('it has frameRate2 {frame_rate2}'))
+@when(parsers.parse('it has frameRate2'))
 def when_frame_rate2(frame_rate2, template_dict):
     template_dict['frame_rate'] = frame_rate2
 
 
-@when('it has frameRateMultiplier <frame_rate_multiplier2>')
+@pytest.fixture
+def frame_rate_multiplier2():
+    return None
+
+@when(parsers.parse('it has frameRateMultiplier2 {frame_rate_multiplier2}'))
+@when(parsers.parse('it has frameRateMultiplier2'))
 def when_frame_rate_multiplier2(frame_rate_multiplier2, template_dict):
     template_dict['frame_rate_multiplier'] = frame_rate_multiplier2
 
 
-@when('it has dropMode <drop_mode2>')
+@pytest.fixture
+def drop_mode2():
+    return None
+
+@when(parsers.parse('it has dropMode2 {drop_mode2}'))
+@when(parsers.parse('it has dropMode2'))
 def when_drop_mode2(drop_mode2, template_dict):
     template_dict['drop_mode'] = drop_mode2
 
 
-@when('it has markerMode <marker_mode2>')
+@pytest.fixture
+def marker_mode2():
+    return None
+
+@when(parsers.parse('it has markerMode2 {marker_mode2}'))
+@when(parsers.parse('it has markerMode2'))
 def when_marker_mode2(marker_mode2, template_dict):
     template_dict['marker_mode'] = marker_mode2
 
 
-@when('it has sequence number <doc2_seqnum>')
+@pytest.fixture
+def doc2_seqnum():
+    return None
+
+@when(parsers.parse('it has sequenceNumber2 {doc2_seqnum}'))
+@when(parsers.parse('it has sequenceNumber2'))
 def when_doc2_has_seqnum(doc2_seqnum, template_dict):
     template_dict['sequence_num'] = doc2_seqnum
 
