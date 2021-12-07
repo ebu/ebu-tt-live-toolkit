@@ -1,10 +1,11 @@
+import pytest
 from ebu_tt_live.documents import EBUTT3Document
 from ebu_tt_live.bindings import style_type, region_type
 from ebu_tt_live.bindings._ebuttdt import FullClockTimingType
 from ebu_tt_live.node.distributing import DistributingNode
 from ebu_tt_live.carriage.interface import IProducerCarriage, IConsumerCarriage
 from mock import MagicMock
-from pytest_bdd import scenarios, when, then, given
+from pytest_bdd import scenarios, when, then, given, parsers
 import six
 
 scenarios('features/segmentation/splitting_documents.feature')
@@ -19,7 +20,7 @@ def assert_raises(exc_class, callable, *args, **kwargs):
         assert isinstance(exc, exc_class)
 
 
-@when('we create a new document with <body_dur> <span1_begin> <span2_begin> <span1_end> <span2_end>')
+@when(parsers.parse('we create a new document with {body_dur} {span1_begin} {span2_begin} {span1_end} {span2_end}'))
 def when_new_doc(template_dict, sequence, body_dur, span1_begin, span1_end, span2_begin, span2_end):
     template_dict.clear()
     new_dummy_doc = sequence.new_document()
@@ -40,27 +41,27 @@ def when_doc_added_to_sequence(template_file, template_dict, sequence):
     sequence.add_document(document)
 
 
-@when('it has sequenceIdentifier <sequence_identifier>')
+@when(parsers.parse('it has sequenceIdentifier {sequence_identifier}'))
 def when_sequence_identifier(template_dict, sequence_identifier):
     template_dict['sequence_identifier'] = sequence_identifier
 
 
-@when('it has sequence identifier <seq_id_1>')
+@when(parsers.parse('it has sequence identifier {seq_id_1}'))
 def when_seq_id_1(seq_id_1, template_dict):
     template_dict['sequence_id'] = seq_id_1
 
 
-@when('it has sequence identifier <seq_id_2>')
+@when(parsers.parse('it has sequence identifier {seq_id_2}'))
 def when_seq_id_2(seq_id_2, template_dict):
     template_dict['sequence_id'] = seq_id_2
 
 
-@when('it has sequence number <seq_n_1>')
+@when(parsers.parse('it has sequence number {seq_n_1}'))
 def when_seq_num_1(template_dict, seq_n_1):
     template_dict['sequence_num'] = seq_n_1
 
 
-@when('it has sequence number <seq_n_2>')
+@when(parsers.parse('it has sequence number {seq_n_2}'))
 def when_seq_num_2(template_dict, seq_n_2):
     template_dict['sequence_num'] = seq_n_2
 
@@ -70,7 +71,7 @@ def when_another_document_arrives(template_dict):
     template_dict.clear()
 
 
-@given('a processing node')
+@given('a processing node', target_fixture='given_processing_node')
 def given_processing_node(template_dict):
     producer_carriage = MagicMock(spec=IProducerCarriage)
     producer_carriage.expects.return_value = six.text_type
@@ -95,12 +96,12 @@ def when_document_processed(test_context, given_processing_node):
     given_processing_node.producer_carriage.reset_mock()
 
 
-@when('the document has availability time <avail_time_1>')
+@when(parsers.parse('the document has availability time {avail_time_1}'))
 def when_document_availability_time(test_context, avail_time_1):
     test_context['document'].availability_time = FullClockTimingType(avail_time_1).timedelta
 
 
-@then('the document has availability time <avail_time_1>')
+@then(parsers.parse('the document has availability time {avail_time_1}'))
 def then_document_availability_time(test_context, avail_time_1):
     assert test_context['document'].availability_time == FullClockTimingType(avail_time_1).timedelta
 
@@ -112,51 +113,51 @@ def then_document_not_processed(test_context, given_processing_node):
     given_processing_node.producer_carriage.reset_mock()
 
 
-@when('it has sequenceNumber <sequence_number>')
+@when(parsers.parse('it has sequenceNumber {sequence_number}'))
 def when_sequence_number(template_dict, sequence_number):
     template_dict['sequence_number'] = sequence_number
 
 
-@when('it has body from <body_begin> to <body_end>')
+@when(parsers.parse('it has body from {body_begin} to {body_end}'))
 def when_body_times(template_dict, body_begin, body_end):
     template_dict['body_begin'] = body_begin
     template_dict['body_end'] = body_end
 
 
-@when('body begins at <body1_begin>')
+@when(parsers.parse('body begins at {body1_begin}'))
 def when_body1_begins(template_dict, body1_begin):
     template_dict['body_begin'] = body1_begin
 
 
-@when('body begins at <body2_begin>')
+@when(parsers.parse('body begins at {body2_begin}'))
 def when_body2_begins(template_dict, body2_begin):
     template_dict['body_begin'] = body2_begin
 
 
-@when('body begins at <body3_begin>')
+@when(parsers.parse('body begins at {body3_begin}'))
 def when_body3_begins(template_dict, body3_begin):
     template_dict['body_begin'] = body3_begin
 
 
-@when('it has span1 from <span1_begin> to <span1_end>')
+@when(parsers.parse('it has span1 from {span1_begin} to {span1_end}'))
 def when_span1_times(template_dict, span1_begin, span1_end):
     template_dict['span1_begin'] = span1_begin
     template_dict['span1_end'] = span1_end
 
 
-@when('it has span2 from <span2_begin> to <span2_end>')
+@when(parsers.parse('it has span2 from {span2_begin} to {span2_end}'))
 def when_span2_times(template_dict, span2_begin, span2_end):
     template_dict['span2_begin'] = span2_begin
     template_dict['span2_end'] = span2_end
 
 
-@when('it has span3 from <span3_begin> to <span3_end>')
+@when(parsers.parse('it has span3 from {span3_begin} to {span3_end}'))
 def when_span3_times(template_dict, span3_begin, span3_end):
     template_dict['span3_begin'] = span3_begin
     template_dict['span3_end'] = span3_end
 
 
-@when('the range from <range_from> to <range_to> is requested')
+@when(parsers.parse('the range from {range_from} to {range_to} is requested'))
 def when_range_requested(template_file, test_context, template_dict, range_from, range_to):
     xml_file = template_file.render(template_dict)
     document = EBUTT3Document.create_from_xml(xml_file)
@@ -167,7 +168,7 @@ def when_range_requested(template_file, test_context, template_dict, range_from,
     test_context['fragment'] = fragment
 
 
-@when('the sequence is segmented from <range_from> to <range_to>')
+@when(parsers.parse('the sequence is segmented from {range_from} to {range_to}'))
 def when_sequence_segmented(sequence, test_context, range_from, range_to):
     fragment = sequence.extract_segment(
         FullClockTimingType(range_from).timedelta,
@@ -176,7 +177,7 @@ def when_sequence_segmented(sequence, test_context, range_from, range_to):
     test_context['fragment'] = fragment
 
 
-@then('the fragment contains body with computed times from <frag_body_begin> to <frag_body_end>')
+@then(parsers.parse('the fragment contains body with computed times from {frag_body_begin} to {frag_body_end}'))
 def then_fragment_body_times(test_context, frag_body_begin, frag_body_end):
 
     assert test_context['fragment'].binding.body.computed_begin_time == FullClockTimingType(frag_body_begin).timedelta
@@ -186,7 +187,12 @@ def then_fragment_body_times(test_context, frag_body_begin, frag_body_end):
         assert test_context['fragment'].binding.body.computed_end_time == FullClockTimingType(frag_body_end).timedelta
 
 
-@then('the fragment contains span1 with computed times from <frag_span1_begin> to <frag_span1_end>')
+@pytest.fixture
+def frag_span1_end():
+    return ''
+
+@then(parsers.parse('the fragment contains span1 with computed times from {frag_span1_begin} to {frag_span1_end}'))
+@then(parsers.parse('the fragment contains span1 with computed times from {frag_span1_begin} to'))
 def then_fragment_span1_times(test_context, frag_span1_begin, frag_span1_end):
     if frag_span1_begin == 'deleted':
         assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span1')
@@ -200,7 +206,12 @@ def then_fragment_span1_times(test_context, frag_span1_begin, frag_span1_end):
                 frag_span1_end).timedelta
 
 
-@then('the fragment contains span2 with computed times from <frag_span2_begin> to <frag_span2_end>')
+@pytest.fixture
+def frag_span2_end():
+    return ''
+
+@then(parsers.parse('the fragment contains span2 with computed times from {frag_span2_begin} to {frag_span2_end}'))
+@then(parsers.parse('the fragment contains span2 with computed times from {frag_span2_begin} to'))
 def then_fragment_span2_times(test_context, frag_span2_begin, frag_span2_end):
     if frag_span2_begin == 'deleted':
         assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span2')
@@ -214,7 +225,13 @@ def then_fragment_span2_times(test_context, frag_span2_begin, frag_span2_end):
                 frag_span2_end).timedelta
 
 
-@then('the fragment contains span3 with computed times from <frag_span3_begin> to <frag_span3_end>')
+
+@pytest.fixture
+def frag_span3_end():
+    return ''
+
+@then(parsers.parse('the fragment contains span3 with computed times from {frag_span3_begin} to {frag_span3_end}'))
+@then(parsers.parse('the fragment contains span3 with computed times from {frag_span3_begin} to'))
 def then_fragment_span3_times(test_context, frag_span3_begin, frag_span3_end):
     if frag_span3_begin == 'deleted':
         assert_raises(LookupError, test_context['fragment'].get_element_by_id, 'span3')
@@ -228,7 +245,7 @@ def then_fragment_span3_times(test_context, frag_span3_begin, frag_span3_end):
                 frag_span3_end).timedelta
 
 
-@then('the fragment only contains styles <frag_styles>')
+@then(parsers.parse('the fragment only contains styles {frag_styles}'))
 def then_fragment_styles_present(test_context, frag_styles):
     fragment = test_context['fragment']
     styling = fragment.binding.head.styling
@@ -245,7 +262,12 @@ def then_fragment_styles_present(test_context, frag_styles):
     assert set(styles_present) == set(styles_required)
 
 
-@then('the fragment only contains regions <frag_regions>')
+@pytest.fixture
+def frag_regions():
+    return ''
+
+@then(parsers.parse('the fragment only contains regions {frag_regions}'))
+@then(parsers.parse('the fragment only contains regions'))
 def then_fragment_regions_present(test_context, frag_regions):
     fragment = test_context['fragment']
     layout = fragment.binding.head.layout

@@ -11,7 +11,7 @@ import six
 scenarios('features/nodes/passive_nodes_shall_not_modify_document.feature')
 
 
-@given('a distributing node')
+@given('a distributing node', target_fixture='distributing_node')
 def distributing_node():
     reference_clock = MagicMock()
     prod_carriage = MagicMock(spec=IProducerCarriage)
@@ -24,7 +24,7 @@ def distributing_node():
     return node
 
 
-@given('a buffer delay node')
+@given('a buffer delay node', target_fixture='buffer_delay_node')
 def buffer_delay_node():
     reference_clock = MagicMock()
     prod_carriage = MagicMock(spec=IProducerCarriage)

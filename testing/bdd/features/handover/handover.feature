@@ -11,15 +11,15 @@ Feature: Handover
   Scenario: Different group identifiers in a sequence
     Given a handover node with <authors_group_identifier> and <sequence_identifier>
     And an xml file <xml_file>
-    When it has <sequence_identifier1> and <sequence_number1>
-    And it has <authors_group_identifier1>
-    And it has <authors_group_control_token1>
+    When it has sequence id <sequence_identifier1> and sequence num <sequence_number1>
+    And it has authors group identifier <authors_group_identifier1>
+    And it has authors group control token <authors_group_control_token1>
     And the document is generated
     And handover node processes document
     And new document is created
-    And it has <sequence_identifier2> and <sequence_number2>
-    And it has <authors_group_identifier2>
-    And it has <authors_group_control_token2>
+    And new document has sequence id <sequence_identifier2> and sequence num <sequence_number2>
+    And new document has authors group identifier <authors_group_identifier2>
+    And new document has authors group control token <authors_group_control_token2>
     And the document is generated
     Then handover node errors when processing document
 
@@ -32,9 +32,9 @@ Feature: Handover
   Scenario: Documents with missing group identifier and token
     Given a handover node with <authors_group_identifier> and <sequence_identifier>
     And an xml file <xml_file>
-    When it has <sequence_identifier1> and <sequence_number1>
-    And it has <authors_group_identifier1>
-    And it has <authors_group_control_token1>
+    When it has sequence id <sequence_identifier1> and sequence num <sequence_number1>
+    And it has authors group identifier <authors_group_identifier1>
+    And it has authors group control token <authors_group_control_token1>
     And the document is generated
     And handover node processes document
     Then handover node emits <emitted_documents> documents
@@ -51,7 +51,7 @@ Feature: Handover
   Scenario: Invalid group identifier
     Given a handover node with <authors_group_identifier> and <sequence_identifier>  # This is line is not needed by the test but otherwise the BDD framework complains of mismatching variables
     And an xml file <xml_file>
-    When it has <sequence_identifier1> and <sequence_number1>
+    When it has sequence id <sequence_identifier1> and sequence num <sequence_number1>
     And it has <authors_group_identifier1>
     Then document is invalid
 

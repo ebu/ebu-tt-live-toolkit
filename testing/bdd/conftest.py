@@ -1,4 +1,4 @@
-from pytest_bdd import when, given, then
+from pytest_bdd import when, given, then, parsers
 from jinja2 import Environment, FileSystemLoader
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence, EBUTTDDocument
 from ebu_tt_live.clocks.local import LocalMachineClock
@@ -10,21 +10,21 @@ import os
 import unittest
 
 
-@given('an xml file <xml_file>')
+@given(parsers.parse('an xml file {xml_file}'), target_fixture='template_file')
 def template_file(xml_file):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
                          trim_blocks=True)
     return j2_env.get_template(xml_file)
 
-@given('a first xml file <xml_file_1>')
+@given(parsers.parse('a first xml file {xml_file_1}'), target_fixture='template_file_one')
 def template_file_one(xml_file_1):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
                          trim_blocks=True)
     return j2_env.get_template(xml_file_1)
 
-@then('a second xml file <xml_file_2>')
+@then(parsers.parse('a second xml file {xml_file_2}'))
 def template_file_two(xml_file_2):
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
@@ -41,7 +41,7 @@ def template_file_two_fixture(xml_file_2):
     
 # NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
-@given('a sequence <sequence_identifier> with timeBase <time_base>')
+@given(parsers.parse('a sequence {sequence_identifier} with timeBase {time_base}'), target_fixture='sequence')
 def sequence(sequence_identifier, time_base):
     ref_clock = None
     if time_base == 'clock':
@@ -79,7 +79,7 @@ def invalid_doc(template_file, template_dict):
         EBUTT3Document.create_from_xml(xml_file)
 
 
-@given('the document is generated')
+@given('the document is generated', target_fixture='gen_document')
 def gen_document(template_file, template_dict):
     # TODO: This is legacy and to be removed when tests are refactored
     xml_file = template_file.render(template_dict)
@@ -95,7 +95,7 @@ def when_doc_generated(test_context, template_dict, template_file):
     test_context['document'] = document
 
 
-@given('the first document is generated')
+@given('the first document is generated', target_fixture='gen_first_document')
 def gen_first_document(test_context, template_dict, template_file_one):
     xml_file_1 = template_file_one.render(template_dict)
     document1 = EBUTT3Document.create_from_xml(xml_file_1)
@@ -134,14 +134,22 @@ def timestr_to_timedelta(time_str, time_base):
     elif time_base == 'smpte':
         raise NotImplementedError('SMPTE needs implementation')
 
+@pytest.fixture
+def computed_begin():
+    return None
 
-@then('it has computed begin time <computed_begin>')
+@then(parsers.parse('it has computed begin time {computed_begin}'))
+@then(parsers.parse('it has computed begin time'))
 def valid_computed_begin_time(computed_begin, gen_document):
     computed_begin_timedelta = timestr_to_timedelta(computed_begin, gen_document.time_base)
     assert gen_document.computed_begin_time == computed_begin_timedelta
 
+@pytest.fixture
+def computed_end():
+    return None
 
-@then('it has computed end time <computed_end>')
+@then(parsers.parse('it has computed end time {computed_end}'))
+@then(parsers.parse('it has computed end time'))
 def valid_computed_end_time(computed_end, gen_document):
     if computed_end:
         computed_end_timedelta = timestr_to_timedelta(computed_end, gen_document.time_base)
@@ -169,7 +177,12 @@ computed_style_attribute_casting = {
 }
 
 
-@then('the computed <style_attribute> in <elem_id> is <computed_value>')
+@pytest.fixture
+def computed_value():
+    return ''
+
+@then(parsers.parse('the computed {style_attribute} in {elem_id} is {computed_value}'))
+@then(parsers.parse('the computed {style_attribute} in {elem_id} is'))
 def then_computed_style_value_is(style_attribute, elem_id, computed_value, test_context):
     document = test_context['document']
     elem = document.get_element_by_id(elem_id)
@@ -179,7 +192,7 @@ def then_computed_style_value_is(style_attribute, elem_id, computed_value, test_
         assert elem.computed_style.get_attribute_value(style_attribute) == computed_style_attribute_casting[style_attribute](computed_value)
 
 
-@given('it has availability time <avail_time>')
+@given(parsers.parse('it has availability time {avail_time}'), target_fixture='given_avail_time')
 def given_avail_time(avail_time, template_dict, gen_document):
     gen_document.availability_time = timestr_to_timedelta(avail_time, gen_document.time_base)
 

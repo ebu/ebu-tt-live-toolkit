@@ -34,7 +34,6 @@
     <tt:styling>
       <tt:style xml:id="ID001"/>
     </tt:styling>
-    <tt:layout/>
   </tt:head>
 {% if time_base == "smpte" %}
   <tt:body begin="00:00:00:13">
