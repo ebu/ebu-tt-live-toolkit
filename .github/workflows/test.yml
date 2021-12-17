@@ -1,0 +1,23 @@
+name: Check the tests pass
+
+on: pull_request
+
+jobs:
+  build:
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      - name: Generate bindings
+      run: |
+        pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+      - name: Run tests with pytest
+      run: |
+        python setup.py test
