@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Clean docs
         run: |
-          rm -R docs/build/ui
+          if [ -d docs/build/ui ]; then rm -R docs/build/ui; fi
         shell: bash
       - name: Setup node
         uses: actions/setup-node@v2
