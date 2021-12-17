@@ -7,11 +7,12 @@ jobs:
     name: Install and build and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python 3.7
+      - name: Checkout the code
+        uses: actions/checkout@v2
+      - name: Setup Python 2.7
         uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: '2.7'
           cache: 'pip'
       - name: Install dependencies
         run: |
