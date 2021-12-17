@@ -12,10 +12,11 @@ jobs:
         run: |
           rm -R docs/build/ui
         shell: bash
-      - name: Generate templates
+      - name: Setup node
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
+      - name: Generate templates
         run: |
           npm install nunjucks
           node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
