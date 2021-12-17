@@ -4,7 +4,7 @@ on: pull_request
 
 jobs:
   build:
-    name: Install and build
+    name: Install and build and test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -22,14 +22,7 @@ jobs:
         run: |
           pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
         shell: bash
-
-  test:
-    name: Run tests with pytest
-    needs: build
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run tests with pytest
+      - name: Test
         run: |
           python setup.py test
         shell: bash
