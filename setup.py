@@ -3,7 +3,7 @@ try:
     from setuptools import setup
     extra = dict(
         include_package_data=True,
-        setup_requires=['pytest-runner']
+        # setup_requires=['pytest-runner']
     )
 except ImportError:
     from distutils.core import setup
