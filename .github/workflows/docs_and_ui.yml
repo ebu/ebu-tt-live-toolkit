@@ -1,12 +1,22 @@
 name: Build the documentation and the UI
 
-on: [pull_request, push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   docs_and_ui:
     name: Build the Documentation and UI
     runs-on: ubuntu-latest
     steps:
+      - name: Skip publishing to GitHub Pages
+        env:
+          REF_NAME: ${{ github.ref }}
+        if: ${{ 'refs/head/master' != env.REF_NAME }}
+        run: |
+          echo "This is NOT a push to master branch, not pushing to github-pages"
       - uses: actions/checkout@v2
       - name: Clean docs
         run: |
