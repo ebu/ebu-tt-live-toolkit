@@ -65,8 +65,13 @@ jobs:
         env:
           REF_NAME: ${{ github.ref }}
         if: ${{ 'refs/head/master' == env.REF_NAME }}
-        run: |
-          echo "This is a push to master branch, pushing build output to github-pages"
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: docs/build
+          clean: true
+          clean-exclude: |
+            .nojekyll
       - name: Skip publishing to GitHub Pages
         env:
           REF_NAME: ${{ github.ref }}
