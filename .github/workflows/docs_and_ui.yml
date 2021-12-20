@@ -1,10 +1,10 @@
-name: Build UI
+name: Build the documentation and the UI
 
 on: [pull_request, push]
 
 jobs:
-  ui:
-    name: Build the UI
+  docs_and_ui:
+    name: Build the Documantation and UI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,6 +29,11 @@ jobs:
           cp -R ebu_tt_live/ui/assets docs/build/ui/user_input_producer/
           cp -R ebu_tt_live/ui/assets docs/build/ui/test/
         shell: bash
+      - name: Setup graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+      - name: Build the documentation
+        run: |
+          python setup.py build_sphinx
       - name: Publish to GitHub Pages
         env:
           REF_NAME: ${{ github.ref }}
