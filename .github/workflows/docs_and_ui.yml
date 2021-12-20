@@ -4,7 +4,7 @@ on: [pull_request, push]
 
 jobs:
   docs_and_ui:
-    name: Build the Documantation and UI
+    name: Build the Documentation and UI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +31,20 @@ jobs:
         shell: bash
       - name: Setup graphviz
         uses: ts-graphviz/setup-graphviz@v1
+      - name: Setup Python 2.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          cache: 'pip'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        shell: bash
+      - name: Generate bindings
+        run: |
+          pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+        shell: bash
       - name: Build the documentation
         run: |
           python setup.py build_sphinx
