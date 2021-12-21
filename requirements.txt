@@ -69,7 +69,7 @@ pytest-runner==5.2
 pytest-twisted==1.13.2
 pytz==2020.1
 PyXB==1.2.6
-PyYAML==5.3.1
+PyYAML==5.4
 recommonmark==0.6.0
 requests==2.24.0
 scandir==1.10.0
