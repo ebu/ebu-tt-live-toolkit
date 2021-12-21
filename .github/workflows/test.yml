@@ -1,6 +1,10 @@
 name: Check the tests pass
 
-on: pull_request
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -40,15 +44,16 @@ jobs:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         run: |
           coveralls
-      # At this point we would like to report coverage, but this doesn't work with Python 2.7
-      # - name: Install coveragepy-lcov
-      #   run: |
-      #     pip install coveragepy-lcov
-      # - name: Convert .coverage to lcov.info
-      #   run: |
-      #     coveragepy-lcov
-      # - name: Coveralls GitHub Action
-      #   uses: coverallsapp/github-action@1.1.3
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     path-to-lcov: lcov.info
+      - name: Build notification
+        if: always()
+        uses: edge/simple-slack-notify@v1.1.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          channel: '#ci'
+          status: ${{ job.status }}
+          success_text: 'Build (#${env.GITHUB_RUN_NUMBER}) completed successfully'
+          failure_text: 'Build (#${env.GITHUB_RUN_NUMBER}) failed'
+          cancelled_text: 'Build (#${env.GITHUB_RUN_NUMBER}) was cancelled'
+          fields: |
+            [{ "title": "Action URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"}]
