@@ -78,3 +78,18 @@ jobs:
         if: ${{ 'refs/head/master' != env.REF_NAME }}
         run: |
           echo "This is NOT a push to master branch, not pushing to github-pages"
+      - name: Build notification
+        if: always()
+        uses: edge/simple-slack-notify@v1.1.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BRANCH: ${{ github.ref }}
+          ACTOR: ${{ github.actor }}
+        with:
+          channel: '#ci'
+          status: ${{ job.status }}
+          success_text: 'Build (#${env.GITHUB_RUN_NUMBER}) workflow ${env.GITHUB_WORKFLOW} of ${env.BRANCH} by ${env.ACTOR} completed successfully'
+          failure_text: 'Build (#${env.GITHUB_RUN_NUMBER}) workflow ${env.GITHUB_WORKFLOW} of ${env.BRANCH} by ${env.ACTOR} failed'
+          cancelled_text: 'Build (#${env.GITHUB_RUN_NUMBER}) workflow ${env.GITHUB_WORKFLOW} of ${env.BRANCH} by ${env.ACTOR} was cancelled'
+          fields: |
+            [{ "title": "Workflow log URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"}]
