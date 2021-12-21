@@ -33,7 +33,7 @@ setup(
         "service_identity",
         "twisted",
         "autobahn<18",
-        "nltk<3.5",
+        "nltk<3.7",
         "sortedcontainers",
         "configman",
         "six",
