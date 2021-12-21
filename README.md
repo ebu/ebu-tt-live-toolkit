@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/ebu/ebu-tt-live-toolkit.svg?branch=master)](https://travis-ci.org/ebu/ebu-tt-live-toolkit)
+![Build Status](https://github.com/ebu/ebu-tt-live-toolkit/actions/workflows/test.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/ebu/ebu-tt-live-toolkit/badge.svg?branch=ebu_master)](https://coveralls.io/github/ebu/ebu-tt-live-toolkit?branch=ebu_master)
 
 # ebu-tt-live-toolkit

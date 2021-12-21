@@ -1,0 +1,96 @@
+name: Build the documentation and the UI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  docs_and_ui:
+    name: Build the Documentation and UI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip publishing to GitHub Pages
+        env:
+          REF_NAME: ${{ github.ref }}
+        if: ${{ 'refs/head/master' != env.REF_NAME }}
+        run: |
+          echo "This is NOT a push to master branch, not pushing to github-pages"
+      - uses: actions/checkout@v2
+      - name: Clean docs
+        run: |
+          if [ -d docs/build/ui ]; then rm -R docs/build/ui; fi
+        shell: bash
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+      - name: Generate templates
+        run: |
+          npm install nunjucks
+          node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.xml > ebu_tt_live/ui/user_input_producer/template/user_input_producer_template.js
+          node_modules/nunjucks/bin/precompile ebu_tt_live/ui/user_input_producer/template/live_message_template.xml > ebu_tt_live/ui/user_input_producer/template/live_message_template.js
+      - name: Copy UI files into place
+        run: |
+          mkdir -p docs/build/ui
+          cp -R ebu_tt_live/ui/user_input_producer docs/build/ui/
+          cp -R ebu_tt_live/ui/test docs/build/ui/
+          cp -R ebu_tt_live/ui/assets docs/build/ui/user_input_producer/
+          cp -R ebu_tt_live/ui/assets docs/build/ui/test/
+        shell: bash
+      - name: Setup graphviz
+        uses: ts-graphviz/setup-graphviz@v1
+      - name: Setup Python 2.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '2.7'
+          cache: 'pip'
+      - name: Install older pip
+        run: |
+          python -m pip install pip==20.3.4
+        shell: bash
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+        shell: bash
+      - name: Generate bindings
+        run: |
+          pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+        shell: bash
+      - name: Build the documentation
+        run: |
+          python setup.py build_sphinx
+      - name: Publish to GitHub Pages
+        env:
+          REF_NAME: ${{ github.ref }}
+        if: ${{ 'refs/head/master' == env.REF_NAME }}
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: gh-pages
+          folder: docs/build
+          clean: true
+          clean-exclude: |
+            .nojekyll
+      - name: Skip publishing to GitHub Pages
+        env:
+          REF_NAME: ${{ github.ref }}
+        if: ${{ 'refs/head/master' != env.REF_NAME }}
+        run: |
+          echo "This is NOT a push to master branch, not pushing to github-pages"
+      - name: Build notification
+        if: always()
+        uses: edge/simple-slack-notify@v1.1.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BRANCH: ${{ github.ref_name }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_REF: ${{ github.sha }}
+        with:
+          channel: '#ci'
+          status: ${{ job.status }}
+          success_text: 'Build <${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|#${env.GITHUB_RUN_NUMBER}> (${env.COMMIT_REF}) of ${env.BRANCH} by ${env.ACTOR} completed successfully'
+          failure_text: 'Build <${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|#${env.GITHUB_RUN_NUMBER}> (${env.COMMIT_REF}) of ${env.BRANCH} by ${env.ACTOR} failed'
+          cancelled_text: 'Build <${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}|#${env.GITHUB_RUN_NUMBER}> (${env.COMMIT_REF}) of ${env.BRANCH} by ${env.ACTOR} was cancelled'
+          fields: |
+            [{ "title": "${env.GITHUB_WORKFLOW} log URL"}]

@@ -3,7 +3,7 @@ try:
     from setuptools import setup
     extra = dict(
         include_package_data=True,
-        setup_requires=['pytest-runner']
+        # setup_requires=['pytest-runner']
     )
 except ImportError:
     from distutils.core import setup
@@ -23,7 +23,7 @@ packages=[
 
 setup(
     name="ebu-tt-live",
-    version="2.1.2",
+    version="2.1.3",
     description="EBU-TT Part 3 library implementing Specification EBU-3370",
     install_requires=[
         "PyXB",
@@ -33,7 +33,7 @@ setup(
         "service_identity",
         "twisted",
         "autobahn<18",
-        "nltk",
+        "nltk<3.5",
         "sortedcontainers",
         "configman",
         "six",
