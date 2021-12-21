@@ -1,4 +1,5 @@
 ![Build Status](https://github.com/ebu/ebu-tt-live-toolkit/actions/workflows/test.yml/badge.svg)
+![Build Status](https://github.com/ebu/ebu-tt-live-toolkit/actions/workflows/docs_and_ui.yml/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/ebu/ebu-tt-live-toolkit/badge.svg?branch=ebu_master)](https://coveralls.io/github/ebu/ebu-tt-live-toolkit?branch=ebu_master)
 
 # ebu-tt-live-toolkit

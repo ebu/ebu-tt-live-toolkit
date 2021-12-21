@@ -63,8 +63,8 @@ jobs:
           python setup.py build_sphinx
       - name: Publish to GitHub Pages
         env:
-          REF_NAME: ${{ github.ref }}
-        if: ${{ 'refs/head/master' == env.REF_NAME }}
+          GITHUB_REF: ${{ github.ref }}
+        if: ${{ env.GITHUB_REF == 'refs/head/master' }}
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
           branch: gh-pages
@@ -74,10 +74,11 @@ jobs:
             .nojekyll
       - name: Skip publishing to GitHub Pages
         env:
-          REF_NAME: ${{ github.ref }}
-        if: ${{ 'refs/head/master' != env.REF_NAME }}
+          GITHUB_REF: ${{ github.ref }}
+        if: ${{ env.GITHUB_REF != 'refs/head/master' }}
         run: |
           echo "This is NOT a push to master branch, not pushing to github-pages"
+          echo "ref is ${{ env.GITHUB_REF }}"
       - name: Build notification
         if: always()
         uses: edge/simple-slack-notify@v1.1.2
