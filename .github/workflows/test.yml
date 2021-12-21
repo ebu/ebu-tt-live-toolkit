@@ -32,7 +32,7 @@ jobs:
         shell: bash
       - name: Install coveralls
         run: |
-          pip install coveralls<2
+          pip install "coveralls<2"
         shell: bash
       - name: Coveralls
         env:
