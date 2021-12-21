@@ -106,7 +106,7 @@ class EBUTT3toEBUTTDAdapter(IDocumentDataAdapter):
         self._converter = EBUTT3EBUTTDConverter(media_clock=media_clock)
 
     def convert_data(self, data, **kwargs):
-        return EBUTTDDocument.create_from_raw_binding(self._converter.convert_document(data)), kwargs
+        return EBUTTDDocument.create_from_raw_binding(self._converter.convert_document(data.binding)), kwargs
 
 
 def get_document_data_adapter(expects, provides):

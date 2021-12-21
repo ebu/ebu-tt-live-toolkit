@@ -192,6 +192,20 @@ class RetimingDelay(ConsumerMixin, ProducerMixin, NodeBase):
         self._create_input(config)
         self._create_output(config)
 
+class Denester(ConsumerMixin, ProducerMixin, NodeBase):
+    required_config = Namespace()
+
+    def _create_component(self, config):
+        self.component = processing_node.DenesterNode(
+            node_id=self.config.id
+        )
+
+    def __init__(self, config, local_config):
+        super(RetimingDelay, self).__init__(config, local_config)
+        self._create_component(config)
+        self._create_input(config)
+        self._create_output(config)
+
 
 class SimpleProducer(ProducerMixin, NodeBase):
     required_config = Namespace()

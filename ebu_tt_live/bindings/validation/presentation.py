@@ -1,8 +1,7 @@
-from ebu_tt_live.errors import SemanticValidationError
+from ebu_tt_live.errors import SemanticValidationError, RegionExtendingOutsideDocumentError
 from ebu_tt_live.strings import ERR_SEMANTIC_STYLE_MISSING, ERR_SEMANTIC_VALIDATION_EXPECTED, \
     ERR_SEMANTIC_REGION_MISSING
-
-
+import re
 class SizingValidationMixin(object):
     """
     This is meant to validate that the sizing types correspond to the tt element and head region definitions.
@@ -33,6 +32,7 @@ class StyledElementMixin(object):
     """
     _compatible_style_type = None
     _referenced_styles = None
+    _referenced_divs = None
     _inherited_styles = None
     _region_styles = None
     _validated_styles = None
@@ -184,6 +184,17 @@ class RegionedElementMixin(object):
                     region=self.region
                 ))
 
+    def _semantic_set_d_region(self, dataset, region_type):
+        if self.region is not None:
+            try:
+                region = dataset['ttd_element'].get_element_by_id(self.region, region_type)
+                dataset['region'] = region
+                self._validated_region = region
+            except LookupError:
+                raise SemanticValidationError(ERR_SEMANTIC_REGION_MISSING.format(
+                    region=self.region
+                ))
+
     def _semantic_unset_region(self, dataset):
         if self.region is not None:
             dataset['region'] = None
@@ -193,3 +204,6 @@ class RegionedElementMixin(object):
         if self._validated_region is not None:
             if self._validated_region in orphans:
                 orphans.remove(self._validated_region)
+
+
+                        

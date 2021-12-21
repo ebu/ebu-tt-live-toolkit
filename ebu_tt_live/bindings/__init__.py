@@ -17,7 +17,7 @@ from ebu_tt_live.bindings.validation.presentation import SizingValidationMixin, 
 from ebu_tt_live.bindings.validation.timing import TimingValidationMixin, BodyTimingValidationMixin
 from ebu_tt_live.bindings.validation.content import SubtitleContentContainer, ContentContainerMixin
 from .validation.validator import SemanticValidator
-from ebu_tt_live.errors import SemanticValidationError, OutsideSegmentError
+from ebu_tt_live.errors import SemanticValidationError, OutsideSegmentError, RegionExtendingOutsideDocumentError, InvalidRegionOriginType, InvalidRegionExtentType
 from ebu_tt_live.strings import ERR_SEMANTIC_VALIDATION_MISSING_ATTRIBUTES, \
     ERR_SEMANTIC_VALIDATION_INVALID_ATTRIBUTES, ERR_SEMANTIC_STYLE_CIRCLE, ERR_SEMANTIC_STYLE_MISSING, \
     ERR_SEMANTIC_ELEMENT_BY_ID_MISSING, ERR_SEMANTIC_VALIDATION_EXPECTED
@@ -100,6 +100,24 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     }
     _default_attrs = None
 
+    def check_equal(self, other):
+        return (self.backgroundColor == other.backgroundColor and
+            self.padding == other.padding and
+            self.unicodeBidi == other.unicodeBidi and
+            self.color == other.color and
+            self.direction == other.direction and
+            self.fontFamily == other.fontFamily and
+            self.fontStyle == other.fontStyle and
+            self.fontWeight == other.fontWeight and
+            self.linePadding == other.linePadding and
+            self.multiRowAlign == other.multiRowAlign and
+            self.textAlign == other.textAlign and
+            self.textDecoration == other.textDecoration and
+            self.fontSize == other.fontSize and
+            self.lineHeight == other.lineHeight and
+            self.wrapOption == other.wrapOption)
+            
+
     def __repr__(self):
         return '<style ID: {id} at {addr}>'.format(
             id=self.id,
@@ -109,7 +127,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     def _semantic_copy(self, dataset):
         copied_style = style_type(
             id=self.id,
-            style=self.style,  # there is no ordering requirement in styling so too soon to deconflict here
+            # there is no ordering requirement in styling so too soon to deconflict here
+            style=self.style,
             direction=self.direction,
             fontFamily=self.fontFamily,
             fontSize=self.fontSize,
@@ -152,10 +171,12 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
                 return self._ordered_styles
             ordered_styles = [self]
             if self.style is not None:
-                for style_id in self.style:
+                for style_id in self.style[::-1]: # Reverse style references: last reference should take precedence
                     try:
-                        style_elem = dataset['tt_element'].get_element_by_id(elem_id=style_id, elem_type=style_type)
-                        cascading_styles = style_elem.ordered_styles(dataset=dataset)
+                        style_elem = dataset['tt_element'].get_element_by_id(
+                            elem_id=style_id, elem_type=style_type)
+                        cascading_styles = style_elem.ordered_styles(
+                            dataset=dataset)
                         for style_elem in cascading_styles:
                             if style_elem in ordered_styles:
                                 continue
@@ -307,7 +328,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
 
     @classmethod
     def compute_inherited_attribute(cls, attr_name, specified_style, parent_computed_style, region_computed_style):
-        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        fallback_order = [specified_style,
+            parent_computed_style, region_computed_style]
         for item in fallback_order:
             if item is not None and attr_name not in item.default_attrs:
                 attr_value = getattr(item, attr_name)
@@ -325,7 +347,8 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
 
     @classmethod
     def compute_line_height(cls, specified_style, parent_computed_style, region_computed_style, dataset, font_size):
-        fallback_order = [specified_style, parent_computed_style, region_computed_style]
+        fallback_order = [specified_style,
+            parent_computed_style, region_computed_style]
         for item in fallback_order:
             if item is not None and item.lineHeight is not None and 'lineHeight' not in item.default_attrs:
                 selected_value = item.lineHeight
@@ -420,6 +443,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.fontSize, dataset=dataset)
         self._semantic_check_sizing_type(self.lineHeight, dataset=dataset)
+        self._semantic_check_sizing_type(self.padding, dataset=dataset)
         # Init recursion loop detection lock
         self._styling_lock = threading.Lock()
         self._ordered_styles = None
@@ -427,6 +451,7 @@ class style_type(StyledElementMixin, IDMixin, SizingValidationMixin, SemanticVal
     def _semantic_before_copy(self, dataset, element_content=None):
         if self not in dataset['affected_elements']:
             raise OutsideSegmentError()
+
 
 # For the requirements of the StyledElementMixin
 style_type._compatible_style_type = style_type
@@ -574,7 +599,6 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
                 )
             )
 
-
     def __semantic_test_time_base_clock_attrs_absent(self):
         clock_attrs = [
             'clockMode'
@@ -606,13 +630,15 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
         # NOTE: As a side effect however this monkey patch will cause cellResolution to be defined on all generated
         # documents' tt element.
         if isinstance(self.cellResolution, ebuttdt.cellResolutionType):
-            self.cellResolution = ebuttdt.CellResolutionType(self.cellResolution)
+            self.cellResolution = ebuttdt.CellResolutionType(
+                self.cellResolution)
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
         # attributes.
         dataset['timing_begin_stack'] = []
         dataset['timing_end_stack'] = []
+        dataset['div_stack'] = []
         dataset['timing_syncbase'] = timedelta()
         dataset['tt_element'] = self
         dataset['styles_stack'] = []
@@ -642,7 +668,8 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             raise SemanticValidationError(ERR_SEMANTIC_VALIDATION_EXPECTED)
         element = self._elements_by_id.get(elem_id, None)
         if element is None or elem_type is not None and not isinstance(element, elem_type):
-            raise LookupError(ERR_SEMANTIC_ELEMENT_BY_ID_MISSING.format(id=elem_id))
+            raise LookupError(
+                ERR_SEMANTIC_ELEMENT_BY_ID_MISSING.format(id=elem_id))
         return element
 
     def get_timing_type(self, timedelta_in):
@@ -652,6 +679,7 @@ class tt_type(SemanticDocumentMixin, raw.tt_type):
             return ebuttdt.FullClockTimingType(timedelta_in)
         if self.timeBase == 'smpte':
             return ebuttdt.SMPTETimingType(timedelta_in)
+
 
 raw.tt_type._SetSupersedingClass(tt_type)
 
@@ -668,6 +696,7 @@ class head_type(SemanticValidationMixin, raw.head_type):
 
     def merge(self, other_elem, dataset):
         return self
+
 
 raw.head_type._SetSupersedingClass(head_type)
 
@@ -688,8 +717,10 @@ class p_type(RegionedElementMixin, LiveStyledElementMixin, SubtitleContentContai
             id=self.id,
             space=self.space,
             lang=self.lang,
-            region=self._semantic_deconflicted_ids(attr_name='region', dataset=dataset),
-            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            region=self._semantic_deconflicted_ids(
+                attr_name='region', dataset=dataset),
+            style=self._semantic_deconflicted_ids(
+                attr_name='style', dataset=dataset),
             begin=self.begin,
             end=self.end,
             agent=self.agent,
@@ -715,20 +746,26 @@ class p_type(RegionedElementMixin, LiveStyledElementMixin, SubtitleContentContai
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
-        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
-        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_timebase_validation(
+            dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(
+            dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
-        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
+        self._semantic_postprocess_timing(
+            dataset=dataset, element_content=element_content)
+        self._semantic_manage_timeline(
+            dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
         self._semantic_pop_styles(dataset=dataset)
 
     def _semantic_before_copy(self, dataset, element_content=None):
-        self._assert_in_segment(dataset=dataset, element_content=element_content)
+        self._assert_in_segment(
+            dataset=dataset, element_content=element_content)
 
     def is_timed_leaf(self):
         if len(self.span):
@@ -757,7 +794,8 @@ class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type)
     def _semantic_copy(self, dataset):
         copied_span = span_type(
             id=self.id,
-            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            style=self._semantic_deconflicted_ids(
+                attr_name='style', dataset=dataset),
             begin=self.begin,
             end=self.end,
             space=self.space,
@@ -784,18 +822,24 @@ class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type)
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
-        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
-        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_collect_applicable_styles(dataset=dataset, style_type=style_type, parent_binding=parent_binding)
+        self._semantic_timebase_validation(
+            dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(
+            dataset=dataset, element_content=element_content)
+        self._semantic_collect_applicable_styles(
+            dataset=dataset, style_type=style_type, parent_binding=parent_binding)
         self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
-        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
-        self._semantic_manage_timeline(dataset=dataset, element_content=element_content)
+        self._semantic_postprocess_timing(
+            dataset=dataset, element_content=element_content)
+        self._semantic_manage_timeline(
+            dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
     def _semantic_before_copy(self, dataset, element_content=None):
-        self._assert_in_segment(dataset=dataset, element_content=element_content)
+        self._assert_in_segment(
+            dataset=dataset, element_content=element_content)
 
     def is_timed_leaf(self):
         if len(self.span):
@@ -808,6 +852,7 @@ class span_type(LiveStyledElementMixin, SubtitleContentContainer, raw.span_type)
         self._semantic_copy_apply_leaf_timing(
             copied_instance=copied_instance, dataset=dataset, element_content=element_content)
         self._semantic_copy_verify_referenced_styles(dataset=dataset)
+
 
 raw.span_type._SetSupersedingClass(span_type)
 
@@ -823,6 +868,7 @@ class br_type(SemanticValidationMixin, raw.br_type):
 
 raw.br_type._SetSupersedingClass(br_type)
 
+
 class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledElementMixin, TimingValidationMixin,
                SemanticValidationMixin, raw.div_type):
 
@@ -834,8 +880,10 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
     def _semantic_copy(self, dataset):
         copied_div = div_type(
             id=self.id,
-            region=self._semantic_deconflicted_ids(attr_name='region', dataset=dataset),
-            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            region=self._semantic_deconflicted_ids(
+                attr_name='region', dataset=dataset),
+            style=self._semantic_deconflicted_ids(
+                attr_name='style', dataset=dataset),
             agent=self.agent,
             role=self.role,
             begin=self.begin,
@@ -857,10 +905,15 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         )
         return copied_div
 
+    def merge(self, elem):
+        return self
+
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
         self._semantic_register_id(dataset=dataset)
-        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
-        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_timebase_validation(
+            dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(
+            dataset=dataset, element_content=element_content)
         self._semantic_set_region(dataset=dataset, region_type=region_type)
         self._semantic_collect_applicable_styles(
             dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
@@ -868,11 +921,13 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
         self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
-        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_postprocess_timing(
+            dataset=dataset, element_content=element_content)
         self._semantic_unset_region(dataset=dataset)
 
     def _semantic_before_copy(self, dataset, element_content=None):
-        self._assert_in_segment(dataset=dataset, element_content=element_content)
+        self._assert_in_segment(
+            dataset=dataset, element_content=element_content)
 
     def is_empty(self):
         if len(self.div):
@@ -889,6 +944,8 @@ class div_type(ContentContainerMixin, IDMixin, RegionedElementMixin, LiveStyledE
             copied_instance=copied_instance, dataset=dataset, element_content=element_content)
         self._semantic_copy_verify_referenced_styles(dataset=dataset)
         self._semantic_copy_verify_referenced_region(dataset=dataset)
+    
+
 
 
 raw.div_type._SetSupersedingClass(div_type)
@@ -904,12 +961,13 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
 
     def _semantic_copy(self, dataset):
         copied_body = body_type(
-            agent = self.agent,
-            role = self.role,
+            agent=self.agent,
+            role=self.role,
             begin=self.begin,
             dur=self.dur,
             end=self.end,
-            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            style=self._semantic_deconflicted_ids(
+                attr_name='style', dataset=dataset),
             _strict_keywords=False
         )
         return copied_body
@@ -971,24 +1029,29 @@ class body_type(LiveStyledElementMixin, BodyTimingValidationMixin, SemanticValid
         ids = dataset['ids']
 
         self._merge_deconflict_ids(element=self, dest=merged_body, ids=ids)
-        self._merge_deconflict_ids(element=other_elem, dest=merged_body, ids=ids)
+        self._merge_deconflict_ids(
+            element=other_elem, dest=merged_body, ids=ids)
 
         return merged_body
 
     def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
-        self._semantic_timebase_validation(dataset=dataset, element_content=element_content)
-        self._semantic_preprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_timebase_validation(
+            dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(
+            dataset=dataset, element_content=element_content)
         self._semantic_collect_applicable_styles(
             dataset=dataset, style_type=style_type, parent_binding=parent_binding, defer_font_size=True
         )
         self._semantic_push_styles(dataset=dataset)
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
-        self._semantic_postprocess_timing(dataset=dataset, element_content=element_content)
+        self._semantic_postprocess_timing(
+            dataset=dataset, element_content=element_content)
         self._semantic_pop_styles(dataset=dataset)
 
     def _semantic_before_copy(self, dataset, element_content=None):
-        self._assert_in_segment(dataset=dataset, element_content=element_content)
+        self._assert_in_segment(
+            dataset=dataset, element_content=element_content)
 
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         self._semantic_copy_apply_leaf_timing(
@@ -1030,7 +1093,8 @@ class styling(SemanticValidationMixin, raw.styling):
             copied_style_elem = dataset['instance_mapping'].get(style_elem)
             # The style may not have been copied at all because it isn't used in the requested segment
             if copied_style_elem is not None:
-                style_elem_styles = style_elem._semantic_deconflicted_ids(attr_name='style', dataset=dataset)
+                style_elem_styles = style_elem._semantic_deconflicted_ids(
+                    attr_name='style', dataset=dataset)
                 if style_elem_styles:
                     copied_style_elem.style = style_elem_styles
 
@@ -1045,7 +1109,8 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
             id=self.id,
             origin=self.origin,
             extent=self.extent,
-            style=self._semantic_deconflicted_ids(attr_name='style', dataset=dataset),
+            style=self._semantic_deconflicted_ids(
+                attr_name='style', dataset=dataset),
             displayAlign=self.displayAlign,
             padding=self.padding,
             writingMode=self.writingMode,
@@ -1060,6 +1125,7 @@ class region_type(IDMixin, LiveStyledElementMixin, SizingValidationMixin, Semant
         self._semantic_register_id(dataset=dataset)
         self._semantic_check_sizing_type(self.origin, dataset=dataset)
         self._semantic_check_sizing_type(self.extent, dataset=dataset)
+        self._semantic_check_sizing_type(self.padding, dataset=dataset)
         self._semantic_collect_applicable_styles(
             dataset=dataset,
             style_type=self._compatible_style_type,
@@ -1105,7 +1171,21 @@ raw.layout._SetSupersedingClass(layout)
 # EBU TT D classes
 # ================
 
-class d_tt_type(raw.d_tt_type):
+
+class d_tt_type(SemanticDocumentMixin, raw.d_tt_type):
+
+    _validator_class = SemanticValidator
+
+    def __post_time_base_set_attribute(self, attr_use):
+        context = get_xml_parsing_context()
+        if context is not None:
+            # This means we are in XML parsing mode
+            context['timeBase'] = self.timeBase
+
+    _attr_en_post = {
+        (pyxb.namespace.ExpandedName(ttp.Namespace, 'timeBase')).uriTuple(): __post_time_base_set_attribute
+    }
+    _elements_by_id = None
 
     @classmethod
     def __check_bds(cls, bds):
@@ -1140,6 +1220,36 @@ class d_tt_type(raw.d_tt_type):
             indent='  '
         )
 
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+            # The tt element adds itself to the semantic dataset to help classes lower down the line to locate constraining
+            # attributes.
+        dataset['timing_begin_stack'] = []
+        dataset['timing_end_stack'] = []
+        dataset['timing_syncbase'] = timedelta()
+        dataset['ttd_element'] = self #WIP with the namespace
+        dataset['styles_stack'] = []
+        self._elements_by_id = {}
+        dataset['elements_by_id'] = self._elements_by_id
+
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
+        # Save this for id lookup.
+        self._elements_by_id = dataset['elements_by_id']
+
+    def get_element_by_id(self, elem_id, elem_type=None):
+        """
+        Lookup an element and return it. Optionally type is checked as well.
+        :param elem_id:
+        :param elem_type:
+        :return:
+        """
+        if self._elements_by_id is None:
+            raise SemanticValidationError(ERR_SEMANTIC_VALIDATION_EXPECTED)
+        element = self._elements_by_id.get(elem_id, None)
+        if element is None or elem_type is not None and not isinstance(element, elem_type):
+            raise LookupError(
+                ERR_SEMANTIC_ELEMENT_BY_ID_MISSING.format(id=elem_id))
+        return element
+
     def _validateBinding_vx(self):
         if self.timeBase != 'media':
             raise SimpleTypeValueError(type(self.timeBase), self.timeBase)
@@ -1150,7 +1260,7 @@ class d_tt_type(raw.d_tt_type):
 raw.d_tt_type._SetSupersedingClass(d_tt_type)
 
 
-class d_layout_type(raw.d_layout_type):
+class d_layout_type(SemanticValidationMixin, raw.d_layout_type):
 
     @classmethod
     def create_default_value(cls):
@@ -1161,8 +1271,13 @@ class d_layout_type(raw.d_layout_type):
 
 raw.d_layout_type._SetSupersedingClass(d_layout_type)
 
+class d_head_type(SemanticValidationMixin, raw.d_head_type):
+    pass
 
-class d_region_type(raw.d_region_type):
+
+raw.d_layout_type._SetSupersedingClass(d_layout_type)
+
+class d_region_type(SemanticValidationMixin,IDMixin, raw.d_region_type):
 
     @classmethod
     def create_default_value(cls):
@@ -1173,10 +1288,28 @@ class d_region_type(raw.d_region_type):
         )
         return instance
 
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_register_id(dataset=dataset)
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        pass
+
+    def _validateBinding_vx(self):
+        origins = self.origin.split(" ")
+        extents = self.extent.split(" ")
+        if not isinstance(self.origin, ebuttdt.percentageOriginType) and self.origin is not None:
+            raise InvalidRegionOriginType(self)
+        if not isinstance(self.extent, ebuttdt.percentageExtentType) and self.extent is not None:
+            raise InvalidRegionExtentType(self)
+        l1 = [float(origin.strip('%')) for origin in origins]  # l1
+        r1 = [float(extent.strip('%')) for extent in extents]  # r1
+        if l1[0] < 0.0 or (l1[0]+r1[0]) > 100.0 or l1[1] < 0.0 or (l1[1] + r1[1]) > 100.0:
+            raise RegionExtendingOutsideDocumentError(self)
+
 raw.d_region_type._SetSupersedingClass(d_region_type)
 
 
-class d_styling_type(raw.d_styling_type):
+class d_styling_type(SemanticValidationMixin, raw.d_styling_type):
 
     @classmethod
     def create_default_value(cls):
@@ -1185,11 +1318,15 @@ class d_styling_type(raw.d_styling_type):
         )
         return instance
 
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        pass
+
+
 raw.d_styling_type._SetSupersedingClass(d_styling_type)
 
 
-class d_style_type(raw.d_style_type):
-
+class d_style_type(SemanticValidationMixin, IDMixin, raw.d_style_type):
+    
     @classmethod
     def create_default_value(cls):
         instance = cls(
@@ -1197,4 +1334,87 @@ class d_style_type(raw.d_style_type):
         )
         return instance
 
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_register_id(dataset=dataset)
+
+
 raw.d_style_type._SetSupersedingClass(d_style_type)
+
+
+class d_body_type(SemanticValidationMixin, raw.d_body_type):
+
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        self._assert_in_segment(
+        dataset=dataset, element_content=element_content)
+
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        self._semantic_copy_apply_leaf_timing(
+        copied_instance=copied_instance, dataset=dataset, element_content=element_content)
+        self._semantic_copy_verify_referenced_styles(dataset=dataset)
+
+raw.d_body_type._SetSupersedingClass(d_body_type)
+
+
+class d_div_type(ContentContainerMixin, IDMixin, TimingValidationMixin, SemanticValidationMixin, RegionedElementMixin ,raw.d_div_type):
+
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_register_id(dataset=dataset)
+        self._semantic_set_d_region(dataset=dataset, region_type=d_region_type)
+
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_unset_region(dataset=dataset)
+
+    def _semantic_before_copy(self, dataset, element_content=None):
+        self._assert_in_segment(
+            dataset=dataset, element_content=element_content)
+
+    def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
+        copied_instance._assert_empty_container()
+        self._semantic_copy_verify_referenced_styles(dataset=dataset)
+        self._semantic_copy_verify_referenced_region(dataset=dataset)
+
+raw.d_div_type._SetSupersedingClass(d_div_type)
+
+
+class d_p_type(IDMixin, TimingValidationMixin, SemanticValidationMixin, RegionedElementMixin ,raw.d_p_type):
+
+    _attr_en_pre = {
+        (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
+    }
+
+    def _semantic_before_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_register_id(dataset=dataset)
+        self._semantic_timebase_validation(
+        dataset=dataset, element_content=element_content)
+        self._semantic_preprocess_timing(
+        dataset=dataset, element_content=element_content)
+        self._semantic_set_d_region(dataset=dataset, region_type=d_region_type)
+
+
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_postprocess_timing(
+        dataset=dataset, element_content=element_content)
+        self._semantic_manage_timeline(
+        dataset=dataset, element_content=element_content)
+        self._semantic_validate_active_areas(dataset=dataset)
+
+
+raw.d_p_type._SetSupersedingClass(d_p_type)
+
+
+class d_span_type(IDMixin, TimingValidationMixin,StyledElementMixin ,SemanticValidationMixin, RegionedElementMixin, raw.d_span_type):
+
+    _attr_en_pre = {
+        (pyxb.namespace.ExpandedName(None, 'begin')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute,
+        (pyxb.namespace.ExpandedName(None, 'end')).uriTuple(): TimingValidationMixin._pre_timing_set_attribute
+    }
+
+    def _semantic_before_traversal(self,dataset,element_content=None, parent_binding=None):
+         self._semantic_preprocess_timing(
+             dataset=dataset, element_content=element_content)
+
+    def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
+        self._semantic_postprocess_timing(
+                dataset=dataset, element_content=element_content)

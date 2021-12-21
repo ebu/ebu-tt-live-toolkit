@@ -18,4 +18,5 @@ The components mimic the nodes and carriage mechanisms defined in the specificat
     timing_resolution
     segmentation
     deduplication
+    denesting
     conversion
