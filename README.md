@@ -72,6 +72,17 @@ After that the following command should work:
 
     ebu-dummy-encoder
 
+Docker User
+=============
+
+Create image:
+
+    docker build -t ebu-tt-live-toolkit .
+
+Run container:
+
+    docker run -it ebu-tt-live-toolkit
+
 The Schema definitions XSD
 ==========================
 
