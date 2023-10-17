@@ -32,7 +32,7 @@ setup(
         "pyyaml",
         "service_identity",
         "twisted",
-        "autobahn<18",
+        "autobahn<21",
         "nltk<3.5",
         "sortedcontainers",
         "configman",
