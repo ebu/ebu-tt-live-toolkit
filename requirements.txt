@@ -4,7 +4,7 @@ atomicwrites==1.4.0
 attrs==20.2.0
 autobahn==17.10.1
 Automat==20.2.0
-Babel==2.8.0
+Babel==2.9.1
 backports-abc==0.5
 backports.functools-lru-cache==1.6.1
 backports.shutil-get-terminal-size==1.0.0
