@@ -1,6 +1,7 @@
 
-from .switcher import SwitcherNode
 from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+
+from .switcher import SwitcherNode
 
 
 class HandoverNode(SwitcherNode):
@@ -20,7 +21,7 @@ class HandoverNode(SwitcherNode):
     _known_sequences = None
 
     def __init__(self, node_id, authors_group_identifier, sequence_identifier, consumer_carriage=None, producer_carriage=None, **kwargs):
-        super(HandoverNode, self).__init__(
+        super().__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage,
             producer_carriage=producer_carriage,

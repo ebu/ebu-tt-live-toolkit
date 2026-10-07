@@ -1,12 +1,22 @@
-from .common import ConfigurableComponent, Namespace
-from ebu_tt_live.carriage.direct import DirectCarriageImpl
-from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage, WebsocketConsumerCarriage
-from ebu_tt_live.carriage import filesystem
-from ebu_tt_live.strings import ERR_CONF_PROXY_CONF_VALUE, ERR_NO_SUCH_COMPONENT
-from ebu_tt_live.errors import ConfigurationError
-from ebu_tt_live.strings import CFG_FILENAME_PATTERN, CFG_MESSAGE_PATTERN
-import urlparse
 import re
+import urllib
+
+from ebu_tt_live.carriage import filesystem
+from ebu_tt_live.carriage.direct import DirectCarriageImpl
+from ebu_tt_live.carriage.websocket import (
+    WebsocketConsumerCarriage,
+    WebsocketProducerCarriage,
+)
+from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import (
+    CFG_FILENAME_PATTERN,
+    CFG_MESSAGE_PATTERN,
+    ERR_CONF_PROXY_CONF_VALUE,
+    ERR_NO_SUCH_COMPONENT,
+)
+
+from .common import ConfigurableComponent, Namespace
+
 
 # Memory carriage mechanism configurators
 # ===========================================
@@ -17,7 +27,7 @@ class DirectCommon(ConfigurableComponent):
     _components = {}
 
     def __init__(self, config, local_config, **kwargs):
-        super(DirectCommon, self).__init__(
+        super().__init__(
             config=config,
             local_config=local_config,
             **kwargs
@@ -77,7 +87,7 @@ class FilesystemOutput(ConfigurableComponent):
     )
     
     def __init__(self, config, local_config):
-        super(FilesystemOutput, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self.component = filesystem.FilesystemProducerImpl(
             dirpath=self.config.folder,
             file_name_pattern=self.config.filename_pattern,
@@ -98,7 +108,7 @@ class FilesystemInput(ConfigurableComponent):
     _fs_reader = None
 
     def __init__(self, config, local_config):
-        super(FilesystemInput, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self.component = filesystem.FilesystemConsumerImpl()
         self._fs_reader = filesystem.FilesystemReader(
             manifest_path=self.config.manifest_file,
@@ -114,7 +124,7 @@ class FilesystemInput(ConfigurableComponent):
 # Websocket carriage mechanism configurators
 # ==========================================
 def str_to_url_converter(value):
-    parsed = urlparse.urlparse(value)
+    parsed = urllib.parse.urlparse(value)
     return parsed
 
 
@@ -133,7 +143,7 @@ def parse_proxy_address(value):
     match = proxy_regex.match(value)
     if match:
         # Ignoring the protocol part for now as it is only a http proxy
-        result = {u'host': match.group('host'), u'port': int(match.group('port'))}
+        result = {'host': match.group('host'), 'port': int(match.group('port'))}
     elif value:
         # In this case something was provided that isn't a falsy value but the parsing failed.
         raise ConfigurationError(
@@ -155,7 +165,7 @@ class WebsocketLegacyOutput(WebsocketLegacyBase):
     _looping_call = None
 
     def __init__(self, config, local_config):
-        super(WebsocketLegacyOutput, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self.component = WebsocketProducerCarriage()
         self.backend.register_component_start(self)
 
@@ -175,7 +185,7 @@ class WebsocketLegacyInput(WebsocketLegacyBase):
     )
 
     def __init__(self, config, local_config):
-        super(WebsocketLegacyInput, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self.component = WebsocketConsumerCarriage()
         self.backend.register_component_start(self)
 
@@ -207,7 +217,7 @@ class WebsocketOutput(WebsocketBase):
     _backend_producer = None
 
     def __init__(self, config, local_config):
-        super(WebsocketOutput, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         # from_string_converter does not work for lists in configman :( Doing it manually here
         self.config.connect = parse_url_list(self.config.connect)
         self.component = WebsocketProducerCarriage()
@@ -228,7 +238,7 @@ class WebsocketInput(WebsocketBase):
     _backend_consumer = None
 
     def __init__(self, config, local_config):
-        super(WebsocketInput, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         # from_string_converter does not work for lists in configman :( Doing it manually here
         self.config.connect = parse_url_list(self.config.connect)
         self.component = WebsocketConsumerCarriage()

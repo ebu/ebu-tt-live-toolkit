@@ -1,11 +1,12 @@
 
-from unittest import TestCase
 from datetime import timedelta
+from unittest import TestCase
+from unittest.mock import MagicMock
+
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
+from ebu_tt_live.carriage.interface import IConsumerCarriage
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
 from ebu_tt_live.node import SimpleConsumer
-from ebu_tt_live.carriage.interface import IConsumerCarriage
-from mock import MagicMock
 
 
 class SCDocumentProcessingTest(TestCase):

@@ -1,12 +1,17 @@
 
-from .base import IDocumentDataAdapter
-from ebu_tt_live.documents import EBUTT3EBUTTDConverter, EBUTTDDocument, EBUTT3Document, EBUTTAuthorsGroupControlRequest
-from ebu_tt_live.clocks.media import MediaClock
-from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
-from ebu_tt_live.bindings import CreateFromDocument, tt_type
-import six
 import logging
 
+from ebu_tt_live.bindings import CreateFromDocument, tt_type
+from ebu_tt_live.clocks.media import MediaClock
+from ebu_tt_live.documents import (
+    EBUTT3Document,
+    EBUTT3EBUTTDConverter,
+    EBUTTAuthorsGroupControlRequest,
+    EBUTTDDocument,
+)
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
+
+from .base import IDocumentDataAdapter
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +20,7 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
     """
     This converter converts the raw XML documents to the EBUTT3Document type.
     """
-    _expects = six.text_type
+    _expects = str
     _provides = EBUTT3Document
 
     def convert_data(self, data, availability_time=None, sequence_identifier=None, **kwargs):
@@ -34,7 +39,7 @@ class XMLtoEBUTT3Adapter(IDocumentDataAdapter):
 
         if sequence_identifier is not None and sequence_identifier != doc.sequence_identifier:
             log.error(
-                'Sequence identifier mismatch found: {} != {}'.format(sequence_identifier, doc.sequence_identifier)
+                f'Sequence identifier mismatch found: {sequence_identifier} != {doc.sequence_identifier}'
             )
             raise UnexpectedSequenceIdentifierError()
         kwargs.update(dict(
@@ -47,7 +52,7 @@ class XMLtoEBUTTDAdapter(IDocumentDataAdapter):
     """
     This converter converts the raw XML documents to the EBUTTDDocument type.
     """
-    _expects = six.text_type
+    _expects = str
     _provides = EBUTTDDocument
 
     def convert_data(self, data, **kwargs):
@@ -59,7 +64,7 @@ class EBUTTDtoXMLAdapter(IDocumentDataAdapter):
     This converter serializes Document objects to XML
     """
     _expects = EBUTTDDocument
-    _provides = six.text_type
+    _provides = str
 
     def convert_data(self, data, **kwargs):
         return data.get_xml(), kwargs
@@ -71,7 +76,7 @@ class EBUTT3toXMLAdapter(IDocumentDataAdapter):
     """
 
     _expects = EBUTT3Document
-    _provides = six.text_type
+    _provides = str
 
     def convert_data(self, data, **kwargs):
         if isinstance(data, EBUTT3Document):

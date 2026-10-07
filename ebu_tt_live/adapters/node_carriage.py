@@ -1,12 +1,14 @@
 
 from abc import abstractmethod
-from .base import INodeCarriageAdapter
-from ebu_tt_live.carriage.interface import IProducerCarriage, IConsumerCarriage
-from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
+
+from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
 from ebu_tt_live.errors import DataCompatError
+from ebu_tt_live.node.interface import IConsumerNode, IProducerNode
 from ebu_tt_live.strings import ERR_INCOMPATIBLE_DATA_CONVERSION
-from .document_data import get_document_data_adapter
 from ebu_tt_live.utils import ANY
+
+from .base import INodeCarriageAdapter
+from .document_data import get_document_data_adapter
 
 
 class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
@@ -30,14 +32,15 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
                 )]
                 # It managed to find an adapter :)
                 success = True
-            except ValueError as exc:
+            except ValueError:
                 success = False
                 data_adapters = []
         else:
             data_adapters = []
 
         if len(data_adapters):
-            if data_adapters[0].expects() != provides or data_adapters[-1].provides() != expects:
+            if data_adapters[0].expects() != provides \
+               or data_adapters[-1].provides() != expects:
                 success = False
         elif expects == provides:
             success = True
@@ -61,11 +64,15 @@ class AbstractNodeCarriageAdapter(INodeCarriageAdapter):
         in_kwargs.update(kwargs)
         in_data = data
         for data_adapter in self.data_adapters:
-            in_data, in_kwargs = data_adapter.convert_data(in_data, **in_kwargs)
+            in_data, in_kwargs = data_adapter.convert_data(
+                in_data, **in_kwargs)
         return in_data, in_kwargs
 
 
-class ProducerNodeCarriageAdapter(IProducerCarriage, IProducerNode, AbstractNodeCarriageAdapter):
+class ProducerNodeCarriageAdapter(
+        IProducerCarriage,
+        IProducerNode,
+        AbstractNodeCarriageAdapter):
 
     _producer_node = None
     _producer_carriage = None
@@ -86,7 +93,8 @@ class ProducerNodeCarriageAdapter(IProducerCarriage, IProducerNode, AbstractNode
         producer_node.register_producer_carriage(self)
 
     def register_producer_carriage(self, producer_carriage):
-        # We don't have to revalidate the interfaces as they are done on both sides for us
+        # We don't have to revalidate the interfaces as they are done
+        # on both sides for us
         self._producer_carriage = producer_carriage
         self._producer_carriage.register_producer_node(self)
 
@@ -120,10 +128,13 @@ class ProducerNodeCarriageAdapter(IProducerCarriage, IProducerNode, AbstractNode
         self.producer_node.process_document(document=document, **kwargs)
 
     def convert_data(self, data, **kwargs):
-        return super(ProducerNodeCarriageAdapter, self).convert_data(data=data, **kwargs)
+        return super().convert_data(data=data, **kwargs)
 
 
-class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNodeCarriageAdapter):
+class ConsumerNodeCarriageAdapter(
+        IConsumerNode,
+        IConsumerCarriage,
+        AbstractNodeCarriageAdapter):
 
     _consumer_carriage = None
     _consumer_node = None
@@ -174,4 +185,4 @@ class ConsumerNodeCarriageAdapter(IConsumerNode, IConsumerCarriage, AbstractNode
         self.consumer_node.process_document(conv_doc, **new_kwargs)
 
     def convert_data(self, data, **kwargs):
-        return super(ConsumerNodeCarriageAdapter, self).convert_data(data=data, **kwargs)
+        return super().convert_data(data=data, **kwargs)

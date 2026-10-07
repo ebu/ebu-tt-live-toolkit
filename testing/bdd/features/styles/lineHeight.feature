@@ -10,25 +10,22 @@ Feature: lineHeight relative to fontSize
   # NOTE: computing 'normal' explicitly is currently beyond the scope of this project. The computed value shall
   # remain 'normal' in that case. In all the rest of the cases the computed value is based on cell units.
 
-  Examples:
-  | xml_file                  | style_attribute | style_attribute2 | cell_resolution | extent      |
-  | style_attribute_pairs.xml | tts:lineHeight  | tts:fontSize     | 32 15           | 320px 150px |
-
   # Inheritance: region (S1) > div (S2) > p (S3) > span (S4)
-  Scenario: lineHeight computed values
-    Given an xml file <xml_file>
-    When it has a cell resolution of <cell_resolution>
-    And it has extent of <extent>
-    And it contains style S1 with <style_attribute> value <S1_value>
-    And S1 contains <style_attribute2> value <S1_value2>
-    And it contains style S2 with <style_attribute> value <S2_value>
-    And S2 contains <style_attribute2> value <S2_value2>
-    And it contains style S3 with <style_attribute> value <S3_value>
-    And S3 contains <style_attribute2> value <S3_value2>
-    And it contains style S4 with <style_attribute> value <S4_value>
-    And S4 contains <style_attribute2> value <S4_value2>
+  Scenario Outline: lineHeight computed values
+    Given an xml file "style_attribute_pairs.xml"
+    And it has the following template variables
+      | cell_resolution | extent      |
+      | 32 15           | 320px 150px |
+    When it contains style S1 with tts:lineHeight value <S1_value>
+    And S1 contains tts:fontSize value <S1_value2>
+    And it contains style S2 with tts:lineHeight value <S2_value>
+    And S2 contains tts:fontSize value <S2_value2>
+    And it contains style S3 with tts:lineHeight value <S3_value>
+    And S3 contains tts:fontSize value <S3_value2>
+    And it contains style S4 with tts:lineHeight value <S4_value>
+    And S4 contains tts:fontSize value <S4_value2>
     And the document is generated
-    Then the computed <style_attribute> in <elem_id> is <computed_value>
+    Then the computed tts:lineHeight in <elem_id> is <computed_value>
 
     Examples:
 
@@ -41,4 +38,4 @@ Feature: lineHeight relative to fontSize
     | 1c       | 2c        | 100%     | 3c        |          |           |          |           | p1      | 3c             |  # Dependence of fontSize
     | 1c       | 2c        | 100%     | 30px      |          |           |          |           | p1      | 3c             |  # Dependence of fontSize
     | 100%     | 2c        |          | 3c        |          |           |          |           | p1      | 2c             |  # Dependence of fontSize in the same context
-    | normal   | 1c        | 100%     | 2c        | 150%     |           | 50%      | 4c        | p1      | 3c             | # lineHeight and fontSize on span are ignored, p fontSize inherited 
+    | normal   | 1c        | 100%     | 2c        | 150%     |           | 50%      | 4c        | p1      | 3c             |  # lineHeight and fontSize on span are ignored, p fontSize inherited

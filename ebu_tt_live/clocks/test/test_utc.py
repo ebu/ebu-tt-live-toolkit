@@ -1,7 +1,8 @@
 
-from unittest import TestCase
-from ebu_tt_live.clocks.utc import UTCClock
 from datetime import timedelta
+from unittest import TestCase
+
+from ebu_tt_live.clocks.utc import UTCClock
 
 
 class TestUTCClock(TestCase):

@@ -1,13 +1,13 @@
 
-from datetime import timedelta
-import logging
 import copy
-from ebu_tt_live.bindings.validation.base import SemanticValidationMixin, IDMixin
+import logging
+from datetime import timedelta
+
+from ebu_tt_live.bindings import ebuttdt, region_type, style_type
 from ebu_tt_live.bindings.pyxb_utils import RecursiveOperation
+from ebu_tt_live.bindings.validation.base import IDMixin, SemanticValidationMixin
 from ebu_tt_live.bindings.validation.presentation import StyledElementMixin
-from ebu_tt_live.bindings import style_type, region_type
 from ebu_tt_live.errors import DiscardElement
-from ebu_tt_live.bindings import ebuttdt
 
 # Splicer and segmentation
 # ========================
@@ -26,7 +26,7 @@ class EBUTT3Segmenter(RecursiveOperation):
     _semantic_dataset = None
 
     def __init__(self, document, begin=None, end=None, deconflict_ids=False):
-        super(EBUTT3Segmenter, self).__init__(
+        super().__init__(
             root_element=document.binding
         )
         self._document = document
@@ -119,7 +119,7 @@ class EBUTT3Segmenter(RecursiveOperation):
                 else:
                     self._segment = celem
             except DiscardElement:
-                log.debug('{} discarded during copy'.format(value))
+                log.debug(f'{value} discarded during copy')
 
 
     def _process_non_element(self, value, non_element, parent_binding=None, **kwargs):
@@ -130,7 +130,7 @@ class EBUTT3Segmenter(RecursiveOperation):
         self._semantic_dataset = {}
         self._semantic_dataset.update(kwargs)
 
-        super(EBUTT3Segmenter, self).proceed(**kwargs)
+        super().proceed(**kwargs)
 
 # NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 

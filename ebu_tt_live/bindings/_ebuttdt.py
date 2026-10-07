@@ -1,15 +1,22 @@
-# -*- coding: utf-8 -*-
-from raw._ebuttdt import *
-from raw import _ebuttdt as ebuttdt_raw
+import logging
+import re
+from abc import abstractmethod
 from datetime import timedelta
-from decimal import Decimal
-import re, logging
-import six
-from pyxb.exceptions_ import SimpleTypeValueError, SimpleFacetValueError
-from ebu_tt_live.errors import TimeFormatOverflowError, ExtentMissingError
-from ebu_tt_live.strings import ERR_TIME_FORMAT_OVERFLOW, ERR_SEMANTIC_VALIDATION_TIMING_TYPE, ERR_1DIM_ONLY, \
-    ERR_2DIM_ONLY
+from typing import ClassVar
+
+from pyxb.exceptions_ import SimpleTypeValueError
+
+from ebu_tt_live.errors import ExtentMissingError, TimeFormatOverflowError
+from ebu_tt_live.strings import (
+    ERR_1DIM_ONLY,
+    ERR_2DIM_ONLY,
+    ERR_SEMANTIC_VALIDATION_TIMING_TYPE,
+    ERR_TIME_FORMAT_OVERFLOW,
+)
+
 from .pyxb_utils import get_xml_parsing_context
+from .raw import _ebuttdt as ebuttdt_raw
+from .raw._ebuttdt import *
 from .validation.base import SemanticValidationMixin
 from .validation.presentation import SizingValidationMixin
 
@@ -24,18 +31,29 @@ def _get_time_members(checked_time):
     return hours, minutes, seconds, milliseconds
 
 
-class _TimedeltaBindingMixin(object):
+class _TimedeltaBindingMixin:
     """
     Wiring in timedelta assignment and conversion operators
     """
 
-    # For each timing attribute a list of timeBases is specified, which represents the valid timeBase, timing attribute
+    # For each timing attribute a list of timeBases is specified, which
+    # represents the valid timeBase, timing attribute
     # and timing type semantic constraint.
-    _compatible_timebases = {
+    _compatible_timebases: ClassVar = {
         'begin': [],
         'dur': [],
         'end': []
     }
+
+    @classmethod
+    @abstractmethod
+    def from_timedelta(cls, instance):
+        raise NotImplementedError
+
+    @classmethod
+    @abstractmethod
+    def as_timedelta(cls, instance):
+        raise NotImplementedError
 
     @classmethod
     def compatible_timebases(cls):
@@ -44,10 +62,13 @@ class _TimedeltaBindingMixin(object):
     @classmethod
     def _ConvertArguments_vx(cls, args, kw):
         """
-        This hook is called before the type in question is instantiated. This is meant to do some normalization
-        of input parameters and convert them to tuple. In this function we check the timeBase and the attribute name
-        against our compatible_timebases mapping inside the timing type class. If an invalid scenario is encountered
-        SimpleTypeValueError is raised, which effectively prevents the timingType union to instantiate the type.
+        This hook is called before the type in question is instantiated. This
+        is meant to do some normalization of input parameters and convert them
+        to tuple. In this function we check the timeBase and the attribute name
+        against our compatible_timebases mapping inside the timing type class.
+        If an invalid scenario is encountered
+        SimpleTypeValueError is raised, which effectively prevents the
+        timingType union to instantiate the type.
 
         :raises pyxb.SimpleTypeValueError:
         :param args:
@@ -55,17 +76,20 @@ class _TimedeltaBindingMixin(object):
         :return: tuple of converted input parameters.
         """
         result = []
-        # In parsing mode check timebase compatibility at instantiation time. This prevents pyxb instantiating
-        # the wrong type given 2 types having overlapping values in a union as it happens in full and limited
+        # In parsing mode check timebase compatibility at instantiation time.
+        # This prevents pyxb instantiating the wrong type given 2 types having
+        # overlapping values in a union as it happens in full and limited
         # clock timing types.
         context = get_xml_parsing_context()
         if context is not None:
-            # This means we are in XML parsing context. There should be a timeBase and a timing_attribute_name in the
-            # context object.
+            # This means we are in XML parsing context. There should be a
+            # timeBase and a timing_attribute_name in the context object.
             time_base = context['timeBase']
-            # It is possible for a timing type to exist as the value of an element not an attribute,
-            # in which case no timing_attribute_name is in the context; in that case don't attempt
-            # to validate the data against a timebase. At the moment this only affects the
+            # It is possible for a timing type to exist as the value of an
+            # element not an attribute, in which case no timing_attribute_name
+            # is in the context; in that case don't attempt to validate the
+            # data against a timebase.
+            # At the moment this only affects the
             # documentStartOfProgramme metadata element.
             if 'timing_attribute_name' in context:
                 timing_att_name = context['timing_attribute_name']
@@ -76,12 +100,15 @@ class _TimedeltaBindingMixin(object):
                         attr_value=args,
                         time_base=time_base
                     ))
-                    raise pyxb.SimpleTypeValueError(ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
-                        attr_name=timing_att_name,
-                        attr_type=cls,
-                        attr_value=args,
-                        time_base=time_base
-                    ))
+                    raise pyxb.SimpleTypeValueError(
+                        ERR_SEMANTIC_VALIDATION_TIMING_TYPE.format(
+                            attr_name=timing_att_name,
+                            attr_type=cls,
+                            attr_value=args,
+                            time_base=time_base
+                        ),
+                        args
+                    )
         for item in args:
             if isinstance(item, timedelta):
                 result.append(cls.from_timedelta(item))
@@ -137,17 +164,16 @@ def named_color_to_rgba(named_color):
         "aqua": "00ffffff",
         "cyan": "00ffffff"
     }
-    return '#{}'.format(color_map[named_color])
+    return f'#{color_map[named_color]}'
 
 
 def convert_cell_region_to_percentage(cells_in, cell_resolution):
-    return '{}% {}%'.format(
-        (float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100,
-        (float(cells_in.vertical) / float(cell_resolution.vertical)) * 100
-    )
+    return \
+        f'{(float(cells_in.horizontal) / float(cell_resolution.horizontal)) * 100}% ' \
+        f'{(float(cells_in.vertical) / float(cell_resolution.vertical)) * 100}%'
 
 
-class TwoDimSizingMixin(object):
+class TwoDimSizingMixin:
 
     _groups_regex = None
     _1dim_format = None
@@ -200,7 +226,7 @@ class TwoDimSizingMixin(object):
         result = []
         current_pair = []
         for item in args:
-            if isinstance(item, int) or isinstance(item, float):
+            if isinstance(item, (int, float)):
                 current_pair.append(item)
                 if len(current_pair) > 1:
                     result.append(cls.from_tuple(tuple(current_pair)))
@@ -212,23 +238,30 @@ class TwoDimSizingMixin(object):
         return tuple(result)
 
     def __eq__(self, other):
-        if type(self) == type(other) and self.horizontal == other.horizontal and self.vertical == other.vertical:
+        if type(self) == type(other) \
+           and self.horizontal == other.horizontal \
+           and self.vertical == other.vertical:
             return True
-        elif isinstance(other, six.text_type):
+        elif isinstance(other, str):
             return str(self) == str(other)
         else:
             return NotImplemented
 
 
-class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingType):
+class TimecountTimingType(
+    _TimedeltaBindingMixin,
+    ebuttdt_raw.timecountTimingType
+    ):
     """
     Extending the string type with conversions to and from timedelta
     """
 
     # NOTE: Update this regex should the spec change about this type
-    _groups_regex = re.compile('(?P<numerator>[0-9]+(?:\\.[0-9]+)?)(?P<unit>h|ms|s|m)')
-    # TODO: Consult and restrict this in an intuitive way to avoid awkward timing type combinations on the timing attributes.
-    _compatible_timebases = {
+    _groups_regex = re.compile(
+        r'(?P<numerator>[0-9]+(?:\.[0-9]+)?)(?P<unit>h|ms|s|m)')
+    # TODO: Consult and restrict this in an intuitive way to avoid awkward
+    # timing type combinations on the timing attributes.
+    _compatible_timebases: ClassVar = {
         'begin': ['clock', 'media'],
         'dur': ['clock', 'media'],
         'end': ['clock', 'media']
@@ -241,29 +274,33 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
         :param instance:
         :return:
         """
-        numerator, unit = cls._groups_regex.match(instance).groups()
-        numerator = float(numerator)
-        if unit == 's':
-            return timedelta(seconds=numerator)
-        elif unit == 'm':
-            return timedelta(minutes=numerator)
-        elif unit == 'h':
-            return timedelta(hours=numerator)
-        elif unit == 'ms':
-            return timedelta(milliseconds=numerator)
-        else:
-            raise SimpleTypeValueError()
+        rm = cls._groups_regex.match(instance)
+        if rm:
+            numerator = float(rm['numerator'])
+            unit = rm['unit']
+            if unit == 's':
+                return timedelta(seconds=numerator)
+            elif unit == 'm':
+                return timedelta(minutes=numerator)
+            elif unit == 'h':
+                return timedelta(hours=numerator)
+            elif unit == 'ms':
+                return timedelta(milliseconds=numerator)
+
+        raise SimpleTypeValueError(cls.__name__, instance)
 
     @classmethod
     def from_timedelta(cls, instance):
         """
         Convert to one dimensional value.
         Find the smallest unit and create value using that.
-        Consistency is ensured to the millisecond. Below that the number will be trimmed.
+        Consistency is ensured to the millisecond. Below that the number will
+        be trimmed.
         :param instance:
         :return:
         """
-        # Get the edge case out of the way even though validation will catch a 0 duration later
+        # Get the edge case out of the way even though validation will catch a
+        # 0 duration later
         if not instance:
             return '0s'
         hours, minutes, seconds, milliseconds = _get_time_members(instance)
@@ -288,23 +325,27 @@ class TimecountTimingType(_TimedeltaBindingMixin, ebuttdt_raw.timecountTimingTyp
             if not unit:
                 unit = 'h'
             numerator += hours * multiplier
-        return '{}{}'.format(numerator, unit)
+        return f'{numerator}{unit}'
 
 
 ebuttdt_raw.timecountTimingType._SetSupersedingClass(TimecountTimingType)
 
 
-class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebuttdt_raw.fullClockTimingType):
+class FullClockTimingType(
+        SemanticValidationMixin,
+        _TimedeltaBindingMixin,
+        ebuttdt_raw.fullClockTimingType):
     """
     Extending the string type with conversions to and from timedelta
     """
 
-    _compatible_timebases = {
+    _compatible_timebases: ClassVar = {
         'begin': ['media'],
         'dur': ['media'],
         'end': ['media']
     }
-    _groups_regex = re.compile('([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?')
+    _groups_regex = re.compile(
+        r'([0-9][0-9]+):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?')
 
     @classmethod
     def compatible_timebases(cls):
@@ -317,11 +358,19 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         :param instance:
         :return:
         """
-        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
-        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
-        return timedelta(hours=int(hours_str), 
-            minutes=int(minutes_str), 
-            seconds=int(seconds_str), 
+
+        rm = cls._groups_regex.match(instance)
+        if not rm:
+            raise SimpleTypeValueError(cls.__name__, instance)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [
+            x for x in rm.groups()]
+        milliseconds = float('0.' + seconds_fraction_str) * 1000 \
+            if seconds_fraction_str else 0
+
+        return timedelta(
+            hours=int(hours_str),
+            minutes=int(minutes_str),
+            seconds=int(seconds_str),
             milliseconds=milliseconds)
 
     @classmethod
@@ -333,18 +382,10 @@ class FullClockTimingType(SemanticValidationMixin, _TimedeltaBindingMixin, ebutt
         """
         hours, minutes, seconds, milliseconds = _get_time_members(instance)
         if milliseconds:
-            return '{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}'.format(
-                hours=hours,
-                minutes=minutes,
-                seconds=seconds,
-                milliseconds=milliseconds
-            )
+            return \
+                f'{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}'
         else:
-            return '{hours:02d}:{minutes:02d}:{seconds:02d}'.format(
-                hours=hours,
-                minutes=minutes,
-                seconds=seconds
-            )
+            return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
 
 
 ebuttdt_raw.fullClockTimingType._SetSupersedingClass(FullClockTimingType)
@@ -355,12 +396,12 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
     Extending the string type with conversions to and from timedelta
     """
 
-    _compatible_timebases = {
+    _compatible_timebases: ClassVar = {
         'begin': ['clock'],
         'dur': ['clock'],
         'end': ['clock']
     }
-    _groups_regex = re.compile('([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?')
+    _groups_regex = re.compile(r'([0-9][0-9]):([0-5][0-9]):([0-5][0-9]|60)(?:\.([0-9]+))?')
 
     @classmethod
     def as_timedelta(cls, instance):
@@ -369,13 +410,19 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         :param instance:
         :return:
         """
-        hours_str, minutes_str, seconds_str, seconds_fraction_str = [x for x in cls._groups_regex.match(instance).groups()]
-        milliseconds = seconds_fraction_str and float('0.' + seconds_fraction_str) * 1000 or 0
-        return timedelta(hours=int(hours_str), 
-            minutes=int(minutes_str), 
-            seconds=int(seconds_str), 
+        rm = cls._groups_regex.match(instance)
+        if not rm:
+            raise SimpleTypeValueError(cls.__name__, instance)
+        hours_str, minutes_str, seconds_str, seconds_fraction_str = [
+            x for x in rm.groups()]
+        milliseconds = float('0.' + seconds_fraction_str) * 1000 \
+            if seconds_fraction_str \
+            else 0
+        return timedelta(
+            hours=int(hours_str),
+            minutes=int(minutes_str),
+            seconds=int(seconds_str),
             milliseconds=milliseconds)
-        
 
     @classmethod
     def from_timedelta(cls, instance):
@@ -389,33 +436,30 @@ class LimitedClockTimingType(_TimedeltaBindingMixin, ebuttdt_raw.limitedClockTim
         if hours > 99:
             raise TimeFormatOverflowError(ERR_TIME_FORMAT_OVERFLOW)
         if milliseconds:
-            return '{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}'.format(
-                hours=hours,
-                minutes=minutes,
-                seconds=seconds,
-                milliseconds=milliseconds
-            )
+            return \
+                f'{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}'
         else:
-            return '{hours:02d}:{minutes:02d}:{seconds:02d}'.format(
-                hours=hours,
-                minutes=minutes,
-                seconds=seconds
-            )
+            return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
 
 
 ebuttdt_raw.limitedClockTimingType._SetSupersedingClass(LimitedClockTimingType)
 
-# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 
-# Here comes the tricky one. The SMPTE requires knowledge about frames. The top level tt element knows the frameRate.
-# Unfortunately the conversion methods run before the object gets created let alone inserted into a document structure.
-# The conversion paradigm of storing data in the xml datatype does not work here. A deferred method is needed that
-# will compute the appropriate value when the element is inserted into the document structure.
+# NOTE: Some of the code below includes handling of SMPTE time base, which was
+# removed from version 1.0 of the specification.
+
+# Here comes the tricky one. The SMPTE requires knowledge about frames.
+# The top level tt element knows the frameRate.
+# Unfortunately the conversion methods run before the object gets created let
+# alone inserted into a document structure. The conversion paradigm of storing
+# data in the xml datatype does not work here. A deferred method is needed that
+# will compute the appropriate value when the element is inserted into the
+# document structure.
 class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
     """
     Extending the string type with conversions to and from timedelta
     """
-    _compatible_timebases = {
+    _compatible_timebases: ClassVar = {
         'begin': ['smpte'],
         'dur': ['smpte'],
         'end': ['smpte']
@@ -436,9 +480,13 @@ class SMPTETimingType(_TimedeltaBindingMixin, ebuttdt_raw.smpteTimingType):
 ebuttdt_raw.smpteTimingType._SetSupersedingClass(SMPTETimingType)
 
 
-class PixelOriginType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelOriginType):
+class PixelOriginType(
+        TwoDimSizingMixin,
+        SizingValidationMixin,
+        ebuttdt_raw.pixelOriginType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:px))')
+    _groups_regex = re.compile(
+        r'(?:[+-]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:px))')
     _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
@@ -446,28 +494,41 @@ class PixelOriginType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixe
         if extent is None:
             raise ExtentMissingError(self)
 
+
 ebuttdt_raw.pixelOriginType._SetSupersedingClass(PixelOriginType)
 
 
-class CellOriginType(TwoDimSizingMixin, ebuttdt_raw.cellOriginType):
+class CellOriginType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.cellOriginType):
 
-    _groups_regex = re.compile(r'(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
+    _groups_regex = re.compile(
+        r'(?:[+-]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:c))')
     _2dim_format = '{}c {}c'
+
 
 ebuttdt_raw.cellOriginType._SetSupersedingClass(CellOriginType)
 
 
-class PercentageOriginType(TwoDimSizingMixin, ebuttdt_raw.percentageOriginType):
+class PercentageOriginType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.percentageOriginType):
 
-    _groups_regex = re.compile('(?:[+-]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:%))')
+    _groups_regex = re.compile(
+        r'(?:[+-]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+-]?(?P<second>\d*\.?\d+)(?:%))')
     _2dim_format = '{}% {}%'
+
 
 ebuttdt_raw.percentageOriginType._SetSupersedingClass(PercentageOriginType)
 
 
-class PixelExtentType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelExtentType):
+class PixelExtentType(
+        TwoDimSizingMixin,
+        SizingValidationMixin,
+        ebuttdt_raw.pixelExtentType):
 
-    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+]?(?P<second>\d*\.?\d+)(?:px))')
+    _groups_regex = re.compile(
+        r'(?:[+]?(?P<first>\d*\.?\d+)(?:px))\s(?:[+]?(?P<second>\d*\.?\d+)(?:px))')
     _2dim_format = '{}px {}px'
 
     def _semantic_validate_sizing_context(self, dataset):
@@ -479,23 +540,33 @@ class PixelExtentType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixe
 ebuttdt_raw.pixelExtentType._SetSupersedingClass(PixelExtentType)
 
 
-class CellExtentType(TwoDimSizingMixin, ebuttdt_raw.cellExtentType):
+class CellExtentType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.cellExtentType):
 
-    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+]?(?P<second>\d*\.?\d+)(?:c))')
+    _groups_regex = re.compile(
+        r'(?:[+]?(?P<first>\d*\.?\d+)(?:c))\s(?:[+]?(?P<second>\d*\.?\d+)(?:c))')
     _2dim_format = '{}c {}c'
+
 
 ebuttdt_raw.cellExtentType._SetSupersedingClass(CellExtentType)
 
 
-class PercentageExtentType(TwoDimSizingMixin, ebuttdt_raw.percentageExtentType):
+class PercentageExtentType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.percentageExtentType):
 
-    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+]?(?P<second>\d*\.?\d+)(?:%))')
+    _groups_regex = re.compile(
+        r'(?:[+]?(?P<first>\d*\.?\d+)(?:%))\s(?:[+]?(?P<second>\d*\.?\d+)(?:%))')
     _2dim_format = '{}% {}%'
+
 
 ebuttdt_raw.percentageExtentType._SetSupersedingClass(PercentageExtentType)
 
 
-class PixelLengthType(SizingValidationMixin, ebuttdt_raw.pixelLengthType):
+class PixelLengthType(
+        SizingValidationMixin,
+        ebuttdt_raw.pixelLengthType):
 
     def _semantic_validate_sizing_context(self, dataset):
         extent = dataset['tt_element'].extent
@@ -520,9 +591,30 @@ class CellLengthType(ebuttdt_raw.cellLengthType):
 ebuttdt_raw.cellLengthType._SetSupersedingClass(CellLengthType)
 
 
-class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pixelFontSizeType):
+class PaddingType(
+        SizingValidationMixin,
+        ebuttdt_raw.paddingType):
+    _groups_regex = re.compile(
+        r'([+-]?\d*(\.\d+)?(px|c|%))(\s([+-]?\d*(\.\d+)?(px|c|%)))?(\s([+-]?\d*(\.\d+)?(px|c|%)))?(\s([+-]?\d*(\.\d+)?(px|c|%)))?')
 
-    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:px))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:px)))?')
+    def _semantic_validate_sizing_context(self, dataset):
+        if 'px' in self:
+            extent = dataset['tt_element'].extent
+            if not isinstance(extent, ebuttdt_raw.pixelExtentType):
+                raise ExtentMissingError(self)
+
+
+ebuttdt_raw.paddingType._SetSupersedingClass(PaddingType)
+
+
+
+class PixelFontSizeType(
+        TwoDimSizingMixin,
+        SizingValidationMixin,
+        ebuttdt_raw.pixelFontSizeType):
+
+    _groups_regex = re.compile(
+        r'(?:[+]?(?P<first>\d*\.?\d+)(?:px))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:px)))?')
 
     _1dim_format = '{}px'
     _2dim_format = '{}px {}px'
@@ -532,12 +624,16 @@ class PixelFontSizeType(TwoDimSizingMixin, SizingValidationMixin, ebuttdt_raw.pi
         if extent is None:
             raise ExtentMissingError(self)
 
+
 ebuttdt_raw.pixelFontSizeType._SetSupersedingClass(PixelFontSizeType)
 
 
-class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
+class CellFontSizeType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.cellFontSizeType):
 
-    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:c))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:c)))?')
+    _groups_regex = re.compile(
+        r'(?:[+]?(?P<first>\d*\.?\d+)(?:c))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:c)))?')
 
     _1dim_format = '{}c'
     _2dim_format = '{}c {}c'
@@ -550,17 +646,21 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
         if isinstance(other, CellFontSizeType):
             result_list = []
             if self.horizontal is not None and other.horizontal is not None:
-                result_list.append((float(self.horizontal) / float(other.horizontal)) * 100)
+                result_list.append(
+                    (float(self.horizontal) / float(other.horizontal)) * 100)
             elif self.horizontal is None and other.horizontal is not None:
-                result_list.append((float(self.vertical) / float(other.horizontal)) * 100)
+                result_list.append(
+                    (float(self.vertical) / float(other.horizontal)) * 100)
             elif self.horizontal is not None and other.horizontal is None:
-                result_list.append((float(self.horizontal) / float(other.vertical)) * 100)
-            result_list.append((float(self.vertical) / float(other.vertical)) * 100)
+                result_list.append(
+                    (float(self.horizontal) / float(other.vertical)) * 100)
+            result_list.append(
+                (float(self.vertical) / float(other.vertical)) * 100)
             return PercentageFontSizeType(*result_list)
         else:
             return NotImplemented
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         return self._do_div(other)
 
     def _do_eq(self, other):
@@ -576,7 +676,7 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
             else:
                 return self.vertical == other.vertical and \
                        self.horizontal == other.horizontal
-        elif isinstance(other, six.text_type):
+        elif isinstance(other, str):
             return str(self) == str(other)
         else:
             return NotImplemented
@@ -588,9 +688,12 @@ class CellFontSizeType(TwoDimSizingMixin, ebuttdt_raw.cellFontSizeType):
 ebuttdt_raw.cellFontSizeType._SetSupersedingClass(CellFontSizeType)
 
 
-class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeType):
+class PercentageFontSizeType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.percentageFontSizeType):
 
-    _groups_regex = re.compile('(?:[+]?(?P<first>\d*\.?\d+)(?:%))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:%)))?')
+    _groups_regex = re.compile(
+        r'(?:[+]?(?P<first>\d*\.?\d+)(?:%))(?:\s(?:[+]?(?P<second>\d*\.?\d+)(?:%)))?')
 
     _1dim_format = '{}%'
     _2dim_format = '{}% {}%'
@@ -634,30 +737,39 @@ class PercentageFontSizeType(TwoDimSizingMixin, ebuttdt_raw.percentageFontSizeTy
     def __rmul__(self, other):
         return self.do_mul(other)
 
+
 ebuttdt_raw.percentageFontSizeType._SetSupersedingClass(PercentageFontSizeType)
 
 
-class CellResolutionType(TwoDimSizingMixin, ebuttdt_raw.cellResolutionType):
+class CellResolutionType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.cellResolutionType):
 
-    _groups_regex = re.compile('(?P<first>[0]*[1-9][0-9]*)\s(?P<second>[0]*[1-9][0-9]*)')
+    _groups_regex = re.compile(
+        r'(?P<first>[0]*[1-9][0-9]*)\s(?P<second>[0]*[1-9][0-9]*)')
     _2dim_format = '{} {}'
 
 
 ebuttdt_raw.cellResolutionType._SetSupersedingClass(CellResolutionType)
 
 
-class CellLineHeightType(TwoDimSizingMixin, ebuttdt_raw.cellLineHeightType):
+class CellLineHeightType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.cellLineHeightType):
 
-    _groups_regex = re.compile('(?P<first>\d*\.?\d+)c')
+    _groups_regex = re.compile(
+        r'(?P<first>\d*\.?\d+)c')
     _1dim_format = '{}c'
 
 
 ebuttdt_raw.cellLineHeightType._SetSupersedingClass(CellLineHeightType)
 
 
-class PercentageLineHeightType(TwoDimSizingMixin, ebuttdt_raw.percentageLineHeightType):
+class PercentageLineHeightType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.percentageLineHeightType):
 
-    _groups_regex = re.compile('(?P<first>\d*\.?\d+)%')
+    _groups_regex = re.compile(r'(?P<first>\d*\.?\d+)%')
     _1dim_format = '{}%'
 
     def do_mul(self, other):
@@ -673,12 +785,16 @@ class PercentageLineHeightType(TwoDimSizingMixin, ebuttdt_raw.percentageLineHeig
         return self.do_mul(other)
 
 
-ebuttdt_raw.percentageLineHeightType._SetSupersedingClass(PercentageLineHeightType)
+ebuttdt_raw.percentageLineHeightType._SetSupersedingClass(
+    PercentageLineHeightType)
 
 
-class PixelLineHeightType(TwoDimSizingMixin, ebuttdt_raw.pixelLineHeightType):
+class PixelLineHeightType(
+        TwoDimSizingMixin,
+        ebuttdt_raw.pixelLineHeightType):
 
-    _groups_regex = re.compile('(?P<first>\d*\.?\d+)px')
+    _groups_regex = re.compile(
+        r'(?P<first>\d*\.?\d+)px')
     _1dim_format = '{}px'
 
 

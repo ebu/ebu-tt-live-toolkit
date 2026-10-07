@@ -1,17 +1,13 @@
 @styles @document @simple
 Feature: Compute style attribute on a single EBU-TT Live element
 
-  Examples:
-  | xml_file                      | cell_resolution | extent      |
-  | style_attribute_inherited.xml | 32 15           | 320px 150px |
-
-
   # Inheritance: region (S1) > div (S2) > p (S3) > span (S4)
-  Scenario: Simple (non-inheritable) style attributes
-    Given an xml file <xml_file>
-    When it has a cell resolution of <cell_resolution>
-    And it has extent of <extent>
-    And R1 contains <style_attribute> value <R1_value>
+  Scenario Outline: Simple (non-inheritable) style attributes
+    Given an xml file "style_attribute_inherited.xml"
+    And it has the following template variables
+      | cell_resolution | extent      |
+      | 32 15           | 320px 150px |
+    When R1 contains <style_attribute> value <R1_value>
     And it contains style S1 with <style_attribute> value <S1_value>
     And it contains style S2 with <style_attribute> value <S2_value>
     And it contains style S3 with <style_attribute> value <S3_value>

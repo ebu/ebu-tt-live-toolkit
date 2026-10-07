@@ -1,10 +1,19 @@
-from .interface import INode, IConsumerNode, IProducerNode
-from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
-from ebu_tt_live.errors import ComponentCompatError, DataCompatError, UnexpectedSequenceIdentifierError
-from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, ERR_INCOMPATIBLE_DATA_PROVIDED
-from ebu_tt_live.utils import RingBufferWithCallback
-from ebu_tt_live.documents import SubtitleDocument
 import logging
+
+from ebu_tt_live.carriage.interface import IConsumerCarriage, IProducerCarriage
+from ebu_tt_live.documents import SubtitleDocument
+from ebu_tt_live.errors import (
+    ComponentCompatError,
+    DataCompatError,
+    UnexpectedSequenceIdentifierError,
+)
+from ebu_tt_live.strings import (
+    ERR_INCOMPATIBLE_COMPONENT,
+    ERR_INCOMPATIBLE_DATA_EXPECTED,
+)
+from ebu_tt_live.utils import RingBufferWithCallback
+
+from .interface import IConsumerNode, INode, IProducerNode
 
 log = logging.getLogger(__name__)
 
@@ -17,11 +26,7 @@ class __AbstractNode(INode):
         self._node_id = node_id
 
     def __repr__(self):
-        return '<{name}, ID:{id} at {address} >'.format(
-            name=self.__class__,
-            id=self._node_id,
-            address=hex(id(self))
-        )
+        return f'<{self.__class__}, ID:{self._node_id} at {hex(id(self))} >'
 
     @property
     def node_id(self):
@@ -37,7 +42,7 @@ class AbstractProducerNode(IProducerNode, __AbstractNode):
     _producer_carriage = None
 
     def __init__(self, node_id, producer_carriage=None, **kwargs):
-        super(AbstractProducerNode, self).__init__(node_id=node_id, **kwargs)
+        super().__init__(node_id=node_id, **kwargs)
         if producer_carriage is not None:
             self.register_producer_carriage(producer_carriage)
 
@@ -75,7 +80,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
     _first_input_document_sequence = None
 
     def __init__(self, node_id, consumer_carriage=None, **kwargs):
-        super(AbstractConsumerNode, self).__init__(node_id=node_id, **kwargs)
+        super().__init__(node_id=node_id, **kwargs)
         if consumer_carriage is not None:
             self.register_consumer_carriage(consumer_carriage)
         self._seen_docs = {}
@@ -92,7 +97,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
 
         if self._first_input_document_sequence != document.sequence_identifier:
             log.error(
-                'Sequences limited to one: expecting: {}, received: {}'.format(self._first_input_document_sequence, document.sequence_identifier)
+                f'Sequences limited to one: expecting: {self._first_input_document_sequence}, received: {document.sequence_identifier}'
             )
             raise UnexpectedSequenceIdentifierError('Rejecting new sequence identifier')
 
@@ -139,7 +144,7 @@ class AbstractConsumerNode(IConsumerNode, __AbstractNode):
 class AbstractCombinedNode(AbstractConsumerNode, AbstractProducerNode):
 
     def __init__(self, node_id, producer_carriage=None, consumer_carriage=None, **kwargs):
-        super(AbstractCombinedNode, self).__init__(
+        super().__init__(
             node_id=node_id,
             producer_carriage=producer_carriage,
             consumer_carriage=consumer_carriage,

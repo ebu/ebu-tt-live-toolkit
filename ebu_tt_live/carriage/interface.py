@@ -1,15 +1,19 @@
-from abc import abstractmethod, abstractproperty
-from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, validate_types_only
+from abc import abstractmethod
+
+from ebu_tt_live.utils import (
+    AbstractStaticMember,
+    AutoRegisteringABCMeta,
+    validate_types_only,
+)
 
 # Interfaces
 # ==========
 
 
-class ICarriageMechanism(object):
+class ICarriageMechanism(metaclass=AutoRegisteringABCMeta):
     """
-    Basic interface for the carrige mechanisms
+    Basic interface for the carriage mechanisms
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
 
 class IProducerCarriage(ICarriageMechanism):
@@ -27,7 +31,8 @@ class IProducerCarriage(ICarriageMechanism):
         :return:
         """
         if isinstance(cls._expects, AbstractStaticMember):
-            raise TypeError('Classmethod relies on abstract property: \'_expects\'')
+            raise TypeError(
+                'Classmethod relies on abstract property: \'_expects\'')
         return cls._expects
 
     @abstractmethod
@@ -39,7 +44,8 @@ class IProducerCarriage(ICarriageMechanism):
 
         """
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def producer_node(self):
         """
         Node accessor
@@ -81,7 +87,8 @@ class IConsumerCarriage(ICarriageMechanism):
         :return:
         """
         if isinstance(cls._provides, AbstractStaticMember):
-            raise TypeError('Classmethod relies on abstract property: \'_provides\'')
+            raise TypeError(
+                'Classmethod relies on abstract property: \'_provides\'')
         return cls._provides
 
     @abstractmethod
@@ -93,7 +100,8 @@ class IConsumerCarriage(ICarriageMechanism):
         :return:
         """
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def consumer_node(self):
         """
         Node accessor

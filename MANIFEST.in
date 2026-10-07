@@ -3,3 +3,5 @@ include CHANGES.txt
 
 recursive-include ebu_tt_live/examples *.txt
 recursive-include ebu_tt_live/examples *.json
+
+recursive-exclude testing

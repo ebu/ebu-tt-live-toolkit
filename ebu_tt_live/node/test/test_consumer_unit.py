@@ -1,12 +1,18 @@
 
-from ebu_tt_live.documents import EBUTT3Document, EBUTTAuthorsGroupControlRequest, EBUTT3DocumentSequence
-from ebu_tt_live.node import SimpleConsumer
-from ebu_tt_live.carriage import IConsumerCarriage
-from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
-from mock import MagicMock
-from unittest import TestCase
 from datetime import timedelta
+from unittest import TestCase
+from unittest.mock import MagicMock
+
+from ebu_tt_live.carriage import IConsumerCarriage
 from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.documents import (
+    EBUTT3Document,
+    EBUTT3DocumentSequence,
+    EBUTTAuthorsGroupControlRequest,
+)
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
+from ebu_tt_live.node import SimpleConsumer
+
 
 class TestSimpleConsumerUnit(TestCase):
 
@@ -29,14 +35,16 @@ class TestSimpleConsumerUnit(TestCase):
             sequence_number='1'
         )
 
-        self.consumer.process_document(document=doc, availability_time=timedelta())
+        self.consumer.process_document(
+            document=doc,
+            availability_time=timedelta())
 
         self.assertIsInstance(self.consumer._sequence, EBUTT3DocumentSequence)
         self.assertIsInstance(self.consumer.reference_clock, LocalMachineClock)
 
     def test_process_two_documents_ignore_second_sequence_id(self):
 
-        first_sequence =  EBUTT3Document(
+        first_sequence = EBUTT3Document(
             time_base='clock',
             clock_mode='local',
             lang='en-GB',
@@ -59,8 +67,8 @@ class TestSimpleConsumerUnit(TestCase):
         with self.assertRaises(UnexpectedSequenceIdentifierError) as context:
             self.consumer.process_document(document=second_sequence)
 
-        self.assertTrue('Rejecting new sequence identifier' in context.exception.message)
-
+        self.assertTrue(
+            'Rejecting new sequence identifier' in context.exception.message)
 
     def test_control_request(self):
         # The message must be ignored

@@ -1,28 +1,28 @@
-from ebu_tt_live.node.delay import BufferDelayNode
-from ebu_tt_live.clocks.local import LocalMachineClock
+import os
+from shutil import rmtree
+from tempfile import mkdtemp
+
+from pytest import fixture
+from pytest_bdd import given, parsers, scenarios, then
+
+from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
 from ebu_tt_live.bindings._ebuttdt import LimitedClockTimingType
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
-from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
-from ebu_tt_live.adapters import document_data
-from pytest_bdd import scenarios, given, when, then
-from pytest import fixture
-from tempfile import mkdtemp
-from shutil import rmtree
-import os
+from ebu_tt_live.node.delay import BufferDelayNode
 
 scenarios('features/timing/bufferDelayNode.feature')
 
 # functions for scenario: BufferDelayNode delays emission by no less than the delay period
 
 
-@fixture('module')
+@fixture(scope='module')
 def temp_dir():
     new_dir = mkdtemp()
     yield new_dir
     rmtree(new_dir)
 
 
-@given('the buffer delay node delays it by <delay_offset>')
+@given(parsers.parse('the buffer delay node delays it by {delay_offset}'))
 def given_buffer_delay(delay_offset, test_context, gen_document, temp_dir):
 
     gen_document.availability_time = LimitedClockTimingType('00:00:00.0').timedelta
@@ -99,7 +99,7 @@ def given_document_emitted(test_context, temp_dir):
     test_context['doc'].emission = emission_time
 
 
-@then('the delta between emission and availability time is greater or equal to <delay_offset>')
+@then(parsers.parse('the delta between emission and availability time is greater or equal to {delay_offset}'))
 def then_delta_should_be_correct(delay_offset, test_context):
 
     delay_timedelta = LimitedClockTimingType(delay_offset).timedelta

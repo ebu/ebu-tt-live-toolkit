@@ -2,16 +2,26 @@
 
 import logging
 from argparse import ArgumentParser
-from .common import create_loggers
 
-from ebu_tt_live.node.distributing import DistributingNode
-from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.twisted import TwistedConsumer, UserInputServerProtocol, UserInputServerFactory, \
-    BroadcastServerFactory, TwistedPushProducer, BroadcastServerProtocol
-from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
-from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage, WebsocketProducerCarriage
 from twisted.internet import reactor
 
+from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
+from ebu_tt_live.carriage.websocket import (
+    WebsocketConsumerCarriage,
+    WebsocketProducerCarriage,
+)
+from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.node.distributing import DistributingNode
+from ebu_tt_live.twisted import (
+    BroadcastServerFactory,
+    BroadcastServerProtocol,
+    TwistedConsumer,
+    TwistedPushProducer,
+    UserInputServerFactory,
+    UserInputServerProtocol,
+)
+
+from .common import create_loggers
 
 log = logging.getLogger('ebu_simple_consumer')
 

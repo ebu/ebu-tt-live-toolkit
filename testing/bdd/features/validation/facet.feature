@@ -2,12 +2,11 @@
 Feature: Facet
   Rules on use of ebuttm:facet and ebuttm:documentFacet
 
-
   # SPEC-CONFORMANCE: R26 R66 R67
   # skipped because the semantic validation does not check facets yet
   @skip
-  Scenario: Invalid term identifier
-    Given an xml file <xml_file>
+  Scenario Outline: Invalid term identifier
+    Given an xml file "facet.xml"
     When it has facet1 applied to element <parent1>
     And facet1 has attribute <link1>
     And facet1 contains string <term1>
@@ -17,12 +16,12 @@ Feature: Facet
     Then document is invalid
 
     Examples:
-    | xml_file  | parent1 | link1            | term1   | parent2 | link2            | term2   |
-    | facet.xml | body    | http://link1.com | string1 | body    | http://link1.com | string1 |
+    | parent1 | link1            | term1   | parent2 | link2            | term2   |
+    | body    | http://link1.com | string1 | body    | http://link1.com | string1 |
 
 
-  Scenario: Valid term identifier
-    Given an xml file <xml_file>
+  Scenario Outline: Valid term identifier
+    Given an xml file "facet.xml"
     When it has facet1 applied to element <parent1>
     And facet1 has attribute <link1>
     And facet1 contains string <term1>
@@ -32,45 +31,45 @@ Feature: Facet
     Then document is valid
 
     Examples:
-    | xml_file  | parent1  | link1            | term1   | parent2  | link2            | term2   |
-    | facet.xml | body     | http://link1.com | string1 | div      | http://link1.com | string1 |
-    | facet.xml | p        | http://link1.com | string1 | p        | http://link2.com | string2 |
-    | facet.xml | span     | http://link1.com | string1 | span     | http://link1.com | string2 |
+    | parent1  | link1            | term1   | parent2  | link2            | term2   |
+    | body     | http://link1.com | string1 | div      | http://link1.com | string1 |
+    | p        | http://link1.com | string1 | p        | http://link2.com | string2 |
+    | span     | http://link1.com | string1 | span     | http://link1.com | string2 |
 
 
   # SPEC-CONFORMANCE: R27 R28 R29 R30
-  Scenario: Valid Facet Summary
-    Given an xml file <xml_file>
+  Scenario Outline: Valid Facet Summary
+    Given an xml file "facet.xml"
     When it has element facet1 with attribute <expresses1>
     And it has element facet2 with attribute <expresses2>
     And it has element facet3 with attribute <expresses3>
-    And documentFacet has atribute <summary>
+    And documentFacet has attribute <summary>
     Then document is valid
 
     Examples:
-    | xml_file  | expresses1 | expresses2 | expresses3 | summary     |
-    | facet.xml | has        | has        | has        | all_has     |
-    | facet.xml | has_not    | has_not    | has_not    | all_has_not |
-    | facet.xml | has        | has_not    | has        | mixed       |
-    | facet.xml | unknown    | has        | has        | mixed       |
-    | facet.xml |            |            |            | unspecified |
-    | facet.xml | unknown    | unknown    | unknown    | unspecified |
+    | expresses1 | expresses2 | expresses3 | summary     |
+    | has        | has        | has        | all_has     |
+    | has_not    | has_not    | has_not    | all_has_not |
+    | has        | has_not    | has        | mixed       |
+    | unknown    | has        | has        | mixed       |
+    |            |            |            | unspecified |
+    | unknown    | unknown    | unknown    | unspecified |
 
 
-  Scenario: Invalid Facet Summary
-    Given an xml file <xml_file>
+  Scenario Outline: Invalid Facet Summary
+    Given an xml file "facet.xml"
     When it has element facet1 with attribute <expresses1>
     And it has element facet2 with attribute <expresses2>
     And it has element facet3 with attribute <expresses3>
-    And documentFacet has atribute <summary>
+    And documentFacet has attribute <summary>
     Then document is invalid
 
     Examples:
-    | xml_file  | expresses1 | expresses2 | expresses3 | summary     |
-    | facet.xml | has_not    | has_not    | has_not    | has         |
-    | facet.xml | has        | has_not    | has        | has         |
-    | facet.xml |            |            |            | has_not     |
-    | facet.xml | unknown    | unknown    | unknown    | has         |
-    @skip # again semantic validation for that part is missing in the xml validation for now
-    | facet.xml | has        | has        | has        | all_has_not |
-    | facet.xml | unknown    | has        | has        | unspecified |
+    | expresses1 | expresses2 | expresses3 | summary     |
+    | has_not    | has_not    | has_not    | has         |
+    | has        | has_not    | has        | has         |
+    |            |            |            | has_not     |
+    | unknown    | unknown    | unknown    | has         |
+    # @skip # again semantic validation for that part is missing in the xml validation for now
+    # | has        | has        | has        | all_has_not |
+    # | unknown    | has        | has        | unspecified |

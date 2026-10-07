@@ -1,15 +1,20 @@
-from unittest import TestCase, skip
-from mock import patch, MagicMock
-from ebu_tt_live.clocks.base import Clock
-from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl, FilesystemConsumerImpl, FilesystemReader, timestr_manifest_to_timedelta, timedelta_to_str_manifest
-from ebu_tt_live.errors import EndOfData, XMLParsingFailed
-from ebu_tt_live.documents import EBUTT3Document
-from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
-from datetime import timedelta
 import os
-import tempfile
 import shutil
-import six
+import tempfile
+from datetime import timedelta
+from unittest import TestCase
+from unittest.mock import MagicMock, patch
+
+from ebu_tt_live.carriage.filesystem import (
+    FilesystemConsumerImpl,
+    FilesystemProducerImpl,
+    FilesystemReader,
+    timedelta_to_str_manifest,
+    timestr_manifest_to_timedelta,
+)
+from ebu_tt_live.clocks.base import Clock
+from ebu_tt_live.errors import EndOfData
+from ebu_tt_live.node.interface import IConsumerNode, IProducerNode
 
 
 class TestFilesystemProducerImpl(TestCase):
@@ -27,7 +32,7 @@ class TestFilesystemProducerImpl(TestCase):
 
     def test_resume_producing_no_existing_manifest(self):
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
 
         def side_effect():
             raise EndOfData()
@@ -42,7 +47,7 @@ class TestFilesystemProducerImpl(TestCase):
     def test_emit_document(self):
         data = 'test'
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
         test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
         node.resume_producing.side_effect = EndOfData()
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
@@ -59,7 +64,7 @@ class TestFilesystemProducerImpl(TestCase):
     def test_doc_missing_availability(self):
         data = 'test document without availability time'
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         fs_carriage.emit_data(data, sequence_identifier='testSeq',
@@ -73,7 +78,7 @@ class TestFilesystemProducerImpl(TestCase):
     def test_msg_first_item_missing_availability(self):
         data = 'live message without availability time'
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         fs_carriage.emit_data(data, sequence_identifier='testSeq')
@@ -83,7 +88,7 @@ class TestFilesystemProducerImpl(TestCase):
 
     def test_msg_mid_sequence_missing_availability(self):
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         data = 'document without availability'
@@ -111,7 +116,7 @@ class TestFilesystemProducerImpl(TestCase):
         # availability_time but no time_base...etc.
 
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
         fs_carriage = FilesystemProducerImpl(self.test_dir_path)
         fs_carriage.register_producer_node(node)
         test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
@@ -133,7 +138,7 @@ class TestFilesystemProducerImpl(TestCase):
         # Check that when suppress_manifest is true no manifest file is written
         data = 'test'
         node = MagicMock(spec=IProducerNode)
-        node.provides.return_value = six.text_type
+        node.provides.return_value = str
         test_time = timedelta(hours=42, minutes=42, seconds=42, milliseconds=67)
         node.resume_producing.side_effect = EndOfData()
         fs_carriage = FilesystemProducerImpl(self.test_dir_path, suppress_manifest = True)
@@ -158,7 +163,7 @@ class TestFilesystemConsumerImpl(TestCase):
 
     def test_on_new_data(self):
         node = MagicMock(spec=IConsumerNode)
-        node.expects.return_value = six.text_type
+        node.expects.return_value = str
         test_xml_file_path = os.path.join(self.test_data_dir_path, 'testSeq_1.xml')
         with open(test_xml_file_path, 'r') as test_xml_file:
             test_xml = test_xml_file.read()

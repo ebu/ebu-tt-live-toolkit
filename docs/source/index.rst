@@ -9,12 +9,11 @@ Welcome to EBU-TT-Live Toolkit's documentation!
 Contents:
 
 .. toctree::
+   :caption: Table of Contents
    :maxdepth: -1
 
    overview
    ebu_tt_live
-
-
 
 Indices and tables
 ==================

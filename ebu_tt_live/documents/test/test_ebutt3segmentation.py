@@ -1,12 +1,11 @@
 
-from unittest import TestCase
 from datetime import timedelta
+from unittest import TestCase
+
 from ebu_tt_live import bindings
 from ebu_tt_live.bindings import ebuttdt as datatypes
 from ebu_tt_live.bindings import ebuttm as metadata
-from ebu_tt_live.documents.converters import ebutt3_to_ebuttd
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.bindings import div_type, p_type, span_type, br_type, ebuttdt
 
 
 class TestEBUTT3DocumentSegment(TestCase):

@@ -1,9 +1,12 @@
 import logging
-from .common import ConfigurableComponent, Namespace, RequiredConfig
-from ebu_tt_live.strings import ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH
-from ebu_tt_live.errors import ConfigurationError
-from ebu_tt_live.strings import ERR_NO_SUCH_COMPONENT
 
+from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import (
+    ERR_CONF_WS_SERVER_PROTOCOL_MISMATCH,
+    ERR_NO_SUCH_COMPONENT,
+)
+
+from .common import ConfigurableComponent, Namespace, RequiredConfig
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +17,7 @@ class BackendBase(ConfigurableComponent):
     _all_components = None
 
     def __init__(self, config, local_config):
-        super(BackendBase, self).__init__(config, local_config, backend=self)
+        super().__init__(config, local_config, backend=self)
         self._components_to_start = []
         self._all_configurators = set()
 
@@ -25,7 +28,7 @@ class BackendBase(ConfigurableComponent):
         for item in self._all_configurators:
             # Start all the components
             if item != self and item in self._components_to_start:
-                log.info('Starting component: {}'.format(item))
+                log.info(f'Starting component: {item}')
                 item.start()
 
     def register_component_start(self, component):
@@ -47,7 +50,7 @@ class DummyBackend(BackendBase):
     def __init__(self, config, local_config):
         self._simple_calls = []
         self._periodic_calls = []
-        super(DummyBackend, self).__init__(config=config, local_config=local_config)
+        super().__init__(config=config, local_config=local_config)
 
     def call_once(self, func, delay=0.0, result_callback=None, error_callback=None, *args, **kwargs):
         self._simple_calls.append({
@@ -83,8 +86,15 @@ class TwistedBackend(BackendBase):
     _ws_twisted_servers = None
 
     def __init__(self, config, local_config):
-        from ebu_tt_live.twisted import websocket, reactor, task, TwistedWSPushProducer, TwistedWSConsumer, \
-            TwistedConsumer, TwistedPullProducer
+        from ebu_tt_live.twisted import (
+            TwistedConsumer,
+            TwistedPullProducer,
+            TwistedWSConsumer,
+            TwistedWSPushProducer,
+            reactor,
+            task,
+            websocket,
+        )
         self._websocket = websocket
         self._reactor = reactor
         self._task = task
@@ -95,10 +105,10 @@ class TwistedBackend(BackendBase):
 
         self._wsl_twisted_servers = {}
         self._ws_twisted_servers = {}
-        super(TwistedBackend, self).__init__(config=config, local_config=local_config)
+        super().__init__(config=config, local_config=local_config)
 
     def start(self):
-        super(TwistedBackend, self).start()
+        super().start()
         self._reactor.run()
 
     def _crosscheck_ws_server_uri(self, listen, legacy=False):

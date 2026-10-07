@@ -2,19 +2,12 @@
 
 Feature: Segmentation of single document into pieces 1
 
-  Examples:
-  | xml_file         | sequence_identifier | sequence_number | body_begin | body_end | span1_begin | span1_end | span2_begin | span2_end | span3_begin | span3_end |
-  | segmentation.xml | test                | 1               | 00:00:00   | 00:00:10 | 00:00:01    | 00:00:02  | 00:00:03    | 00:00:04  | 00:00:05    | 00:00:06  |
-
-  Scenario: Get parts of document
-    Given an xml file <xml_file>
-    When it has sequenceIdentifier <sequence_identifier>
-    And it has sequenceNumber <sequence_number>
-    And it has body from <body_begin> to <body_end>
-    And it has span1 from <span1_begin> to <span1_end>
-    And it has span2 from <span2_begin> to <span2_end>
-    And it has span3 from <span3_begin> to <span3_end>
-    And the range from <range_from> to <range_to> is requested
+  Scenario Outline: Get parts of document
+    Given an xml file "segmentation.xml"
+    And it has the following template variables
+      | sequence_identifier | sequence_number | body_begin | body_end | span1_begin | span1_end | span2_begin | span2_end | span3_begin | span3_end |
+      | test                | 1               | 00:00:00   | 00:00:10 | 00:00:01    | 00:00:02  | 00:00:03    | 00:00:04  | 00:00:05    | 00:00:06  |
+    When the range from <range_from> to <range_to> is requested
     Then the fragment contains body with computed times from <frag_body_begin> to <frag_body_end>
     And the fragment contains span1 with computed times from <frag_span1_begin> to <frag_span1_end>
     And the fragment contains span2 with computed times from <frag_span2_begin> to <frag_span2_end>

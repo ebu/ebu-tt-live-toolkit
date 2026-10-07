@@ -1,15 +1,16 @@
-from .common import ConfigurableComponent, Namespace, converters, RequiredConfig
-from .clocks import get_clock
-from .carriage import get_producer_carriage, get_consumer_carriage
-from ebu_tt_live import documents
-from ebu_tt_live import bindings
-from ebu_tt_live.examples import get_example_data
-import ebu_tt_live.node as processing_node
 from itertools import cycle
-from ebu_tt_live.utils import tokenize_english_document
+
+import ebu_tt_live.node as processing_node
+from ebu_tt_live import bindings, documents
 from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.examples import get_example_data
 from ebu_tt_live.strings import ERR_CONF_NO_SUCH_NODE
-from .adapters import ProducerNodeCarriageAdapter, ConsumerNodeCarriageAdapter
+from ebu_tt_live.utils import tokenize_english_document
+
+from .adapters import ConsumerNodeCarriageAdapter, ProducerNodeCarriageAdapter
+from .carriage import get_consumer_carriage, get_producer_carriage
+from .clocks import get_clock
+from .common import ConfigurableComponent, Namespace, RequiredConfig
 
 
 class NodeBase(ConfigurableComponent):
@@ -85,7 +86,7 @@ class SimpleConsumer(ConsumerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(SimpleConsumer, self).__init__(
+        super().__init__(
             config=config,
             local_config=local_config
         )
@@ -136,7 +137,7 @@ class ReSequencer(ProducerMixin, ConsumerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(ReSequencer, self).__init__(
+        super().__init__(
             config=config,
             local_config=local_config
         )
@@ -168,7 +169,7 @@ class BufferDelay(ConsumerMixin, ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(BufferDelay, self).__init__(config, local_config)
+        super().__init__(config, local_config)
 
         self._create_component(config)
         self._create_input(config)
@@ -189,7 +190,7 @@ class RetimingDelay(ConsumerMixin, ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(RetimingDelay, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
@@ -234,7 +235,7 @@ class SimpleProducer(ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(SimpleProducer, self). __init__(
+        super(). __init__(
             config=config,
             local_config=local_config
         )
@@ -272,7 +273,7 @@ class EBUTTDEncoder(ProducerMixin, ConsumerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(EBUTTDEncoder, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
@@ -286,7 +287,7 @@ class Distributor(ConsumerMixin, ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(Distributor, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
@@ -306,7 +307,7 @@ class Handover(ConsumerMixin, ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(Handover, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self._create_component(config)
         self._create_input(config)
         self._create_output(config)
@@ -328,7 +329,7 @@ class DeDuplicator(ConsumerMixin, ProducerMixin, NodeBase):
         )
 
     def __init__(self, config, local_config):
-        super(DeDuplicator, self).__init__(
+        super().__init__(
             config=config,
             local_config=local_config
         )

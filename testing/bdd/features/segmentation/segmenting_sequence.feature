@@ -2,20 +2,24 @@
 
 Feature: Segmentation of document sequence
 
-  Examples:
-  | xml_file               | sequence_identifier | time_base | body_dur | span1_begin | span1_end | span2_begin | span2_end |
-  | segmentation_short.xml | test                | media     | 00:00:05 | 00:00:01    | 00:00:02  | 00:00:03    | 00:00:04  |
-
-  Scenario: Get parts of sequence
-    Given an xml file <xml_file>
-    And a sequence <sequence_identifier> with timeBase <time_base>
-    When we create a new document with <body_dur> <span1_begin> <span2_begin> <span1_end> <span2_end>
+  Scenario Outline: Get parts of sequence
+    Given an xml file "segmentation_short.xml"
+    And a sequence with the following identifier and timeBase
+      | sequence_identifier | time_base |
+      | test                | media     |
+    When we create a new document with the following template variables
+      | body_dur | span1_begin | span1_end | span2_begin | span2_end |
+      | 00:00:05 | 00:00:01    | 00:00:02  | 00:00:03    | 00:00:04  |
     And body begins at <body1_begin>
     And document added to the sequence
-    And we create a new document with <body_dur> <span1_begin> <span2_begin> <span1_end> <span2_end>
+    When we create a new document with the following template variables
+      | body_dur | span1_begin | span1_end | span2_begin | span2_end |
+      | 00:00:05 | 00:00:01    | 00:00:02  | 00:00:03    | 00:00:04  |
     And body begins at <body2_begin>
     And document added to the sequence
-    And we create a new document with <body_dur> <span1_begin> <span2_begin> <span1_end> <span2_end>
+    When we create a new document with the following template variables
+      | body_dur | span1_begin | span1_end | span2_begin | span2_end |
+      | 00:00:05 | 00:00:01    | 00:00:02  | 00:00:03    | 00:00:04  |
     And body begins at <body3_begin>
     And document added to the sequence
     And the sequence is segmented from <range_from> to <range_to>

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-from raw._ebuttlm import *
-from raw import _ebuttlm as raw
-from raw import _ebuttp as ebuttp
 from pyxb.utils.domutils import BindingDOMSupport
 
+from .raw import _ebuttlm as raw
+from .raw import _ebuttp as ebuttp
+from .raw._ebuttlm import *
 
 namespace_prefix_map = {
     'ebuttlm': Namespace,
@@ -23,7 +22,7 @@ class message_type(raw.message_type):
             )
 
     def toDOM(self, bds=None, parent=None, element_name=None):
-        return super(message_type, self).toDOM(
+        return super().toDOM(
             bds=self.__check_bds(bds),
             parent=parent,
             element_name=element_name

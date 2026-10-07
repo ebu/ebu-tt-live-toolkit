@@ -1,19 +1,19 @@
-import os
-import six
-import weakref
 import gc
+import os
+import weakref
 from unittest import TestCase
+
 from ebu_tt_live import documents
-from ebu_tt_live.adapters.base import IDocumentDataAdapter
 from ebu_tt_live.adapters import document_data
+from ebu_tt_live.adapters.base import IDocumentDataAdapter
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
 
 
-class DummyDataTypeA(object):
+class DummyDataTypeA:
     pass
 
 
-class DummyDataTypeB(object):
+class DummyDataTypeB:
     pass
 
 
@@ -91,7 +91,7 @@ class TestXMLtoEBUTT3Adapter(TestCase):
         self.assertIsInstance(result, self._output_type)
 
     def _assert_kwargs_passtrough(self, result_kwargs, expected_keys):
-        self.assertEquals(set(result_kwargs.keys()), set(expected_keys))
+        self.assertEqual(set(result_kwargs.keys()), set(expected_keys))
 
     def _get_xml(self):
         with open(self._test_xml_path, 'r') as xml_file:
@@ -144,7 +144,7 @@ class TestXMLtoEBUTTDAdapter(TestCase):
 
 
 class TestEBUTT3toXMLAdapter(TestXMLtoEBUTT3Adapter):
-    _output_type = six.text_type
+    _output_type = str
     _adapter_class = document_data.EBUTT3toXMLAdapter
     _expected_keys = [
         'sequence_identifier',

@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 
-class Clock(object):
+class Clock:
     """
     This class represents our timing source that we use to get time related
     information when document processing happens. Most of the utility

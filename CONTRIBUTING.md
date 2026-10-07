@@ -22,13 +22,11 @@ For testing we use the py.test test runner.
 
 After initializing the virtual environment and installing the package run either one of the following commands:
 
-    python setup.py test
+    uv run pytest
 
 or:
 
-    py.test
-    
-**TODO: make test should work as well once implemented**
+    make test
 
 ## Structure
 

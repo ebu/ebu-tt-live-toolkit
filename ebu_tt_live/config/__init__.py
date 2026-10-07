@@ -18,14 +18,24 @@ the individual modules can be self-contained as much as possible yet it is possi
 parameters, such as a HTTP proxy.
 """
 
-from configman import RequiredConfig, ConfigurationManager, ConfigFileFutureProxy, \
-    command_line
+from configmanners import (
+    ConfigFileFutureProxy,
+    ConfigurationManager,
+    RequiredConfig,
+    command_line,
+)
+
 from .backend import UniversalBackend
-from .node import UniversalNodes
 from .common import current_app, install_app
+from .node import UniversalNodes
 
 __all__ = [
-    'common', 'backend', 'node', 'carriage', 'adapters', 'clocks'
+    'adapters',
+    'backend',
+    'carriage',
+    'clocks',
+    'common',
+    'node'
 ]
 
 

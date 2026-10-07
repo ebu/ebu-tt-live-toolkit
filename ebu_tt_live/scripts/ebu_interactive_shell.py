@@ -1,9 +1,10 @@
 
 import logging
 from argparse import ArgumentParser
-from common import create_loggers
+
 from ebu_tt_live.documents import EBUTT3Document
 
+from .common import create_loggers
 
 log = logging.getLogger('ebu_interactive_shell')
 parser = ArgumentParser()
@@ -20,5 +21,5 @@ def main():
         with open(args.input_file, 'r') as ifile:
             document = EBUTT3Document.create_from_xml(ifile.read())
 
-    import ipdb
-    ipdb.set_trace()
+    from IPython.core.debugger import set_trace
+    set_trace()

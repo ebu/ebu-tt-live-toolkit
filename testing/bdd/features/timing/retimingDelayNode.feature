@@ -1,15 +1,12 @@
 @timing @delay
 Feature: Delay of a document sequence
 
-  Examples:
-  | xml_file      |
-  | delayNode.xml |  # Empty span timing creates the span without timing. It does not omit it.
-
+  # In the xml file delayNode.xml Empty span timing creates the span without timing. It does not omit it.
 
   # SPEC-CONFORMANCE.md R114    
   # Times are inherited so to delay an element we only need to delay its syncbase  
-  Scenario: RetimingDelayNode delays document, computed times
-    Given an xml file <xml_file>
+  Scenario Outline: RetimingDelayNode delays document, computed times
+    Given an xml file "delayNode.xml"
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
@@ -55,8 +52,8 @@ Feature: Delay of a document sequence
     |            |              | 00:00:20  |          |          | 00:00:10 |            |          |             |           | 00:00:15 | 00:00:35           | 00:00:45         | 00:00:35          | 00:00:45        | 00:00:35        | 00:00:45      | 00:00:35           | 00:00:45         | 00:00:35            | 00:00:45          |          |
 
 
-  Scenario: RetimingDelayNode delays document, specified times
-    Given an xml file <xml_file>
+  Scenario Outline: RetimingDelayNode delays document, specified times
+    Given an xml file "delayNode.xml"
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And it has body duration <body_dur>
@@ -112,14 +109,14 @@ Feature: Delay of a document sequence
 
 
   # SPEC-CONFORMANCE.md R113 R117
-  Scenario: RetimingDelayNode changes sequence ID but not authoring delay
-    Given an xml file <xml_file>
-    And it has <sequence_id_1>
-    And it has <authoring_delay>
+  Scenario Outline: RetimingDelayNode changes sequence ID but not authoring delay
+    Given an xml file "delayNode.xml"
+    And it has sequence identifier <sequence_id_1>
+    And it has authoring delay <authoring_delay>
     And the document is generated
     When the retiming delay node delays it by <delay>
-    Then the updated document has <sequence_id_2>
-    And the updated document has <authoring_delay>
+    Then the updated document has sequence id <sequence_id_2>
+    And the updated document has authoring delay <authoring_delay>
 
     Examples:
     | sequence_id_1 | authoring_delay | delay    | sequence_id_2    |
@@ -128,9 +125,9 @@ Feature: Delay of a document sequence
     | 0             |                 | 00:00:03 | delayed_sequence |
 
   # The above scenario brings up a problem with the incoming sequence identifier matching the produced one
-  Scenario: Retiming delay receives matching sequence identifier
-    Given an xml file <xml_file>
-    And it has <sequence_id_1>
+  Scenario Outline: Retiming delay receives matching sequence identifier
+    Given an xml file "delayNode.xml"
+    And it has sequence identifier <sequence_id_1>
     And the document is generated
     Then the retiming delay node with <produced_sequence> will reject it
 

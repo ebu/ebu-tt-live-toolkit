@@ -1,8 +1,5 @@
 
-from . import base
-from . import local
-from . import utc
-from . import media
+from . import base, local, media, utc
 
 # NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 

@@ -1,11 +1,15 @@
-import six
 from unittest import TestCase
-from mock import MagicMock
-from ebu_tt_live.node.delay import RetimingDelayNode, BufferDelayNode
+from unittest.mock import MagicMock
+
+from ebu_tt_live.bindings._ebuttm import (
+    appliedProcessing_type,
+    documentMetadata,
+    headMetadata_type,
+)
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.documents import EBUTT3Document, EBUTTAuthorsGroupControlRequest
 from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
-from ebu_tt_live.bindings._ebuttm import documentMetadata, headMetadata_type, appliedProcessing_type
+from ebu_tt_live.node.delay import BufferDelayNode, RetimingDelayNode
 
 
 class TestRetimingDelayNode(TestCase):
@@ -84,7 +88,7 @@ class TestBufferDelayNode(TestCase):
     def setUp(self):
         self.delay = 2
         carriage = MagicMock(spec=IProducerCarriage)
-        carriage.expects.return_value = six.text_type
+        carriage.expects.return_value = str
 
         self.buffer_delay_node = BufferDelayNode(
             node_id='delay_node',

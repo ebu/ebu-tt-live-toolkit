@@ -1,29 +1,37 @@
 import os
-from jinja2 import Environment, FileSystemLoader
-from pytest_bdd import scenarios, given, when, then
-from pytest import fixture
 import socket
 
+from jinja2 import Environment, FileSystemLoader
+from pytest import fixture
+from pytest_bdd import given, parsers, scenarios, then, when
+
+from testing.bdd.conftest import legacy_name
 
 scenarios('features/config/websocket_carriage_config.feature')
 
 
 @fixture
 def config_dict():
-    return dict()
+    return {}
 
 
-@given('a configuration file <config_file>')
+@given(**legacy_name(name='a configuration file <config_file>'))
+@given(
+    name=parsers.parse(name='a configuration file {config_file}'),
+    target_fixture='config_file')
 def given_config_file(config_file):
+    config_file = config_file.strip('"')
     cur_dir = os.path.dirname(os.path.abspath(__file__))
-    j2_env = Environment(loader=FileSystemLoader(os.path.join(cur_dir, 'templates')),
-                         trim_blocks=True)
+    j2_env = Environment(
+        loader=FileSystemLoader(
+            os.path.join(cur_dir, 'templates')),
+        trim_blocks=True)
     return j2_env.get_template(config_file)
 
 
 @when('the configuration file is loaded')
-def when_config_loaded(given_config_file, config_dict):
-    full_config = given_config_file.render(config_dict)
+def when_config_loaded(config_file, config_dict):
+    full_config = config_file.render(config_dict)
 
 
 @when('a free port has been found')
@@ -39,17 +47,18 @@ def when_producer_listens_port():
     pass
 
 
-@when('the consumer connects to the port with <client_url_path>')
+@when(**legacy_name(
+    name='the consumer connects to the port with <client_url_path>'))
 def when_consumer_connects_port(client_url_path):
     pass
 
 
-@when('producer sends document with <sequence_number_1>')
+@when(**legacy_name(name='producer sends document with <sequence_number_1>'))
 def when_producer_sends_document1(sequence_number_1):
     pass
 
 
-@when('producer sends document with <sequence_number_2>')
+@when(**legacy_name(name='producer sends document with <sequence_number_2>'))
 def when_producer_sends_document2(sequence_number_2):
     pass
 

@@ -1,9 +1,10 @@
 
-from ebu_tt_live.node import HandoverNode
 from unittest import TestCase
-from mock import MagicMock
+from unittest.mock import MagicMock
+
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.documents import EBUTT3Document, EBUTTAuthorsGroupControlRequest
+from ebu_tt_live.node import HandoverNode
 
 
 class HandoverUnittests(TestCase):

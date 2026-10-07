@@ -1,12 +1,12 @@
 
-from unittest import TestCase
-from datetime import timedelta
 import os
+from datetime import timedelta
+from unittest import TestCase
+
+from ebu_tt_live.bindings import br_type, div_type, ebuttdt, p_type, span_type
+from ebu_tt_live.clocks.media import MediaClock
 from ebu_tt_live.documents.converters import ebutt3_to_ebuttd
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.clocks.media import MediaClock
-from ebu_tt_live.bindings import div_type, p_type, span_type, br_type, ebuttdt
 
 
 class TestEBUTT3ToEBUTTDConverter(TestCase):

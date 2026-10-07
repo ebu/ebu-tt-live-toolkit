@@ -1,14 +1,18 @@
-from ebu_tt_live.documents import EBUTT3Document, EBUTTDDocument, EBUTTAuthorsGroupControlRequest
-from ebu_tt_live.node.encoder import EBUTTDEncoder
-from ebu_tt_live.carriage.interface import IProducerCarriage
-from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
-from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata
-from ebu_tt_live.bindings import _ebuttdt as datatypes
 from datetime import timedelta
 from unittest import TestCase
-from pyxb import BIND
-from mock import MagicMock
+from unittest.mock import MagicMock
+
+from ebu_tt_live import bindings
+from ebu_tt_live.bindings import _ebuttdt as datatypes
+from ebu_tt_live.bindings import _ebuttm as metadata
+from ebu_tt_live.carriage.interface import IProducerCarriage
+from ebu_tt_live.documents import (
+    EBUTT3Document,
+    EBUTTAuthorsGroupControlRequest,
+    EBUTTDDocument,
+)
+from ebu_tt_live.errors import UnexpectedSequenceIdentifierError
+from ebu_tt_live.node.encoder import EBUTTDEncoder
 
 
 class TestEBUTTDEncoderSuccess(TestCase):

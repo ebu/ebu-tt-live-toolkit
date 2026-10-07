@@ -1,2 +1,2 @@
 
-__all__ = ['base', 'timing', 'presentation', 'validator', 'content']
+__all__ = ['base', 'content', 'presentation', 'timing', 'validator']

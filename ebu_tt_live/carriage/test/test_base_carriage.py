@@ -1,30 +1,47 @@
 from unittest import TestCase
-from ebu_tt_live.carriage import interface as carriage_interface
+from unittest.mock import MagicMock
+
 from ebu_tt_live.carriage import base as carriage_base
-from ebu_tt_live.node import interface as node_interface
+from ebu_tt_live.carriage import interface as carriage_interface
 from ebu_tt_live.errors import ComponentCompatError, DataCompatError
-from mock import MagicMock
+from ebu_tt_live.node import interface as node_interface
 
 
-class DummyDataTypeA(object):
+class DummyDataTypeA:
     pass
 
 
-class DummyDataTypeB(object):
+class DummyDataTypeB:
     pass
 
 
 class TestABCs(TestCase):
 
     def test_interfaces(self):
-        self.assertRaises(TypeError, carriage_interface.ICarriageMechanism)
-        self.assertRaises(TypeError, carriage_interface.IProducerCarriage)
-        self.assertRaises(TypeError, carriage_interface.IConsumerCarriage)
+        for c in [
+            carriage_interface.ICarriageMechanism,
+            carriage_interface.IProducerCarriage,
+            carriage_interface.IConsumerCarriage,
+        ]:
+            with self.subTest(c=c):
+                try:
+                    c()
+                except TypeError as e:
+                    print(f'Exception {e!s}')
+                self.assertRaises(TypeError, c)
 
     def test_abstract_classes(self):
-        self.assertRaises(TypeError, carriage_base.AbstractProducerCarriage)
-        self.assertRaises(TypeError, carriage_base.AbstractConsumerCarriage)
-        self.assertRaises(TypeError, carriage_base.AbstractCombinedCarriage)
+        for c in [
+            carriage_base.AbstractProducerCarriage,
+            carriage_base.AbstractConsumerCarriage,
+            carriage_base.AbstractCombinedCarriage,
+        ]:
+            with self.subTest(c=c):
+                try:
+                    c()
+                except TypeError as e:
+                    print(f'Exception {e!s}')
+                self.assertRaises(TypeError, c)
 
 
 class TestDummyCarriages(TestCase):
@@ -38,8 +55,11 @@ class TestDummyCarriages(TestCase):
         cons_node.expects.return_value = DummyDataTypeA
         self._consumer_node = cons_node
 
-        # We can't unittest with combined mocked out because MagicMock can't emulate 2 interfaces
-        # comb_node = MagicMock(spec=[node_interface.IProducerNode, node_interface.IConsumerNode])
+        # We can't unittest with combined mocked out because MagicMock can't
+        # emulate 2 interfaces
+        # comb_node = MagicMock(spec=[
+        #     node_interface.IProducerNode,
+        #     node_interface.IConsumerNode])
         # comb_node.provides.return_value = DummyDataTypeA
         # comb_node.expects.return_value = DummyDataTypeA
         # self._combined_node = comb_node
@@ -81,66 +101,111 @@ class TestDummyCarriages(TestCase):
     def test_dummy_producer_success(self):
         producer_carriage = self._get_dummy_producer_carriage(DummyDataTypeA)
         producer_carriage.register_producer_node(self._producer_node)
-        self.assertEquals(producer_carriage.producer_node, self._producer_node)
+        self.assertEqual(producer_carriage.producer_node, self._producer_node)
 
     def test_dummy_producer_incompatible_interface(self):
         producer_carriage = self._get_dummy_producer_carriage(DummyDataTypeA)
-        self.assertRaises(ComponentCompatError, producer_carriage.register_producer_node, self._consumer_node)
+        self.assertRaises(
+            ComponentCompatError,
+            producer_carriage.register_producer_node,
+            self._consumer_node)
         self.assertIsNone(producer_carriage.producer_node)
 
     def test_dummy_producer_incompatible_data(self):
         producer_carriage = self._get_dummy_producer_carriage(DummyDataTypeB)
-        self.assertRaises(DataCompatError, producer_carriage.register_producer_node, self._producer_node)
+        self.assertRaises(
+            DataCompatError,
+            producer_carriage.register_producer_node,
+            self._producer_node)
         self.assertIsNone(producer_carriage.producer_node)
-        
+
     def test_dummy_consumer_success(self):
         consumer_carriage = self._get_dummy_consumer_carriage(DummyDataTypeA)
         consumer_carriage.register_consumer_node(self._consumer_node)
-        self.assertEquals(consumer_carriage.consumer_node, self._consumer_node)
+        self.assertEqual(consumer_carriage.consumer_node, self._consumer_node)
 
     def test_dummy_consumer_incompatible_interface(self):
         consumer_carriage = self._get_dummy_consumer_carriage(DummyDataTypeA)
-        self.assertRaises(ComponentCompatError, consumer_carriage.register_consumer_node, self._producer_node)
+        self.assertRaises(
+            ComponentCompatError,
+            consumer_carriage.register_consumer_node,
+            self._producer_node)
         self.assertIsNone(consumer_carriage.consumer_node)
 
     def test_dummy_consumer_incompatible_data(self):
         consumer_carriage = self._get_dummy_consumer_carriage(DummyDataTypeB)
-        self.assertRaises(DataCompatError, consumer_carriage.register_consumer_node, self._consumer_node)
+        self.assertRaises(
+            DataCompatError,
+            consumer_carriage.register_consumer_node,
+            self._consumer_node)
         self.assertIsNone(consumer_carriage.consumer_node)
-        
+
     def test_dummy_combined_success_with_producer(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeA, provides=DummyDataTypeA)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeA,
+                provides=DummyDataTypeA)
         combined_carriage.register_producer_node(self._producer_node)
-        self.assertEquals(combined_carriage.producer_node, self._producer_node)
+        self.assertEqual(combined_carriage.producer_node, self._producer_node)
 
     def test_dummy_combined_success_with_consumer(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeA, provides=DummyDataTypeA)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeA,
+                provides=DummyDataTypeA)
         combined_carriage.register_consumer_node(self._consumer_node)
-        self.assertEquals(combined_carriage.consumer_node, self._consumer_node)
+        self.assertEqual(combined_carriage.consumer_node, self._consumer_node)
 
     def test_dummy_combined_success_with_both(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeA, provides=DummyDataTypeA)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeA,
+                provides=DummyDataTypeA)
         combined_carriage.register_producer_node(self._producer_node)
         combined_carriage.register_consumer_node(self._consumer_node)
-        self.assertEquals(combined_carriage.producer_node, self._producer_node)
-        self.assertEquals(combined_carriage.consumer_node, self._consumer_node)
+        self.assertEqual(combined_carriage.producer_node, self._producer_node)
+        self.assertEqual(combined_carriage.consumer_node, self._consumer_node)
 
     def test_dummy_combined_incompatible_interface_with_consumer(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeA, provides=DummyDataTypeA)
-        self.assertRaises(ComponentCompatError, combined_carriage.register_consumer_node, self._producer_node)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeA,
+                provides=DummyDataTypeA)
+        self.assertRaises(
+            ComponentCompatError,
+            combined_carriage.register_consumer_node,
+            self._producer_node)
         self.assertIsNone(combined_carriage.consumer_node)
 
     def test_dummy_combined_incompatible_interface_with_producer(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeA, provides=DummyDataTypeA)
-        self.assertRaises(ComponentCompatError, combined_carriage.register_producer_node, self._consumer_node)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeA,
+                provides=DummyDataTypeA)
+        self.assertRaises(
+            ComponentCompatError,
+            combined_carriage.register_producer_node,
+            self._consumer_node)
         self.assertIsNone(combined_carriage.producer_node)
 
     def test_dummy_combined_incompatible_data_with_consumer(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeA, provides=DummyDataTypeB)
-        self.assertRaises(DataCompatError, combined_carriage.register_consumer_node, self._consumer_node)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeA,
+                provides=DummyDataTypeB)
+        self.assertRaises(
+            DataCompatError,
+            combined_carriage.register_consumer_node,
+            self._consumer_node)
         self.assertIsNone(combined_carriage.consumer_node)
 
     def test_dummy_combined_incompatible_data_with_producer(self):
-        combined_carriage = self._get_dummy_combined_carriage(expects=DummyDataTypeB, provides=DummyDataTypeA)
-        self.assertRaises(DataCompatError, combined_carriage.register_producer_node, self._producer_node)
+        combined_carriage = \
+            self._get_dummy_combined_carriage(
+                expects=DummyDataTypeB,
+                provides=DummyDataTypeA)
+        self.assertRaises(
+            DataCompatError,
+            combined_carriage.register_producer_node,
+            self._producer_node)
         self.assertIsNone(combined_carriage.producer_node)

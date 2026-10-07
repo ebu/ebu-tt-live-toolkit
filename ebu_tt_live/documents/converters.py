@@ -1,11 +1,8 @@
 
-from ebu_tt_live.bindings.converters.ebutt3_ebuttd import EBUTT3EBUTTDConverter
-from ebu_tt_live.documents.ebuttd import EBUTTDDocument
-from subprocess import Popen, PIPE
-import tempfile
-import os
 import logging
 
+from ebu_tt_live.bindings.converters.ebutt3_ebuttd import EBUTT3EBUTTDConverter
+from ebu_tt_live.documents.ebuttd import EBUTTDDocument
 
 log = logging.getLogger(__name__)
 

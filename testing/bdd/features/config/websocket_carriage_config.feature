@@ -2,14 +2,12 @@
 Feature: Configuration of websocket carriage
   # These examples hold a websocket carriage mechanism configuration for a producer-consumer pair of nodes
 
-  Examples:
-  | config_file                    | xml_file            | sequence_identifier | time_base |
-  | websocket_carriage_config.json | sequence_id_num.xml | test                | media     |
-
-  Scenario: Get parts of sequence
-    Given an xml file <xml_file>
-    And a configuration file <config_file>
-    And a sequence <sequence_identifier> with timeBase <time_base>
+  Scenario Outline: Get parts of sequence
+    Given an xml file "sequence_id_num.xml"
+    And a configuration file "websocket_carriage_config.json"
+    And a sequence with the following identifier and timeBase
+      | sequence_identifier | time_base |
+      | test                | media     |
     When a free port has been found
     And the producer listens on the port
     And the consumer connects to the port with <client_url_path>

@@ -1,7 +1,7 @@
 
+
 from ..pyxb_utils import RecursiveOperation
 from .base import SemanticValidationMixin
-from pyxb.binding.basis import NonElementContent
 
 
 class SemanticValidator(RecursiveOperation):
@@ -9,7 +9,7 @@ class SemanticValidator(RecursiveOperation):
     _semantic_dataset = None
 
     def __init__(self, root_element):
-        super(SemanticValidator, self).__init__(
+        super().__init__(
             root_element=root_element,
             filter=self._semantic_validation_filter,
             children_iterator='_validatedChildren'
@@ -24,7 +24,6 @@ class SemanticValidator(RecursiveOperation):
 
     def _before_element(self, value, element=None, parent_binding=None, **kwargs):
         value._semantic_before_traversal(dataset=self._semantic_dataset, element_content=element, parent_binding=parent_binding)
-        pass
 
     def _process_element(self, value, element=None, parent_binding=None, **kwargs):
         return None
@@ -38,5 +37,5 @@ class SemanticValidator(RecursiveOperation):
     def proceed(self, **kwargs):
         self._semantic_dataset = {}
         self._semantic_dataset.update(kwargs)
-        super(SemanticValidator, self).proceed(**kwargs)
+        super().proceed(**kwargs)
         return self._semantic_dataset

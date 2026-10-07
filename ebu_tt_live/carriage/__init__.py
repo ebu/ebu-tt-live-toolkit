@@ -1,10 +1,16 @@
 
-from .interface import IConsumerCarriage, IProducerCarriage, ICarriageMechanism
-from .base import AbstractProducerCarriage, AbstractConsumerCarriage, AbstractCombinedCarriage
+from .base import (
+   AbstractCombinedCarriage,
+   AbstractConsumerCarriage,
+   AbstractProducerCarriage,
+)
 from .filesystem import FilesystemConsumerImpl, FilesystemProducerImpl, FilesystemReader
+from .interface import ICarriageMechanism, IConsumerCarriage, IProducerCarriage
 from .websocket import WebsocketConsumerCarriage, WebsocketProducerCarriage
 
-
 __all__ = [
-   'interface', 'base', 'filesystem', 'twisted'
+   'base',
+   'filesystem',
+   'interface',
+   'twisted'
 ]

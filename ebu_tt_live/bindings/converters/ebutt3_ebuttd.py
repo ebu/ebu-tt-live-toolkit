@@ -1,17 +1,41 @@
-from ebu_tt_live.bindings import tt, ttd, tt_type, d_tt_type, body_type, d_body_type, div_type, d_div_type, \
-    p_type, d_p_type, span_type, d_span_type, br_type, d_br_type, d_metadata_type, d_head_type, d_style_type, \
-    d_styling_type, head_type, style_type, styling, layout, d_layout_type, region_type, d_region_type, ebuttdt, StyledElementMixin
 import copy
 import logging
-from pyxb.binding.basis import NonElementContent, ElementContent
-from pyxb import BIND
 
+from pyxb.binding.basis import ElementContent, NonElementContent
+
+from ebu_tt_live.bindings import (
+    StyledElementMixin,
+    body_type,
+    br_type,
+    d_body_type,
+    d_br_type,
+    d_div_type,
+    d_head_type,
+    d_layout_type,
+    d_p_type,
+    d_region_type,
+    d_span_type,
+    d_style_type,
+    d_styling_type,
+    div_type,
+    ebuttdt,
+    head_type,
+    layout,
+    p_type,
+    region_type,
+    span_type,
+    style_type,
+    styling,
+    tt_type,
+    ttd,
+)
 
 log = logging.getLogger(__name__)
 
-# NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
+# NOTE: Some of the code below includes handling of SMPTE time base, which was
+# removed from version 1.0 of the specification.
 
-class EBUTT3EBUTTDConverter(object):
+class EBUTT3EBUTTDConverter:
 
     _media_clock = None
     _font_size_style_template = 'autogenFontStyle_{}_{}'
@@ -22,7 +46,9 @@ class EBUTT3EBUTTDConverter(object):
         self._media_clock = media_clock
 
     def _children_contain(self, container_elem, binding_type):
-        element_types = [type(item.value) for item in container_elem.orderedContent() if isinstance(item, ElementContent)]
+        element_types = [
+            type(item.value) for item in container_elem.orderedContent()
+            if isinstance(item, ElementContent)]
         return binding_type in element_types
 
     def _process_timing_type(self, timing_type, dataset):
@@ -31,7 +57,8 @@ class EBUTT3EBUTTDConverter(object):
         time_base = dataset['timeBase']
         if time_base == 'clock':
             # Means we need to convert to media
-            return ebuttdt.FullClockTimingType(self._media_clock.get_media_time(timing_type.timedelta))
+            return ebuttdt.FullClockTimingType(
+                self._media_clock.get_media_time(timing_type.timedelta))
         if time_base == 'media':
             return timing_type
         if time_base == 'smpte':

@@ -1,7 +1,8 @@
 
-from unittest import TestCase
-from ebu_tt_live.clocks.base import Clock
 from datetime import timedelta
+from unittest import TestCase
+
+from ebu_tt_live.clocks.base import Clock
 
 
 class TestLocalClock(TestCase):

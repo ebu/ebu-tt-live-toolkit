@@ -1,7 +1,12 @@
 import logging
 import weakref
-from abc import abstractmethod, abstractproperty
-from ebu_tt_live.utils import AutoRegisteringABCMeta, AbstractStaticMember, validate_types_only
+from abc import abstractmethod
+
+from ebu_tt_live.utils import (
+    AbstractStaticMember,
+    AutoRegisteringABCMeta,
+    validate_types_only,
+)
 
 log = logging.getLogger(__name__)
 
@@ -9,11 +14,11 @@ log = logging.getLogger(__name__)
 # ==========
 
 
-class IDocumentDataAdapter(object):
+class IDocumentDataAdapter(metaclass=AutoRegisteringABCMeta):
     """
-    This adapter is used to do various conversions on the payload between the carriage and the node
+    This adapter is used to do various conversions on the payload between the
+    carriage and the node
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
     __impl_registry = {}
     _expects = AbstractStaticMember(validate_types_only)
@@ -22,24 +27,19 @@ class IDocumentDataAdapter(object):
     @classmethod
     def auto_register_impl(cls, impl_class):
         impl_expects = impl_class.expects()
-        provides_map = cls.__impl_registry.setdefault(impl_expects, weakref.WeakValueDictionary())
+        provides_map = cls.__impl_registry.setdefault(
+            impl_expects, weakref.WeakValueDictionary())
         impl_provides = impl_class.provides()
-        if impl_provides in provides_map.keys():
+        if impl_provides in provides_map:
             log.warning(
-                '({} -> {}) adapter already registered: {}. Ignoring: {} '.format(
-                    impl_expects,
-                    impl_provides,
-                    provides_map[impl_provides],
-                    impl_class
-                )
+                f'({impl_expects} -> {impl_provides}) adapter already '
+                f'registered: {provides_map[impl_provides]}. '
+                f'Ignoring: {impl_class} '
             )
         else:
             log.debug(
-                'Registering ({} -> {}) adapter: {}'.format(
-                    impl_expects,
-                    impl_provides,
-                    impl_class
-                )
+                f'Registering ({impl_expects} -> {impl_provides}) adapter: '
+                f'{impl_class}'
             )
             provides_map[impl_provides] = impl_class
 
@@ -47,9 +47,7 @@ class IDocumentDataAdapter(object):
     def get_registered_impl(cls, expects, provides):
         impl_class = cls.__impl_registry.get(expects, {}).get(provides, None)
         if impl_class is None:
-            raise ValueError('No adapter found for: {} -> {}'.format(
-                expects, provides
-            ))
+            raise ValueError(f'No adapter found for: {expects} -> {provides}')
         return impl_class
 
     @classmethod
@@ -59,7 +57,8 @@ class IDocumentDataAdapter(object):
         :return:
         """
         if isinstance(cls._expects, AbstractStaticMember):
-            raise TypeError('Classmethod relies on abstract property: \'_expects\'')
+            raise TypeError(
+                'Classmethod relies on abstract property: \'_expects\'')
         return cls._expects
 
     @classmethod
@@ -69,7 +68,8 @@ class IDocumentDataAdapter(object):
         :return:
         """
         if isinstance(cls._provides, AbstractStaticMember):
-            raise TypeError('Classmethod relies on abstract property: \'_provides\'')
+            raise TypeError(
+                'Classmethod relies on abstract property: \'_provides\'')
         return cls._provides
 
     @abstractmethod
@@ -83,16 +83,18 @@ class IDocumentDataAdapter(object):
         raise NotImplementedError()
 
 
-class INodeCarriageAdapter(object):
+class INodeCarriageAdapter(metaclass=AutoRegisteringABCMeta):
     """
-    This adapter wraps the DocumentDataAdapter conversion logic and shows a dual interface. It responsibility is
-    to facilitate direct communication between incompatible carriage mechanisms and processing nodes.
-    This is a tricky business because this class does not have a hardcoded expects-provides interface contract.
+    This adapter wraps the DocumentDataAdapter conversion logic and shows a
+    dual interface. It responsibility is to facilitate direct communication
+    between incompatible carriage mechanisms and processing nodes.
+    This is a tricky business because this class does not have a hardcoded
+    expects-provides interface contract.
     It works it out as it goes forward from the parameters.
     """
-    __metaclass__ = AutoRegisteringABCMeta
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def data_adapters(self):
         """
         Data conversion adapters

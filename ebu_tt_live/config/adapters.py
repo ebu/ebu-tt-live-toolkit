@@ -1,7 +1,7 @@
 
-from .common import ConfigurableComponent
 from ebu_tt_live.adapters import document_data, node_carriage
 
+from .common import ConfigurableComponent
 
 data_adapters_by_directed_conversion = {
     'xml->ebutt3': document_data.XMLtoEBUTT3Adapter,

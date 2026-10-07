@@ -5,7 +5,7 @@ from twisted.python import log as twisted_log
 
 log = logging.getLogger(__name__)
 log_format = '[%(levelname)s] (%(asctime)s) in %(name)s[%(lineno)d] - %(message)s'
-yaml_file = re.compile('^.*(\.yml|\.yaml)(\w)?$')
+yaml_file = re.compile(r'^.*(\.yml|\.yaml)(\w)?$')
 
 
 def create_loggers(level=logging.INFO):

@@ -1,11 +1,13 @@
 
-from .timing import TimingValidationMixin
-from .base import SemanticValidationMixin, IDMixin
-from ebu_tt_live.errors import DiscardElement
 from pyxb.binding.basis import NonElementContent
 
+from ebu_tt_live.errors import DiscardElement
 
-class ContentContainerMixin(object):
+from .base import IDMixin, SemanticValidationMixin
+from .timing import TimingValidationMixin
+
+
+class ContentContainerMixin:
 
     def is_empty(self):
         """
@@ -47,36 +49,20 @@ class SubtitleContentContainer(
         if end is not None:
             if end <= self.computed_begin_time:
                 str_lines.append(
-                    u'{} Timings: [({} - {})({} -{})(discarded)]'.format(
-                        self.__class__.__name__,
-                        self.begin,
-                        self.end,
-                        self.computed_begin_time,
-                        self.computed_end_time
-                    )
+                    f'{self.__class__.__name__} Timings: [({self.begin} - {self.end})({self.computed_begin_time} -{self.computed_end_time})(discarded)]'
                 )
             else:
-                if self.computed_end_time is not None and end < self.computed_end_time:
-                    res_end_time = end
-                elif self.computed_end_time is None:
+                if self.computed_end_time is not None and end < self.computed_end_time or self.computed_end_time is None:
                     res_end_time = end
                 else:
                     res_end_time = self.computed_end_time
                 str_lines.append(
-                    u'{} Timings: [({} - {})({} - {})({} - {})]'.format(
-                        self.__class__.__name__,
-                        self.begin,
-                        self.end,
-                        self.computed_begin_time,
-                        self.computed_end_time,
-                        begin if begin is not None and begin > self.computed_begin_time else self.computed_begin_time,
-                        res_end_time
-                    )
+                    f'{self.__class__.__name__} Timings: [({self.begin} - {self.end})({self.computed_begin_time} - {self.computed_end_time})({begin if begin is not None and begin > self.computed_begin_time else self.computed_begin_time} - {res_end_time})]'
                 )
         for item in self.orderedContent():
             if isinstance(item, NonElementContent):
-                str_lines.append(u'{}'.format(item.value))
+                str_lines.append(f'{item.value}')
             else:
                 str_lines.append(item.value.content_to_string(begin=begin, end=end))
 
-        return u'\n'.join(str_lines)
+        return '\n'.join(str_lines)

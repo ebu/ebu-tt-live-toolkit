@@ -3,8 +3,7 @@
 all: init ui
 	
 init:
-	pip install --upgrade -r requirements.txt
-	pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+	uv run pyxbgen --binding-root=. -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd --module-prefix=ebu_tt_live.bindings
 
 initnpm:
 ifeq ("$(wildcard node_modules)","")
@@ -14,13 +13,13 @@ else
 endif
 
 test:
-	python setup.py test
+	uv run pytest
 
 docs:
-	python setup.py build_sphinx
+	uv run sphinx-build -b html docs/source docs/build
 
 bindings:
-	pyxbgen --binding-root=./ebu_tt_live/bindings -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd
+	uv run pyxbgen --binding-root=. -m __init__ --schema-root=./ebu_tt_live/xsd/ -r -u ebutt_all.xsd --module-prefix=ebu_tt_live.bindings
 
 ui: uiclean uibuild
 	

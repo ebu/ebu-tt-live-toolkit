@@ -1,9 +1,16 @@
 
-from .base import INode, IConsumerNode, IProducerNode, AbstractConsumerNode, AbstractProducerNode, AbstractCombinedNode
-from .producer import SimpleProducer
-from .consumer import SimpleConsumer, ReSequencer
-from .encoder import EBUTTDEncoder
+from .base import (
+    AbstractCombinedNode,
+    AbstractConsumerNode,
+    AbstractProducerNode,
+    IConsumerNode,
+    INode,
+    IProducerNode,
+)
+from .consumer import ReSequencer, SimpleConsumer
+from .deduplicator import DeDuplicatorNode
 from .delay import BufferDelayNode, RetimingDelayNode
 from .distributing import DistributingNode
+from .encoder import EBUTTDEncoder
 from .handover import HandoverNode
-from .deduplicator import DeDuplicatorNode
+from .producer import SimpleProducer

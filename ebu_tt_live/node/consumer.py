@@ -1,11 +1,12 @@
 
-from .base import AbstractConsumerNode, AbstractProducerNode
-from ebu_tt_live.documents import EBUTT3DocumentSequence, EBUTT3Document
-from ebu_tt_live.strings import DOC_RECEIVED
-from ebu_tt_live.errors import SequenceNumberCollisionError
-from datetime import timedelta
 import logging
+from datetime import timedelta
 
+from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
+from ebu_tt_live.errors import SequenceNumberCollisionError
+from ebu_tt_live.strings import DOC_RECEIVED
+
+from .base import AbstractConsumerNode, AbstractProducerNode
 
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
@@ -19,7 +20,7 @@ class SimpleConsumer(AbstractConsumerNode):
     _expects = EBUTT3Document
 
     def __init__(self, node_id, consumer_carriage=None, reference_clock=None, verbose=False, **kwargs):
-        super(SimpleConsumer, self).__init__(
+        super().__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage
         )
@@ -32,9 +33,7 @@ class SimpleConsumer(AbstractConsumerNode):
 
             if self._sequence is None:
                 # Create sequence from document
-                log.info('Creating document sequence from first document {}'.format(
-                    document
-                ))
+                log.info(f'Creating document sequence from first document {document}')
                 self.create_sequence_from_document(document)
             if document.availability_time is None:
                 document.availability_time = self._reference_clock.get_time()
@@ -49,9 +48,7 @@ class SimpleConsumer(AbstractConsumerNode):
                 self._sequence.add_document(document)
             except SequenceNumberCollisionError:
                 log.info(
-                    'Consumer ignoring duplicate seq number: {}'.format(
-                        document.sequence_number
-                    )
+                    f'Consumer ignoring duplicate seq number: {document.sequence_number}'
                 )
 
     def create_sequence_from_document(self, document):
@@ -81,7 +78,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
 
     def __init__(self, node_id, reference_clock, segment_length, discard, sequence_identifier,
                  consumer_carriage=None, producer_carriage=None, init_document=None, **kwargs):
-        super(ReSequencer, self).__init__(
+        super().__init__(
             node_id=node_id,
             consumer_carriage=consumer_carriage,
             producer_carriage=producer_carriage,
@@ -97,9 +94,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
         
         if init_document is not None:
             # Create sequence from init document, in order to immediately start document output
-            log.info('Creating document sequence from init document {}'.format(
-                init_document
-            ))
+            log.info(f'Creating document sequence from init document {init_document}')
             with open(init_document, 'r') as xml_file:
                 xml_content = xml_file.read()
             xml_doc = EBUTT3Document.create_from_xml(xml_content)
@@ -119,7 +114,7 @@ class ReSequencer(AbstractProducerNode, SimpleConsumer):
 
     def process_document(self, document, **kwargs):
         sequence_missing = self._sequence is None
-        super(ReSequencer, self).process_document(document)
+        super().process_document(document)
         # TODO: re-enable this functionality or remove it.
         # if sequence_missing and self._sequence is not None:
         #     # Ok we just got a relevant document. Let's call the function

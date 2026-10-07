@@ -1,7 +1,9 @@
 
+from unittest.mock import MagicMock
+
 from twisted.trial.unittest import TestCase
-from ebu_tt_live.twisted import TwistedWSPushProducer, TwistedWSConsumer
-from mock import MagicMock
+
+from ebu_tt_live.twisted import TwistedWSConsumer, TwistedWSPushProducer
 
 
 class TestTwistedConsumer(TestCase):

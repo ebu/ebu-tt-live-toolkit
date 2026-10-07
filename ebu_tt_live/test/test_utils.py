@@ -1,10 +1,14 @@
-
-from unittest import TestCase
-from mock import MagicMock
-import tempfile
-from ebu_tt_live.utils import RingBufferWithCallback, RotatingFileBuffer, RotatingFileBufferStopped
 import os
-import time
+import tempfile
+from unittest import TestCase
+from unittest.mock import MagicMock
+
+from ebu_tt_live.utils import (
+    RingBufferWithCallback,
+    RotatingFileBuffer,
+    RotatingFileBufferStopped,
+    StoppableThread,
+)
 
 
 class TestRingBuffer(TestCase):
@@ -50,14 +54,14 @@ class RFBCommon(TestCase):
                 os.remove(item)
 
     def _create_a_file(self, number):
-        created_file = tempfile.NamedTemporaryFile(
-            prefix='ebu_tt_live_utils_test',
-            suffix='{}.tmp'.format(number),
-            delete=False
-        )
-        created_file.file.write('TestFile {}'.format(number))
-        created_file.file.close()
-        file_name = created_file.name
+        file_name = ''
+        with tempfile.NamedTemporaryFile(
+                    prefix='ebu_tt_live_utils_test',
+                    suffix=f'{number}.tmp',
+                    delete=False
+                ) as created_file:
+            created_file.file.write(f'TestFile {number}'.encode())
+            file_name = created_file.name
         # Adding it to the cleanup
         self.files_created.append(file_name)
         # OK we closed the file let's make sure it is still on the system
@@ -65,17 +69,19 @@ class RFBCommon(TestCase):
         return file_name
 
     def _assert_exists(self, file_name):
-        self.assertTrue(os.path.exists(file_name))
+        exists = os.path.exists(file_name)
+        self.assertTrue(exists)
 
     def _assert_not_exists(self, file_name):
-        self.assertFalse(os.path.exists(file_name))
+        exists = os.path.exists(file_name)
+        self.assertFalse(exists)
 
 
 class TestRotatingFileBufferSync(RFBCommon):
 
     def setUp(self):
-        super(TestRotatingFileBufferSync, self).setUp()
-        self.instance = RotatingFileBuffer(maxlen=3, async=False)
+        super().setUp()
+        self.instance = RotatingFileBuffer(maxlen=3, async_delete=False)
 
     def test_one_file(self):
         file1 = self._create_a_file(1)
@@ -112,13 +118,19 @@ class TestRotatingFileBufferSync(RFBCommon):
 class TestRotatingFileBufferAsync(RFBCommon):
 
     def setUp(self):
-        super(TestRotatingFileBufferAsync, self).setUp()
+        super().setUp()
         self.instance = RotatingFileBuffer(maxlen=3)
 
     def _stop_thread(self):
-        if not self.instance._deletion_thread.stopped():
-            self.instance._deletion_thread.stop()
+        if not isinstance(self.instance._deletion_thread, StoppableThread):
+            # This satisfies the type checker, but we should never be here
+            self.assertIsInstance(
+                self.instance._deletion_thread,
+                StoppableThread)
+        elif not self.instance._deletion_thread.stopped():
+            self.assertTrue(self.instance._deletion_thread.stop(timeout=2))
             self.instance._deletion_thread.join()
+            self.assertTrue(self.instance._deletion_thread.stopped())
 
     def test_one_file(self):
         file1 = self._create_a_file(1)
@@ -146,8 +158,10 @@ class TestRotatingFileBufferAsync(RFBCommon):
         file2 = self._create_a_file(2)
         self.instance.append(file1)
         self._stop_thread()
-        self.assertRaises(RotatingFileBufferStopped, self.instance.append, file2)
+        self.assertRaises(
+            RotatingFileBufferStopped,
+            self.instance.append, file2)
 
     def tearDown(self):
         self._stop_thread()
-        super(TestRotatingFileBufferAsync, self).tearDown()
+        super().tearDown()

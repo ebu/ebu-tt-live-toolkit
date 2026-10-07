@@ -1,7 +1,9 @@
 from unittest import TestCase
+
+from ebu_tt_live.bindings import (
+    style_type,
+)
 from ebu_tt_live.node import deduplicator
-from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.bindings import style_type, region_type, div_type, p_type, span_type, br_type, ebuttdt
 
 
 class TestComparableElement(TestCase):

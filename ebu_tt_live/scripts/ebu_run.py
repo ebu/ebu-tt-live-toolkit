@@ -34,6 +34,7 @@ interconnected set of nodes via various carriage mechanisms, events and timings.
 """
 
 from ebu_tt_live.config import create_app
+
 from .common import create_loggers
 
 

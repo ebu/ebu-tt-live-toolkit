@@ -2,7 +2,7 @@
 Feature: xml:lang attribute is mandatory on tt element
 
   # SPEC-CONFORMANCE: R77
-  Scenario: Invalid xml:lang attribute
+  Scenario Outline: Invalid xml:lang attribute
     Given an xml file <xml_file>
     When it has xml:lang attribute <lang>
     Then document is invalid
@@ -13,7 +13,7 @@ Feature: xml:lang attribute is mandatory on tt element
 
 
   # SPEC-CONFORMANCE: R77
-  Scenario: Valid xml:lang attribute
+  Scenario Outline: Valid xml:lang attribute
     Given an xml file <xml_file>
     When it has xml:lang attribute <lang>
     Then document is valid

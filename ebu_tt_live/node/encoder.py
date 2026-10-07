@@ -1,9 +1,11 @@
 
 from datetime import timedelta
-from .base import AbstractCombinedNode
+
 from ebu_tt_live.clocks.media import MediaClock
+from ebu_tt_live.documents import EBUTT3Document, EBUTTDDocument
 from ebu_tt_live.documents.converters import EBUTT3EBUTTDConverter
-from ebu_tt_live.documents import EBUTTDDocument, EBUTT3Document
+
+from .base import AbstractCombinedNode
 
 
 class EBUTTDEncoder(AbstractCombinedNode):
@@ -16,7 +18,7 @@ class EBUTTDEncoder(AbstractCombinedNode):
 
     def __init__(self, node_id, media_time_zero, default_ns=False, producer_carriage=None,
                  consumer_carriage=None, **kwargs):
-        super(EBUTTDEncoder, self).__init__(
+        super().__init__(
             producer_carriage=producer_carriage,
             consumer_carriage=consumer_carriage,
             node_id=node_id,

@@ -1,19 +1,26 @@
 import logging
-from argparse import ArgumentParser
-from .common import create_loggers
-from datetime import timedelta
 import math
+from argparse import ArgumentParser
+from datetime import timedelta
 
-from ebu_tt_live.node import EBUTTDEncoder
+from twisted.internet import reactor, task
+
+from ebu_tt_live import bindings
+from ebu_tt_live.carriage.filesystem import (
+    FilesystemConsumerImpl,
+    FilesystemReader,
+    RotatingFolderExport,
+    SimpleFolderExport,
+)
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.utc import UTCClock
-from ebu_tt_live.twisted import TwistedConsumer, BroadcastClientFactory, BroadcastClientProtocol
-from ebu_tt_live.carriage.websocket import WebsocketConsumerCarriage
-from ebu_tt_live.carriage.filesystem import FilesystemConsumerImpl, FilesystemReader, SimpleFolderExport, \
-    RotatingFolderExport
-from ebu_tt_live import bindings
-from twisted.internet import task, reactor
+from ebu_tt_live.node import EBUTTDEncoder
+from ebu_tt_live.twisted import (
+    BroadcastClientFactory,
+    TwistedConsumer,
+)
 
+from .common import create_loggers
 
 log = logging.getLogger('ebu_simple_consumer')
 
@@ -90,7 +97,7 @@ def main():
         else:
             outbound_carriage = SimpleFolderExport(args.output_folder, 'ebuttd-encode-{counter}.xml')
     else:
-        raise Exception('Invalid output format: {}'.format(args.output_format))
+        raise Exception(f'Invalid output format: {args.output_format}')
 
     if args.utc_clock is True:
         reference_clock = UTCClock()

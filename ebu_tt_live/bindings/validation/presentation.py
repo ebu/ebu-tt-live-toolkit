@@ -1,9 +1,12 @@
 from ebu_tt_live.errors import SemanticValidationError
-from ebu_tt_live.strings import ERR_SEMANTIC_STYLE_MISSING, ERR_SEMANTIC_VALIDATION_EXPECTED, \
-    ERR_SEMANTIC_REGION_MISSING
+from ebu_tt_live.strings import (
+    ERR_SEMANTIC_REGION_MISSING,
+    ERR_SEMANTIC_STYLE_MISSING,
+    ERR_SEMANTIC_VALIDATION_EXPECTED,
+)
 
 
-class SizingValidationMixin(object):
+class SizingValidationMixin:
     """
     This is meant to validate that the sizing types correspond to the tt element and head region definitions.
     It is meant to be used by the containing element and its attributes as well so the class interoperates with itself.
@@ -27,7 +30,7 @@ class SizingValidationMixin(object):
         raise NotImplementedError()
 
 
-class StyledElementMixin(object):
+class StyledElementMixin:
     """
     This functionality applies to all styled boxes to help computing styling related information
     """
@@ -166,7 +169,7 @@ class StyledElementMixin(object):
                 orphans.remove(item)
 
 
-class RegionedElementMixin(object):
+class RegionedElementMixin:
     """
     Makes sure we always know where we are. Detects double region assignment which is a warning.
     """

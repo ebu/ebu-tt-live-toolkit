@@ -1,8 +1,7 @@
 
-from .base import AbstractProducerCarriage, AbstractConsumerCarriage
 import logging
-import six
 
+from .base import AbstractConsumerCarriage, AbstractProducerCarriage
 
 log = logging.getLogger(__name__)
 
@@ -10,7 +9,7 @@ log = logging.getLogger(__name__)
 class WebsocketProducerCarriage(AbstractProducerCarriage):
 
     _backend_producer = None
-    _expects = six.text_type
+    _expects = str
 
     def register_backend_producer(self, producer):
         self._backend_producer = producer
@@ -26,7 +25,7 @@ class WebsocketProducerCarriage(AbstractProducerCarriage):
 
 class WebsocketConsumerCarriage(AbstractConsumerCarriage):
 
-    _provides = six.text_type
+    _provides = str
 
     def on_new_data(self, data, **kwargs):
         self.consumer_node.process_document(data, **kwargs)

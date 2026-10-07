@@ -1,20 +1,21 @@
-from .common import ConfigurableComponent, Namespace
 from ebu_tt_live import clocks
 from ebu_tt_live.errors import ConfigurationError
 from ebu_tt_live.strings import ERR_NO_SUCH_COMPONENT
+
+from .common import ConfigurableComponent
 
 
 class LocalMachineClock(ConfigurableComponent):
 
     def __init__(self, config, local_config):
-        super(LocalMachineClock, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self.component = clocks.local.LocalMachineClock()
 
 
 class UTCClock(ConfigurableComponent):
 
     def __init__(self, config, local_config):
-        super(UTCClock, self).__init__(config, local_config)
+        super().__init__(config, local_config)
         self.component = clocks.utc.UTCClock()
 
 

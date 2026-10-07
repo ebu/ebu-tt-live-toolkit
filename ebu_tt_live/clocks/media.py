@@ -1,9 +1,10 @@
-from datetime import datetime, timedelta
 from collections import namedtuple
+from datetime import datetime, timedelta
+
 from ebu_tt_live.errors import TimeFormatError
 from ebu_tt_live.strings import ERR_TIME_WRONG_FORMAT
-from .local import Clock
 
+from .local import Clock
 
 ReferenceTime = namedtuple('ReferenceTime', ['local', 'remote'])
 

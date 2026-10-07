@@ -1,21 +1,25 @@
 # NOTE: This script is no longer maintained. Use `ebu-run` instead.
 
-from itertools import cycle
-from twisted.internet import task, reactor
 from argparse import ArgumentParser
-from .common import create_loggers
-from ebu_tt_live.utils import tokenize_english_document
+from itertools import cycle
 
-from ebu_tt_live.clocks.local import LocalMachineClock
-from ebu_tt_live.examples import get_example_data
-from ebu_tt_live.documents import EBUTT3DocumentSequence
-from ebu_tt_live.node import SimpleProducer
-from ebu_tt_live.twisted import BroadcastServerFactory, BroadcastServerProtocol, \
-    TwistedWSPushProducer
+from twisted.internet import reactor, task
+
+from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
 from ebu_tt_live.carriage.filesystem import FilesystemProducerImpl
 from ebu_tt_live.carriage.websocket import WebsocketProducerCarriage
-from ebu_tt_live.adapters.node_carriage import ProducerNodeCarriageAdapter
+from ebu_tt_live.clocks.local import LocalMachineClock
+from ebu_tt_live.documents import EBUTT3DocumentSequence
+from ebu_tt_live.examples import get_example_data
+from ebu_tt_live.node import SimpleProducer
+from ebu_tt_live.twisted import (
+    BroadcastServerFactory,
+    BroadcastServerProtocol,
+    TwistedWSPushProducer,
+)
+from ebu_tt_live.utils import tokenize_english_document
 
+from .common import create_loggers
 
 parser = ArgumentParser()
 
@@ -90,7 +94,7 @@ def main():
         )
 
         factory = BroadcastServerFactory(
-            url=u"ws://127.0.0.1:9000",
+            url="ws://127.0.0.1:9000",
             producer=twisted_producer
         )
 

@@ -1,9 +1,10 @@
 
 from unittest import TestCase
-from ebu_tt_live.clocks.utc import UTCClock
+
+from ebu_tt_live.clocks import get_clock
 from ebu_tt_live.clocks.local import LocalMachineClock
 from ebu_tt_live.clocks.media import MediaClock, SMPTEClock
-from ebu_tt_live.clocks import get_clock
+from ebu_tt_live.clocks.utc import UTCClock
 
 # NOTE: Some of the code below includes handling of SMPTE time base, which was removed from version 1.0 of the specification.
 

@@ -1,5 +1,6 @@
-from .base import AbstractCombinedCarriage
 from ebu_tt_live.utils import ANY
+
+from .base import AbstractCombinedCarriage
 
 
 class DirectCarriageImpl(AbstractCombinedCarriage):

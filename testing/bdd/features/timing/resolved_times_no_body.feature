@@ -1,39 +1,37 @@
 @timing @resolution @sequence
 Feature: Resolved times computation in sequence when there is no body
 
-  Examples:
-  | xml_file                             | sequence_identifier | time_base |
-  | computed_resolved_time_semantics.xml | testSequence1       | clock     |
-
   # SPEC-CONFORMANCE: R15 R16 R17
   # Also validates that resolved times don't overlap, which tests SPEC-CONFORMANCE R1 R13 R14
   # To test missing <body>, the template has: {% if not body %}
   # For backwards compatibility, TRUE equals no body. 
   # Nunjunks interprets true/false as a string, so in the examples an empty variable is FALSE. Any other value is TRUE 
-  Scenario: Resolved times in sequence
-    Given a sequence <sequence_identifier> with timeBase <time_base>
-    And an xml file <xml_file>
-    When it has predefined sequenceNumber 1
-    And it has sequenceIdentifier <sequence_identifier>
-    And it has timeBase <time_base>
+  Scenario Outline: Resolved times in sequence
+    Given a sequence with the following identifier and timeBase
+      | sequence_identifier | time_base |
+      | testSequence1       | clock     |
+    And an xml file "computed_resolved_time_semantics.xml"
+    And it has the following template variables
+      | sequence_identifier | sequence_number | time_base |
+      | testSequence1       | 1               | clock     |
     And it has doc1 body <doc1_no_body>
     And it has doc1 body begin time <doc1_begin>
     And it has doc1 body end time <doc1_end>
     And it has doc1 body duration <doc1_dur>
     And doc1 is added to the sequence with availability time <doc1_avail_time>
-    And we create a new document
-    And it has predefined sequenceNumber 2
-    And it has sequenceIdentifier <sequence_identifier>
-    And it has timeBase <time_base>
+    When we create a new document
+    And it has the following template variables
+      | sequence_identifier | sequence_number | time_base |
+      | testSequence1       | 2               | clock     |
     And it has doc2 body <doc2_no_body>
     And it has doc2 body begin time <doc2_begin>
     And it has doc2 body end time <doc2_end>
     And it has doc2 body duration <doc2_dur>
     And doc2 is added to the sequence with availability time <doc2_avail_time>
     And we create a new document
-    And it has sequenceIdentifier <sequence_identifier>
-    And it has timeBase <time_base>
-    And it has predefined sequenceNumber 3
+    And it has the following template variables
+      | sequence_identifier | sequence_number | time_base |
+      | testSequence1       | 3               | clock     |
     And it has doc3 body <doc3_no_body>
     And it has doc3 body begin time <doc3_begin>
     And it has doc3 body end time <doc3_end>
@@ -56,8 +54,5 @@ Feature: Resolved times computation in sequence when there is no body
     # See issue #429 
     | 00:00:00        | TRUE         |            |          |          | 00:00:01.0      | TRUE         |            |          |          | 00:00:03.0      | TRUE         |            |          |          | 00:00:00     |            | 00:00:01.0   | 00:00:01.0 | 00:00:03.0   | 00:00:03.0 |  
     #i.e., this fails:
-    @skip
-    | 00:00:00        | TRUE         |            |          |          | 00:00:01.0      | TRUE         |            |          |          | 00:00:03.0      | TRUE         |            |          |          | 00:00:00     | 00:00:00   | 00:00:01.0   | 00:00:01.0 | 00:00:03.0   | 00:00:03.0 |  
-   
-
-  
+    # @skip
+    # | 00:00:00        | TRUE         |            |          |          | 00:00:01.0      | TRUE         |            |          |          | 00:00:03.0      | TRUE         |            |          |          | 00:00:00     | 00:00:00   | 00:00:01.0   | 00:00:01.0 | 00:00:03.0   | 00:00:03.0 |  

@@ -4,19 +4,19 @@ This file contains all the pyxb helpers needed for enabling a concise semantic v
 import copy
 import logging
 import re
-import six
 
 from pyxb.namespace import ExpandedName
 
 from ebu_tt_live.errors import SemanticValidationError
-from ebu_tt_live.strings import DOC_SYNTACTIC_VALIDATION_SUCCESSFUL, ERR_SEMANTIC_ID_UNIQUENESS
-from pyxb.binding.basis import NonElementContent, ElementContent
+from ebu_tt_live.strings import (
+    ERR_SEMANTIC_ID_UNIQUENESS,
+)
 
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
 
 
-class SemanticValidationMixin(object):
+class SemanticValidationMixin:
     """
     This mixin contains the necessary boilerplate to enable semantic validation as well as enabling _setAttribute hooks
     to help populate the context object with useful data.
@@ -30,7 +30,7 @@ class SemanticValidationMixin(object):
         uri_tuple = attr_en.uriTuple()
         if uri_tuple in self._attr_en_pre:
             self._attr_en_pre[uri_tuple](self, attr_en, value_lex)
-        au = super(SemanticValidationMixin, self)._setAttribute(attr_en, value_lex)
+        au = super()._setAttribute(attr_en, value_lex)
         if uri_tuple in self._attr_en_post:
             self._attr_en_post[uri_tuple](self, au)
         return au
@@ -41,7 +41,6 @@ class SemanticValidationMixin(object):
         :param dataset: semantic context object
         :param element_content: the element itself
         """
-        pass
 
     def _semantic_after_traversal(self, dataset, element_content=None, parent_binding=None):
         """
@@ -49,7 +48,6 @@ class SemanticValidationMixin(object):
         :param dataset: semantic context object
         :param element_content: the element itself
         """
-        pass
 
     def _do_link_copy_with_copied_parent(self, dataset, element_content, parent_binding):
         celem = dataset['instance_mapping'][self]
@@ -68,7 +66,6 @@ class SemanticValidationMixin(object):
         :param element_content:
         :return:
         """
-        pass
 
     def _semantic_before_subtree_copy(self, copied_instance, dataset, element_content=None):
         """
@@ -77,7 +74,6 @@ class SemanticValidationMixin(object):
         :param element_content:
         :return:
         """
-        pass
 
     def _semantic_after_subtree_copy(self, copied_instance, dataset, element_content=None):
         """
@@ -86,7 +82,6 @@ class SemanticValidationMixin(object):
         :param element_content:
         :return:
         """
-        pass
 
     def _semantic_attributes_missing(self, attr_names):
         """
@@ -138,7 +133,7 @@ class SemanticValidationMixin(object):
         if old_elem_ids is None:
             return None
 
-        if isinstance(old_elem_ids, six.text_type):
+        if isinstance(old_elem_ids, str):
             new_elem = self._find_deconflicted_elem_by_id(elem_id=old_elem_ids, dataset=dataset)
             return new_elem.id
         else:
@@ -171,7 +166,6 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         """
         Before PyXB starts its syntactic validation this hook runs where the user may execute custom code.
         """
-        pass
 
     def validateBinding (self, **extra_kwargs):
         """Check whether the binding content matches its content model.
@@ -195,12 +189,12 @@ class SemanticDocumentMixin(SemanticValidationMixin):
         return True
 
 
-class IDMixin(object):
+class IDMixin:
     """
     Making sure the IDs are collected and maintained appropriately
     """
 
-    _re_ebu_id_deconflict = re.compile('SEQ([0-9]+)\.(.*)')
+    _re_ebu_id_deconflict = re.compile(r'SEQ([0-9]+)\.(.*)')
     _tp_ebu_id_deconflict = 'SEQ{sequence_number}.{original_id}'
 
     def deconflict_id(self, seq_num):

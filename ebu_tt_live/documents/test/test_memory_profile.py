@@ -1,13 +1,14 @@
 
-from unittest import TestCase
-from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
-from ebu_tt_live.bindings import ebuttdt
 import gc
 import os
-from datetime import timedelta
-from jinja2 import Environment, FileSystemLoader, Template
 import weakref
+from datetime import timedelta
+from unittest import TestCase
 
+from jinja2 import Environment, FileSystemLoader, Template
+
+from ebu_tt_live.bindings import ebuttdt
+from ebu_tt_live.documents import EBUTT3Document, EBUTT3DocumentSequence
 
 raw_template = """<?xml version="1.0" ?>
 <tt:tt
@@ -68,7 +69,7 @@ class TestDocumentLeaks(TestCase):
         doc = EBUTT3Document.create_from_xml(
             template_file.render(temp_dict)
         )
-        # print 'doc id {} created'.format(id(doc))
+        # print('doc id {} created'.format(id(doc)))
         return doc
 
     def test_single_document_removed(self):
@@ -99,7 +100,7 @@ class TestDocumentLeaks(TestCase):
         doc_reserve = []
         doc_refs = []
 
-        for number in xrange(1, 10):
+        for number in range(1, 10):
             doc = self._generate_document(
                 sequence_number=number,
                 offset=timedelta(seconds=5*number)
@@ -128,7 +129,7 @@ class TestDocumentLeaks(TestCase):
         sequence.add_document(doc1)
         seq_ref = weakref.ref(sequence)
         del doc1
-        for number in xrange(2, 10):
+        for number in range(2, 10):
             doc = self._generate_document(
                 sequence_number=number,
                 offset=timedelta(seconds=5*number)
@@ -151,9 +152,12 @@ class TestDocumentLeaks(TestCase):
 
     def test_discard_partial_sequence(self):
 
-        doc1 = self._generate_document(sequence_number=1, offset=timedelta(seconds=0))
-        doc2 = self._generate_document(sequence_number=2, offset=timedelta(seconds=5))
-        doc3 = self._generate_document(sequence_number=3, offset=timedelta(seconds=10))
+        doc1 = self._generate_document(
+            sequence_number=1, offset=timedelta(seconds=0))
+        doc2 = self._generate_document(
+            sequence_number=2, offset=timedelta(seconds=5))
+        doc3 = self._generate_document(
+            sequence_number=3, offset=timedelta(seconds=10))
 
         doc_refs = [
             weakref.ref(doc1),
@@ -185,5 +189,3 @@ class TestDocumentLeaks(TestCase):
         self.assertIsNone(doc_refs[0]())
         self.assertIsInstance(doc_refs[1](), EBUTT3Document)
         self.assertIsInstance(doc_refs[2](), EBUTT3Document)
-
-

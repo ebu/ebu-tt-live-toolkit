@@ -1,11 +1,14 @@
-import six
 from unittest import TestCase
-from mock import MagicMock
-from ebu_tt_live import bindings
-from ebu_tt_live.node.deduplicator import DeDuplicatorNode, ReplaceStylesAndRegions, ReplaceNone
+from unittest.mock import MagicMock
+
+from ebu_tt_live.bindings import (
+    style_type,
+)
 from ebu_tt_live.carriage.interface import IProducerCarriage
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from ebu_tt_live.bindings import style_type, region_type, div_type, p_type, span_type, br_type, ebuttdt
+from ebu_tt_live.node.deduplicator import (
+    DeDuplicatorNode,
+)
 
 
 class TestDeDuplicator(TestCase):

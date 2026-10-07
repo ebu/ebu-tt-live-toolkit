@@ -1,12 +1,12 @@
-import re
-import six
 import logging
-import time
-from configman import RequiredConfig, Namespace, converters
-from ebu_tt_live.strings import ERR_CONF_ONE_BACKEND_ONLY
-from ebu_tt_live.errors import ConfigurationError
+import re
 
-runtime_template_regex = re.compile(ur'[*]{2}.*?[*]{2}')
+from configmanners import Namespace, RequiredConfig, converters
+
+from ebu_tt_live.errors import ConfigurationError
+from ebu_tt_live.strings import ERR_CONF_ONE_BACKEND_ONLY
+
+runtime_template_regex = re.compile(r'[*]{2}.*?[*]{2}')
 converters = converters
 
 log = logging.getLogger(__name__)
@@ -55,8 +55,8 @@ class ConfigurableComponent(RequiredConfig):
     @classmethod
     def _resolve_runtime_variable_match(cls, matchobj):
         # Give this function to re.sub to do the replacement for you
-        var_loc = matchobj.group(0).replace(u'**', u'')
-        var_loc = var_loc.split(u'.')
+        var_loc = matchobj.group(0).replace('**', '')
+        var_loc = var_loc.split('.')
         node_id, attr_names = var_loc[0], var_loc[1:]
         node = current_app.get_node(node_id)
         result = node
@@ -64,8 +64,8 @@ class ConfigurableComponent(RequiredConfig):
             temp_result = getattr(result, attr_name)
             result = temp_result
 
-        if not isinstance(result, six.text_type):
-            result = six.text_type(result)
+        if not isinstance(result, str):
+            result = str(result)
         return result
 
     @classmethod

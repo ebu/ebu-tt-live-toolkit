@@ -1,9 +1,10 @@
 
 from pytest import fixture, raises
-from ebu_tt_live.config import AppConfig, UniversalNodes
-import ebu_tt_live.config.node as node_config
+
 import ebu_tt_live.config.carriage as carriage_config
+import ebu_tt_live.config.node as node_config
 import ebu_tt_live.node as processing_node
+from ebu_tt_live.config import AppConfig
 from ebu_tt_live.config.common import ConfigurableComponent
 from ebu_tt_live.errors import ConfigurationError
 
@@ -130,6 +131,11 @@ def test_handover_default_conf():
 
 
 def test_simple_producer_wrong_backend():
+    """ Ask for a dummy backend to process a websocket carriage,
+    which it cannot do. Generates an AttributeError because the carriage adapter
+    tries to call the ws_backend_consumer() method on the backend,
+    which the dummy backend doesn't have.
+    """
     val_source = {
         "nodes": {
             "node1": {

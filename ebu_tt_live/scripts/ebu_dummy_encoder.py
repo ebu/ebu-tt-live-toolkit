@@ -1,11 +1,12 @@
 import logging
-from .common import create_loggers
+from datetime import datetime, timedelta
+
 from ebu_tt_live import bindings
-from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.bindings import _ebuttdt as datatypes
+from ebu_tt_live.bindings import _ebuttm as metadata
 from ebu_tt_live.documents.ebutt3 import EBUTT3Document
-from pyxb import BIND
-from datetime import timedelta, datetime
+
+from .common import create_loggers
 
 log = logging.getLogger('ebu_dummy_encoder')
 

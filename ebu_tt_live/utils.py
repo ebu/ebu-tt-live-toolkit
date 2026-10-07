@@ -1,22 +1,28 @@
 import abc
 import collections
-import threading
-import Queue
+import inspect
 import os
-import time
-import types
-
-from nltk import BlanklineTokenizer, PunktSentenceTokenizer, WhitespaceTokenizer
-from xml.dom.minidom import Node, parseString
+import queue
 import re
+import threading
+import time
+from xml.dom.minidom import Node, parseString
+
+from nltk import (
+    BlanklineTokenizer,
+    PunktSentenceTokenizer,
+    WhitespaceTokenizer,
+)
 
 
-class ComparableMixin(object):
+class ComparableMixin:
     """
-    This mixin is meant to make implementing the comparison interface easier without having to clutter up
-    custom class implementations that would only like to delegate their comparison to comparable a member.
+    This mixin is meant to make implementing the comparison interface easier
+    without having to clutter up custom class implementations that would only
+    like to delegate their comparison to comparable a member.
     This class is Python3 compatible.
-    NOTE: This is a slightly modified version of the one suggested by the following blog:
+    NOTE: This is a slightly modified version of the one suggested by the
+    following blog:
     https://regebro.wordpress.com/2010/12/13/python-implementing-rich-comparison-the-correct-way/
     """
     def _compare(self, other, method):
@@ -55,17 +61,19 @@ class ComparableMixin(object):
 
     def _cmp_checks(self, other):
         """
-        Extra checks that need to be fulfilled in order for the comparison to make sense.
-        Any custom exceptions thrown here are preserved and propagated in original form.
+        Extra checks that need to be fulfilled in order for the comparison to
+        make sense.
+        Any custom exceptions thrown here are preserved and propagated in
+        original form.
         :param other:
         :return:
         """
-        pass
 
 
 class RingBufferWithCallback(collections.deque):
     """
-    This class calls a callback when an item is falling out of the buffer due to removal.
+    This class calls a callback when an item is falling out of the buffer due
+    to removal.
     On manual removal it does not. That is the user's responsibility.
     """
 
@@ -73,15 +81,14 @@ class RingBufferWithCallback(collections.deque):
 
     def __init__(self, iterable=(), maxlen=None, callback=None):
         if callback is not None and not callable(callback):
-            raise ValueError('Callback: {} is not callable'.format(callback))
+            raise ValueError(f'Callback: {callback} is not callable')
         self._callback = callback
-        super(RingBufferWithCallback, self).__init__(iterable, maxlen)
+        super().__init__(iterable, maxlen)
 
     def append(self, item):
-        if len(self) >= self.maxlen:
-            if self._callback is not None:
-                self._callback(self.popleft())
-        super(RingBufferWithCallback, self).append(item)
+        if len(self) >= self.maxlen and self._callback is not None:  # ty:ignore[unsupported-operator]
+            self._callback(self.popleft())
+        super().append(item)
 
 
 class StoppableThread(threading.Thread):
@@ -91,14 +98,16 @@ class StoppableThread(threading.Thread):
     """
 
     def __init__(self, *args, **kwargs):
-        super(StoppableThread, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._stop = threading.Event()
 
-    def stop(self):
+    def stop(self, timeout: float | None = None):
         self._stop.set()
+        return self._stop.wait(timeout=timeout)
 
     def stopped(self):
-        return self._stop.isSet()
+        rv = self._stop.is_set()
+        return rv
 
 
 class RotatingFileBufferStopped(Exception):
@@ -107,19 +116,22 @@ class RotatingFileBufferStopped(Exception):
 
 class RotatingFileBuffer(RingBufferWithCallback):
     """
-    This class holds the given number of file names and when they are pushed out of the buffer it deletes
-    them asynchronously. Preferably just the names and not open file handles.
+    This class holds the given number of file names and when they are pushed
+    out of the buffer it deletes them asynchronously. Preferably just the
+    names and not open file handles.
     """
 
     _deletion_thread = None
     _deletion_queue = None
 
-    def __init__(self, maxlen, async=True):
-        super(RotatingFileBuffer, self).__init__(maxlen=maxlen, callback=self.delete_file)
-        # In this case threads make sense since it is I/O we are going to be waiting for and that is releasing the GIL.
-        # Deletion is the means for us to send down files for deletion to the other thread(maybe process later)....
-        self._deletion_queue = Queue.Queue()
-        if async is True:
+    def __init__(self, maxlen, async_delete=True):
+        super().__init__(maxlen=maxlen, callback=self.delete_file)
+        # In this case threads make sense since it is I/O we are going to be
+        # waiting for and that is releasing the GIL.
+        # Deletion is the means for us to send down files for deletion to the
+        # other thread(maybe process later)....
+        self._deletion_queue = queue.Queue()
+        if async_delete is True:
             self._deletion_thread = StoppableThread(
                 target=self._delete_thread_loop,
                 kwargs={'q': self._deletion_queue}
@@ -140,7 +152,7 @@ class RotatingFileBuffer(RingBufferWithCallback):
                 # If not we do nothing. The loop discards the name
                 try:
                     os.remove(full_path)
-                except IOError:
+                except OSError:
                     # Horrible! Quick, put it back... NEXT
                     failed_files.append(item)
 
@@ -150,7 +162,7 @@ class RotatingFileBuffer(RingBufferWithCallback):
     def _do_consume(cls, q, files_waiting, default_wait):
         try:
             files_waiting.append(q.get(timeout=default_wait))
-        except Queue.Empty:
+        except queue.Empty:
             pass
 
         failed_files = cls._do_delete(files_waiting)
@@ -160,8 +172,11 @@ class RotatingFileBuffer(RingBufferWithCallback):
     def _delete_thread_loop(cls, q):
         files_waiting = []
         default_wait = 0.2
-        while not threading.current_thread().stopped() or not q.empty():
-            files_waiting = cls._do_consume(q=q, files_waiting=files_waiting, default_wait=default_wait)
+        while not threading.current_thread().stopped() or not q.empty():  # ty:ignore[unresolved-attribute]
+            files_waiting = cls._do_consume(
+                q=q,
+                files_waiting=files_waiting,
+                default_wait=default_wait)
             time.sleep(0.1)
         while files_waiting:
             files_waiting = cls._do_delete(files_waiting=files_waiting)
@@ -173,11 +188,11 @@ class RotatingFileBuffer(RingBufferWithCallback):
         :param item:
         :return:
         """
-        self._deletion_queue.put(item)
+        self._deletion_queue.put(item)  # ty:ignore[unresolved-attribute]
         if self._deletion_thread is None:
             files_waiting = []
             default_wait = 0.1
-            while files_waiting or not self._deletion_queue.empty():
+            while files_waiting or not self._deletion_queue.empty():  # ty:ignore[unresolved-attribute]
                 files_waiting = self._do_consume(
                     q=self._deletion_queue,
                     files_waiting=files_waiting,
@@ -186,14 +201,15 @@ class RotatingFileBuffer(RingBufferWithCallback):
 
     def append(self, item):
         """
-        This override makes sure that we don't add to an asynchronously managed buffer that is about to be shut down.
+        This override makes sure that we don't add to an asynchronously
+        managed buffer that is about to be shut down.
         :param item: The file name
         :return:
         """
-        if self._deletion_thread is not None:
-            if self._deletion_thread.stopped():
-                raise RotatingFileBufferStopped('File deletion thread is stopped!')
-        super(RotatingFileBuffer, self).append(item)
+        if self._deletion_thread and self._deletion_thread.stopped():
+            raise RotatingFileBufferStopped(
+                'File deletion thread is stopped!')
+        super().append(item)
 
 
 def tokenize_english_document(input_text):
@@ -224,8 +240,9 @@ def tokenize_english_document(input_text):
             line_full = False
             while reverse_words:
                 word = reverse_words.pop()
-                longer_line = ' '.join([current_line, word]).strip()
-                if len(longer_line) > characters_per_line and len(current_line):
+                longer_line = f'{current_line} {word}'.strip()
+                if len(longer_line) > characters_per_line \
+                   and len(current_line):
                     # The longer line is overreaching boundaries
                     reverse_words.append(word)
                     line_full = True
@@ -255,10 +272,8 @@ def tokenize_english_document(input_text):
 def _assert_asm_is_defined(value, member_name, class_name):
     if value in (None, NotImplemented):
         raise TypeError(
-            'Abstract static member: \`{}.{}\` does not match the criteria'.format(
-                class_name,
-                member_name
-            )
+            f'Abstract static member: `{class_name}.{member_name}` '
+            f'does not match the criteria'
         )
 
 
@@ -266,16 +281,14 @@ def validate_types_only(value, member_name, class_name):
     if not isinstance(value, tuple):
         value = (value,)
     for item in value:
-        if not isinstance(item, (type, types.ClassType)) and item is not ANY:
+        if not isinstance(item, type) and item is not ANY:
             raise TypeError(
-                'Abstract static member: \'{}.{}\' is not a type or class'.format(
-                    class_name,
-                    member_name
-                )
+                f'Abstract static member: \'{class_name}.{member_name}\' '
+                f'is not a type or class'
             )
 
 
-class AnyType(object):
+class AnyType:
     "A helper object that compares equal to everything."
 
     def __eq__(self, other):
@@ -287,14 +300,16 @@ class AnyType(object):
     def __repr__(self):
         return '<ANY>'
 
+
 ANY = AnyType()
 
 
-class AbstractStaticMember(object):
+class AbstractStaticMember:
     """
-    This allows me to require the subclasses to define some attributes using a customizeable
-    validator. The idea is that all static members should be initialized to a value by the time
-    abstract functions have all been implemented.
+    This allows me to require the subclasses to define some attributes using a
+    customizeable validator. The idea is that all static members should be
+    initialized to a value by the time abstract functions have all been
+    implemented.
     """
 
     _validation_func = None
@@ -306,37 +321,44 @@ class AbstractStaticMember(object):
             self._validation_func = validation_func
 
     def validate(self, value, member_name, class_name):
-        self._validation_func(value, member_name, class_name)
+        self._validation_func(value, member_name, class_name)  # ty:ignore[call-non-callable]
 
 
 class AutoRegisteringABCMeta(abc.ABCMeta):
     """
-    This metaclass gets us automatic class registration and cooperates with AbstractStaticMember.
-    If none of the 2 features are needed it just provides the basic abc.ABCMeta functionality.
-    For the auto registration an abstract class needs to implement the auto_register_impl classmethod.
+    This metaclass gets us automatic class registration and cooperates
+    with AbstractStaticMember.
+    If none of the 2 features are needed it just provides the basic
+    abc.ABCMeta functionality.
+    For the auto registration an abstract class needs to implement the
+    auto_register_impl classmethod.
     """
 
     def __new__(mcls, name, bases, namespace):
-        cls = super(AutoRegisteringABCMeta, mcls).__new__(mcls, name, bases, namespace)
-        abstract_members = set(name
-                        for name, value in namespace.items()
-                        if isinstance(value, AbstractStaticMember))
+        cls = super().__new__(mcls, name, bases, namespace)
+        abstract_members = {
+            name for name, value in namespace.items()
+            if isinstance(value, AbstractStaticMember)}
 
         abstracts = getattr(cls, "__abstractmethods__", set())
 
         if not abstracts:
-            # This means the class is not abstract so we should not have any abstract static members
+            # This means the class is not abstract so we should not have any
+            # abstract static members
             validated_members = set()
             for base in bases:
                 if isinstance(base, mcls):
-                    for base_member in getattr(base, '_abc_static_members', set()):
+                    for base_member in getattr(
+                            base, '_abc_static_members', set()):
                         if base_member in validated_members:
                             continue
                         value = getattr(cls, base_member, NotImplemented)
-                        if isinstance(value, AbstractStaticMember) or value is NotImplemented:
+                        if isinstance(value, AbstractStaticMember) \
+                           or value is NotImplemented:
                             abstract_members.add(base_member)
                         else:
-                            getattr(base, base_member).validate(value, base_member, name)
+                            getattr(base, base_member).validate(
+                                value, base_member, name)
                             validated_members.add(base_member)
 
                     base.auto_register_impl(cls)
@@ -349,21 +371,35 @@ class AutoRegisteringABCMeta(abc.ABCMeta):
         if namespace.get('auto_register_impl') is None:
             cls.auto_register_impl = classmethod(lambda x, y: None)
         cls._abc_static_members = frozenset(abstract_members)
-        cls._abc_interface = '__metaclass__' in namespace.keys()
+        # We can no longer inspect namespaces to see if __metaclass__ is present,
+        # as we could in Python2.x,
+        # but if we're here then we must be a metaclass, and if no other bases
+        # are present, then we should be an interface. If not, why bother
+        # using AutoRegisteringABCMeta?
+        # This works around the Python isabstract() test that returns False if the
+        # class has no members or properties at all, even if it is otherwise intended
+        # to be an abstract base class. It's only looking for the presence of any
+        # abstract members or properties.
+        cls._abc_interface = inspect.isabstract(cls) \
+            or not bases
         return cls
 
     def __call__(cls, *args, **kwargs):
-        if cls._abc_interface is True:
-            raise TypeError('Can\'t instantiate {} is an abstract base class.'.format(cls))
-        instance = super(AutoRegisteringABCMeta, cls).__call__(*args, **kwargs)
+        if cls._abc_interface is True:  # ty:ignore[unresolved-attribute]
+            raise TypeError(
+                f'Can\'t instantiate {cls} is an abstract base class.')
+        instance = super().__call__(*args, **kwargs)
         return instance
 
 
 # The following section is taken from https://github.com/django/django/blob/master/django/test/utils.py
-# This is a relatively simple XML comparator implementation based on Python's minidom library.
-# NOTE: different namespace aliases can break this code. The code superficial on namespaces. It ignores them
-# In very rare cases when an element has 2 attributes with the same localName but their namespaces differ
-# this implementation might say the document differs. It also avoids attribute sorting by comparing
+# This is a relatively simple XML comparator implementation based on Python's
+# minidom library.
+# NOTE: different namespace aliases can break this code. The code superficial
+# on namespaces. It ignores them in very rare cases when an element has 2
+# attributes with the same localName but their namespaces differ
+# this implementation might say the document differs.
+# It also avoids attribute sorting by comparing
 # and attr_dict that it builds from minidom attributes.
 #
 # The Django Project is protected by the BSD Licence.
@@ -404,8 +440,9 @@ def compare_xml(want, got):
     Based on https://github.com/lxml/lxml/blob/master/src/lxml/doctestcompare.py
 
     This function is a close but not full implementation of fn:deep-equals.
-    Possible scenario where this will yield a false positive result is where an element can have 2 arguments with
-    the same name but different namespaces:
+    Possible scenario where this will yield a false positive result is where
+    an element can have 2 arguments with the same name but different
+    namespaces:
 
         i.e.: <elem ns1:myattr="1" /> != <elem ns2:myattr="1" /> if ns1 != ns2
 

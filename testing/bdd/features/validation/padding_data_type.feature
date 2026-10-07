@@ -4,67 +4,67 @@ Feature: Padding Element and Datatype testing
 
   ## Assumes that we can pass <tag> to the examples so that we test that the attribute is only applied to the elements that support it.
   ## If we can't, this restriction will be built into the template.
-  Scenario: Valid padding on element
-    Given an xml file <xml_file>
+  Scenario Outline: Valid padding on element
+    Given an xml file "padding_data_type.xml"
     When <tag> has a padding attribute
     Then document is valid
 
     Examples:
-    | xml_file              | tag       |
-    | padding_data_type.xml | tt:style  |
-    | padding_data_type.xml | tt:region |
+    | tag       |
+    | tt:style  |
+    | tt:region |
 
-  Scenario: Invalid padding on element
-    Given an xml file <xml_file>
+  Scenario Outline: Invalid padding on element
+    Given an xml file "padding_data_type.xml"
     When <tag> has a padding attribute
     Then document is invalid
 
     Examples:
-    | xml_file              | tag     |
-    | padding_data_type.xml | tt:p    |
-    | padding_data_type.xml | tt:span |
+    | tag     |
+    | tt:p    |
+    | tt:span |
 
 
   ## SPEC-CONFORMANCE: R100
   ## Assumes something like this in the template: <tag tts:padding="{{value1}} {{value2}} {{value3}} {{value4}}">
   ## Note that this attribute can have 1, 2, 3, or 4 values
-  Scenario: Valid padding datatype
-    Given an xml file <xml_file>
+  Scenario Outline: Valid padding datatype
+    Given an xml file "padding_data_type.xml"
     When it has a padding attribute
-    And the padding attribute has <value1>
-    And the padding attribute has <value2>
-    And the padding attribute has <value3>
-    And the padding attribute has <value4>
+    And the padding attribute component 1 is <value1>
+    And the padding attribute component 2 is <value2>
+    And the padding attribute component 3 is <value3>
+    And the padding attribute component 4 is <value4>
     Then document is valid
 
     Examples:
-    | xml_file              | value1 | value2  | value3 | value4 |
-    | padding_data_type.xml | 1px    |         |        |        |
-    | padding_data_type.xml | +1px   |         |        |        |
-    | padding_data_type.xml | -1px   |         |        |        |
-    | padding_data_type.xml | -.5px  |         |        |        |
-    | padding_data_type.xml | 001px  |         |        |        |
-    | padding_data_type.xml | 1px    | 1c      |        |        |
-    | padding_data_type.xml | 1px    | 1c      | 1%     |        |
-    | padding_data_type.xml | 1px    | 1c      | 1%     | 1px    |
-    | padding_data_type.xml | 1.5px  | 1.3333% | 1.5px  | 0.05px |
-    | padding_data_type.xml | 1px    | 1c      | 0px    | 0px    |
-    | padding_data_type.xml | 1px    | 001c    | 0px    | 0px    |
+    | value1 | value2  | value3 | value4 |
+    | 1px    |         |        |        |
+    | +1px   |         |        |        |
+    | -1px   |         |        |        |
+    | -.5px  |         |        |        |
+    | 001px  |         |        |        |
+    | 1px    | 1c      |        |        |
+    | 1px    | 1c      | 1%     |        |
+    | 1px    | 1c      | 1%     | 1px    |
+    | 1.5px  | 1.3333% | 1.5px  | 0.05px |
+    | 1px    | 1c      | 0px    | 0px    |
+    | 1px    | 001c    | 0px    | 0px    |
 
-  Scenario: Invalid padding datatype
-    Given an xml file <xml_file>
+  Scenario Outline: Invalid padding datatype
+    Given an xml file "padding_data_type.xml"
     When it has a padding attribute
-    And the padding attribute has <value1>
-    And the padding attribute has <value2>
-    And the padding attribute has <value3>
-    And the padding attribute has <value4>
+    And the padding attribute component 1 is <value1>
+    And the padding attribute component 2 is <value2>
+    And the padding attribute component 3 is <value3>
+    And the padding attribute component 4 is <value4>
     Then document is invalid
 
     Examples:
-    | xml_file              | value1 | value2 | value3 | value4 |
-    | padding_data_type.xml | 1      |        |        |        |
-    | padding_data_type.xml | 1em    |        |        |        |
-    | padding_data_type.xml | --1px  |        |        |        |
-    | padding_data_type.xml |        |        |        |        |
-    | padding_data_type.xml | ' '    |        |        |        |
-    | padding_data_type.xml |        |        |        |        |
+    | value1 | value2 | value3 | value4 |
+    | 1      |        |        |        |
+    | 1em    |        |        |        |
+    | --1px  |        |        |        |
+    |        |        |        |        |
+    | ' '    |        |        |        |
+    |        |        |        |        |

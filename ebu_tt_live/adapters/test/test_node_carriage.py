@@ -1,20 +1,28 @@
 
-from ebu_tt_live.adapters.base import INodeCarriageAdapter, IDocumentDataAdapter
-from ebu_tt_live.adapters.node_carriage import AbstractNodeCarriageAdapter, ProducerNodeCarriageAdapter, \
-    ConsumerNodeCarriageAdapter
-from ebu_tt_live.node import IConsumerNode, IProducerNode, SimpleProducer, SimpleConsumer
-from ebu_tt_live.carriage import IConsumerCarriage, IProducerCarriage, FilesystemConsumerImpl, FilesystemProducerImpl, \
-    WebsocketConsumerCarriage, WebsocketProducerCarriage
-from ebu_tt_live.errors import DataCompatError
-from unittest import TestCase
 import pytest
 
+from ebu_tt_live.adapters.base import IDocumentDataAdapter
+from ebu_tt_live.adapters.node_carriage import (
+    AbstractNodeCarriageAdapter,
+    ConsumerNodeCarriageAdapter,
+    ProducerNodeCarriageAdapter,
+)
+from ebu_tt_live.carriage import (
+    IConsumerCarriage,
+    IProducerCarriage,
+)
+from ebu_tt_live.errors import DataCompatError
+from ebu_tt_live.node import (
+    IConsumerNode,
+    IProducerNode,
+)
 
-class CustomDataType1(object):
+
+class CustomDataType1:
     pass
 
 
-class CustomDataType2(object):
+class CustomDataType2:
     pass
 
 

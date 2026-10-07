@@ -2,12 +2,13 @@
 This file contains those bits and pieces that are necessary to give PyXB extra functionality.
 """
 
-import threading
 import logging
-from ebu_tt_live.errors import StopBranchIteration
-from pyxb.binding.basis import NonElementContent, ElementContent, complexTypeDefinition
+import threading
+
+from pyxb.binding.basis import ElementContent, complexTypeDefinition
 from pyxb.exceptions_ import NotComplexContentError
 
+from ebu_tt_live.errors import StopBranchIteration
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +27,7 @@ def get_xml_parsing_context():
     :return: dict that is te parsing context for the currently running parser
     :return: None if not in parsing mode
     """
-    log.debug('Accessing xml_parsing_context: {}'.format(__xml_parsing_context))
+    log.debug(f'Accessing xml_parsing_context: {__xml_parsing_context}')
     if __xml_parsing_context.parsing is False:
         # We are not in parsing mode
         return None
@@ -34,12 +35,12 @@ def get_xml_parsing_context():
 
 
 def reset_xml_parsing_context(parsing=False):
-    log.debug('Resetting xml_parsing_context: {}'.format(__xml_parsing_context))
+    log.debug(f'Resetting xml_parsing_context: {__xml_parsing_context}')
     __xml_parsing_context.context = {}
     __xml_parsing_context.parsing = parsing
 
 
-class xml_parsing_context(object):
+class xml_parsing_context:
     """
     This context manager is helpful to inject a thread local parsing context into the XML parser to be able to control
     its type choices based on semantic rules. The context manager makes sure the context is renewed every time a new
@@ -53,7 +54,7 @@ class xml_parsing_context(object):
         reset_xml_parsing_context()
 
 
-class RecursiveOperation(object):
+class RecursiveOperation:
     """
     A recursive operation can be a validation of the content model, a full- or partial copy of the document tree, the
     splicing of two documents together or conversion of one document format to another. This class contains the

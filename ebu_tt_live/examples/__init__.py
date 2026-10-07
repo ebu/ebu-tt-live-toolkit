@@ -1,4 +1,6 @@
-from pkg_resources import ResourceManager, get_provider
+from importlib.resources import read_text
+
+current_module = __import__(__name__)
 
 
 def get_example_data(dataset_name):
@@ -7,9 +9,7 @@ def get_example_data(dataset_name):
     :param dataset_name:
     :return:
     """
-    provider = get_provider('ebu_tt_live')
-    manager = ResourceManager()
 
-    source = provider.get_resource_string(manager, 'examples/'+dataset_name)
+    source = read_text(current_module, dataset_name)
 
     return source

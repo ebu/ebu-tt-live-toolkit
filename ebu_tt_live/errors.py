@@ -43,7 +43,9 @@ class SequenceNumberCollisionError(IncompatibleSequenceError):
 
 
 class DocumentDiscardedError(Exception):
-    offending_document = None
+
+    def __init__(self, offending_document):
+        self.offending_document = offending_document
 
 
 class SequenceOverridden(Exception):
@@ -62,28 +64,32 @@ class ExtentMissingError(Exception):
         self._attribute = attribute
 
     def __str__(self):
-        return ERR_DOCUMENT_EXTENT_MISSING.format(type=type(self._attribute), value=self._attribute)
+        return ERR_DOCUMENT_EXTENT_MISSING.format(
+            type=type(self._attribute),
+            value=self._attribute)
 
 
 class StopBranchIteration(Exception):
     """
-    Let the iterator know that it can proceed to the next branch. It does not need to traverse the current one any
-    further.
+    Let the iterator know that it can proceed to the next branch. It does not
+    need to traverse the current one any further.
     """
 
 
 class OutsideSegmentError(StopBranchIteration):
     """
-    This exception is meant to be raised by the copying functionality to make the iterator know that a particular
-    subtree is not meant to be parsed.
+    This exception is meant to be raised by the copying functionality to make
+    the iterator know that a particular subtree is not meant to be parsed.
     """
 
 
 class DiscardElement(Exception):
     """
-    There is a possibility that an element may become superfluous or lose its value. Such a possibility  can happen
-    in segmentation when a p element gets selected because it contains 2 spans but the segment happens to be selecting
-    an interval between them so the container ends up being empty and thus should be discarded.
+    There is a possibility that an element may become superfluous or lose its
+    value. Such a possibility  can happen in segmentation when a p element gets
+    selected because it contains 2 spans but the segment happens to be
+    selecting an interval between them so the container ends up being empty and
+    thus should be discarded.
     """
 
 
@@ -92,7 +98,13 @@ class ConfigurationError(Exception):
 
 
 class UnexpectedSequenceIdentifierError(Exception):
-    pass
+
+    def __init__(self, message: str | None = None):
+        self._message = message
+
+    @property
+    def message(self):
+        return self._message
 
 
 class UnexpectedAuthorsGroupError(Exception):

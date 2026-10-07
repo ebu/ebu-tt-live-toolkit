@@ -2,18 +2,14 @@
 Feature: Computed element active begin and end times
   # Assuming that parent end = min(explicit end, begin+dur) where dur may exist, i.e. for body element.
 
+  Scenario Outline: 
 
   # Given a parent element with one child element, the computed active parent and child begin and active parent end times are valid:
-  Examples:
-  | xml_file                                      | sequence_identifier | sequence_number | time_base |  
-  | elements_active_time_semantics_empty_body.xml | testSeq             | 1               | media     |  
-
-
-  Scenario: Parent with no child element
-    Given an xml file <xml_file>
-    When it has sequenceIdentifier <sequence_identifier>
-    And it has sequenceNumber <sequence_number>
-    And it has timeBase <time_base>
+  Scenario Outline: Parent with no child element
+    Given an xml file "elements_active_time_semantics_empty_body.xml"
+    When it has sequenceIdentifier testSeq
+    And it has sequenceNumber 1
+    And it has timeBase media
     And it has body begin time <body_begin>
     And it has body end time <body_end>
     And the document is generated
@@ -30,12 +26,11 @@ Feature: Computed element active begin and end times
 
   # These cases involve body duration and availability time cases, in which the logic significantly changes
   # The code assumes availability_time to be 0 unless specified otherwise.
-
-  Scenario: Body timing parameters affecting document without children
-    Given an xml file <xml_file>
-    When it has sequenceIdentifier <sequence_identifier>
-    And it has sequenceNumber <sequence_number>
-    And it has timeBase <time_base>
+  Scenario Outline: Body timing parameters affecting document without children
+    Given an xml file "elements_active_time_semantics_empty_body.xml"
+    When it has sequenceIdentifier testSeq
+    And it has sequenceNumber 1
+    And it has timeBase media
     And it has body begin time <body_begin>
     And it has body duration <body_dur>
     And it has body end time <body_end>

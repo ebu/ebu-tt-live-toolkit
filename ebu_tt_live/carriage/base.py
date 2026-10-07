@@ -1,15 +1,19 @@
-from .interface import IProducerCarriage, IConsumerCarriage
-from ebu_tt_live.node.interface import IProducerNode, IConsumerNode
 from ebu_tt_live.documents import SubtitleDocument
 from ebu_tt_live.errors import ComponentCompatError, DataCompatError
-from ebu_tt_live.strings import ERR_INCOMPATIBLE_COMPONENT, ERR_INCOMPATIBLE_DATA_EXPECTED, \
-    ERR_INCOMPATIBLE_DATA_PROVIDED
+from ebu_tt_live.node.interface import IConsumerNode, IProducerNode
+from ebu_tt_live.strings import (
+    ERR_INCOMPATIBLE_COMPONENT,
+    ERR_INCOMPATIBLE_DATA_EXPECTED,
+    ERR_INCOMPATIBLE_DATA_PROVIDED,
+)
+
+from .interface import IConsumerCarriage, IProducerCarriage
 
 # Abstract classes
 # ================
 
 
-class AbstractCarriage(object):
+class AbstractCarriage:
 
     def is_document(self, document):
         if isinstance(document, SubtitleDocument):

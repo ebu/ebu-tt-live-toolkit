@@ -1,9 +1,9 @@
 import logging
 from xml.dom import minidom
-from .base import SubtitleDocument, TimeBase
-from ebu_tt_live import bindings
-from ebu_tt_live.bindings.converters.ebutt3_ebuttd import EBUTT3EBUTTDConverter
 
+from ebu_tt_live import bindings
+
+from .base import SubtitleDocument
 
 log = logging.getLogger(__name__)
 document_logger = logging.getLogger('document_logger')
